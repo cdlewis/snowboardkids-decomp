@@ -441,7 +441,7 @@ void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *arg0) {
     u8 temp;
 
     player = &gRacePlayers[arg0->index];
-    if (player->stateFlags & 0x2000) {
+    if (player->state.stateFlags & 0x2000) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitForRaceStartPlayerEffect);
         return;
     }
@@ -449,7 +449,7 @@ void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *arg0) {
     temp = arg0->unk2E;
     if (temp != 5) {
         arg0->unk2E = temp + 1;
-    } else if (player->isTargetedByAttack == 0) {
+    } else if (player->state.isTargetedByAttack == 0) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitForRaceStartPlayerEffect);
     }
 
@@ -458,13 +458,13 @@ void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *arg0) {
     sp2C.z = 0;
 
     player = &gRacePlayers[arg0->index];
-    makeFixedRotationXY(sp38, player->pitchAngle, player->facingAngle);
+    makeFixedRotationXY(sp38, player->state.pitchAngle, player->state.facingAngle);
     transformVec3iByFixedMatrix(sp38, &sp2C, (Vec3i *)&arg0->unk18);
 
     player = &gRacePlayers[arg0->index];
-    arg0->unk18.word += player->renderPosition.x;
-    arg0->unk1C.word += player->renderPosition.y;
-    arg0->unk20.word += player->renderPosition.z;
+    arg0->unk18.word += player->state.renderPosition.x;
+    arg0->unk1C.word += player->state.renderPosition.y;
+    arg0->unk20.word += player->state.renderPosition.z;
 
     addRenderCallback(
         &gRaceModelEffectRenderCallbackList,
@@ -475,8 +475,8 @@ void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *arg0) {
 
 void waitForRaceStartPlayerEffect(MenuScreenEffectActor *arg0) {
     RacePlayer *player = &gRacePlayers[arg0->index];
-    if (!(player->stateFlags & 0x2000)) {
-        if (player->isTargetedByAttack != 0) {
+    if (!(player->state.stateFlags & 0x2000)) {
+        if (player->state.isTargetedByAttack != 0) {
             arg0->unk2E = 0xFF;
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceStartPlayerEffectActive);
         }

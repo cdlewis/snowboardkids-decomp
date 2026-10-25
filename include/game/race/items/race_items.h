@@ -10,7 +10,7 @@
  * HUD tile indices, or PLAYER_HITFLAG_* bit masks.
  */
 
-/* RacePlayer.shotType and gShotRollTable. */
+/* RacePlayer.state.shotType and gShotRollTable. */
 #define RACE_SHOT_NONE 0
 #define RACE_SHOT_SLAPSTICK 1
 #define RACE_SHOT_PARACHUTE 2
@@ -18,7 +18,7 @@
 #define RACE_SHOT_SNOWMAN 4
 #define RACE_SHOT_BOMB 5
 
-/* RacePlayer.itemType and gItemRollTable. */
+/* RacePlayer.state.itemType and gItemRollTable. */
 #define RACE_ITEM_NONE 0
 #define RACE_ITEM_SPEED_FAN 1
 #define RACE_ITEM_GHOST 2

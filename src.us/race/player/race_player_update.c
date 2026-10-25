@@ -34,12 +34,6 @@ typedef struct {
     s16 facingAngle;
 } RacePlayerPreviewStart;
 
-typedef union {
-    Vec3i *vec;
-    char *bytes;
-    u32 index;
-} RacePlayerInitLocal;
-
 typedef struct {
     s16 angle;
     s16 unk2;
@@ -59,51 +53,51 @@ u16 gRacePlayerVoiceLeadSoundOffsets[] = { 0, 20, 20, 30, 30, 20, 20, 30, 30, 0 
 
 u16 gRacePlayerVoiceSplitSoundOffsets[] = { 0, 10, 20, 20, 30, 10, 20, 20, 30, 0 };
 
-RacePlayerPreviewStart gRacePlayerPreviewStartPositions[][4] = {
-    { { { 0xB368C3F4, 0xCB46B624, 0xEA08A3AE }, 0x0086, 0x0219 },
-     { { 0xB2E0A118, 0xCB1BF934, 0xE976F80E }, 0x0087, 0x0219 },
-     { { 0xB3DCC2C0, 0xCB76CBC7, 0xEAC479D2 }, 0x0085, 0x0219 },
-     { { 0xB4588A34, 0xCB7BBDC0, 0xEA907F46 }, 0x0085, 0x0219 } },
-    { { { 0xD063FFEB, 0xE3CDAB7F, 0xF6122B47 }, 0x0047, 0x039D },
-     { { 0xCDF310C7, 0xE3196BA9, 0xF5ABF799 }, 0x004A, 0x00CB },
-     { { 0xD213A6C5, 0xE447FE19, 0xF536149D }, 0x0045, 0x057C },
-     { { 0xD2F7EC75, 0xE543D9F6, 0xF17E596D }, 0x0042, 0x07A6 } },
-    { { { 0xFF006C53, 0xFE018275, 0xF6D9F959 }, 0x000E, 0x01BB },
-     { { 0x00312A27, 0xFE6222E8, 0xF7E100F5 }, 0x000C, 0x01BB },
-     { { 0x009D334B, 0xFEA97BBA, 0xF94BA899 }, 0x0008, 0x014F },
-     { { 0x0122D61D, 0xFEF0BF18, 0xFB0C2767 }, 0x0005, 0x0007 } },
-    { { { 0xF3146D96, 0xF65FD87C, 0xE594B2A7 }, 0x001C, 0x0112 },
-     { { 0xF3DE014E, 0xF6F48DE5, 0xE6F87AAB }, 0x001B, 0x0112 },
-     { { 0xF50C3D28, 0xF79DEC47, 0xE85C0A69 }, 0x001B, 0x018C },
-     { { 0xF4FD20BA, 0xF7BF24E1, 0xE8D66707 }, 0x001B, 0x018C } },
-    { { { 0xF6BC6F6A, 0xF9282D2F, 0xEAC9A71E }, 0x0019, 0x0185 },
-     { { 0xF51BF890, 0xF7B512C2, 0xE89EBBC2 }, 0x001B, 0x0185 },
-     { { 0xF51C3792, 0xF7A94134, 0xE876D4B8 }, 0x001B, 0x0185 },
-     { { 0xF4EF8D12, 0xF7A8E16E, 0xE8952A98 }, 0x001B, 0x0185 } },
-    { { { 0x03658EEB, 0xFDB008F5, 0xF347D9C3 }, 0x000E, 0x007A },
-     { { 0x032C7FE7, 0xFDD2BA88, 0xF3B1B53B }, 0x000E, 0x00A6 },
-     { { 0x039BF323, 0xFDBA013C, 0xF3FAB937 }, 0x000E, 0x00A6 },
-     { { 0x03561369, 0xFDD1D31D, 0xF455FCC1 }, 0x000E, 0x00A6 } },
-    { { { 0x152F51DA, 0xDB57148A, 0xD9C5DE9A }, 0x003D, 0xFFDA },
-     { { 0x1574E1FA, 0xDA904D40, 0xD8767BDE }, 0x003E, 0xFFDA },
-     { { 0x15945DC0, 0xDAFF0927, 0xD93EE950 }, 0x003D, 0xFFDA },
-     { { 0x15223A28, 0xDBD20087, 0xDA9BC6D4 }, 0x003C, 0xFED2 } },
-    { { { 0xDD2EE8D5, 0xE28F8DD8, 0xB0BE962E }, 0x007B, 0x0225 },
-     { { 0xDB2A07EF, 0xE1D64190, 0xAF8EF0AA }, 0x007D, 0x0137 },
-     { { 0xDB738683, 0xE1EB39CB, 0xAFA37ADA }, 0x007D, 0x0137 },
-     { { 0xDBDF1787, 0xE21B7F22, 0xAFB2168E }, 0x007C, 0x01CA } },
-    { { { 0xF72554A7, 0xEF95A3F6, 0xDDAF853E }, 0x0033, 0x0319 },
-     { { 0xF430DCC7, 0xEF3B35CA, 0xDC2D95AE }, 0x0037, 0x0319 },
-     { { 0xF8142BD3, 0xEFC226B6, 0xDDDB5064 }, 0x0032, 0x039D },
-     { { 0xF968B2D9, 0xF01A652D, 0xDDEDE22C }, 0x0031, 0x039D } },
-    { { { 0xFCC9F88C, 0xFC00DC7E, 0xF2167F01 }, 0x0014, 0xFE57 },
-     { { 0xFE07ACCC, 0xFAC04712, 0xEFE1D5D3 }, 0x0016, 0xFE57 },
-     { { 0xFFFB7EC8, 0xF9110ACA, 0xEE25DD1F }, 0x0018, 0xFE57 },
-     { { 0x010B8D34, 0xF84E86C9, 0xEB0C423D }, 0x001C, 0xFD9B } },
-    { { { 0xB14D4F91, 0xB636FD06, 0xC6EEE2EB }, 0x009F, 0xFC80 },
-     { { 0xB28B6B3D, 0xB58C9448, 0xC7013571 }, 0x00A0, 0xFC80 },
-     { { 0xB2A97AB1, 0xB5714EA4, 0xC686D82B }, 0x00A0, 0xFB70 },
-     { { 0xAF715C51, 0xB7453607, 0xC8C47837 }, 0x009D, 0xFE95 } },
+RacePlayerPreviewStart gRacePlayerPreviewStartPositions[] = {
+    { { 0xB368C3F4, 0xCB46B624, 0xEA08A3AE }, 0x0086, 0x0219 },
+    { { 0xB2E0A118, 0xCB1BF934, 0xE976F80E }, 0x0087, 0x0219 },
+    { { 0xB3DCC2C0, 0xCB76CBC7, 0xEAC479D2 }, 0x0085, 0x0219 },
+    { { 0xB4588A34, 0xCB7BBDC0, 0xEA907F46 }, 0x0085, 0x0219 },
+    { { 0xD063FFEB, 0xE3CDAB7F, 0xF6122B47 }, 0x0047, 0x039D },
+    { { 0xCDF310C7, 0xE3196BA9, 0xF5ABF799 }, 0x004A, 0x00CB },
+    { { 0xD213A6C5, 0xE447FE19, 0xF536149D }, 0x0045, 0x057C },
+    { { 0xD2F7EC75, 0xE543D9F6, 0xF17E596D }, 0x0042, 0x07A6 },
+    { { 0xFF006C53, 0xFE018275, 0xF6D9F959 }, 0x000E, 0x01BB },
+    { { 0x00312A27, 0xFE6222E8, 0xF7E100F5 }, 0x000C, 0x01BB },
+    { { 0x009D334B, 0xFEA97BBA, 0xF94BA899 }, 0x0008, 0x014F },
+    { { 0x0122D61D, 0xFEF0BF18, 0xFB0C2767 }, 0x0005, 0x0007 },
+    { { 0xF3146D96, 0xF65FD87C, 0xE594B2A7 }, 0x001C, 0x0112 },
+    { { 0xF3DE014E, 0xF6F48DE5, 0xE6F87AAB }, 0x001B, 0x0112 },
+    { { 0xF50C3D28, 0xF79DEC47, 0xE85C0A69 }, 0x001B, 0x018C },
+    { { 0xF4FD20BA, 0xF7BF24E1, 0xE8D66707 }, 0x001B, 0x018C },
+    { { 0xF6BC6F6A, 0xF9282D2F, 0xEAC9A71E }, 0x0019, 0x0185 },
+    { { 0xF51BF890, 0xF7B512C2, 0xE89EBBC2 }, 0x001B, 0x0185 },
+    { { 0xF51C3792, 0xF7A94134, 0xE876D4B8 }, 0x001B, 0x0185 },
+    { { 0xF4EF8D12, 0xF7A8E16E, 0xE8952A98 }, 0x001B, 0x0185 },
+    { { 0x03658EEB, 0xFDB008F5, 0xF347D9C3 }, 0x000E, 0x007A },
+    { { 0x032C7FE7, 0xFDD2BA88, 0xF3B1B53B }, 0x000E, 0x00A6 },
+    { { 0x039BF323, 0xFDBA013C, 0xF3FAB937 }, 0x000E, 0x00A6 },
+    { { 0x03561369, 0xFDD1D31D, 0xF455FCC1 }, 0x000E, 0x00A6 },
+    { { 0x152F51DA, 0xDB57148A, 0xD9C5DE9A }, 0x003D, 0xFFDA },
+    { { 0x1574E1FA, 0xDA904D40, 0xD8767BDE }, 0x003E, 0xFFDA },
+    { { 0x15945DC0, 0xDAFF0927, 0xD93EE950 }, 0x003D, 0xFFDA },
+    { { 0x15223A28, 0xDBD20087, 0xDA9BC6D4 }, 0x003C, 0xFED2 },
+    { { 0xDD2EE8D5, 0xE28F8DD8, 0xB0BE962E }, 0x007B, 0x0225 },
+    { { 0xDB2A07EF, 0xE1D64190, 0xAF8EF0AA }, 0x007D, 0x0137 },
+    { { 0xDB738683, 0xE1EB39CB, 0xAFA37ADA }, 0x007D, 0x0137 },
+    { { 0xDBDF1787, 0xE21B7F22, 0xAFB2168E }, 0x007C, 0x01CA },
+    { { 0xF72554A7, 0xEF95A3F6, 0xDDAF853E }, 0x0033, 0x0319 },
+    { { 0xF430DCC7, 0xEF3B35CA, 0xDC2D95AE }, 0x0037, 0x0319 },
+    { { 0xF8142BD3, 0xEFC226B6, 0xDDDB5064 }, 0x0032, 0x039D },
+    { { 0xF968B2D9, 0xF01A652D, 0xDDEDE22C }, 0x0031, 0x039D },
+    { { 0xFCC9F88C, 0xFC00DC7E, 0xF2167F01 }, 0x0014, 0xFE57 },
+    { { 0xFE07ACCC, 0xFAC04712, 0xEFE1D5D3 }, 0x0016, 0xFE57 },
+    { { 0xFFFB7EC8, 0xF9110ACA, 0xEE25DD1F }, 0x0018, 0xFE57 },
+    { { 0x010B8D34, 0xF84E86C9, 0xEB0C423D }, 0x001C, 0xFD9B },
+    { { 0xB14D4F91, 0xB636FD06, 0xC6EEE2EB }, 0x009F, 0xFC80 },
+    { { 0xB28B6B3D, 0xB58C9448, 0xC7013571 }, 0x00A0, 0xFC80 },
+    { { 0xB2A97AB1, 0xB5714EA4, 0xC686D82B }, 0x00A0, 0xFB70 },
+    { { 0xAF715C51, 0xB7453607, 0xC8C47837 }, 0x009D, 0xFE95 },
 };
 
 void (*gRacePlayerModeUpdateHandlers[])(RacePlayer *) = {
@@ -272,231 +266,216 @@ void applyRacePlayerProperties(RacePlayer *arg0) {
     }
     temp_a1 = (RacePlayerProperties *)((u8 *)var_v1 + (player->characterId * sizeof(RacePlayerProperties)));
     temp_a2 = (RacePlayerProperties *)((u8 *)var_v0 + (player->snowboardIndex * sizeof(RacePlayerProperties)));
-    player->baseSpeedLimit = (temp_a1->maxSpeed + temp_a2->maxSpeed) << 8;
-    player->speedLimit = player->baseSpeedLimit;
-    player->gravity = (temp_a1->gravity + temp_a2->gravity) << 4;
-    player->aerialGravity = (temp_a1->aerialGravity + temp_a2->aerialGravity) << 4;
-    player->turnStrength = temp_a1->turnStrength + temp_a2->turnStrength;
-    player->lateralDeceleration = (temp_a1->lateralDeceleration + temp_a2->lateralDeceleration) << 4;
-    player->turnRadiusAtFullLean = (temp_a1->turnRadiusAtFullLean + temp_a2->turnRadiusAtFullLean) << 4;
-    player->turnRadiusAtHalfLean = (temp_a1->turnRadiusAtHalfLean + temp_a2->turnRadiusAtHalfLean) << 4;
-    player->forwardDeceleration = (temp_a1->forwardDeceleration + temp_a2->forwardDeceleration) << 4;
-    player->reverseDeceleration = (temp_a1->reverseDeceleration + temp_a2->reverseDeceleration) << 4;
+    player->state.baseSpeedLimit = (temp_a1->maxSpeed + temp_a2->maxSpeed) << 8;
+    player->state.speedLimit = player->state.baseSpeedLimit;
+    player->state.gravity = (temp_a1->gravity + temp_a2->gravity) << 4;
+    player->state.aerialGravity = (temp_a1->aerialGravity + temp_a2->aerialGravity) << 4;
+    player->state.turnStrength = temp_a1->turnStrength + temp_a2->turnStrength;
+    player->state.lateralDeceleration = (temp_a1->lateralDeceleration + temp_a2->lateralDeceleration) << 4;
+    player->state.turnRadiusAtFullLean = (temp_a1->turnRadiusAtFullLean + temp_a2->turnRadiusAtFullLean) << 4;
+    player->state.turnRadiusAtHalfLean = (temp_a1->turnRadiusAtHalfLean + temp_a2->turnRadiusAtHalfLean) << 4;
+    player->state.forwardDeceleration = (temp_a1->forwardDeceleration + temp_a2->forwardDeceleration) << 4;
+    player->state.reverseDeceleration = (temp_a1->reverseDeceleration + temp_a2->reverseDeceleration) << 4;
 }
 
 void initRacePlayer(RacePlayer *player) {
-    RacePlayerInitLocal pos;
-    RacePlayerInitLocal previousPos;
+    u32 i;
+    char *bytes;
     u32 size;
 
-    /* Clear pos through the end of RacePlayer, including race gold (score). */
-    size = (s32)(player + 1) - (s32)&player->pos;
-    previousPos.index = 0;
-    if (size != 0) {
-        pos.bytes = (char *)&player->pos;
-        do {
-            previousPos.index++;
-            *pos.bytes = 0;
-            pos.bytes++;
-        } while (previousPos.index < size);
+    size = (char *)(&player->state + 1) - (char *)&player->state;
+    bytes = (char *)&player->state;
+    i = 0;
+    while (i < size) {
+        bytes[i++] = 0;
     }
 
-    player->loopSoundPitch = 0.0f;
-    pos.vec = &player->pos;
+    player->state.loopSoundPitch = 0.0f;
     initRaceMotionModelParts(player);
     setRaceMotionAnimation(player, 1);
 
     if (gRacePlayerCount == 4) {
         switch (player->playerIndex) {
             case 0:
-                player->pos.x = -0xC0000;
+                player->state.pos.x = -0xC0000;
                 break;
             case 1:
-                player->pos.x = 0xC0000;
+                player->state.pos.x = 0xC0000;
                 break;
             case 2:
-                player->pos.x = -0x240000;
+                player->state.pos.x = -0x240000;
                 break;
             case 3:
-                player->pos.x = 0x240000;
+                player->state.pos.x = 0x240000;
                 break;
         }
     }
-    player->pos.z = -0x200000;
+    player->state.pos.z = -0x200000;
 
-    previousPos.vec = &player->previousPosition;
-    *previousPos.vec = *pos.vec;
-    player->targetGroundOffset = 0x40000;
-    player->collisionRadius = 0x80000;
-    player->collisionHeight = 0xE0000;
+    player->state.previousPosition = player->state.pos;
+    player->state.targetGroundOffset = 0x40000;
+    player->state.collisionRadius = 0x80000;
+    player->state.collisionHeight = 0xE0000;
 
     applyRacePlayerProperties(player);
     if (player->isCpu != 0) {
-        player->lateralDeceleration = 0x10000;
+        player->state.lateralDeceleration = 0x10000;
     }
     if ((player->isCpu != 0) && (player->characterId == 5)) {
-        player->lateralDeceleration = 0xC0000;
+        player->state.lateralDeceleration = 0xC0000;
     }
     if (gRaceSplitscreenMode == 2) {
-        player->itemType = RACE_ITEM_SPEED_FAN;
+        player->state.itemType = RACE_ITEM_SPEED_FAN;
     }
     if (player->isCpu == 0) {
-        player->unk519 = 6;
+        player->state.unk519 = 6;
     }
     if ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 1)) {
-        player->shieldShotCount = 10;
+        player->state.shieldShotCount = 10;
     }
     if (gRaceCourseIndex.signedValue == RACE_COURSE_ROOKIE_MOUNTAIN) {
-        player->pos.z = -0xBD0000;
+        player->state.pos.z = -0xBD0000;
     }
-    player->collisionCenterOffset = 0xC0000;
+    player->state.collisionCenterOffset = 0xC0000;
 
     if ((player->isCpu == 0) && (player->soundDisabled == 0) && (gRaceCameraModeChangeDisabled == 0) &&
-        (player->forwardDeceleration != player->reverseDeceleration)) {
+        (player->state.forwardDeceleration != player->state.reverseDeceleration)) {
         createCallbackTaskWithUserIdPreservingArgs(initRaceUiBoardReversePrompt, 0, 0x64, player->playerIndex);
     }
 
     if (gRaceDemoPlaybackEnabled == 1) {
         if (player->playerIndex == 0) {
-            player->shotType = RACE_SHOT_FREEZE_SHOT;
-            player->shotCount = 3;
+            player->state.shotType = RACE_SHOT_FREEZE_SHOT;
+            player->state.shotCount = 3;
         } else {
-            player->shotType = RACE_SHOT_BOMB;
-            player->shotCount = 3;
+            player->state.shotType = RACE_SHOT_BOMB;
+            player->state.shotCount = 3;
         }
-        player->itemType = RACE_ITEM_SPEED_FAN;
+        player->state.itemType = RACE_ITEM_SPEED_FAN;
     }
 
     switch (gTrainingCourseLesson) {
         case 1:
-            player->facingAngle = 0x57E;
-            player->pos.x = 0xDB870B2D;
-            player->pos.z = 0xE72C26D8;
-            player->coursePathIndex = 0x34;
+            player->state.facingAngle = 0x57E;
+            player->state.pos.x = 0xDB870B2D;
+            player->state.pos.z = 0xE72C26D8;
+            player->state.coursePathIndex = 0x34;
             break;
         case 2:
         case 3:
         case 4:
         case 5:
-            player->facingAngle = 0xFD5;
-            player->pos.x = 0xAE2B01F4;
-            player->pos.z = 0xD6C4D18A;
-            player->coursePathIndex = 0x96;
+            player->state.facingAngle = 0xFD5;
+            player->state.pos.x = 0xAE2B01F4;
+            player->state.pos.z = 0xD6C4D18A;
+            player->state.coursePathIndex = 0x96;
             break;
         case 6:
-            player->facingAngle = 0x993;
-            player->pos.x = 0xC183C5F9;
-            player->pos.z = 0xCE51B844;
-            player->coursePathIndex = 0xAE;
+            player->state.facingAngle = 0x993;
+            player->state.pos.x = 0xC183C5F9;
+            player->state.pos.z = 0xCE51B844;
+            player->state.coursePathIndex = 0xAE;
             break;
         case 7:
         case 8:
             switch (player->playerIndex) {
                 case 0:
-                    player->facingAngle = 0xF7D;
-                    player->pos.x = 0x8FC2BA;
-                    player->pos.z = 0xFC4A83D8;
-                    player->coursePathIndex = 4;
+                    player->state.facingAngle = 0xF7D;
+                    player->state.pos.x = 0x8FC2BA;
+                    player->state.pos.z = 0xFC4A83D8;
+                    player->state.coursePathIndex = 4;
                     break;
                 case 2:
-                    player->facingAngle = 0x102;
-                    player->pos.x = 0x012FA8E0;
-                    player->pos.z = 0xF9850FD2;
-                    player->coursePathIndex = 8;
+                    player->state.facingAngle = 0x102;
+                    player->state.pos.x = 0x012FA8E0;
+                    player->state.pos.z = 0xF9850FD2;
+                    player->state.coursePathIndex = 8;
                     break;
                 case 3:
-                    player->facingAngle = 0x8F;
-                    player->pos.x = 0xC2C658;
-                    player->pos.z = 0xFA155B82;
-                    player->coursePathIndex = 7;
+                    player->state.facingAngle = 0x8F;
+                    player->state.pos.x = 0xC2C658;
+                    player->state.pos.z = 0xFA155B82;
+                    player->state.coursePathIndex = 7;
                     break;
                 case 1:
-                    player->facingAngle = 0x8F;
-                    player->pos.x = 0x017C2FC4;
-                    player->pos.z = 0xFA1B250E;
-                    player->coursePathIndex = 7;
+                    player->state.facingAngle = 0x8F;
+                    player->state.pos.x = 0x017C2FC4;
+                    player->state.pos.z = 0xFA1B250E;
+                    player->state.coursePathIndex = 7;
                     break;
             }
             break;
         case 9:
-            player->facingAngle = 0x235;
-            player->pos.x = 0xFEAFF7CD;
-            player->pos.z = 0xF62C899D;
-            player->coursePathIndex = 0xE;
+            player->state.facingAngle = 0x235;
+            player->state.pos.x = 0xFEAFF7CD;
+            player->state.pos.z = 0xF62C899D;
+            player->state.coursePathIndex = 0xE;
             break;
     }
 
     switch (gMainMenuModeSelection) {
         case 1:
-            player->shotType = RACE_SHOT_SLAPSTICK;
-            player->shotCount = 3;
+            player->state.shotType = RACE_SHOT_SLAPSTICK;
+            player->state.shotCount = 3;
             break;
         case 2:
-            player->shotType = RACE_SHOT_PARACHUTE;
-            player->shotCount = 3;
+            player->state.shotType = RACE_SHOT_PARACHUTE;
+            player->state.shotCount = 3;
             break;
         case 3:
-            player->shotType = RACE_SHOT_FREEZE_SHOT;
-            player->shotCount = 3;
+            player->state.shotType = RACE_SHOT_FREEZE_SHOT;
+            player->state.shotCount = 3;
             break;
         case 4:
-            player->shotType = RACE_SHOT_SNOWMAN;
-            player->shotCount = 3;
+            player->state.shotType = RACE_SHOT_SNOWMAN;
+            player->state.shotCount = 3;
             break;
         case 5:
-            player->shotType = RACE_SHOT_BOMB;
-            player->shotCount = 3;
+            player->state.shotType = RACE_SHOT_BOMB;
+            player->state.shotCount = 3;
             break;
         case 6:
-            player->itemType = RACE_ITEM_SPEED_FAN;
+            player->state.itemType = RACE_ITEM_SPEED_FAN;
             break;
         case 7:
-            player->itemType = RACE_ITEM_GHOST;
+            player->state.itemType = RACE_ITEM_GHOST;
             break;
         case 8:
-            player->itemType = RACE_ITEM_PAN;
+            player->state.itemType = RACE_ITEM_PAN;
             break;
         case 9:
-            player->itemType = RACE_ITEM_ROCK;
+            player->state.itemType = RACE_ITEM_ROCK;
             break;
         case 10:
-            player->itemType = RACE_ITEM_RAT_FACE;
+            player->state.itemType = RACE_ITEM_RAT_FACE;
             if (player->playerIndex != 0) {
-                player->score = 0x1388;
+                player->state.score = 0x1388;
             }
             break;
         case 11:
-            player->itemType = RACE_ITEM_INVISIBLE;
+            player->state.itemType = RACE_ITEM_INVISIBLE;
             if (player->playerIndex == 2) {
-                player->itemType = RACE_ITEM_PAN;
+                player->state.itemType = RACE_ITEM_PAN;
             }
-            player->shotType = RACE_SHOT_SLAPSTICK;
-            player->shotCount = 3;
+            player->state.shotType = RACE_SHOT_SLAPSTICK;
+            player->state.shotCount = 3;
             break;
     }
 
     if (gMainMenuModeSelection != 0) {
-        *pos.vec = ((RacePlayerPreviewStart *)
-                        gRacePlayerPreviewStartPositions)[(gMainMenuModeSelection - 1) * 4 + player->playerIndex]
-                       .position;
-        player->facingAngle = ((
-            RacePlayerPreviewStart *
-        )gRacePlayerPreviewStartPositions)[(gMainMenuModeSelection - 1) * 4 + player->playerIndex]
-                                  .facingAngle;
-        player->coursePathIndex = ((
-            RacePlayerPreviewStart *
-        )gRacePlayerPreviewStartPositions)[(gMainMenuModeSelection - 1) * 4 + player->playerIndex]
-                                      .surfaceHint;
+        player->state.pos = gRacePlayerPreviewStartPositions[(gMainMenuModeSelection - 1) * 4 + player->playerIndex].position;
+        player->state.facingAngle = gRacePlayerPreviewStartPositions[(gMainMenuModeSelection - 1) * 4 + player->playerIndex].facingAngle;
+        player->state.coursePathIndex = gRacePlayerPreviewStartPositions[(gMainMenuModeSelection - 1) * 4 + player->playerIndex].surfaceHint;
     }
 
-    player->coursePathIndex = findRaceCourseSurfaceFromHint(player->coursePathIndex, player->pos.x, player->pos.z);
-    player->pos.y = getRaceCourseSurfaceHeight(player->coursePathIndex, player->pos.x, player->pos.z);
+    player->state.coursePathIndex = findRaceCourseSurfaceFromHint(player->state.coursePathIndex, player->state.pos.x, player->state.pos.z);
+    player->state.pos.y = getRaceCourseSurfaceHeight(player->state.coursePathIndex, player->state.pos.x, player->state.pos.z);
     if (!gRaceDemoPlaybackEnabled) {
-        player->pos.y += 0x40000;
+        player->state.pos.y += 0x40000;
     }
 
-    *previousPos.vec = *pos.vec;
-    player->randomIndex = randomNextMain();
+    player->state.previousPosition = player->state.pos;
+    player->state.randomIndex = randomNextMain();
     setRaceCameraMode(player->playerIndex, 1);
 
     if ((gRaceDemoPlaybackEnabled == 0) && (gRaceSplitscreenMode == 0)) {
@@ -507,10 +486,10 @@ void initRacePlayer(RacePlayer *player) {
 void updateRacePlayers(void) {
     s32 i;
 
-    gRacePlayers[0].loopSoundVolume = 0;
-    gRacePlayers[1].loopSoundVolume = 0;
-    gRacePlayers[2].loopSoundVolume = 0;
-    gRacePlayers[3].loopSoundVolume = 0;
+    gRacePlayers[0].state.loopSoundVolume = 0;
+    gRacePlayers[1].state.loopSoundVolume = 0;
+    gRacePlayers[2].state.loopSoundVolume = 0;
+    gRacePlayers[3].state.loopSoundVolume = 0;
     if (gRaceUpdatePaused == 0) {
         updateRacePlayerInput(&gRacePlayers[0]);
         updateRacePlayerInput(&gRacePlayers[1]);
@@ -541,135 +520,135 @@ void updateRacePlayer(RacePlayer *player) {
     Transform3D mtx;
     u8 cooldown;
 
-    player->anglePtr = NULL;
-    player->previousSurfaceType = player->surfaceType;
-    player->surfaceType = getRaceCourseSurfaceType(player->coursePathIndex, player->pos.x, player->pos.z);
-    if (player->stateFlags & 0x02000000) {
-        player->surfaceType = 0xB;
+    player->state.anglePtr = NULL;
+    player->state.previousSurfaceType = player->state.surfaceType;
+    player->state.surfaceType = getRaceCourseSurfaceType(player->state.coursePathIndex, player->state.pos.x, player->state.pos.z);
+    if (player->state.stateFlags & 0x02000000) {
+        player->state.surfaceType = 0xB;
     }
 
-    if (player->surfaceType >= 0x11 && player->surfaceType < 0x19 && !(player->stateFlags & 0x200)) {
+    if (player->state.surfaceType >= 0x11 && player->state.surfaceType < 0x19 && !(player->state.stateFlags & 0x200)) {
         offset.x = 0;
         offset.y = 0;
         offset.z = -0x2000;
-        getRaceCourseSurfaceSpawnTransform(player->coursePathIndex, &spawnX.value, &spawnY, &spawnZ, &spawnAngle);
-        spawnAngle = spawnAngle - (player->surfaceType << 9) + 0x2200;
+        getRaceCourseSurfaceSpawnTransform(player->state.coursePathIndex, &spawnX.value, &spawnY, &spawnZ, &spawnAngle);
+        spawnAngle = spawnAngle - (player->state.surfaceType << 9) + 0x2200;
         makeFixedRotationY(mtx.rotation, spawnAngle);
         transformVec3iByFixedMatrix(mtx.rotation, &offset, &transformedOffset);
-        player->pos.x += transformedOffset.x;
-        player->pos.y += transformedOffset.y;
-        player->pos.z += transformedOffset.z;
+        player->state.pos.x += transformedOffset.x;
+        player->state.pos.y += transformedOffset.y;
+        player->state.pos.z += transformedOffset.z;
     }
 
-    player->coursePathOffset = -projectRaceCourseSurfaceProgress(player->coursePathIndex, player->pos.x, player->pos.z);
-    player->velocity.x = player->pos.x - player->previousPosition.x;
-    player->velocity.y = player->pos.y - player->previousPosition.y;
-    player->velocity.z = player->pos.z - player->previousPosition.z;
-    if (player->verticalVelocityLimit < player->velocity.y) {
-        player->velocity.y = player->verticalVelocityLimit;
+    player->state.coursePathOffset = -projectRaceCourseSurfaceProgress(player->state.coursePathIndex, player->state.pos.x, player->state.pos.z);
+    player->state.velocity.x = player->state.pos.x - player->state.previousPosition.x;
+    player->state.velocity.y = player->state.pos.y - player->state.previousPosition.y;
+    player->state.velocity.z = player->state.pos.z - player->state.previousPosition.z;
+    if (player->state.verticalVelocityLimit < player->state.velocity.y) {
+        player->state.velocity.y = player->state.verticalVelocityLimit;
     }
-    verticalDelta = player->velocity.y;
-    if (player->velocity.y < -0x400000) {
-        player->velocity.y = -0x400000;
+    verticalDelta = player->state.velocity.y;
+    if (player->state.velocity.y < -0x400000) {
+        player->state.velocity.y = -0x400000;
     }
-    if (player->velocity.y > 0x400000) {
-        player->velocity.y = 0x400000;
+    if (player->state.velocity.y > 0x400000) {
+        player->state.velocity.y = 0x400000;
     }
 
-    player->previousPosition = player->pos;
-    player->verticalVelocityLimit = 0x7FFFFFFF;
-    player->boardContactPoints[4] = player->boardContactPoints[0];
-    player->boardContactPoints[5] = player->boardContactPoints[1];
+    player->state.previousPosition = player->state.pos;
+    player->state.verticalVelocityLimit = 0x7FFFFFFF;
+    player->state.boardContactPoints[4] = player->state.boardContactPoints[0];
+    player->state.boardContactPoints[5] = player->state.boardContactPoints[1];
 
-    player->boardContactPoints[6] = player->boardContactPoints[2];
-    player->boardContactPoints[7] = player->boardContactPoints[3];
-    player->targetSpeedLimit = player->baseSpeedLimit;
+    player->state.boardContactPoints[6] = player->state.boardContactPoints[2];
+    player->state.boardContactPoints[7] = player->state.boardContactPoints[3];
+    player->state.targetSpeedLimit = player->state.baseSpeedLimit;
 
     /* Fixed CPU target-speed addition, independent of rank and course. */
     if (player->isCpu != 0) {
-        player->targetSpeedLimit += 0x6000;
+        player->state.targetSpeedLimit += 0x6000;
     }
 
-    for (i = 0; i < player->activeSparkleEffectCount; i++) {
-        player->targetSpeedLimit -= player->targetSpeedLimit >> 2;
+    for (i = 0; i < player->state.activeSparkleEffectCount; i++) {
+        player->state.targetSpeedLimit -= player->state.targetSpeedLimit >> 2;
     }
 
-    if ((player->pendingItemHitFlags == 0) && (player->surfaceType == 1) && (player->targetSpeedLimit >= 0x50001)) {
-        player->targetSpeedLimit = 0x50000;
+    if ((player->state.pendingItemHitFlags == 0) && (player->state.surfaceType == 1) && (player->state.targetSpeedLimit >= 0x50001)) {
+        player->state.targetSpeedLimit = 0x50000;
     }
 
-    if (player->trailEffectTimer != 0) {
+    if (player->state.trailEffectTimer != 0) {
         if ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 0)) {
-            player->targetSpeedLimit += 0x40000;
+            player->state.targetSpeedLimit += 0x40000;
         } else {
-            player->targetSpeedLimit += 0x30000;
+            player->state.targetSpeedLimit += 0x30000;
         }
     }
 
     resolveRacePlayerHitReactions(player);
 
-    if ((player->isCpu == 0) || (player->cpuPaceMode == RACE_CPU_PACE_RANK_BONUS)) {
-        speedDelta = gRaceRankSpeedBonuses[player->rankIndex];
-        catchupDelta = speedDelta - player->rankSpeedBonus;
+    if ((player->isCpu == 0) || (player->state.cpuPaceMode == RACE_CPU_PACE_RANK_BONUS)) {
+        speedDelta = gRaceRankSpeedBonuses[player->state.rankIndex];
+        catchupDelta = speedDelta - player->state.rankSpeedBonus;
         if (catchupDelta >= 0x21) {
             catchupDelta = 0x20;
         }
         if (catchupDelta < -0x30) {
             catchupDelta = -0x30;
         }
-        player->rankSpeedBonus += catchupDelta;
-        player->targetSpeedLimit += player->rankSpeedBonus;
+        player->state.rankSpeedBonus += catchupDelta;
+        player->state.targetSpeedLimit += player->state.rankSpeedBonus;
     } else {
-        if (player->cpuPaceMode == RACE_CPU_PACE_CATCH_UP) {
-            player->targetSpeedLimit += 0x70000;
+        if (player->state.cpuPaceMode == RACE_CPU_PACE_CATCH_UP) {
+            player->state.targetSpeedLimit += 0x70000;
         }
-        if (player->cpuPaceMode == RACE_CPU_PACE_SLOW_DOWN) {
-            player->targetSpeedLimit /= 3;
+        if (player->state.cpuPaceMode == RACE_CPU_PACE_SLOW_DOWN) {
+            player->state.targetSpeedLimit /= 3;
         }
-        if ((player->cpuPaceMode == RACE_CPU_PACE_YIELD) && (player->rankIndex != 3)) {
-            player->targetSpeedLimit -= player->targetSpeedLimit >> 4;
-        }
-    }
-
-    if ((player->isCpu != 0) && (player->lapDigit >= (gRaceLapCount - 1))) {
-        if (((gRaceCourseStartEntries[gRaceCourseIndex.signedValue].pathIndex - 0x14) < player->coursePathIndex) &&
-            (player->coursePathIndex < gRaceCourseStartEntries[gRaceCourseIndex.signedValue].pathIndex)) {
-            player->targetSpeedLimit = player->baseSpeedLimit;
+        if ((player->state.cpuPaceMode == RACE_CPU_PACE_YIELD) && (player->state.rankIndex != 3)) {
+            player->state.targetSpeedLimit -= player->state.targetSpeedLimit >> 4;
         }
     }
 
-    speedDelta = player->targetSpeedLimit - player->speedLimit;
+    if ((player->isCpu != 0) && (player->state.lapDigit >= (gRaceLapCount - 1))) {
+        if (((gRaceCourseStartEntries[gRaceCourseIndex.signedValue].pathIndex - 0x14) < player->state.coursePathIndex) &&
+            (player->state.coursePathIndex < gRaceCourseStartEntries[gRaceCourseIndex.signedValue].pathIndex)) {
+            player->state.targetSpeedLimit = player->state.baseSpeedLimit;
+        }
+    }
+
+    speedDelta = player->state.targetSpeedLimit - player->state.speedLimit;
     if (speedDelta > 0xE00) {
         speedDelta = 0xE00;
     }
     if (speedDelta < -0xE00) {
         speedDelta = -0xE00;
     }
-    player->speedLimit += speedDelta;
-    player->stateFlags &= ~0x800;
+    player->state.speedLimit += speedDelta;
+    player->state.stateFlags &= ~0x800;
 
     if (player->isCpu != 0) {
         updateRacePlayerCheckpointEvents(player);
     }
 
-    if (player->unk578 != 0) {
-        player->unk578--;
+    if (player->state.unk578 != 0) {
+        player->state.unk578--;
     }
 
-    gRacePlayerModeUpdateHandlers[player->mode](player);
-    player->unk517 = 0;
-    player->unk57B = 0;
-    player->isTargetedByAttack = 0;
-    player->stateFlags &= ~0x2000000;
-    if (player->stateFlags & 2) {
-        player->stateFlags &= ~2;
+    gRacePlayerModeUpdateHandlers[player->state.mode](player);
+    player->state.unk517 = 0;
+    player->state.unk57B = 0;
+    player->state.isTargetedByAttack = 0;
+    player->state.stateFlags &= ~0x2000000;
+    if (player->state.stateFlags & 2) {
+        player->state.stateFlags &= ~2;
     } else {
-        player->modelRotationX = 0;
-        player->modelRotationY = 0;
-        player->modelRotationZ = 0;
+        player->state.modelRotationX = 0;
+        player->state.modelRotationY = 0;
+        player->state.modelRotationZ = 0;
     }
 
-    if (player->stateFlags & 0x80000) {
+    if (player->state.stateFlags & 0x80000) {
         gViewportStates[player->playerIndex].overlayAlpha += 0x10;
         if (gViewportStates[player->playerIndex].overlayAlpha > 0xFF) {
             gViewportStates[player->playerIndex].overlayAlpha = 0xFF;
@@ -681,38 +660,38 @@ void updateRacePlayer(RacePlayer *player) {
         }
     }
 
-    deltaX = player->pos.x - player->previousPosition.x;
-    deltaZ = player->pos.z - player->previousPosition.z;
-    player->movementSpeed = integerSquareRoot64((s64)deltaX * deltaX + (s64)deltaZ * deltaZ);
-    player->collisionVelocityX = player->velocity.x;
-    player->collisionVelocityZ = player->velocity.z;
-    player->collisionBottomY = player->pos.y - 0x60000;
+    deltaX = player->state.pos.x - player->state.previousPosition.x;
+    deltaZ = player->state.pos.z - player->state.previousPosition.z;
+    player->state.movementSpeed = integerSquareRoot64((s64)deltaX * deltaX + (s64)deltaZ * deltaZ);
+    player->state.collisionVelocityX = player->state.velocity.x;
+    player->state.collisionVelocityZ = player->state.velocity.z;
+    player->state.collisionBottomY = player->state.pos.y - 0x60000;
 
-    if (player->unk2D4 != 0) {
-        player->unk2D4--;
+    if (player->state.unk2D4 != 0) {
+        player->state.unk2D4--;
     }
 
-    if (player->trailEffectTimer != 0) {
-        player->loopSoundId = SFX_SPEED_FAN_LOOP;
-        player->loopSoundVolume = 0x7F;
-        player->loopSoundPitch = 0.0f;
-        if (player->trailEffectTimer >= 0xDD) {
-            player->rumbleTimer = 2;
-            player->rumblePatternId = 0;
+    if (player->state.trailEffectTimer != 0) {
+        player->state.loopSoundId = SFX_SPEED_FAN_LOOP;
+        player->state.loopSoundVolume = 0x7F;
+        player->state.loopSoundPitch = 0.0f;
+        if (player->state.trailEffectTimer >= 0xDD) {
+            player->state.rumbleTimer = 2;
+            player->state.rumblePatternId = 0;
         }
     }
 
-    if (player->invisibilityTimer != 0) {
-        player->invisibilityTimer--;
+    if (player->state.invisibilityTimer != 0) {
+        player->state.invisibilityTimer--;
     }
-    if (player->stateFlags & 0x403040) {
-        player->invisibilityTimer = 0;
+    if (player->state.stateFlags & 0x403040) {
+        player->state.invisibilityTimer = 0;
     }
 
     if (!(gMenuFlowState & 1)) {
-        cooldown = player->unk519;
+        cooldown = player->state.unk519;
         if (cooldown != 0) {
-            player->unk519 = cooldown - 1;
+            player->state.unk519 = cooldown - 1;
         }
     }
 }
@@ -723,9 +702,9 @@ void updateRacePlayerMotionFeedback(RacePlayer *player) {
     s32 deltaX;
     s32 deltaZ;
 
-    deltaX = player->pos.x - player->previousPosition.x;
-    deltaZ = player->pos.z - player->previousPosition.z;
-    angleDiff = (calculateFixedAngleFromDeltaXZ(deltaX, deltaZ) - player->facingAngle) & 0xFFF;
+    deltaX = player->state.pos.x - player->state.previousPosition.x;
+    deltaZ = player->state.pos.z - player->state.previousPosition.z;
+    angleDiff = (calculateFixedAngleFromDeltaXZ(deltaX, deltaZ) - player->state.facingAngle) & 0xFFF;
     if (angleDiff >= 0x801) {
         angleDiff = 0x1000 - angleDiff;
     }
@@ -733,38 +712,38 @@ void updateRacePlayerMotionFeedback(RacePlayer *player) {
         angleDiff = 0x800 - angleDiff;
     }
 
-    player->loopSoundPitch = (f32)((f64)(f32)-angleDiff / 171.0);
-    player->loopSoundVolume = player->movementSpeed >> 0xC;
-    if (player->loopSoundVolume >= 0x80) {
-        player->loopSoundVolume = 0x7F;
+    player->state.loopSoundPitch = (f32)((f64)(f32)-angleDiff / 171.0);
+    player->state.loopSoundVolume = player->state.movementSpeed >> 0xC;
+    if (player->state.loopSoundVolume >= 0x80) {
+        player->state.loopSoundVolume = 0x7F;
     }
 
-    itemType = getRaceItemEffectType(player->surfaceType);
-    player->loopSoundId = SFX_BOARD_GLIDE_LOOP;
+    itemType = getRaceItemEffectType(player->state.surfaceType);
+    player->state.loopSoundId = SFX_BOARD_GLIDE_LOOP;
     if (itemType == 1) {
-        player->loopSoundId = SFX_BREAKABLE_SURFACE_LOOP;
-        player->loopSoundVolume = 0x7F;
-        player->loopSoundPitch = 0.0f;
+        player->state.loopSoundId = SFX_BREAKABLE_SURFACE_LOOP;
+        player->state.loopSoundVolume = 0x7F;
+        player->state.loopSoundPitch = 0.0f;
     }
     if (itemType == 2) {
-        player->loopSoundId = SFX_BOARD_CONTACT_FALLBACK_LOOP;
+        player->state.loopSoundId = SFX_BOARD_CONTACT_FALLBACK_LOOP;
     }
     if (3 == itemType) {
-        player->loopSoundId = SFX_BOARD_SURFACE_SPRAY_LOOP;
+        player->state.loopSoundId = SFX_BOARD_SURFACE_SPRAY_LOOP;
     }
     if (4 == itemType) {
-        player->loopSoundId = SFX_BOARD_CONTACT_FALLBACK_LOOP;
-        if (player->surfaceType == 0xD) {
-            player->loopSoundId = SFX_BOARD_SURFACE_RUMBLE_LOOP;
-            if (player->loopSoundVolume >= 0x51) {
-                player->rumbleTimer = 2;
-                player->rumblePatternId = 1;
+        player->state.loopSoundId = SFX_BOARD_CONTACT_FALLBACK_LOOP;
+        if (player->state.surfaceType == 0xD) {
+            player->state.loopSoundId = SFX_BOARD_SURFACE_RUMBLE_LOOP;
+            if (player->state.loopSoundVolume >= 0x51) {
+                player->state.rumbleTimer = 2;
+                player->state.rumblePatternId = 1;
             }
         }
-        player->loopSoundPitch = 0.0f;
+        player->state.loopSoundPitch = 0.0f;
     }
-    if (player->stateFlags & 0x2000000) {
-        player->loopSoundId = SFX_BOARD_CONTACT_FALLBACK_LOOP;
+    if (player->state.stateFlags & 0x2000000) {
+        player->state.loopSoundId = SFX_BOARD_CONTACT_FALLBACK_LOOP;
     }
 }
 
@@ -791,31 +770,31 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
     s16 unused;
     s32 interpolated;
 
-    if (player->updateState == 0) {
-        player->updateState++;
-        player->stateFlags &= ~0x200;
-        player->stanceChangeTimer = 0;
-        player->stanceTransitionFrame = 0;
-        player->subState = 0;
-        player->subStateTimer = 0;
-        player->modeAngle = 0;
-        player->unk528 = 0;
-        player->localVelocityX = 0;
-        if (player->unk57B != 0) {
+    if (player->state.updateState == 0) {
+        player->state.updateState++;
+        player->state.stateFlags &= ~0x200;
+        player->state.stanceChangeTimer = 0;
+        player->state.stanceTransitionFrame = 0;
+        player->state.subState = 0;
+        player->state.subStateTimer = 0;
+        player->state.modeAngle = 0;
+        player->state.unk528 = 0;
+        player->state.localVelocityX = 0;
+        if (player->state.unk57B != 0) {
             enqueueRacePlayerVoiceSound(player, RACE_VOICE_LANDING);
             setRaceMotionAnimation(player, 0x22);
         }
     }
 
-    if (player->unk57A != 0) {
-        player->stanceChangeTimer = 6;
+    if (player->state.unk57A != 0) {
+        player->state.stanceChangeTimer = 6;
     }
-    if (player->targetGroundOffset == 0) {
-        player->targetGroundOffset = 0x40000;
+    if (player->state.targetGroundOffset == 0) {
+        player->state.targetGroundOffset = 0x40000;
     }
 
-    player->velocity.y -= player->gravity;
-    speed = player->localVelocityZ;
+    player->state.velocity.y -= player->state.gravity;
+    speed = player->state.localVelocityZ;
     if (speed > 0) {
         if (speed < 0x4000) {
             speed = 0x4000;
@@ -826,16 +805,16 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
 
     if (player->isCpu != 0) {
         getRaceCourseTargetPositionAhead(
-            player->coursePathIndex,
-            player->pos.x,
-            player->pos.z,
+            player->state.coursePathIndex,
+            player->state.pos.x,
+            player->state.pos.z,
             &targetX,
             &targetZ,
             (s8)player->unk17,
             (u16)player->playerIndex
         );
         turn =
-            (calculateFixedAngleBetweenXZPoints(player->pos.x, player->pos.z, targetX, targetZ) - player->facingAngle) &
+            (calculateFixedAngleBetweenXZPoints(player->state.pos.x, player->state.pos.z, targetX, targetZ) - player->state.facingAngle) &
             0xFFF;
         if (turn >= 0x801) {
             turn -= 0x1000;
@@ -856,7 +835,7 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
             turn = -0x1F;
         }
 
-        turn = (turn - player->unk528) & 0xFFF;
+        turn = (turn - player->state.unk528) & 0xFFF;
         if (turn >= 0x801) {
             turn -= 0x1000;
         }
@@ -866,72 +845,72 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
         if (turn < -2) {
             turn = -2;
         }
-        player->unk528 += turn;
-        turn = player->unk528;
+        player->state.unk528 += turn;
+        turn = player->state.unk528;
         if (turn == 1) {
             turn = 0;
         }
         if (turn == -1) {
             turn = 0;
         }
-        player->leanScale = 0x3F;
+        player->state.leanScale = 0x3F;
     } else {
-        turn = -player->stickX;
-        player->leanScale = 0x20 - player->stickY;
-        if (player->leanScale < 0x1F) {
-            player->leanScale = 0x1F;
+        turn = -player->state.stickX;
+        player->state.leanScale = 0x20 - player->state.stickY;
+        if (player->state.leanScale < 0x1F) {
+            player->state.leanScale = 0x1F;
         }
     }
 
     lean = speed;
-    if (player->localVelocityZ > 0) {
+    if (player->state.localVelocityZ > 0) {
         lean = -speed;
         turn = -turn;
     }
 
     if (player->isCpu == 0) {
         spawn = &gRaceCourseStartEntries[gRaceCourseIndex.signedValue];
-        if ((spawn->pathIndex == player->coursePathIndex) && !(player->stateFlags & 0x40)) {
+        if ((spawn->pathIndex == player->state.coursePathIndex) && !(player->state.stateFlags & 0x40)) {
             surfaceCue = (s16)(((calculateFixedAngleBetweenXZPoints(
-                                     player->pos.x,
-                                     player->pos.z,
+                                     player->state.pos.x,
+                                     player->state.pos.z,
                                      spawn->startSurfaceTargetX,
                                      spawn->startSurfaceTargetZ
                                  ) -
-                                 player->facingAngle) +
+                                 player->state.facingAngle) +
                                 0x400) &
                                0xFFF);
             if (surfaceCue < 0x800) {
-                if (player->stateFlags & 0x400) {
-                    player->stanceChangeTimer = 0;
-                    player->stateFlags &= ~0x400;
-                    player->stanceTransitionFrame = 6 - player->stanceTransitionFrame;
+                if (player->state.stateFlags & 0x400) {
+                    player->state.stanceChangeTimer = 0;
+                    player->state.stateFlags &= ~0x400;
+                    player->state.stanceTransitionFrame = 6 - player->state.stanceTransitionFrame;
                 }
-            } else if (!(player->stateFlags & 0x400)) {
-                player->stanceChangeTimer = 0;
-                player->stateFlags |= 0x400;
-                player->stanceTransitionFrame = 6 - player->stanceTransitionFrame;
+            } else if (!(player->state.stateFlags & 0x400)) {
+                player->state.stanceChangeTimer = 0;
+                player->state.stateFlags |= 0x400;
+                player->state.stanceTransitionFrame = 6 - player->state.stanceTransitionFrame;
             }
         } else {
-            if (player->localVelocityZ < -0x8000) {
-                if (player->stateFlags & 0x400) {
-                    if (player->stanceChangeTimer >= 6) {
-                        player->stanceChangeTimer = 0;
-                        player->stateFlags &= ~0x400;
-                        player->stanceTransitionFrame = 6 - player->stanceTransitionFrame;
+            if (player->state.localVelocityZ < -0x8000) {
+                if (player->state.stateFlags & 0x400) {
+                    if (player->state.stanceChangeTimer >= 6) {
+                        player->state.stanceChangeTimer = 0;
+                        player->state.stateFlags &= ~0x400;
+                        player->state.stanceTransitionFrame = 6 - player->state.stanceTransitionFrame;
                     } else {
-                        player->stanceChangeTimer++;
+                        player->state.stanceChangeTimer++;
                     }
                 }
             }
-            if (player->localVelocityZ >= 0x8001) {
-                if (!(player->stateFlags & 0x400)) {
-                    if (player->stanceChangeTimer >= 6) {
-                        player->stanceChangeTimer = 0;
-                        player->stateFlags |= 0x400;
-                        player->stanceTransitionFrame = 6 - player->stanceTransitionFrame;
+            if (player->state.localVelocityZ >= 0x8001) {
+                if (!(player->state.stateFlags & 0x400)) {
+                    if (player->state.stanceChangeTimer >= 6) {
+                        player->state.stanceChangeTimer = 0;
+                        player->state.stateFlags |= 0x400;
+                        player->state.stanceTransitionFrame = 6 - player->state.stanceTransitionFrame;
                     } else {
-                        player->stanceChangeTimer++;
+                        player->state.stanceChangeTimer++;
                     }
                 }
             }
@@ -940,8 +919,8 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
 
     if (!(gMenuFlowState & 1)) {
         turnTarget = updateRacePlayerLeanAngle(player, lean, turn);
-        if (player->stanceTransitionFrame == 0) {
-            steerAngle = player->modeAngle;
+        if (player->state.stanceTransitionFrame == 0) {
+            steerAngle = player->state.modeAngle;
             steerAngle = turnTarget - steerAngle;
             if (steerAngle >= 0x31) {
                 steerAngle = 0x30;
@@ -949,43 +928,43 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
             if (steerAngle < -0x30) {
                 steerAngle = -0x30;
             }
-            player->modeAngle += steerAngle;
-            if (player->modeAngle == 0) {
-                if (player->animationId == 0x22) {
+            player->state.modeAngle += steerAngle;
+            if (player->state.modeAngle == 0) {
+                if (player->state.animationId == 0x22) {
                     if (stepRaceMotionJointAnimationUntilEnd(player) != 0) {
                         setRaceMotionAnimation(player, 1);
                     }
                 } else {
-                    if (player->animationId != 1) {
+                    if (player->state.animationId != 1) {
                         setRaceMotionAnimation(player, 1);
                     }
                     stepRaceMotionLoopingJointAnimation(player);
                 }
-            } else if (player->modeAngle >= 0) {
+            } else if (player->state.modeAngle >= 0) {
                 setRaceMotionAnimation(player, 3);
-                blendRaceMotionJointAnimation(player, 3, player->modeAngle, 0x118);
+                blendRaceMotionJointAnimation(player, 3, player->state.modeAngle, 0x118);
             } else {
                 setRaceMotionAnimation(player, 2);
-                blendRaceMotionJointAnimation(player, 2, -player->modeAngle, 0x118);
+                blendRaceMotionJointAnimation(player, 2, -player->state.modeAngle, 0x118);
             }
         } else {
-            player->stanceTransitionFrame--;
-            steerAngle = -player->modeAngle;
+            player->state.stanceTransitionFrame--;
+            steerAngle = -player->state.modeAngle;
             if (steerAngle >= 0x31) {
                 steerAngle = 0x30;
             }
             if (steerAngle < -0x30) {
                 steerAngle = -0x30;
             }
-            player->modeAngle += steerAngle;
-            setRaceMotionAnimation(player, player->stanceTransitionFrame + 8);
+            player->state.modeAngle += steerAngle;
+            setRaceMotionAnimation(player, player->state.stanceTransitionFrame + 8);
             stepRaceMotionJointAnimationUntilEnd(player);
         }
 
         if (player->isCpu == 0) {
             steerAngle = 0;
-            bankRate = (-turn * 0x10 * player->turnStrength) / 0x100;
-            interpolated = (((player->turnRadiusAtHalfLean - player->turnRadiusAtFullLean) * (0x3F - player->leanScale)) / 0x20) + player->turnRadiusAtFullLean;
+            bankRate = (-turn * 0x10 * player->state.turnStrength) / 0x100;
+            interpolated = (((player->state.turnRadiusAtHalfLean - player->state.turnRadiusAtFullLean) * (0x3F - player->state.leanScale)) / 0x20) + player->state.turnRadiusAtFullLean;
             if (bankRate != 0) {
                 lean = (lean - 0xFF) / 0x100;
                 temp = ((s64)interpolated * lean * lean) / bankRate;
@@ -1021,67 +1000,67 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
             if ((steerAngle >= 0x801) && (steerAngle < 0xF80)) {
                 steerAngle = 0xF80;
             }
-            player->facingAngle += steerAngle;
+            player->state.facingAngle += steerAngle;
         } else {
-            player->facingAngle += quickTurn;
+            player->state.facingAngle += quickTurn;
         }
 
         rotation = 0;
-        if (player->trailEffectTimer != 0) {
+        if (player->state.trailEffectTimer != 0) {
             rotation = -0x8000;
-            if (player->snowboardTrailSide != 0) {
+            if (player->state.snowboardTrailSide != 0) {
                 rotation = 0x8000;
             }
         }
-        if ((gMainMenuModeSelection != 0) && ((u8)player->unk519 == 6)) {
+        if ((gMainMenuModeSelection != 0) && ((u8)player->state.unk519 == 6)) {
             rotation = -0x60000;
         }
-        updateRacePlayerLocalVelocity(player, 0, rotation, player->lateralDeceleration, player->forwardDeceleration, player->reverseDeceleration);
+        updateRacePlayerLocalVelocity(player, 0, rotation, player->state.lateralDeceleration, player->state.forwardDeceleration, player->state.reverseDeceleration);
 
-        if (player->unk57A == 0) {
+        if (player->state.unk57A == 0) {
             if (player->isCpu == 0) {
-                if (player->heldInput & A_BUTTON) {
-                    player->mode = 2;
-                    player->updateState = 0;
-                    player->updateTimer = 0;
+                if (player->state.heldInput & A_BUTTON) {
+                    player->state.mode = 2;
+                    player->state.updateState = 0;
+                    player->state.updateTimer = 0;
                 }
-            } else if (player->checkpointHit != 0) {
-                player->mode = 2;
-                player->updateState = 0;
-                player->updateTimer = 0;
-                player->unk525 = 1;
-            } else if ((player->movementSpeed < 0x30000) || (player->localVelocityZ >= (s32)0xFFFD0001)) {
-                player->mode = 2;
-                player->updateState = 0;
-                player->updateTimer = 0;
-                player->unk525 = 0;
+            } else if (player->state.checkpointHit != 0) {
+                player->state.mode = 2;
+                player->state.updateState = 0;
+                player->state.updateTimer = 0;
+                player->state.unk525 = 1;
+            } else if ((player->state.movementSpeed < 0x30000) || (player->state.localVelocityZ >= (s32)0xFFFD0001)) {
+                player->state.mode = 2;
+                player->state.updateState = 0;
+                player->state.updateTimer = 0;
+                player->state.unk525 = 0;
             }
             updateRacePlayerShotUse(player);
             updateRacePlayerItemUse(player);
         } else {
-            player->unk57A--;
-            player->stanceChangeTimer = 6;
+            player->state.unk57A--;
+            player->state.stanceChangeTimer = 6;
         }
 
-        if (player->stateFlags & 0x2000000) {
-            player->mode = 0x1D;
-            player->updateState = 0;
-            player->updateTimer = 0;
+        if (player->state.stateFlags & 0x2000000) {
+            player->state.mode = 0x1D;
+            player->state.updateState = 0;
+            player->state.updateTimer = 0;
         }
-        if (player->stateFlags & 0x40) {
-            player->mode = 0x1E;
-            player->updateState = 0;
-            player->updateTimer = 0;
+        if (player->state.stateFlags & 0x40) {
+            player->state.mode = 0x1E;
+            player->state.updateState = 0;
+            player->state.updateTimer = 0;
         }
     } else {
         stepRaceMotionLoopingJointAnimation(player);
     }
 
-    player->pos.x += player->velocity.x;
-    player->pos.y += player->velocity.y;
-    player->pos.z += player->velocity.z;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += player->state.velocity.y;
+    player->state.pos.z += player->state.velocity.z;
     updateRacePlayerMotionFeedback(player);
-    if (player->unk517 != 0) {
+    if (player->state.unk517 != 0) {
         enqueueRacePlayerVoiceSound(player, RACE_VOICE_ATTACK_SUCCESS);
     }
 }
@@ -1089,41 +1068,41 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
 void updateRacePlayerMode29Crash(RacePlayer *player) {
     s16 updateState;
 
-    updateState = player->updateState;
+    updateState = player->state.updateState;
     if (updateState == 0) {
-        player->updateState = updateState + 1;
-        player->stateFlags &= ~0x200;
-        player->modeValue = 0;
-        player->unk80 = 0;
-        player->subState = 0;
-        player->subStateTimer = 0;
-        player->modeAngle = 0;
-        player->unk528 = 0;
+        player->state.updateState = updateState + 1;
+        player->state.stateFlags &= ~0x200;
+        player->state.modeValue = 0;
+        player->state.unk80 = 0;
+        player->state.subState = 0;
+        player->state.subStateTimer = 0;
+        player->state.modeAngle = 0;
+        player->state.unk528 = 0;
         setRaceMotionAnimation(player, 0x1E);
     }
 
-    player->velocity.y -= player->gravity;
-    player->facingAngle = player->unk332;
-    player->pitchAngle = player->unk334;
-    if (player->stateFlags & 0x400) {
-        player->facingAngle += 0x800;
-        player->pitchAngle = -(player->pitchAngle & 0xFFF);
+    player->state.velocity.y -= player->state.gravity;
+    player->state.facingAngle = player->state.unk332;
+    player->state.pitchAngle = player->state.unk334;
+    if (player->state.stateFlags & 0x400) {
+        player->state.facingAngle += 0x800;
+        player->state.pitchAngle = -(player->state.pitchAngle & 0xFFF);
     }
 
     updateRacePlayerLeanAngle(player, 0, 0);
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
-    player->pos.x += player->velocity.x;
-    player->pos.y += player->velocity.y;
-    player->pos.z += player->velocity.z;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += player->state.velocity.y;
+    player->state.pos.z += player->state.velocity.z;
 
     if (stepRaceMotionAnimationUntilEnd(player) != 0) {
         setRaceMotionAnimation(player, 0x1F);
         stepRaceMotionAnimationUntilEnd(player);
     }
 
-    player->unk578 = 6;
+    player->state.unk578 = 6;
     updateRacePlayerMotionFeedback(player);
-    if (player->unk517 != 0) {
+    if (player->state.unk517 != 0) {
         enqueueRacePlayerVoiceSound(player, RACE_VOICE_ATTACK_SUCCESS);
     }
 }
@@ -1135,38 +1114,38 @@ void updateRacePlayerMode01JumpStart(RacePlayer *player) {
     s16 angleDiff;
     s32 yVel;
 
-    if (player->updateState == 0) {
-        if (player->animationId != 4) {
+    if (player->state.updateState == 0) {
+        if (player->state.animationId != 4) {
             setRaceMotionAnimation(player, 4);
         }
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->targetGroundOffset = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.targetGroundOffset = 0;
         resetRacePlayerTrickSubstate(player);
-        player->aerialTrickId = 0;
+        player->state.aerialTrickId = 0;
     }
 
-    if (player->subState == 0) {
+    if (player->state.subState == 0) {
         updateRacePlayerShotUse(player);
         if (player->isCpu == 0) {
-            if (player->stickX > 0) {
-                player->facingAngle -= 0x18;
+            if (player->state.stickX > 0) {
+                player->state.facingAngle -= 0x18;
             }
-            if (player->stickX < 0) {
-                player->facingAngle += 0x18;
+            if (player->state.stickX < 0) {
+                player->state.facingAngle += 0x18;
             }
         } else {
             getRaceCourseTargetPositionAhead(
-                player->coursePathIndex,
-                unused = player->pos.x,
-                player->pos.z,
+                player->state.coursePathIndex,
+                unused = player->state.pos.x,
+                player->state.pos.z,
                 &targetX,
                 &targetZ,
                 (s8)player->unk17,
                 (u16)player->playerIndex
             );
-            angleDiff = (calculateFixedAngleBetweenXZPoints(player->pos.x, player->pos.z, targetX, targetZ) -
-                         player->facingAngle) &
+            angleDiff = (calculateFixedAngleBetweenXZPoints(player->state.pos.x, player->state.pos.z, targetX, targetZ) -
+                         player->state.facingAngle) &
                         0xFFF;
             if (angleDiff >= 0x801) {
                 angleDiff -= 0x1000;
@@ -1177,21 +1156,21 @@ void updateRacePlayerMode01JumpStart(RacePlayer *player) {
             if (angleDiff < -0x18) {
                 angleDiff = -0x18;
             }
-            player->facingAngle += angleDiff;
+            player->state.facingAngle += angleDiff;
         }
         stepRaceMotionAnimationUntilEnd(player);
     }
 
     updateRacePlayerTrickSubstate(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
-    if (player->unk517 != 0) {
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
+    if (player->state.unk517 != 0) {
         enqueueRacePlayerVoiceSound(player, RACE_VOICE_ATTACK_SUCCESS);
     }
 }
@@ -1203,36 +1182,36 @@ void updateRacePlayerMode22Airborne(RacePlayer *player) {
     s16 angleDiff;
     s32 yVel;
 
-    if (player->updateState == 0) {
-        player->updateState++;
-        player->stateFlags |= 0x208;
-        player->targetGroundOffset = 0;
-        player->unk80 = 0;
+    if (player->state.updateState == 0) {
+        player->state.updateState++;
+        player->state.stateFlags |= 0x208;
+        player->state.targetGroundOffset = 0;
+        player->state.unk80 = 0;
         resetRacePlayerTrickSubstate(player);
-        player->aerialTrickId = 0;
+        player->state.aerialTrickId = 0;
     }
 
-    if (player->subState == 0) {
+    if (player->state.subState == 0) {
         updateRacePlayerShotUse(player);
         if (player->isCpu == 0) {
-            if (player->stickX > 0) {
-                player->facingAngle -= 0x18;
+            if (player->state.stickX > 0) {
+                player->state.facingAngle -= 0x18;
             }
-            if (player->stickX < 0) {
-                player->facingAngle += 0x18;
+            if (player->state.stickX < 0) {
+                player->state.facingAngle += 0x18;
             }
         } else {
             getRaceCourseTargetPositionAhead(
-                player->coursePathIndex,
-                unused = player->pos.x,
-                player->pos.z,
+                player->state.coursePathIndex,
+                unused = player->state.pos.x,
+                player->state.pos.z,
                 &targetX,
                 &targetZ,
                 (s8)player->unk17,
                 (u16)player->playerIndex
             );
-            angleDiff = (calculateFixedAngleBetweenXZPoints(player->pos.x, player->pos.z, targetX, targetZ) -
-                         player->facingAngle) &
+            angleDiff = (calculateFixedAngleBetweenXZPoints(player->state.pos.x, player->state.pos.z, targetX, targetZ) -
+                         player->state.facingAngle) &
                         0xFFF;
             if (angleDiff >= 0x801) {
                 angleDiff -= 0x1000;
@@ -1243,25 +1222,25 @@ void updateRacePlayerMode22Airborne(RacePlayer *player) {
             if (angleDiff < -0x18) {
                 angleDiff = -0x18;
             }
-            player->facingAngle += angleDiff;
+            player->state.facingAngle += angleDiff;
         }
     }
 
     updateRacePlayerTrickSubstate(player);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
-    if (player->unk517 != 0) {
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
+    if (player->state.unk517 != 0) {
         enqueueRacePlayerVoiceSound(player, RACE_VOICE_ATTACK_SUCCESS);
     }
 }
 
 void dispatchRacePlayerAirborneMode(RacePlayer *player) {
-    gRacePlayerAirborneUpdateHandlers[player->updateState](player);
+    gRacePlayerAirborneUpdateHandlers[player->state.updateState](player);
 }
 
 void updateRacePlayerAirborneLaunch(RacePlayer *player) {
@@ -1271,100 +1250,100 @@ void updateRacePlayerAirborneLaunch(RacePlayer *player) {
     s32 rotation;
     s8 turnTimer;
 
-    updateTimer = player->updateTimer;
+    updateTimer = player->state.updateTimer;
     if (updateTimer == 0) {
-        player->updateTimer = updateTimer + 1;
-        player->modeValue = 0x40000;
-        player->stateFlags |= 0x10;
+        player->state.updateTimer = updateTimer + 1;
+        player->state.modeValue = 0x40000;
+        player->state.stateFlags |= 0x10;
         setRaceMotionAnimation(player, 5);
         resetRacePlayerSurfaceCueState(player);
-        player->targetGroundOffset = 0x40000;
-        player->aerialTrickId = 0;
-        player->stanceTransitionFrame = 0;
-        player->unk336 = 0;
+        player->state.targetGroundOffset = 0x40000;
+        player->state.aerialTrickId = 0;
+        player->state.stanceTransitionFrame = 0;
+        player->state.unk336 = 0;
     }
 
     if (player->isCpu == 0) {
         spawn = &gRaceCourseStartEntries[gRaceCourseIndex.signedValue];
-        if ((spawn->pathIndex == player->coursePathIndex) && !(player->stateFlags & 0x40)) {
+        if ((spawn->pathIndex == player->state.coursePathIndex) && !(player->state.stateFlags & 0x40)) {
             velocityY = (s16)(((calculateFixedAngleBetweenXZPoints(
-                                    player->pos.x,
-                                    player->pos.z,
+                                    player->state.pos.x,
+                                    player->state.pos.z,
                                     spawn->startSurfaceTargetX,
                                     spawn->startSurfaceTargetZ
                                 ) -
-                                player->facingAngle) +
+                                player->state.facingAngle) +
                                0x400) &
                               0xFFF);
             if (velocityY < 0x800) {
-                if (player->stateFlags & 0x400) {
-                    player->stateFlags &= ~0x400;
-                    player->stanceTransitionFrame = 6 - player->stanceTransitionFrame;
+                if (player->state.stateFlags & 0x400) {
+                    player->state.stateFlags &= ~0x400;
+                    player->state.stanceTransitionFrame = 6 - player->state.stanceTransitionFrame;
                 }
-            } else if (!(player->stateFlags & 0x400)) {
-                player->stateFlags |= 0x400;
-                player->stanceTransitionFrame = 6 - player->stanceTransitionFrame;
+            } else if (!(player->state.stateFlags & 0x400)) {
+                player->state.stateFlags |= 0x400;
+                player->state.stanceTransitionFrame = 6 - player->state.stanceTransitionFrame;
             }
         } else {
-            if (player->localVelocityZ < -0x8000) {
-                if (player->stateFlags & 0x400) {
-                    player->stateFlags &= ~0x400;
-                    player->stanceTransitionFrame = 6 - player->stanceTransitionFrame;
+            if (player->state.localVelocityZ < -0x8000) {
+                if (player->state.stateFlags & 0x400) {
+                    player->state.stateFlags &= ~0x400;
+                    player->state.stanceTransitionFrame = 6 - player->state.stanceTransitionFrame;
                 }
             }
-            if (player->localVelocityZ >= 0x8001) {
-                if (!(player->stateFlags & 0x400)) {
-                    player->stateFlags |= 0x400;
-                    player->stanceTransitionFrame = 6 - player->stanceTransitionFrame;
+            if (player->state.localVelocityZ >= 0x8001) {
+                if (!(player->state.stateFlags & 0x400)) {
+                    player->state.stateFlags |= 0x400;
+                    player->state.stanceTransitionFrame = 6 - player->state.stanceTransitionFrame;
                 }
             }
         }
     }
 
-    turnTimer = player->stanceTransitionFrame;
+    turnTimer = player->state.stanceTransitionFrame;
     if (turnTimer != 0) {
-        player->stanceTransitionFrame = turnTimer - 1;
-        setRaceMotionAnimation(player, player->stanceTransitionFrame + 8);
-    } else if (player->animationId != 5) {
+        player->state.stanceTransitionFrame = turnTimer - 1;
+        setRaceMotionAnimation(player, player->state.stanceTransitionFrame + 8);
+    } else if (player->state.animationId != 5) {
         setRaceMotionAnimation(player, 5);
     }
 
     updateRacePlayerShotUse(player);
     stepRaceMotionJointAnimationUntilEnd(player);
 
-    velocityY = player->targetGroundOffset;
+    velocityY = player->state.targetGroundOffset;
     if (velocityY != 0) {
         if (velocityY < 0x20000) {
-            player->targetGroundOffset = 0;
+            player->state.targetGroundOffset = 0;
         } else {
-            player->targetGroundOffset = velocityY - 0x20000;
+            player->state.targetGroundOffset = velocityY - 0x20000;
         }
     } else {
-        player->updateState++;
+        player->state.updateState++;
     }
 
-    if ((player->isCpu == 0) && !(player->heldInput & A_BUTTON)) {
-        player->stateFlags &= ~0x10;
+    if ((player->isCpu == 0) && !(player->state.heldInput & A_BUTTON)) {
+        player->state.stateFlags &= ~0x10;
     }
 
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->gravity;
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.gravity;
 
     rotation = 0;
-    if (player->trailEffectTimer != 0) {
+    if (player->state.trailEffectTimer != 0) {
         rotation = -0x8000;
-        if (player->snowboardTrailSide != 0) {
+        if (player->state.snowboardTrailSide != 0) {
             rotation = 0x8000;
         }
     }
 
-    updateRacePlayerLocalVelocity(player, 0, rotation, player->lateralDeceleration, player->forwardDeceleration, player->reverseDeceleration);
-    player->pos.x += player->velocity.x;
-    player->pos.y += player->velocity.y;
-    player->pos.z += player->velocity.z;
+    updateRacePlayerLocalVelocity(player, 0, rotation, player->state.lateralDeceleration, player->state.forwardDeceleration, player->state.reverseDeceleration);
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += player->state.velocity.y;
+    player->state.pos.z += player->state.velocity.z;
     updateRacePlayerSurfaceCue(player);
     updateRacePlayerMotionFeedback(player);
-    if (player->unk517 != 0) {
+    if (player->state.unk517 != 0) {
         enqueueRacePlayerVoiceSound(player, RACE_VOICE_ATTACK_SUCCESS);
     }
 }
@@ -1378,609 +1357,609 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
     sp2C = 0;
     if (player->isCpu == 0) {
-        if ((player->coursePathIndex == gRaceCourseStartEntries[gRaceCourseIndex.signedValue].pathIndex) &&
-            (!(player->stateFlags & 0x40))) {
+        if ((player->state.coursePathIndex == gRaceCourseStartEntries[gRaceCourseIndex.signedValue].pathIndex) &&
+            (!(player->state.stateFlags & 0x40))) {
             var_v1 = calculateFixedAngleBetweenXZPoints(
-                         player->pos.x,
-                         player->pos.z,
+                         player->state.pos.x,
+                         player->state.pos.z,
                          gRaceCourseStartEntries[gRaceCourseIndex.signedValue].startSurfaceTargetX,
                          gRaceCourseStartEntries[gRaceCourseIndex.signedValue].startSurfaceTargetZ
                      ) -
-                     player->facingAngle + 0x400;
+                     player->state.facingAngle + 0x400;
             if ((s16)(var_v1 & 0xFFF) < 0x800) {
-                if (player->stateFlags & 0x400) {
-                    player->stateFlags &= ~0x400;
-                    player->stanceTransitionFrame = 6 - player->stanceTransitionFrame;
+                if (player->state.stateFlags & 0x400) {
+                    player->state.stateFlags &= ~0x400;
+                    player->state.stanceTransitionFrame = 6 - player->state.stanceTransitionFrame;
                 }
             } else {
-                if (!(player->stateFlags & 0x400)) {
-                    player->stateFlags |= 0x400;
-                    player->stanceTransitionFrame = 6 - player->stanceTransitionFrame;
+                if (!(player->state.stateFlags & 0x400)) {
+                    player->state.stateFlags |= 0x400;
+                    player->state.stanceTransitionFrame = 6 - player->state.stanceTransitionFrame;
                 }
             }
         } else {
-            if (player->localVelocityZ < (-0x8000)) {
-                if (player->stateFlags & 0x400) {
-                    player->stateFlags &= ~0x400;
-                    player->stanceTransitionFrame = 6 - player->stanceTransitionFrame;
+            if (player->state.localVelocityZ < (-0x8000)) {
+                if (player->state.stateFlags & 0x400) {
+                    player->state.stateFlags &= ~0x400;
+                    player->state.stanceTransitionFrame = 6 - player->state.stanceTransitionFrame;
                 }
             }
-            if (player->localVelocityZ >= 0x8001) {
-                if (!(player->stateFlags & 0x400)) {
-                    player->stateFlags |= 0x400;
-                    player->stanceTransitionFrame = 6 - player->stanceTransitionFrame;
+            if (player->state.localVelocityZ >= 0x8001) {
+                if (!(player->state.stateFlags & 0x400)) {
+                    player->state.stateFlags |= 0x400;
+                    player->state.stanceTransitionFrame = 6 - player->state.stanceTransitionFrame;
                 }
             }
         }
         if (gRaceDemoPlaybackEnabled == 0) {
-            if (player->unk336 < 0x5A) {
-                player->unk336++;
+            if (player->state.unk336 < 0x5A) {
+                player->state.unk336++;
             }
         }
     }
 
-    if (player->stanceTransitionFrame != 0) {
-        player->stanceTransitionFrame--;
-        setRaceMotionAnimation(player, player->stanceTransitionFrame + 8);
-    } else if (player->animationId != 5) {
+    if (player->state.stanceTransitionFrame != 0) {
+        player->state.stanceTransitionFrame--;
+        setRaceMotionAnimation(player, player->state.stanceTransitionFrame + 8);
+    } else if (player->state.animationId != 5) {
         setRaceMotionAnimation(player, 5);
     }
 
-    if (player->stateFlags & 0x10) {
+    if (player->state.stateFlags & 0x10) {
         if (player->isCpu == 0) {
-            if (!(player->heldInput & A_BUTTON)) {
-                player->stateFlags &= ~0x10;
+            if (!(player->state.heldInput & A_BUTTON)) {
+                player->state.stateFlags &= ~0x10;
             }
         } else {
-            player->stateFlags &= ~0x10;
-            if (player->unk525 != 0) {
-                player->modeValue = 0x46000;
+            player->state.stateFlags &= ~0x10;
+            if (player->state.unk525 != 0) {
+                player->state.modeValue = 0x46000;
             }
         }
-        if (player->stateFlags & 0x10) {
-            if (player->modeValue < 0x46000) {
-                player->modeValue += 0x2000;
+        if (player->state.stateFlags & 0x10) {
+            if (player->state.modeValue < 0x46000) {
+                player->state.modeValue += 0x2000;
             }
         }
     }
     updateRacePlayerShotUse(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->gravity;
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.gravity;
     var_a2 = 0;
-    if (player->trailEffectTimer) {
+    if (player->state.trailEffectTimer) {
         var_a2 = -0x8000;
-        if (player->snowboardTrailSide != 0) {
+        if (player->state.snowboardTrailSide != 0) {
             var_a2 = 0x8000;
         }
     }
-    if (!(player->stateFlags & 0x10)) {
-        if (player->stateFlags & 0x400) {
+    if (!(player->state.stateFlags & 0x10)) {
+        if (player->state.stateFlags & 0x400) {
             sp2C = 0x30000;
-            if (((u8)player->unk519) != 0) {
+            if (((u8)player->state.unk519) != 0) {
                 var_a2 = 0x100000;
             }
-            if (player->unk336 >= 0x3C) {
-                player->targetSpeedLimit += 0x50000;
-                player->speedLimit += 0x50000;
+            if (player->state.unk336 >= 0x3C) {
+                player->state.targetSpeedLimit += 0x50000;
+                player->state.speedLimit += 0x50000;
                 var_a2 += 0x50000;
                 enqueueRacePlayerVoiceSound(player, RACE_VOICE_TRICK);
             }
         } else {
             sp2C = -0x30000;
-            if (((u8)player->unk519) != 0) {
+            if (((u8)player->state.unk519) != 0) {
                 var_a2 = -0x100000;
             }
-            if (player->unk336 >= 0x3C) {
-                player->targetSpeedLimit += 0x50000;
-                player->speedLimit += 0x50000;
+            if (player->state.unk336 >= 0x3C) {
+                player->state.targetSpeedLimit += 0x50000;
+                player->state.speedLimit += 0x50000;
                 var_a2 += 0xFFFB0000;
                 enqueueRacePlayerVoiceSound(player, RACE_VOICE_TRICK);
             }
         }
     }
-    updateRacePlayerLocalVelocity(player, sp2C, var_a2, player->lateralDeceleration, player->forwardDeceleration, player->reverseDeceleration);
+    updateRacePlayerLocalVelocity(player, sp2C, var_a2, player->state.lateralDeceleration, player->state.forwardDeceleration, player->state.reverseDeceleration);
     var_v1 = updateRacePlayerSurfaceCue(player);
-    if (!(player->stateFlags & 0x10)) {
-        if (player->modeValue < 0x46000) {
+    if (!(player->state.stateFlags & 0x10)) {
+        if (player->state.modeValue < 0x46000) {
             var_v1 = 0;
         }
         if (var_v1 >= 9) {
-            player->modeValue = 0x50000;
+            player->state.modeValue = 0x50000;
         }
-        player->grabTrickId = 0;
+        player->state.grabTrickId = 0;
         switch (var_v1) {
             case 1:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_TRICK);
                 }
-                player->mode = 0xD;
-                player->aerialTrickId = 1;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0xD;
+                player->state.aerialTrickId = 1;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 2:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_TRICK);
                 }
-                player->mode = 0xF;
-                player->aerialTrickId = 2;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0xF;
+                player->state.aerialTrickId = 2;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 3:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_TRICK);
                 }
-                player->mode = 0x10;
-                player->aerialTrickId = 3;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x10;
+                player->state.aerialTrickId = 3;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 4:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_TRICK);
                 }
-                player->mode = 0x11;
-                player->aerialTrickId = 4;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x11;
+                player->state.aerialTrickId = 4;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 5:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x12;
-                player->aerialTrickId = 5;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x12;
+                player->state.aerialTrickId = 5;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 6:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x13;
-                player->aerialTrickId = 6;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x13;
+                player->state.aerialTrickId = 6;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 7:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x14;
-                player->aerialTrickId = 7;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x14;
+                player->state.aerialTrickId = 7;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 8:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x15;
-                player->aerialTrickId = 8;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x15;
+                player->state.aerialTrickId = 8;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 9:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x1F;
-                player->aerialTrickId = 0xB;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x1F;
+                player->state.aerialTrickId = 0xB;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 10:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x20;
-                player->aerialTrickId = 0xB;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x20;
+                player->state.aerialTrickId = 0xB;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 11:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x21;
-                player->aerialTrickId = 0xC;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x21;
+                player->state.aerialTrickId = 0xC;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 12:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x22;
-                player->aerialTrickId = 0xD;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x22;
+                player->state.aerialTrickId = 0xD;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 13:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x23;
-                player->aerialTrickId = 0xA;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x23;
+                player->state.aerialTrickId = 0xA;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 14:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x24;
-                player->aerialTrickId = 0xC;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x24;
+                player->state.aerialTrickId = 0xC;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 15:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x25;
-                player->aerialTrickId = 0xB;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x25;
+                player->state.aerialTrickId = 0xB;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 16:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x26;
-                player->aerialTrickId = 0xD;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x26;
+                player->state.aerialTrickId = 0xD;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 17:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x27;
-                player->aerialTrickId = 0xE;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x27;
+                player->state.aerialTrickId = 0xE;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 18:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x29;
-                player->aerialTrickId = 9;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x29;
+                player->state.aerialTrickId = 9;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 19:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x2A;
-                player->aerialTrickId = 0xA;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x2A;
+                player->state.aerialTrickId = 0xA;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 20:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x2B;
-                player->aerialTrickId = 0xC;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x2B;
+                player->state.aerialTrickId = 0xC;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 21:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x2C;
-                player->aerialTrickId = 9;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x2C;
+                player->state.aerialTrickId = 9;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 22:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x2D;
-                player->aerialTrickId = 0xA;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x2D;
+                player->state.aerialTrickId = 0xA;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 23:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x2E;
-                player->aerialTrickId = 0xE;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x2E;
+                player->state.aerialTrickId = 0xE;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 24:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x2F;
-                player->aerialTrickId = 9;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x2F;
+                player->state.aerialTrickId = 9;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 25:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x30;
-                player->aerialTrickId = 0xB;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x30;
+                player->state.aerialTrickId = 0xB;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 26:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x31;
-                player->aerialTrickId = 0xD;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x31;
+                player->state.aerialTrickId = 0xD;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 27:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x32;
-                player->aerialTrickId = 9;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x32;
+                player->state.aerialTrickId = 9;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 28:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x33;
-                player->aerialTrickId = 0xA;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x33;
+                player->state.aerialTrickId = 0xA;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 29:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x34;
-                player->aerialTrickId = 0xC;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x34;
+                player->state.aerialTrickId = 0xC;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 30:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x35;
-                player->aerialTrickId = 0xA;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x35;
+                player->state.aerialTrickId = 0xA;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 31:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x36;
-                player->aerialTrickId = 0xC;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x36;
+                player->state.aerialTrickId = 0xC;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 32:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x37;
-                player->aerialTrickId = 9;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x37;
+                player->state.aerialTrickId = 9;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 33:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x38;
-                player->aerialTrickId = 0xA;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x38;
+                player->state.aerialTrickId = 0xA;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 34:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->state.pos), 0x7F, SFX_PRIORITY_NORMAL);
                     enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
-                player->mode = 0x39;
-                player->aerialTrickId = 0xD;
-                player->stateFlags |= 0x800;
+                player->state.mode = 0x39;
+                player->state.aerialTrickId = 0xD;
+                player->state.stateFlags |= 0x800;
                 break;
 
             case 0:
 
             default:
-                player->mode = 1;
-                player->aerialTrickId = 0;
+                player->state.mode = 1;
+                player->state.aerialTrickId = 0;
                 break;
         }
 
-        player->updateState = 0;
-        player->updateTimer = 0;
-        player->velocity.y += player->modeValue;
-        player->pos.y += 0x60000;
-        player->verticalVelocityLimit = player->velocity.y;
-        player->stateFlags |= 0x208;
+        player->state.updateState = 0;
+        player->state.updateTimer = 0;
+        player->state.velocity.y += player->state.modeValue;
+        player->state.pos.y += 0x60000;
+        player->state.verticalVelocityLimit = player->state.velocity.y;
+        player->state.stateFlags |= 0x208;
         setRaceMotionAnimation(player, 4);
     } else {
         updateRacePlayerSurfaceCue(player);
     }
-    player->pos.x += player->velocity.x;
-    player->pos.y += player->velocity.y;
-    player->pos.z += player->velocity.z;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += player->state.velocity.y;
+    player->state.pos.z += player->state.velocity.z;
     stepRaceMotionJointAnimationUntilEnd(player);
     updateRacePlayerMotionFeedback(player);
-    if (player->unk517 != 0) {
+    if (player->state.unk517 != 0) {
         enqueueRacePlayerVoiceSound(player, RACE_VOICE_ATTACK_SUCCESS);
     }
 }
 
 void resetRacePlayerTrickSubstate(RacePlayer *player) {
-    player->subState = 0;
-    player->subStateTimer = 0;
-    player->subStateStep = 0;
-    player->subStateParam = 0;
-    player->grabInputFrames = 0;
+    player->state.subState = 0;
+    player->state.subStateTimer = 0;
+    player->state.subStateStep = 0;
+    player->state.subStateParam = 0;
+    player->state.grabInputFrames = 0;
 }
 
 void updateRacePlayerTrickSubstate(RacePlayer *player) {
-    gRacePlayerTrickSubstateHandlers[player->subState](player);
+    gRacePlayerTrickSubstateHandlers[player->state.subState](player);
 }
 
 void updateRacePlayerTrickSubstateStart(RacePlayer *player) {
     s16 inputMask;
 
-    player->subStateTimer = 0;
-    player->subStateStep = 0;
-    player->grabTrickId = 0;
-    player->grabHoldFrames = 0;
+    player->state.subStateTimer = 0;
+    player->state.subStateStep = 0;
+    player->state.grabTrickId = 0;
+    player->state.grabHoldFrames = 0;
     if (player->isCpu == 0) {
-        if (player->pressedInput & R_CBUTTONS) {
-            player->subStateTimer = R_CBUTTONS;
-            player->grabTrickId = 1;
+        if (player->state.pressedInput & R_CBUTTONS) {
+            player->state.subStateTimer = R_CBUTTONS;
+            player->state.grabTrickId = 1;
         }
-        if (player->pressedInput & L_CBUTTONS) {
-            player->subStateTimer = L_CBUTTONS;
-            player->grabTrickId = 3;
+        if (player->state.pressedInput & L_CBUTTONS) {
+            player->state.subStateTimer = L_CBUTTONS;
+            player->state.grabTrickId = 3;
         }
-        if (player->pressedInput & U_CBUTTONS) {
-            player->subStateTimer = U_CBUTTONS;
-            player->grabTrickId = 7;
+        if (player->state.pressedInput & U_CBUTTONS) {
+            player->state.subStateTimer = U_CBUTTONS;
+            player->state.grabTrickId = 7;
         }
-        if (player->pressedInput & D_CBUTTONS) {
-            player->subStateTimer = D_CBUTTONS;
-            player->grabTrickId = 5;
+        if (player->state.pressedInput & D_CBUTTONS) {
+            player->state.subStateTimer = D_CBUTTONS;
+            player->state.grabTrickId = 5;
         }
-        if (player->subStateTimer != 0) {
-            if (player->grabInputFrames < 6) {
-                player->grabTrickId++;
+        if (player->state.subStateTimer != 0) {
+            if (player->state.grabInputFrames < 6) {
+                player->state.grabTrickId++;
             }
-            player->subState++;
-            if (player->stateFlags & 0x400) {
-                inputMask = player->subStateTimer;
+            player->state.subState++;
+            if (player->state.stateFlags & 0x400) {
+                inputMask = player->state.subStateTimer;
                 if (inputMask & R_CBUTTONS) {
                     setRaceMotionAnimation(player, 0x17);
-                    inputMask = player->subStateTimer;
+                    inputMask = player->state.subStateTimer;
                 }
                 if (inputMask & L_CBUTTONS) {
                     setRaceMotionAnimation(player, 0x15);
-                    inputMask = player->subStateTimer;
+                    inputMask = player->state.subStateTimer;
                 }
             } else {
-                inputMask = player->subStateTimer;
+                inputMask = player->state.subStateTimer;
                 if (inputMask & R_CBUTTONS) {
                     setRaceMotionAnimation(player, 0x15);
-                    inputMask = player->subStateTimer;
+                    inputMask = player->state.subStateTimer;
                 }
                 if (inputMask & L_CBUTTONS) {
                     setRaceMotionAnimation(player, 0x17);
-                    inputMask = player->subStateTimer;
+                    inputMask = player->state.subStateTimer;
                 }
             }
             if (inputMask & U_CBUTTONS) {
                 setRaceMotionAnimation(player, 0x19);
-                inputMask = player->subStateTimer;
+                inputMask = player->state.subStateTimer;
             }
             if (inputMask & D_CBUTTONS) {
                 setRaceMotionAnimation(player, 0x1B);
             }
-            player->stateFlags |= 0x800;
+            player->state.stateFlags |= 0x800;
         }
-        player->grabInputFrames++;
+        player->state.grabInputFrames++;
     }
 }
 
 void updateRacePlayerTrickSubstateHold(RacePlayer *player) {
     s16 inputMask;
 
-    if (!(player->heldInput & player->subStateTimer)) {
-        player->subStateStep = 1;
+    if (!(player->state.heldInput & player->state.subStateTimer)) {
+        player->state.subStateStep = 1;
     }
     if (stepRaceMotionAnimationUntilEnd(player) != 0) {
-        if (player->subStateStep != 0) {
-            player->subState++;
-            if (player->stateFlags & 0x400) {
-                inputMask = player->subStateTimer;
+        if (player->state.subStateStep != 0) {
+            player->state.subState++;
+            if (player->state.stateFlags & 0x400) {
+                inputMask = player->state.subStateTimer;
                 if (inputMask & R_CBUTTONS) {
                     setRaceMotionAnimation(player, 0x18);
-                    inputMask = player->subStateTimer;
+                    inputMask = player->state.subStateTimer;
                 }
                 if (inputMask & L_CBUTTONS) {
                     setRaceMotionAnimation(player, 0x16);
-                    inputMask = player->subStateTimer;
+                    inputMask = player->state.subStateTimer;
                 }
             } else {
-                inputMask = player->subStateTimer;
+                inputMask = player->state.subStateTimer;
                 if (inputMask & R_CBUTTONS) {
                     setRaceMotionAnimation(player, 0x16);
-                    inputMask = player->subStateTimer;
+                    inputMask = player->state.subStateTimer;
                 }
                 if (inputMask & L_CBUTTONS) {
                     setRaceMotionAnimation(player, 0x18);
-                    inputMask = player->subStateTimer;
+                    inputMask = player->state.subStateTimer;
                 }
             }
             if (inputMask & U_CBUTTONS) {
                 setRaceMotionAnimation(player, 0x1A);
-                inputMask = player->subStateTimer;
+                inputMask = player->state.subStateTimer;
             }
             if (inputMask & D_CBUTTONS) {
                 setRaceMotionAnimation(player, 0x1C);
             }
         } else {
-            player->grabHoldFrames++;
+            player->state.grabHoldFrames++;
         }
     }
-    player->stateFlags |= 0x800;
+    player->state.stateFlags |= 0x800;
 }
 
 void updateRacePlayerTrickSubstateFinish(RacePlayer *player) {
     if (stepRaceMotionAnimationUntilEnd(player) != 0) {
-        player->subState++;
+        player->state.subState++;
     }
-    player->stateFlags |= 0x800;
+    player->state.stateFlags |= 0x800;
 }
 
 void updateRacePlayerTrickSubstateNoop(RacePlayer *player) {
@@ -1990,38 +1969,38 @@ void updateRacePlayerMode13AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 stateTimer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
     }
 
-    if (player->subState == 0) {
+    if (player->state.subState == 0) {
         stepRaceMotionAnimationUntilEnd(player);
     }
 
     updateRacePlayerTrickSubstate(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
-    player->modelRotationX = (s16)((s32)(fixedSine(player->modeValue) * 0x1000) / 0x1000);
-    player->modeValue += 0x20;
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    player->state.modelRotationX = (s16)((s32)(fixedSine(player->state.modeValue) * 0x1000) / 0x1000);
+    player->state.modeValue += 0x20;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
-    stateTimer = player->modeValue;
-    player->stateFlags |= 2;
+    stateTimer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (stateTimer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(
                 initRacePlayerYellowTrickSparkles,
@@ -2037,38 +2016,38 @@ void updateRacePlayerMode15AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 stateTimer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
     }
 
-    if (player->subState == 0) {
+    if (player->state.subState == 0) {
         stepRaceMotionAnimationUntilEnd(player);
     }
 
     updateRacePlayerTrickSubstate(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
-    player->modelRotationX = (s16)((s32)(fixedSine(player->modeValue) * -0x1000) / 0x1000);
-    player->modeValue += 0x20;
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    player->state.modelRotationX = (s16)((s32)(fixedSine(player->state.modeValue) * -0x1000) / 0x1000);
+    player->state.modeValue += 0x20;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
-    stateTimer = player->modeValue;
-    player->stateFlags |= 2;
+    stateTimer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (stateTimer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(
                 initRacePlayerYellowTrickSparkles,
@@ -2084,39 +2063,39 @@ void updateRacePlayerMode16AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
     }
-    if (player->subState == 0) {
+    if (player->state.subState == 0) {
         stepRaceMotionAnimationUntilEnd(player);
     }
     updateRacePlayerTrickSubstate(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
-    if (player->stateFlags & 0x400) {
-        player->modelRotationY = (s16)((s32)(fixedSine(player->modeValue) << 0xC) / 4096);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationY = (s16)((s32)(fixedSine(player->state.modeValue) << 0xC) / 4096);
     } else {
-        player->modelRotationY = (s16)((s32)(fixedSine(player->modeValue) * -0x1000) / 4096);
+        player->state.modelRotationY = (s16)((s32)(fixedSine(player->state.modeValue) * -0x1000) / 4096);
     }
 
-    player->modeValue += 0x1E;
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    player->state.modeValue += 0x1E;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(
                 initRacePlayerYellowTrickSparkles,
@@ -2132,39 +2111,39 @@ void updateRacePlayerMode17AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
     }
-    if (player->subState == 0) {
+    if (player->state.subState == 0) {
         stepRaceMotionAnimationUntilEnd(player);
     }
     updateRacePlayerTrickSubstate(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
-    if (player->stateFlags & 0x400) {
-        player->modelRotationY = (s16)((s32)(fixedSine(player->modeValue) * -0x1000) / 0x1000);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationY = (s16)((s32)(fixedSine(player->state.modeValue) * -0x1000) / 0x1000);
     } else {
-        player->modelRotationY = (s16)((s32)(fixedSine(player->modeValue) << 12) / 0x1000);
+        player->state.modelRotationY = (s16)((s32)(fixedSine(player->state.modeValue) << 12) / 0x1000);
     }
 
-    player->modeValue += 0x1D;
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    player->state.modeValue += 0x1D;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(
                 initRacePlayerYellowTrickSparkles,
@@ -2180,40 +2159,40 @@ void updateRacePlayerMode18AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
     }
-    if (player->subState == 0) {
+    if (player->state.subState == 0) {
         stepRaceMotionAnimationUntilEnd(player);
     }
     updateRacePlayerTrickSubstate(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
-    player->modelRotationX = (s16)((s32)(fixedSine((s16)player->modeValue) << 12) / 0x1000);
-    if (player->stateFlags & 0x400) {
-        player->modelRotationY = (s16)((s32)(fixedSine((s16)player->modeValue) << 12) / 0x1000);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
+    player->state.modelRotationX = (s16)((s32)(fixedSine((s16)player->state.modeValue) << 12) / 0x1000);
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationY = (s16)((s32)(fixedSine((s16)player->state.modeValue) << 12) / 0x1000);
     } else {
-        player->modelRotationY = (s16)((s32)(fixedSine((s16)player->modeValue) * -0x1000) / 0x1000);
+        player->state.modelRotationY = (s16)((s32)(fixedSine((s16)player->state.modeValue) * -0x1000) / 0x1000);
     }
 
-    player->modeValue += 0x1A;
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    player->state.modeValue += 0x1A;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(
                 initRacePlayerYellowTrickSparkles,
@@ -2229,40 +2208,40 @@ void updateRacePlayerMode19AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
     }
-    if (player->subState == 0) {
+    if (player->state.subState == 0) {
         stepRaceMotionAnimationUntilEnd(player);
     }
     updateRacePlayerTrickSubstate(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
-    player->modelRotationX = (s16)((s32)(fixedSine(player->modeValue) << 12) / 0x1000);
-    if (player->stateFlags & 0x400) {
-        player->modelRotationY = (s16)((s32)(fixedSine(player->modeValue) * -0x1000) / 0x1000);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
+    player->state.modelRotationX = (s16)((s32)(fixedSine(player->state.modeValue) << 12) / 0x1000);
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationY = (s16)((s32)(fixedSine(player->state.modeValue) * -0x1000) / 0x1000);
     } else {
-        player->modelRotationY = (s16)((s32)(fixedSine(player->modeValue) << 12) / 0x1000);
+        player->state.modelRotationY = (s16)((s32)(fixedSine(player->state.modeValue) << 12) / 0x1000);
     }
 
-    player->modeValue += 0x1A;
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    player->state.modeValue += 0x1A;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(
                 initRacePlayerYellowTrickSparkles,
@@ -2278,40 +2257,40 @@ void updateRacePlayerMode20AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
     }
-    if (player->subState == 0) {
+    if (player->state.subState == 0) {
         stepRaceMotionAnimationUntilEnd(player);
     }
     updateRacePlayerTrickSubstate(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
-    player->modelRotationX = (s16)((s32)(fixedSine(player->modeValue) * -0x1000) / 0x1000);
-    if (player->stateFlags & 0x400) {
-        player->modelRotationY = (s16)((s32)(fixedSine(player->modeValue) << 12) / 0x1000);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
+    player->state.modelRotationX = (s16)((s32)(fixedSine(player->state.modeValue) * -0x1000) / 0x1000);
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationY = (s16)((s32)(fixedSine(player->state.modeValue) << 12) / 0x1000);
     } else {
-        player->modelRotationY = (s16)((s32)(fixedSine(player->modeValue) * -0x1000) / 0x1000);
+        player->state.modelRotationY = (s16)((s32)(fixedSine(player->state.modeValue) * -0x1000) / 0x1000);
     }
 
-    player->modeValue += 0x1A;
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    player->state.modeValue += 0x1A;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(
                 initRacePlayerYellowTrickSparkles,
@@ -2327,40 +2306,40 @@ void updateRacePlayerMode21AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
     }
-    if (player->subState == 0) {
+    if (player->state.subState == 0) {
         stepRaceMotionAnimationUntilEnd(player);
     }
     updateRacePlayerTrickSubstate(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
-    player->modelRotationX = (s16)((s32)(fixedSine(player->modeValue) * -0x1000) / 0x1000);
-    if (player->stateFlags & 0x400) {
-        player->modelRotationY = (s16)((s32)(fixedSine(player->modeValue) * -0x1000) / 0x1000);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
+    player->state.modelRotationX = (s16)((s32)(fixedSine(player->state.modeValue) * -0x1000) / 0x1000);
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationY = (s16)((s32)(fixedSine(player->state.modeValue) * -0x1000) / 0x1000);
     } else {
-        player->modelRotationY = (s16)((s32)(fixedSine(player->modeValue) << 12) / 0x1000);
+        player->state.modelRotationY = (s16)((s32)(fixedSine(player->state.modeValue) << 12) / 0x1000);
     }
 
-    player->modeValue += 0x1A;
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    player->state.modeValue += 0x1A;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(
                 initRacePlayerYellowTrickSparkles,
@@ -2377,56 +2356,56 @@ void updateRacePlayerMode31AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
         setRaceMotionAnimation(player, 0x15);
-        player->updateTimer = 0;
+        player->state.updateTimer = 0;
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
-    if (player->stateFlags & 0x400) {
-        player->modelRotationY = (fixedSine(player->modeValue) * -0x2000) / 4096;
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationY = (fixedSine(player->state.modeValue) * -0x2000) / 4096;
     } else {
-        player->modelRotationY = (fixedSine(player->modeValue) * 0x2000) / 4096;
+        player->state.modelRotationY = (fixedSine(player->state.modeValue) * 0x2000) / 4096;
     }
 
-    player->modeValue += 0x16;
-    player->updateTimer++;
-    updateTimer = player->updateTimer;
+    player->state.modeValue += 0x16;
+    player->state.updateTimer++;
+    updateTimer = player->state.updateTimer;
     if (updateTimer == 8) {
         setRaceMotionAnimation(player, 0x16);
-        updateTimer = player->updateTimer;
+        updateTimer = player->state.updateTimer;
     }
     if (updateTimer == 0xF) {
         setRaceMotionAnimation(player, 0x1B);
-        updateTimer = player->updateTimer;
+        updateTimer = player->state.updateTimer;
     }
     if (updateTimer == 0x1E) {
         setRaceMotionAnimation(player, 0x1C);
     }
 
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
 
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -2437,37 +2416,37 @@ void updateRacePlayerMode41AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
-        player->updateTimer = 0;
+        player->state.updateTimer = 0;
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
-    player->modelRotationX = (fixedSine(player->modeValue) << 13) / 0x1000;
+    player->state.modelRotationX = (fixedSine(player->state.modeValue) << 13) / 0x1000;
 
-    player->modeValue += 0x14;
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    player->state.modeValue += 0x14;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
 
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -2478,37 +2457,37 @@ void updateRacePlayerMode42AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
-        player->updateTimer = 0;
+        player->state.updateTimer = 0;
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
-    player->modelRotationZ = (fixedSine(player->modeValue) << 13) / 0x1000;
+    player->state.modelRotationZ = (fixedSine(player->state.modeValue) << 13) / 0x1000;
 
-    player->modeValue += 0x14;
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    player->state.modeValue += 0x14;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
 
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -2520,49 +2499,49 @@ void updateRacePlayerMode43AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
-        player->updateTimer = 0;
+        player->state.updateTimer = 0;
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
 
-    updateTimer = player->updateTimer;
+    updateTimer = player->state.updateTimer;
     if (updateTimer < 8) {
-        player->pitchAngle = -updateTimer << 7;
+        player->state.pitchAngle = -updateTimer << 7;
     }
     if (updateTimer >= 0x23) {
-        player->pitchAngle = (-(-updateTimer) << 6) - 0xC80;
+        player->state.pitchAngle = (-(-updateTimer) << 6) - 0xC80;
     }
     if (updateTimer < 0x32) {
-        player->updateTimer = updateTimer + 1;
+        player->state.updateTimer = updateTimer + 1;
     }
 
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
-    player->modelRotationY = (fixedSine(player->modeValue) << 14) / 0x1000;
+    player->state.modelRotationY = (fixedSine(player->state.modeValue) << 14) / 0x1000;
 
-    player->modeValue += 0x14;
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    player->state.modeValue += 0x14;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
 
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -2573,28 +2552,28 @@ void updateRacePlayerMode32AerialTrick(RacePlayer *player) {
     s16 updateState;
     s32 yVel;
 
-    updateState = player->updateState;
+    updateState = player->state.updateState;
     if (updateState == 0) {
-        player->updateState = updateState + 1;
+        player->state.updateState = updateState + 1;
         setRaceMotionAnimation(player, 0x28);
-        player->modeValue = 0;
-        player->stateFlags |= 0x200;
+        player->state.modeValue = 0;
+        player->state.stateFlags |= 0x200;
         resetRacePlayerTrickSubstate(player);
-        player->updateTimer = 0;
+        player->state.updateTimer = 0;
     }
 
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
     if (stepRaceMotionAnimationUntilEnd(player) == 0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -2605,45 +2584,45 @@ void updateRacePlayerMode33AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 0x23);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
-        player->updateTimer = 0;
+        player->state.updateTimer = 0;
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
-    player->modelRotationX = (fixedSine(player->modeValue) * -0x3000) / 4096;
-    if (player->stateFlags & 0x400) {
-        player->modelRotationY = -player->updateTimer;
+    player->state.modelRotationX = (fixedSine(player->state.modeValue) * -0x3000) / 4096;
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationY = -player->state.updateTimer;
     } else {
-        player->modelRotationY = player->updateTimer;
+        player->state.modelRotationY = player->state.updateTimer;
     }
-    if (player->updateTimer != 0x1000) {
-        player->updateTimer += 0x80;
-    }
-
-    player->modeValue += 0x11;
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    if (player->state.updateTimer != 0x1000) {
+        player->state.updateTimer += 0x80;
     }
 
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    player->state.modeValue += 0x11;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
+    }
+
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -2654,42 +2633,42 @@ void updateRacePlayerMode34AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 0x23);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
-        player->updateTimer = 0;
+        player->state.updateTimer = 0;
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->modelRotationX = player->modeValue * 4;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.modelRotationX = player->state.modeValue * 4;
+    player->state.verticalVelocityLimit = yVel;
 
-    if (player->stateFlags & 0x400) {
-        player->modelRotationY = (fixedSine((s16)player->modeValue) * -0x4000) / 0x1000;
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationY = (fixedSine((s16)player->state.modeValue) * -0x4000) / 0x1000;
     } else {
-        player->modelRotationY = (fixedSine((s16)player->modeValue) << 0xE) / 0x1000;
+        player->state.modelRotationY = (fixedSine((s16)player->state.modeValue) << 0xE) / 0x1000;
     }
 
-    player->modeValue += 0x15;
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    player->state.modeValue += 0x15;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
 
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -2700,55 +2679,55 @@ void updateRacePlayerMode44AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
         setRaceMotionAnimation(player, 0x17);
-        player->updateTimer = 0;
+        player->state.updateTimer = 0;
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
-    if (player->stateFlags & 0x400) {
-        player->modelRotationY = (fixedSine(player->modeValue) * -0x2000) / 4096;
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationY = (fixedSine(player->state.modeValue) * -0x2000) / 4096;
     } else {
-        player->modelRotationY = (fixedSine(player->modeValue) * 0x2000) / 4096;
+        player->state.modelRotationY = (fixedSine(player->state.modeValue) * 0x2000) / 4096;
     }
 
-    player->modeValue += 0x16;
-    player->updateTimer++;
-    if (player->updateTimer == 8) {
+    player->state.modeValue += 0x16;
+    player->state.updateTimer++;
+    if (player->state.updateTimer == 8) {
         setRaceMotionAnimation(player, 0x18);
     }
-    if (player->updateTimer == 0xF) {
+    if (player->state.updateTimer == 0xF) {
         setRaceMotionAnimation(player, 0x19);
     }
-    if (player->updateTimer == 0x1E) {
+    if (player->state.updateTimer == 0x1E) {
         setRaceMotionAnimation(player, 0x1A);
     }
 
-    timer = player->modeValue;
+    timer = player->state.modeValue;
     if (timer >= 0x401) {
         timer = 0x400;
-        player->modeValue = timer;
+        player->state.modeValue = timer;
     }
 
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -2760,47 +2739,47 @@ void updateRacePlayerMode45AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
-    player->updateTimer = (fixedSine(player->modeValue) << 13) / 0x1000;
-    updateTimer = player->updateTimer;
+    player->state.updateTimer = (fixedSine(player->state.modeValue) << 13) / 0x1000;
+    updateTimer = player->state.updateTimer;
     if (updateTimer >= 0x1001) {
-        player->modelRotationY = 0x2000 - updateTimer;
+        player->state.modelRotationY = 0x2000 - updateTimer;
     } else {
-        player->modelRotationY = updateTimer;
+        player->state.modelRotationY = updateTimer;
     }
 
-    if (player->stateFlags & 0x400) {
-        player->modelRotationY = -player->modelRotationY;
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationY = -player->state.modelRotationY;
     }
 
-    player->modelRotationX = (fixedSine(player->modeValue) << 13) / 0x1000;
-    player->modeValue += 0x14;
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    player->state.modelRotationX = (fixedSine(player->state.modeValue) << 13) / 0x1000;
+    player->state.modeValue += 0x14;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
 
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -2811,47 +2790,47 @@ void updateRacePlayerMode46AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
         setRaceMotionAnimation(player, 0x1B);
-        player->updateTimer = 0;
+        player->state.updateTimer = 0;
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
-    if (player->stateFlags & 0x400) {
-        player->modelRotationY = (fixedSine(player->modeValue) * -0x5000) / 0x1000;
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationY = (fixedSine(player->state.modeValue) * -0x5000) / 0x1000;
     } else {
-        player->modelRotationY = (fixedSine(player->modeValue) * 0x5000) / 0x1000;
+        player->state.modelRotationY = (fixedSine(player->state.modeValue) * 0x5000) / 0x1000;
     }
 
-    player->modeValue += 0x12;
-    player->updateTimer++;
-    if (player->updateTimer == 0x28) {
+    player->state.modeValue += 0x12;
+    player->state.updateTimer++;
+    if (player->state.updateTimer == 0x28) {
         setRaceMotionAnimation(player, 0x1C);
     }
 
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
 
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -2863,47 +2842,47 @@ void updateRacePlayerMode35AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 stateTimer;
 
-    updateState = player->updateState;
+    updateState = player->state.updateState;
     if (updateState == 0) {
-        player->updateState = updateState + 1;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState = updateState + 1;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
         setRaceMotionAnimation(player, 0x15);
-        player->updateTimer = 0;
+        player->state.updateTimer = 0;
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
-    if (player->stateFlags & 0x400) {
-        player->modelRotationZ = (fixedSine(player->modeValue) * -0x2000) / 0x1000;
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationZ = (fixedSine(player->state.modeValue) * -0x2000) / 0x1000;
     } else {
-        player->modelRotationZ = (fixedSine(player->modeValue) << 13) / 0x1000;
+        player->state.modelRotationZ = (fixedSine(player->state.modeValue) << 13) / 0x1000;
     }
 
-    player->modeValue += 0x16;
-    player->updateTimer++;
-    if (player->updateTimer == 0x1E) {
+    player->state.modeValue += 0x16;
+    player->state.updateTimer++;
+    if (player->state.updateTimer == 0x1E) {
         setRaceMotionAnimation(player, 0x16);
     }
 
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
 
-    stateTimer = player->modeValue;
-    player->stateFlags |= 2;
+    stateTimer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (stateTimer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -2915,46 +2894,46 @@ void updateRacePlayerMode36AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    updateState = player->updateState;
+    updateState = player->state.updateState;
     if (updateState == 0) {
-        player->updateState = updateState + 1;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState = updateState + 1;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
         setRaceMotionAnimation(player, 0x15);
-        player->updateTimer = 0;
+        player->state.updateTimer = 0;
     }
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
-    if (player->stateFlags & 0x400) {
-        player->modelRotationY = (s16)((s32)(fixedSine(player->modeValue) * -0x3000) / 4096);
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationY = (s16)((s32)(fixedSine(player->state.modeValue) * -0x3000) / 4096);
     } else {
-        player->modelRotationY = (s16)((s32)(fixedSine(player->modeValue) * 0x3000) / 4096);
+        player->state.modelRotationY = (s16)((s32)(fixedSine(player->state.modeValue) * 0x3000) / 4096);
     }
 
-    player->modeValue += 0x15;
-    player->updateTimer++;
-    if (player->updateTimer == 0x1E) {
+    player->state.modeValue += 0x15;
+    player->state.updateTimer++;
+    if (player->state.updateTimer == 0x1E) {
         setRaceMotionAnimation(player, 0x16);
     }
 
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
 
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -2966,56 +2945,56 @@ void updateRacePlayerMode47AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
         setRaceMotionAnimation(player, 0x19);
-        player->updateTimer = 0;
+        player->state.updateTimer = 0;
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
-    if (player->stateFlags & 0x400) {
-        player->modelRotationY = (fixedSine(player->modeValue) * -0x2000) / 4096;
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationY = (fixedSine(player->state.modeValue) * -0x2000) / 4096;
     } else {
-        player->modelRotationY = (fixedSine(player->modeValue) << 0xD) / 4096;
+        player->state.modelRotationY = (fixedSine(player->state.modeValue) << 0xD) / 4096;
     }
 
-    player->modeValue += 0x16;
-    player->updateTimer++;
-    updateTimer = player->updateTimer;
+    player->state.modeValue += 0x16;
+    player->state.updateTimer++;
+    updateTimer = player->state.updateTimer;
     if (updateTimer == 8) {
         setRaceMotionAnimation(player, 0x1A);
-        updateTimer = player->updateTimer;
+        updateTimer = player->state.updateTimer;
     }
     if (updateTimer == 0xF) {
         setRaceMotionAnimation(player, 0x15);
-        updateTimer = player->updateTimer;
+        updateTimer = player->state.updateTimer;
     }
     if (updateTimer == 0x1E) {
         setRaceMotionAnimation(player, 0x16);
     }
 
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
 
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -3027,52 +3006,52 @@ void updateRacePlayerMode48AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 stateTimer;
 
-    updateState = player->updateState;
+    updateState = player->state.updateState;
     if (updateState == 0) {
-        player->updateState = updateState + 1;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState = updateState + 1;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
         setRaceMotionAnimation(player, 0x15);
-        player->updateTimer = 0;
+        player->state.updateTimer = 0;
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
-    if (player->stateFlags & 0x400) {
-        player->modelRotationZ = (fixedSine(player->modeValue) * 0x3000) / 0x1000;
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationZ = (fixedSine(player->state.modeValue) * 0x3000) / 0x1000;
     } else {
-        player->modelRotationZ = (fixedSine(player->modeValue) * -0x3000) / 0x1000;
+        player->state.modelRotationZ = (fixedSine(player->state.modeValue) * -0x3000) / 0x1000;
     }
 
-    player->modeValue += 0x16;
-    if (player->updateTimer < 0x2D) {
-        player->updateTimer = player->updateTimer + 1;
+    player->state.modeValue += 0x16;
+    if (player->state.updateTimer < 0x2D) {
+        player->state.updateTimer = player->state.updateTimer + 1;
     }
 
-    if (player->updateTimer == 0x1E) {
+    if (player->state.updateTimer == 0x1E) {
         setRaceMotionAnimation(player, 0x16);
     }
 
-    stateTimer = player->modeValue;
-    player->modelRotationY = (player->updateTimer << 0xC) / 45;
+    stateTimer = player->state.modeValue;
+    player->state.modelRotationY = (player->state.updateTimer << 0xC) / 45;
     if (stateTimer >= 0x401) {
-        player->modeValue = 0x400;
+        player->state.modeValue = 0x400;
     }
 
-    stateTimer = player->modeValue;
-    player->stateFlags |= 2;
+    stateTimer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (stateTimer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -3083,36 +3062,36 @@ void updateRacePlayerMode49AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
-    player->modelRotationX = (fixedSine(player->modeValue) * -0x3000) / 0x1000;
+    player->state.modelRotationX = (fixedSine(player->state.modeValue) * -0x3000) / 0x1000;
 
-    player->modeValue += 0x12;
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    player->state.modeValue += 0x12;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
 
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -3127,38 +3106,38 @@ void updateRacePlayerMode37AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    updateState = player->updateState;
+    updateState = player->state.updateState;
     if (updateState == 0) {
-        player->updateState = updateState + 1;
+        player->state.updateState = updateState + 1;
         setRaceMotionAnimation(player, 0x23);
-        player->modeValue = 0;
-        player->stateFlags |= 0x200;
+        player->state.modeValue = 0;
+        player->state.stateFlags |= 0x200;
         resetRacePlayerTrickSubstate(player);
-        player->updateTimer = 0;
-        player->unk306 = 0;
+        player->state.updateTimer = 0;
+        player->state.unk306 = 0;
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = (u32)player->velocity.y;
-    player->pos.x += player->velocity.x;
-    updateTimerPtr = &player->updateTimer;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = (u32)player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    updateTimerPtr = &player->state.updateTimer;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
-    if (player->stateFlags & 0x400) {
-        player->modelRotationZ = (fixedSine(player->modeValue) * -0x2000) / 4096;
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationZ = (fixedSine(player->state.modeValue) * -0x2000) / 4096;
     } else {
-        player->modelRotationZ = (fixedSine(player->modeValue) << 0xD) / 4096;
+        player->state.modelRotationZ = (fixedSine(player->state.modeValue) << 0xD) / 4096;
     }
 
-    player->modeValue += 0x16;
-    player->updateTimer++;
-    updateTimer = player->updateTimer;
+    player->state.modeValue += 0x16;
+    player->state.updateTimer++;
+    updateTimer = player->state.updateTimer;
     if (updateTimer == 0xC) {
         setRaceMotionAnimation(player, 0x15);
         updateTimer = *updateTimerPtr;
@@ -3166,37 +3145,37 @@ void updateRacePlayerMode37AerialTrick(RacePlayer *player) {
 
     if (updateTimer == 0x1E) {
         setRaceMotionAnimation(player, 0x16);
-        updateTimer = player->updateTimer;
+        updateTimer = player->state.updateTimer;
     }
 
     if ((updateTimer >= 9) && (updateTimer < 0x14)) {
-        tilt = player->unk306;
+        tilt = player->state.unk306;
         if (tilt != -0x400) {
-            player->unk306 = tilt - 0x80;
-            updateTimer = player->updateTimer;
+            player->state.unk306 = tilt - 0x80;
+            updateTimer = player->state.updateTimer;
         }
     }
 
-    tilt = player->unk306;
+    tilt = player->state.unk306;
     if ((updateTimer >= 0x1F) && (tilt != 0)) {
-        player->unk306 = tilt + 0x80;
-        tilt = player->unk306;
+        player->state.unk306 = tilt + 0x80;
+        tilt = player->state.unk306;
     }
 
-    if (player->stateFlags & 0x400) {
-        player->modelRotationY = -tilt;
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationY = -tilt;
     } else {
-        player->modelRotationY = tilt;
+        player->state.modelRotationY = tilt;
     }
 
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
 
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -3208,56 +3187,56 @@ void updateRacePlayerMode50AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
         setRaceMotionAnimation(player, 0x19);
-        player->updateTimer = 0;
+        player->state.updateTimer = 0;
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
-    if (player->stateFlags & 0x400) {
-        player->modelRotationY = (fixedSine(player->modeValue) * -0x2000) / 4096;
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationY = (fixedSine(player->state.modeValue) * -0x2000) / 4096;
     } else {
-        player->modelRotationY = (fixedSine(player->modeValue) * 0x2000) / 4096;
+        player->state.modelRotationY = (fixedSine(player->state.modeValue) * 0x2000) / 4096;
     }
 
-    player->modeValue += 0x16;
-    player->updateTimer++;
-    updateTimer = player->updateTimer;
+    player->state.modeValue += 0x16;
+    player->state.updateTimer++;
+    updateTimer = player->state.updateTimer;
     if (updateTimer == 8) {
         setRaceMotionAnimation(player, 0x1A);
-        updateTimer = player->updateTimer;
+        updateTimer = player->state.updateTimer;
     }
     if (updateTimer == 0xF) {
         setRaceMotionAnimation(player, 0x17);
-        updateTimer = player->updateTimer;
+        updateTimer = player->state.updateTimer;
     }
     if (updateTimer == 0x1E) {
         setRaceMotionAnimation(player, 0x18);
     }
 
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
 
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -3272,78 +3251,78 @@ void updateRacePlayerMode51AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    updateState = player->updateState;
+    updateState = player->state.updateState;
     if (updateState == 0) {
-        player->updateState = updateState + 1;
+        player->state.updateState = updateState + 1;
         setRaceMotionAnimation(player, 0x23);
-        player->modeValue = 0;
-        player->stateFlags |= 0x200;
+        player->state.modeValue = 0;
+        player->state.stateFlags |= 0x200;
         resetRacePlayerTrickSubstate(player);
-        player->updateTimer = 0;
-        player->unk306 = 0;
+        player->state.updateTimer = 0;
+        player->state.unk306 = 0;
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
     playerAlias = player;
-    playerAlias->velocity.y -= playerAlias->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&playerAlias->velocity, player);
+    playerAlias->state.velocity.y -= playerAlias->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&playerAlias->state.velocity, player);
 
-    yVel = player->velocity.y;
-    playerAlias->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    playerAlias->pos.z += player->velocity.z;
-    playerAlias->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    playerAlias->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    playerAlias->state.pos.z += player->state.velocity.z;
+    playerAlias->state.verticalVelocityLimit = yVel;
 
-    if (playerAlias->stateFlags & 0x400) {
-        playerAlias->modelRotationZ = (fixedSine((s16)player->modeValue) * 0x3000) / 4096;
+    if (playerAlias->state.stateFlags & 0x400) {
+        playerAlias->state.modelRotationZ = (fixedSine((s16)player->state.modeValue) * 0x3000) / 4096;
     } else {
-        player->modelRotationZ = (fixedSine((s16)player->modeValue) * -0x3000) / 4096;
+        player->state.modelRotationZ = (fixedSine((s16)player->state.modeValue) * -0x3000) / 4096;
     }
 
-    playerAlias->modeValue += 0x14;
-    player->updateTimer++;
-    updateTimer = player->updateTimer;
+    playerAlias->state.modeValue += 0x14;
+    player->state.updateTimer++;
+    updateTimer = player->state.updateTimer;
     if (updateTimer == 0xC) {
         setRaceMotionAnimation(playerAlias, 0x15);
-        updateTimer = playerAlias->updateTimer;
+        updateTimer = playerAlias->state.updateTimer;
     }
 
     if (updateTimer == 0x1E) {
         setRaceMotionAnimation(playerAlias, 0x16);
-        updateTimer = playerAlias->updateTimer;
+        updateTimer = playerAlias->state.updateTimer;
     }
 
     if ((updateTimer >= 9) && (updateTimer < 0x14)) {
-        tilt = player->unk306;
+        tilt = player->state.unk306;
         if (tilt != 0x400) {
-            player->unk306 = tilt + 0x80;
-            updateTimer = playerAlias->updateTimer;
+            player->state.unk306 = tilt + 0x80;
+            updateTimer = playerAlias->state.updateTimer;
         }
     }
 
-    tilt = player->unk306;
+    tilt = player->state.unk306;
     if ((updateTimer >= 0x1F) && (tilt != 0)) {
-        player->unk306 = tilt - 0x80;
-        tilt = player->unk306;
+        player->state.unk306 = tilt - 0x80;
+        tilt = player->state.unk306;
     }
 
-    if (playerAlias->stateFlags & 0x400) {
-        playerAlias->modelRotationY = -tilt;
+    if (playerAlias->state.stateFlags & 0x400) {
+        playerAlias->state.modelRotationY = -tilt;
     } else {
-        player->modelRotationY = tilt;
+        player->state.modelRotationY = tilt;
     }
 
-    timer = player->modeValue;
+    timer = player->state.modeValue;
     if (timer >= 0x401) {
         timer = 0x400;
-        playerAlias->modeValue = timer;
+        playerAlias->state.modeValue = timer;
     }
 
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        playerAlias->stateFlags |= 0x800;
+        playerAlias->state.stateFlags |= 0x800;
         if ((playerAlias->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(
                 initRacePlayerBlueTrickSparkles,
@@ -3360,47 +3339,47 @@ void updateRacePlayerMode52AerialTrick(RacePlayer *player) {
     s32 stateTimer;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
         setRaceMotionAnimation(player, 0x1B);
-        player->updateTimer = 0;
+        player->state.updateTimer = 0;
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
-    if (player->stateFlags & 0x400) {
-        player->modelRotationY = (fixedSine(player->modeValue) * -0x3000) / 0x1000;
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationY = (fixedSine(player->state.modeValue) * -0x3000) / 0x1000;
     } else {
-        player->modelRotationY = (fixedSine(player->modeValue) * 0x3000) / 0x1000;
+        player->state.modelRotationY = (fixedSine(player->state.modeValue) * 0x3000) / 0x1000;
     }
 
-    player->modeValue += 0x16;
-    player->updateTimer++;
-    if (player->updateTimer == 0x1E) {
+    player->state.modeValue += 0x16;
+    player->state.updateTimer++;
+    if (player->state.updateTimer == 0x1E) {
         setRaceMotionAnimation(player, 0x1C);
     }
 
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
 
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -3411,28 +3390,28 @@ void updateRacePlayerMode38AerialTrick(RacePlayer *player) {
     s16 updateState;
     s32 yVel;
 
-    updateState = player->updateState;
+    updateState = player->state.updateState;
     if (updateState == 0) {
-        player->updateState = updateState + 1;
+        player->state.updateState = updateState + 1;
         setRaceMotionAnimation(player, 0x23);
-        player->modeValue = 0;
-        player->stateFlags |= 0x200;
+        player->state.modeValue = 0;
+        player->state.stateFlags |= 0x200;
         resetRacePlayerTrickSubstate(player);
-        player->updateTimer = 0;
+        player->state.updateTimer = 0;
     }
 
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
     if (stepRaceMotionAnimationUntilEnd(player) == 0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -3444,56 +3423,56 @@ void updateRacePlayerMode53AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
         setRaceMotionAnimation(player, 0x19);
-        player->updateTimer = 0;
+        player->state.updateTimer = 0;
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
-    if (player->stateFlags & 0x400) {
-        player->modelRotationY = (fixedSine(player->modeValue) * -0x1800) / 4096;
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationY = (fixedSine(player->state.modeValue) * -0x1800) / 4096;
     } else {
-        player->modelRotationY = ((fixedSine(player->modeValue) * 6) * 1024) / 4096;
+        player->state.modelRotationY = ((fixedSine(player->state.modeValue) * 6) * 1024) / 4096;
     }
 
-    player->modeValue += 0x16;
-    player->updateTimer++;
-    updateTimer = player->updateTimer;
+    player->state.modeValue += 0x16;
+    player->state.updateTimer++;
+    updateTimer = player->state.updateTimer;
     if (updateTimer == 8) {
         setRaceMotionAnimation(player, 0x1A);
-        updateTimer = player->updateTimer;
+        updateTimer = player->state.updateTimer;
     }
     if (updateTimer == 0xF) {
         setRaceMotionAnimation(player, 0x1B);
-        updateTimer = player->updateTimer;
+        updateTimer = player->state.updateTimer;
     }
     if (updateTimer == 0x1E) {
         setRaceMotionAnimation(player, 0x1C);
     }
 
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
 
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -3504,28 +3483,28 @@ void updateRacePlayerMode54AerialTrick(RacePlayer *player) {
     s16 updateState;
     s32 yVel;
 
-    updateState = player->updateState;
+    updateState = player->state.updateState;
     if (updateState == 0) {
-        player->updateState = updateState + 1;
+        player->state.updateState = updateState + 1;
         setRaceMotionAnimation(player, 0x28);
-        player->modeValue = 0;
-        player->stateFlags |= 0x200;
+        player->state.modeValue = 0;
+        player->state.stateFlags |= 0x200;
         resetRacePlayerTrickSubstate(player);
-        player->updateTimer = 0;
+        player->state.updateTimer = 0;
     }
 
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
     if (stepRaceMotionAnimationUntilEnd(player) == 0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -3536,38 +3515,38 @@ void updateRacePlayerMode39AerialTrick(RacePlayer *player) {
     s16 updateTimer;
     s32 yVel;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
-        player->updateTimer = 0;
+        player->state.updateTimer = 0;
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    updateTimer = player->updateTimer;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    updateTimer = player->state.updateTimer;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
     switch (updateTimer) {
         case 0:
-            player->modelRotationX = (s16)((s32)(fixedSine(player->modeValue) << 12) / 4096);
-            player->modeValue += 0x33;
-            if (player->modeValue >= 0x401) {
-                player->modeValue = 0;
-                player->updateTimer++;
-                player->unk306 = 0;
+            player->state.modelRotationX = (s16)((s32)(fixedSine(player->state.modeValue) << 12) / 4096);
+            player->state.modeValue += 0x33;
+            if (player->state.modeValue >= 0x401) {
+                player->state.modeValue = 0;
+                player->state.updateTimer++;
+                player->state.unk306 = 0;
             }
 
-            player->stateFlags |= 0x800;
+            player->state.stateFlags |= 0x800;
             if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
                 createCallbackTaskWithUserIdPreservingArgs(
                     initRacePlayerBlueTrickSparkles,
@@ -3578,24 +3557,24 @@ void updateRacePlayerMode39AerialTrick(RacePlayer *player) {
             }
             break;
         case 1:
-            if (player->stateFlags & 0x400) {
-                player->modelRotationY = (s16)((s32)(fixedSine(player->modeValue) * -0x2000) / 4096);
+            if (player->state.stateFlags & 0x400) {
+                player->state.modelRotationY = (s16)((s32)(fixedSine(player->state.modeValue) * -0x2000) / 4096);
             } else {
-                player->modelRotationY = (s16)((s32)(fixedSine(player->modeValue) << 13) / 4096);
+                player->state.modelRotationY = (s16)((s32)(fixedSine(player->state.modeValue) << 13) / 4096);
             }
 
-            player->modelRotationX = -player->unk306;
-            player->modeValue += 0x20;
-            if (player->modeValue >= 0x401) {
-                player->modeValue = 0x400;
+            player->state.modelRotationX = -player->state.unk306;
+            player->state.modeValue += 0x20;
+            if (player->state.modeValue >= 0x401) {
+                player->state.modeValue = 0x400;
             }
 
-            if (player->unk306 != 0x1000) {
-                player->unk306 += 0x80;
+            if (player->state.unk306 != 0x1000) {
+                player->state.unk306 += 0x80;
             }
 
-            if (player->modeValue < 0x3D0) {
-                player->stateFlags |= 0x800;
+            if (player->state.modeValue < 0x3D0) {
+                player->state.stateFlags |= 0x800;
                 if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
                     createCallbackTaskWithUserIdPreservingArgs(
                         initRacePlayerBlueTrickSparkles,
@@ -3608,47 +3587,47 @@ void updateRacePlayerMode39AerialTrick(RacePlayer *player) {
             break;
     }
 
-    player->stateFlags |= 2;
+    player->state.stateFlags |= 2;
 }
 
 void updateRacePlayerMode55AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
-    if (player->stateFlags & 0x400) {
-        player->modelRotationY = (s16)((s32)(fixedSine(player->modeValue) * -0x2000) / 4096);
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationY = (s16)((s32)(fixedSine(player->state.modeValue) * -0x2000) / 4096);
     } else {
-        player->modelRotationY = (s16)((s32)(fixedSine(player->modeValue) << 0xD) / 4096);
+        player->state.modelRotationY = (s16)((s32)(fixedSine(player->state.modeValue) << 0xD) / 4096);
     }
 
-    player->modeValue += 0x16;
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    player->state.modeValue += 0x16;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
 
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -3659,40 +3638,40 @@ void updateRacePlayerMode56AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
-    if (player->stateFlags & 0x400) {
-        player->modelRotationY = (fixedSine(player->modeValue) * -0x5000) / 0x1000;
+    if (player->state.stateFlags & 0x400) {
+        player->state.modelRotationY = (fixedSine(player->state.modeValue) * -0x5000) / 0x1000;
     } else {
-        player->modelRotationY = (fixedSine(player->modeValue) * 0x5000) / 0x1000;
+        player->state.modelRotationY = (fixedSine(player->state.modeValue) * 0x5000) / 0x1000;
     }
 
-    player->modeValue += 0x14;
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    player->state.modeValue += 0x14;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
 
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -3703,36 +3682,36 @@ void updateRacePlayerMode57AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 timer;
 
-    if (player->updateState == 0) {
+    if (player->state.updateState == 0) {
         setRaceMotionAnimation(player, 4);
-        player->updateState++;
-        player->stateFlags |= 0x200;
-        player->modeValue = 0;
+        player->state.updateState++;
+        player->state.stateFlags |= 0x200;
+        player->state.modeValue = 0;
         resetRacePlayerTrickSubstate(player);
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y -= player->aerialGravity;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y -= player->state.aerialGravity;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-    yVel = player->velocity.y;
-    player->pos.x += player->velocity.x;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->verticalVelocityLimit = yVel;
+    yVel = player->state.velocity.y;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.verticalVelocityLimit = yVel;
 
-    player->modelRotationX = (fixedSine(player->modeValue) * -0x5000) / 0x1000;
+    player->state.modelRotationX = (fixedSine(player->state.modeValue) * -0x5000) / 0x1000;
 
-    player->modeValue += 0x14;
-    if (player->modeValue >= 0x401) {
-        player->modeValue = 0x400;
+    player->state.modeValue += 0x14;
+    if (player->state.modeValue >= 0x401) {
+        player->state.modeValue = 0x400;
     }
 
-    timer = player->modeValue;
-    player->stateFlags |= 2;
+    timer = player->state.modeValue;
+    player->state.stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags |= 0x800;
+        player->state.stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
@@ -3748,35 +3727,35 @@ void updateRacePlayerMode03Nudge(RacePlayer *player) {
     s32 tempX;
     s32 tempZ;
 
-    updateState = player->updateState;
+    updateState = player->state.updateState;
     if (updateState == 0) {
-        player->updateState = updateState + 1;
-        player->stateFlags &= 0xFE0C1FFB;
-        player->stateFlags |= 0x2000;
-        if (((player->unk2DE - player->facingAngle) & 0xFFF) < 0x800) {
+        player->state.updateState = updateState + 1;
+        player->state.stateFlags &= 0xFE0C1FFB;
+        player->state.stateFlags |= 0x2000;
+        if (((player->state.unk2DE - player->state.facingAngle) & 0xFFF) < 0x800) {
             setRaceMotionAnimation(player, 7);
         } else {
             setRaceMotionAnimation(player, 6);
         }
-        player->velocity.x = player->unk2E0;
-        player->velocity.z = player->unk2E4;
-        player->rumbleTimer = 3;
-        player->rumblePatternId = 0;
+        player->state.velocity.x = player->state.unk2E0;
+        player->state.velocity.z = player->state.unk2E4;
+        player->state.rumbleTimer = 3;
+        player->state.rumblePatternId = 0;
     }
 
     updateRacePlayerLeanAngle(player, 0x10000, 0);
     playerAlias = player;
-    player->speedLimit = 0x60000;
-    if (!(playerAlias->stateFlags & 1)) {
-        playerAlias->stateFlags &= ~0x200;
-        playerAlias->velocity.y -= 0xA000;
+    player->state.speedLimit = 0x60000;
+    if (!(playerAlias->state.stateFlags & 1)) {
+        playerAlias->state.stateFlags &= ~0x200;
+        playerAlias->state.velocity.y -= 0xA000;
         updateRacePlayerLocalVelocityNoVerticalOffset(player, 0, (unsigned long long)0x2000, 0x2000, 0x2000);
     } else {
-        playerAlias->stateFlags |= 0x200;
-        player->velocity.y -= 0x7000;
-        clampRacePlayerVectorXZSpeed(&player->velocity, player);
+        playerAlias->state.stateFlags |= 0x200;
+        player->state.velocity.y -= 0x7000;
+        clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
 
-        tempX = playerAlias->velocity.x;
+        tempX = playerAlias->state.velocity.x;
         clamped = tempX;
         if (clamped >= 0x2001) {
             clamped = 0x2000;
@@ -3785,9 +3764,9 @@ void updateRacePlayerMode03Nudge(RacePlayer *player) {
         if (clamped < -0x2000) {
             clamped = updateState;
         }
-        player->velocity.x = tempX - clamped;
+        player->state.velocity.x = tempX - clamped;
 
-        tempZ = playerAlias->velocity.z;
+        tempZ = playerAlias->state.velocity.z;
         clamped = tempZ;
         if (clamped >= 0x2001) {
             clamped = 0x2000;
@@ -3795,26 +3774,26 @@ void updateRacePlayerMode03Nudge(RacePlayer *player) {
         if (clamped < updateState) {
             clamped = updateState;
         }
-        player->velocity.z = tempZ - clamped;
+        player->state.velocity.z = tempZ - clamped;
     }
 
-    playerAlias->pos.x += playerAlias->velocity.x;
-    playerAlias->pos.y += player->velocity.y;
-    playerAlias->pos.z += playerAlias->velocity.z;
+    playerAlias->state.pos.x += playerAlias->state.velocity.x;
+    playerAlias->state.pos.y += player->state.velocity.y;
+    playerAlias->state.pos.z += playerAlias->state.velocity.z;
 
     spawn = &gRaceCourseStartEntries[gRaceCourseIndex.signedValue];
-    if ((spawn->pathIndex == playerAlias->coursePathIndex) && !(playerAlias->stateFlags & 0x40)) {
+    if ((spawn->pathIndex == playerAlias->state.coursePathIndex) && !(playerAlias->state.stateFlags & 0x40)) {
         angleDiff = calculateFixedAngleBetweenXZPoints(
-            playerAlias->pos.x,
-            player->pos.z,
+            playerAlias->state.pos.x,
+            player->state.pos.z,
             spawn->startSurfaceTargetX,
             spawn->startSurfaceTargetZ
         );
-        if (playerAlias->stateFlags & 0x400) {
+        if (playerAlias->state.stateFlags & 0x400) {
             angleDiff += 0x800;
         }
 
-        angleDiff = (angleDiff - player->facingAngle) & 0xFFF;
+        angleDiff = (angleDiff - player->state.facingAngle) & 0xFFF;
         if (angleDiff >= 0x801) {
             angleDiff -= 0x1000;
         }
@@ -3824,23 +3803,23 @@ void updateRacePlayerMode03Nudge(RacePlayer *player) {
         if (angleDiff < -0x96) {
             angleDiff = -0x96;
         }
-        playerAlias->facingAngle += angleDiff;
+        playerAlias->state.facingAngle += angleDiff;
     }
 
-    if (!(player->stateFlags & 1)) {
+    if (!(player->state.stateFlags & 1)) {
         updateRacePlayerMotionFeedback(player);
     }
 
     if (stepRaceMotionAnimationUntilEnd(player) != 0) {
-        playerAlias->stateFlags &= 0xFE0C1FFB;
-        if (playerAlias->stateFlags & 0x200) {
-            player->mode = 1;
-            playerAlias->updateState = 0;
-            player->updateTimer = 0;
+        playerAlias->state.stateFlags &= 0xFE0C1FFB;
+        if (playerAlias->state.stateFlags & 0x200) {
+            player->state.mode = 1;
+            playerAlias->state.updateState = 0;
+            player->state.updateTimer = 0;
         } else {
-            playerAlias->mode = 0;
-            playerAlias->updateState = 0;
-            playerAlias->updateTimer = 0;
+            playerAlias->state.mode = 0;
+            playerAlias->state.updateState = 0;
+            playerAlias->state.updateTimer = 0;
         }
     }
 }
@@ -3850,42 +3829,42 @@ void updateRacePlayerMode04Spinout(RacePlayer *player) {
     s32 tempX;
     s32 tempZ;
 
-    updateState = player->updateState;
+    updateState = player->state.updateState;
     if (updateState == 0) {
-        player->updateState = updateState + 1;
+        player->state.updateState = updateState + 1;
         setRaceMotionAnimation(player, 0xE);
-        player->stateFlags &= 0xFE0C1FFB;
-        player->stateFlags |= 0x12204;
-        player->pitchAngle = 0;
+        player->state.stateFlags &= 0xFE0C1FFB;
+        player->state.stateFlags |= 0x12204;
+        player->state.pitchAngle = 0;
         updateRacePlayerLeanAngle(player, 0, 0);
-        player->velocity.x = player->unk2E0;
-        player->velocity.z = player->unk2E4;
-        player->velocity.y = 0x20000;
-        player->targetGroundOffset = 0;
-        player->rumbleTimer = 3;
-        player->rumblePatternId = 0;
+        player->state.velocity.x = player->state.unk2E0;
+        player->state.velocity.z = player->state.unk2E4;
+        player->state.velocity.y = 0x20000;
+        player->state.targetGroundOffset = 0;
+        player->state.rumbleTimer = 3;
+        player->state.rumblePatternId = 0;
     }
 
-    player->speedLimit = 0x60000;
-    if (player->stateFlags & 1) {
-        clampRacePlayerVectorXZSpeed(&player->velocity, player);
-        tempX = player->velocity.x;
-        tempZ = player->velocity.z;
-        player->velocity.y -= 0xA000;
-        player->velocity.x = tempX - (tempX / 15);
-        player->velocity.z = tempZ - (tempZ / 15);
+    player->state.speedLimit = 0x60000;
+    if (player->state.stateFlags & 1) {
+        clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
+        tempX = player->state.velocity.x;
+        tempZ = player->state.velocity.z;
+        player->state.velocity.y -= 0xA000;
+        player->state.velocity.x = tempX - (tempX / 15);
+        player->state.velocity.z = tempZ - (tempZ / 15);
     } else {
         updateRacePlayerLocalVelocityNoVerticalOffset(player, 0, 0x3000, 0x3000, 0x3000);
     }
 
-    player->pos.x += player->velocity.x;
-    player->pos.y += player->velocity.y;
-    player->pos.z += player->velocity.z;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += player->state.velocity.y;
+    player->state.pos.z += player->state.velocity.z;
 
-    if ((stepRaceMotionAnimationUntilEnd(player) != 0) && !(player->stateFlags & 1)) {
-        player->mode = 5;
-        player->updateState = 0;
-        player->updateTimer = 0;
+    if ((stepRaceMotionAnimationUntilEnd(player) != 0) && !(player->state.stateFlags & 1)) {
+        player->state.mode = 5;
+        player->state.updateState = 0;
+        player->state.updateTimer = 0;
     }
 }
 
@@ -3893,59 +3872,59 @@ void updateRacePlayerMode05SpinoutStun(RacePlayer *player) {
     s16 updateState;
     s32 stateTimer;
 
-    updateState = player->updateState;
+    updateState = player->state.updateState;
     if (updateState == 0) {
-        player->updateState = updateState + 1;
-        player->modeValue = 0x1E;
-        if (player->stateFlags & 0x800000) {
-            player->modeValue = 0x5A;
+        player->state.updateState = updateState + 1;
+        player->state.modeValue = 0x1E;
+        if (player->state.stateFlags & 0x800000) {
+            player->state.modeValue = 0x5A;
             spawnRaceUiStunOrbitingIcons(player->playerIndex);
         }
         setRaceMotionAnimation(player, 0xF);
-        stateTimer = player->modeValue;
-        player->stateFlags &= 0xFE0C1FFB;
-        player->stateFlags &= ~0x200;
-        player->stateFlags |= 0x1012000;
-        player->targetGroundOffset = 0;
-        player->modeValue = stateTimer;
+        stateTimer = player->state.modeValue;
+        player->state.stateFlags &= 0xFE0C1FFB;
+        player->state.stateFlags &= ~0x200;
+        player->state.stateFlags |= 0x1012000;
+        player->state.targetGroundOffset = 0;
+        player->state.modeValue = stateTimer;
         /* Rank-scaled recovery timer for humans and CPUs. With zero-based rank,
          * integer truncation gives 60/53/45/38 updates for a base of 60. */
-        player->modeValue = stateTimer - ((player->modeValue * player->rankIndex) / 8);
-        player->rumbleTimer = 1;
-        player->rumblePatternId = 0;
+        player->state.modeValue = stateTimer - ((player->state.modeValue * player->state.rankIndex) / 8);
+        player->state.rumbleTimer = 1;
+        player->state.rumblePatternId = 0;
     }
 
     updateRacePlayerLeanAngle(player, 0, 0);
-    if (!(player->stateFlags & 1)) {
+    if (!(player->state.stateFlags & 1)) {
         updateRacePlayerLocalVelocityNoVerticalOffset(player, 0, 0x4000, 0x4000, 0x4000);
     }
 
-    player->velocity.y -= 0xA000;
-    player->pos.y += player->velocity.y;
+    player->state.velocity.y -= 0xA000;
+    player->state.pos.y += player->state.velocity.y;
 
-    if (!(player->stateFlags & 1)) {
-        player->modeValue = player->modeValue - getRaceInputTimerDecrementBonus(player) - 1;
-        if (player->modeValue < 0) {
-            player->modeValue = 0;
+    if (!(player->state.stateFlags & 1)) {
+        player->state.modeValue = player->state.modeValue - getRaceInputTimerDecrementBonus(player) - 1;
+        if (player->state.modeValue < 0) {
+            player->state.modeValue = 0;
         }
         if (stepRaceMotionAnimationUntilEnd(player) != 0) {
-            player->stateFlags &= ~0x200;
-            if (player->modeValue == 0) {
-                player->mode = 8;
-                player->updateState = 0;
-                player->updateTimer = 0;
+            player->state.stateFlags &= ~0x200;
+            if (player->state.modeValue == 0) {
+                player->state.mode = 8;
+                player->state.updateState = 0;
+                player->state.updateTimer = 0;
             }
         }
     } else {
-        player->stateFlags |= 0x200;
+        player->state.stateFlags |= 0x200;
         setRaceMotionAnimation(player, 0xF);
         stepRaceMotionAnimationUntilEnd(player);
-        if (player->modeValue < 0x1E) {
-            player->modeValue = 0x1E;
+        if (player->state.modeValue < 0x1E) {
+            player->state.modeValue = 0x1E;
         }
-        if (!(player->stateFlags & 1)) {
-            player->rumbleTimer = 1;
-            player->rumblePatternId = 0;
+        if (!(player->state.stateFlags & 1)) {
+            player->state.rumbleTimer = 1;
+            player->state.rumblePatternId = 0;
         }
     }
 }
@@ -3956,39 +3935,39 @@ void updateRacePlayerMode08SpinoutRecover(RacePlayer *player) {
     s16 targetAngle;
     s16 facingAngle;
 
-    updateState = player->updateState;
+    updateState = player->state.updateState;
     if (updateState == 0) {
-        player->updateState = updateState + 1;
-        if (player->stateFlags & 0x10000) {
+        player->state.updateState = updateState + 1;
+        if (player->state.stateFlags & 0x10000) {
             setRaceMotionAnimation(player, 0x11);
         } else {
             setRaceMotionAnimation(player, 0x10);
         }
-        player->stateFlags = player->stateFlags & 0xFE0C1FFB;
-        player->stateFlags = player->stateFlags & ~0x200;
-        player->stateFlags = player->stateFlags | 0xA000;
-        player->targetGroundOffset = 0x40000;
+        player->state.stateFlags = player->state.stateFlags & 0xFE0C1FFB;
+        player->state.stateFlags = player->state.stateFlags & ~0x200;
+        player->state.stateFlags = player->state.stateFlags | 0xA000;
+        player->state.targetGroundOffset = 0x40000;
     }
 
-    if (player->stateFlags & 1) {
-        player->stateFlags |= 0x200;
+    if (player->state.stateFlags & 1) {
+        player->state.stateFlags |= 0x200;
     } else {
-        player->stateFlags &= ~0x200;
+        player->state.stateFlags &= ~0x200;
     }
 
     spawn = &gRaceCourseStartEntries[gRaceCourseIndex.signedValue];
-    if ((spawn->pathIndex == player->coursePathIndex) && !(player->stateFlags & 0x40)) {
+    if ((spawn->pathIndex == player->state.coursePathIndex) && !(player->state.stateFlags & 0x40)) {
         targetAngle = calculateFixedAngleBetweenXZPoints(
-            player->pos.x,
-            player->pos.z,
+            player->state.pos.x,
+            player->state.pos.z,
             spawn->startSurfaceTargetX,
             spawn->startSurfaceTargetZ
         );
-        if (player->stateFlags & 0x400) {
+        if (player->state.stateFlags & 0x400) {
             targetAngle += 0x800;
         }
 
-        facingAngle = player->facingAngle;
+        facingAngle = player->state.facingAngle;
         targetAngle = (targetAngle - facingAngle) & 0xFFF;
         if (targetAngle >= 0x801) {
             targetAngle -= 0x1000;
@@ -3999,47 +3978,47 @@ void updateRacePlayerMode08SpinoutRecover(RacePlayer *player) {
         if (targetAngle < -0x66) {
             targetAngle = -0x66;
         }
-        player->facingAngle = facingAngle + targetAngle;
+        player->state.facingAngle = facingAngle + targetAngle;
     }
 
     updateRacePlayerLeanAngle(player, 0, 0);
-    player->velocity.y -= 0xA000;
-    player->pos.y += player->velocity.y;
+    player->state.velocity.y -= 0xA000;
+    player->state.pos.y += player->state.velocity.y;
 
     if (stepRaceMotionAnimationUntilEnd(player) != 0) {
-        player->stateFlags &= 0xFE0C1FFB;
-        player->mode = 0;
-        player->updateState = 0;
-        player->updateTimer = 0;
+        player->state.stateFlags &= 0xFE0C1FFB;
+        player->state.mode = 0;
+        player->state.updateState = 0;
+        player->state.updateTimer = 0;
     }
 }
 
 void updateRacePlayerMode06TerrainFall(RacePlayer *player) {
-    if (player->updateState == 0) {
-        player->updateState++;
-        player->modeValue = 0x3C;
-        player->stateFlags &= 0xFE0C1FFB;
-        player->stateFlags |= 0x42000;
-        player->updateTimer = 0;
+    if (player->state.updateState == 0) {
+        player->state.updateState++;
+        player->state.modeValue = 0x3C;
+        player->state.stateFlags &= 0xFE0C1FFB;
+        player->state.stateFlags |= 0x42000;
+        player->state.updateTimer = 0;
         setRaceCameraMode(player->playerIndex, 4);
-        player->targetGroundOffset = 0;
-        player->unk2E8 = player->coursePathIndex;
+        player->state.targetGroundOffset = 0;
+        player->state.unk2E8 = player->state.coursePathIndex;
         if (player->soundDisabled == 0) {
-            spawnRaceItemBreakParticles(player->playerIndex, player->surfaceType);
+            spawnRaceItemBreakParticles(player->playerIndex, player->state.surfaceType);
         }
         /* Rank-scaled recovery timer for humans and CPUs. With zero-based rank,
          * integer truncation gives 60/53/45/38 updates for a base of 60. */
-        player->modeValue -= (player->modeValue * player->rankIndex) / 8;
-        player->rumbleTimer = 2;
-        player->rumblePatternId = 0;
+        player->state.modeValue -= (player->state.modeValue * player->state.rankIndex) / 8;
+        player->state.rumbleTimer = 2;
+        player->state.rumblePatternId = 0;
         setRaceMotionAnimation(player, 0x20);
     }
 
-    switch (player->updateTimer) {
+    switch (player->state.updateTimer) {
         case 0:
-            player->modeValue--;
-            if (player->modeValue == 0) {
-                player->updateTimer++;
+            player->state.modeValue--;
+            if (player->state.modeValue == 0) {
+                player->state.updateTimer++;
             }
             if (stepRaceMotionAnimationUntilEnd(player) != 0) {
                 setRaceMotionAnimation(player, 0x21);
@@ -4049,157 +4028,157 @@ void updateRacePlayerMode06TerrainFall(RacePlayer *player) {
             if (stepRaceMotionAnimationUntilEnd(player) != 0) {
                 setRaceMotionAnimation(player, 0x21);
             }
-            player->stateFlags |= 0x80000;
+            player->state.stateFlags |= 0x80000;
             if (gViewportStates[(u16)player->playerIndex].overlayAlpha == 0xFF) {
-                player->updateTimer++;
-                player->verticalVelocityLimit = 0;
-                player->coursePathIndex = player->unk2E8;
+                player->state.updateTimer++;
+                player->state.verticalVelocityLimit = 0;
+                player->state.coursePathIndex = player->state.unk2E8;
                 do {
                     getRaceCourseSurfaceSpawnTransform(
-                        player->coursePathIndex,
-                        &player->pos.x,
-                        &player->pos.y,
-                        &player->pos.z,
-                        &player->facingAngle
+                        player->state.coursePathIndex,
+                        &player->state.pos.x,
+                        &player->state.pos.y,
+                        &player->state.pos.z,
+                        &player->state.facingAngle
                     );
                     if (isRacePlayerRespawnSurfaceValid(player) == 0) {
-                        player->coursePathIndex--;
+                        player->state.coursePathIndex--;
                     } else {
                         break;
                     }
                 } while (1);
-                player->pos.y = getRaceCourseSurfaceHeight(player->coursePathIndex, player->pos.x, player->pos.z);
-                player->previousPosition = player->pos;
-                player->velocity.x = 0;
-                player->velocity.y = 0;
-                player->velocity.z = 0;
-                player->stateFlags &= ~0x400;
-                player->leanAngle = 0;
+                player->state.pos.y = getRaceCourseSurfaceHeight(player->state.coursePathIndex, player->state.pos.x, player->state.pos.z);
+                player->state.previousPosition = player->state.pos;
+                player->state.velocity.x = 0;
+                player->state.velocity.y = 0;
+                player->state.velocity.z = 0;
+                player->state.stateFlags &= ~0x400;
+                player->state.leanAngle = 0;
                 updateRacePlayerLeanAngle(player, 0, 0);
                 setRaceMotionAnimation(player, 1);
                 stepRaceMotionAnimationUntilEnd(player);
                 setRaceCameraMode(player->playerIndex, 1);
-                player->targetGroundOffset = 0x40000;
+                player->state.targetGroundOffset = 0x40000;
             }
             break;
         case 2:
-            player->stateFlags &= 0xFFF7FFFF;
+            player->state.stateFlags &= 0xFFF7FFFF;
             if (gViewportStates[(u16)player->playerIndex].overlayAlpha == 0) {
-                player->mode = 0;
-                player->updateState = 0;
-                player->updateTimer = 0;
-                player->stateFlags = 0;
+                player->state.mode = 0;
+                player->state.updateState = 0;
+                player->state.updateTimer = 0;
+                player->state.stateFlags = 0;
             }
             stepRaceMotionAnimationUntilEnd(player);
             break;
     }
 
-    player->velocity.y -= player->gravity;
-    player->pos.y += player->velocity.y;
+    player->state.velocity.y -= player->state.gravity;
+    player->state.pos.y += player->state.velocity.y;
 }
 
 void updateRacePlayerMode28TerrainFallWithItemEffect(RacePlayer *player) {
     s16 updateState;
 
-    player->velocity.y -= player->gravity;
-    player->pos.y += player->velocity.y;
-    updateState = player->updateState;
+    player->state.velocity.y -= player->state.gravity;
+    player->state.pos.y += player->state.velocity.y;
+    updateState = player->state.updateState;
 
     switch (updateState) {
         case 0:
-            player->updateState = updateState + 1;
-            player->stateFlags &= 0xFE0C1FFB;
-            player->stateFlags |= 0x42000;
+            player->state.updateState = updateState + 1;
+            player->state.stateFlags &= 0xFE0C1FFB;
+            player->state.stateFlags |= 0x42000;
             setRaceMotionAnimation(player, 0xE);
             stepRaceMotionAnimationUntilEnd(player);
-            player->unk80 = player->coursePathIndex + 2;
+            player->state.unk80 = player->state.coursePathIndex + 2;
             setRaceCameraMode(player->playerIndex, 4);
-            player->targetGroundOffset = 0;
+            player->state.targetGroundOffset = 0;
             if (player->soundDisabled == 0) {
-                spawnRaceItemBreakParticles(player->playerIndex, player->surfaceType);
+                spawnRaceItemBreakParticles(player->playerIndex, player->state.surfaceType);
             }
-            player->unk2E8 = player->coursePathIndex;
-            player->rumbleTimer = 2;
-            player->rumblePatternId = 0;
+            player->state.unk2E8 = player->state.coursePathIndex;
+            player->state.rumbleTimer = 2;
+            player->state.rumblePatternId = 0;
             /* fallthrough */
         case 1:
             if (stepRaceMotionAnimationUntilEnd(player) != 0) {
-                player->updateState++;
+                player->state.updateState++;
                 setRaceMotionAnimation(player, 0xF);
             }
-            updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-            player->speedLimit = 0x20000;
+            updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+            player->state.speedLimit = 0x20000;
             updateRacePlayerLocalVelocityNoVerticalOffset(player, 0, 0x2000, 0x2000, 0x2000);
-            player->pos.x += player->velocity.x;
-            player->pos.y += player->velocity.y;
-            player->pos.z += player->velocity.z;
+            player->state.pos.x += player->state.velocity.x;
+            player->state.pos.y += player->state.velocity.y;
+            player->state.pos.z += player->state.velocity.z;
             break;
         case 2:
             if (stepRaceMotionAnimationUntilEnd(player) != 0) {
-                player->updateState++;
+                player->state.updateState++;
                 /* Rank-scaled recovery timer for humans and CPUs. With zero-based rank,
                  * integer truncation gives 60/53/45/38 updates for a base of 60. */
-                player->modeValue = 0x3C - ((player->rankIndex * 0x3C) / 8);
+                player->state.modeValue = 0x3C - ((player->state.rankIndex * 0x3C) / 8);
                 setRaceMotionAnimation(player, 0x20);
             }
-            updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-            player->speedLimit = 0x20000;
+            updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+            player->state.speedLimit = 0x20000;
             updateRacePlayerLocalVelocityNoVerticalOffset(player, 0, 0x2000, 0x2000, 0x2000);
-            player->pos.x += player->velocity.x;
-            player->pos.y += player->velocity.y;
-            player->pos.z += player->velocity.z;
+            player->state.pos.x += player->state.velocity.x;
+            player->state.pos.y += player->state.velocity.y;
+            player->state.pos.z += player->state.velocity.z;
             break;
         case 3:
-            player->modeValue--;
+            player->state.modeValue--;
             if (stepRaceMotionAnimationUntilEnd(player) != 0) {
                 setRaceMotionAnimation(player, 0x21);
             }
-            if (player->modeValue == 0) {
-                player->updateState++;
+            if (player->state.modeValue == 0) {
+                player->state.updateState++;
             }
             break;
         case 4:
             if (stepRaceMotionAnimationUntilEnd(player) != 0) {
                 setRaceMotionAnimation(player, 0x21);
             }
-            player->stateFlags |= 0x80000;
+            player->state.stateFlags |= 0x80000;
             if (gViewportStates[(u16)player->playerIndex].overlayAlpha == 0xFF) {
-                player->updateState++;
-                player->coursePathIndex = player->unk2E8;
+                player->state.updateState++;
+                player->state.coursePathIndex = player->state.unk2E8;
             loop:
                 getRaceCourseSurfaceSpawnTransform(
-                    player->coursePathIndex,
-                    &player->pos.x,
-                    &player->pos.y,
-                    &player->pos.z,
-                    &player->facingAngle
+                    player->state.coursePathIndex,
+                    &player->state.pos.x,
+                    &player->state.pos.y,
+                    &player->state.pos.z,
+                    &player->state.facingAngle
                 );
                 if (isRacePlayerRespawnSurfaceValid(player) == 0) {
-                    player->coursePathIndex--;
+                    player->state.coursePathIndex--;
                     goto loop;
                 }
-                player->pos.y = getRaceCourseSurfaceHeight(player->coursePathIndex, player->pos.x, player->pos.z);
-                player->previousPosition = player->pos;
-                player->velocity.x = 0;
-                player->velocity.y = 0;
-                player->velocity.z = 0;
-                player->stateFlags &= ~0x400;
-                player->leanAngle = 0;
+                player->state.pos.y = getRaceCourseSurfaceHeight(player->state.coursePathIndex, player->state.pos.x, player->state.pos.z);
+                player->state.previousPosition = player->state.pos;
+                player->state.velocity.x = 0;
+                player->state.velocity.y = 0;
+                player->state.velocity.z = 0;
+                player->state.stateFlags &= ~0x400;
+                player->state.leanAngle = 0;
                 updateRacePlayerLeanAngle(player, 0, 0);
                 setRaceMotionAnimation(player, 1);
                 stepRaceMotionAnimationUntilEnd(player);
                 setRaceCameraMode(player->playerIndex, 1);
-                player->targetGroundOffset = 0x40000;
+                player->state.targetGroundOffset = 0x40000;
             }
             break;
         case 5:
-            player->stateFlags &= 0xFFF7FFFF;
+            player->state.stateFlags &= 0xFFF7FFFF;
             if (gViewportStates[(u16)player->playerIndex].overlayAlpha == 0) {
-                player->mode = 0;
-                player->updateState = 0;
-                player->updateTimer = 0;
+                player->state.mode = 0;
+                player->state.updateState = 0;
+                player->state.updateTimer = 0;
                 stepRaceMotionAnimationUntilEnd(player);
-                player->stateFlags = 0;
+                player->state.stateFlags = 0;
             }
             break;
     }
@@ -4210,105 +4189,105 @@ void updateRacePlayerMode09TerrainCrash(RacePlayer *player) {
     s16 cosine;
     s16 updateState;
 
-    player->velocity.y -= player->gravity;
-    player->pos.y += player->velocity.y;
-    updateState = player->updateState;
+    player->state.velocity.y -= player->state.gravity;
+    player->state.pos.y += player->state.velocity.y;
+    updateState = player->state.updateState;
 
     switch (updateState) {
         case 0:
-            player->updateState = updateState + 1;
-            player->stateFlags &= 0xFE0C1FFB;
-            player->stateFlags |= 0x42000;
+            player->state.updateState = updateState + 1;
+            player->state.stateFlags &= 0xFE0C1FFB;
+            player->state.stateFlags |= 0x42000;
             setRaceMotionAnimation(player, 0xE);
             stepRaceMotionAnimationUntilEnd(player);
-            player->unk80 = player->coursePathIndex + 2;
+            player->state.unk80 = player->state.coursePathIndex + 2;
             setRaceCameraMode((u16)player->playerIndex, 4);
-            player->targetGroundOffset = 0;
+            player->state.targetGroundOffset = 0;
             if (player->soundDisabled == 0) {
-                spawnRaceItemBreakParticles(player->playerIndex, player->surfaceType);
+                spawnRaceItemBreakParticles(player->playerIndex, player->state.surfaceType);
             }
-            player->unk2E8 = player->coursePathIndex;
-            player->rumbleTimer = 2;
-            player->rumblePatternId = 0;
+            player->state.unk2E8 = player->state.coursePathIndex;
+            player->state.rumbleTimer = 2;
+            player->state.rumblePatternId = 0;
             /* fallthrough */
         case 1:
             if (stepRaceMotionAnimationUntilEnd(player) != 0) {
-                player->updateState++;
+                player->state.updateState++;
                 setRaceMotionAnimation(player, 0xF);
             }
-            updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-            player->speedLimit = 0x20000;
+            updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+            player->state.speedLimit = 0x20000;
             updateRacePlayerLocalVelocityNoVerticalOffset(player, 0, 0x2000, 0x2000, 0x2000);
-            player->pos.x += player->velocity.x;
-            player->pos.y += player->velocity.y;
-            player->pos.z += player->velocity.z;
+            player->state.pos.x += player->state.velocity.x;
+            player->state.pos.y += player->state.velocity.y;
+            player->state.pos.z += player->state.velocity.z;
             break;
         case 2:
             if (stepRaceMotionAnimationUntilEnd(player) != 0) {
-                player->updateState++;
+                player->state.updateState++;
                 /* Rank-scaled recovery timer for humans and CPUs. With zero-based rank,
                  * integer truncation gives 60/53/45/38 updates for a base of 60. */
-                player->modeValue = 0x3C - ((player->rankIndex * 0x3C) / 8);
+                player->state.modeValue = 0x3C - ((player->state.rankIndex * 0x3C) / 8);
                 setRaceMotionAnimation(player, 0x20);
             }
-            updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-            player->speedLimit = 0x20000;
+            updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+            player->state.speedLimit = 0x20000;
             updateRacePlayerLocalVelocityNoVerticalOffset(player, 0, 0x2000, 0x2000, 0x2000);
-            player->pos.x += player->velocity.x;
-            player->pos.y += player->velocity.y;
-            player->pos.z += player->velocity.z;
+            player->state.pos.x += player->state.velocity.x;
+            player->state.pos.y += player->state.velocity.y;
+            player->state.pos.z += player->state.velocity.z;
             break;
         case 3:
             if (stepRaceMotionAnimationUntilEnd(player) != 0) {
                 setRaceMotionAnimation(player, 0x21);
             }
-            player->modeValue--;
-            if (player->modeValue == 0) {
-                player->updateState++;
+            player->state.modeValue--;
+            if (player->state.modeValue == 0) {
+                player->state.updateState++;
             }
             break;
         case 4:
             if (stepRaceMotionAnimationUntilEnd(player) != 0) {
                 setRaceMotionAnimation(player, 0x21);
             }
-            player->stateFlags |= 0x80000;
+            player->state.stateFlags |= 0x80000;
             if (gViewportStates[(u16)player->playerIndex].overlayAlpha == 0xFF) {
-                player->updateState++;
-                player->coursePathIndex = player->unk2E8;
+                player->state.updateState++;
+                player->state.coursePathIndex = player->state.unk2E8;
                 getRaceCourseSurfaceSpawnTransform(
-                    player->unk80,
-                    &player->pos.x,
-                    &player->pos.y,
-                    &player->pos.z,
-                    &player->facingAngle
+                    player->state.unk80,
+                    &player->state.pos.x,
+                    &player->state.pos.y,
+                    &player->state.pos.z,
+                    &player->state.facingAngle
                 );
-                player->pos.y = getRaceCourseSurfaceHeight(player->coursePathIndex, player->pos.x, player->pos.z);
-                sine = fixedSine(player->facingAngle);
-                cosine = fixedCosine(player->facingAngle);
-                player->pos.x += ((s64)sine * -0x240000) / 0x1000;
-                player->pos.z += ((s64)cosine * -0x240000) / 0x1000;
-                player->previousPosition = player->pos;
-                player->velocity.x = 0;
-                player->velocity.y = 0;
-                player->velocity.z = 0;
-                player->verticalVelocityLimit = 0;
-                player->stateFlags &= ~0x400;
-                player->leanAngle = 0;
+                player->state.pos.y = getRaceCourseSurfaceHeight(player->state.coursePathIndex, player->state.pos.x, player->state.pos.z);
+                sine = fixedSine(player->state.facingAngle);
+                cosine = fixedCosine(player->state.facingAngle);
+                player->state.pos.x += ((s64)sine * -0x240000) / 0x1000;
+                player->state.pos.z += ((s64)cosine * -0x240000) / 0x1000;
+                player->state.previousPosition = player->state.pos;
+                player->state.velocity.x = 0;
+                player->state.velocity.y = 0;
+                player->state.velocity.z = 0;
+                player->state.verticalVelocityLimit = 0;
+                player->state.stateFlags &= ~0x400;
+                player->state.leanAngle = 0;
                 updateRacePlayerLeanAngle(player, 0, 0);
                 setRaceMotionAnimation(player, 1);
                 stepRaceMotionAnimationUntilEnd(player);
                 setRaceCameraMode((u16)player->playerIndex, 1);
-                player->targetGroundOffset = 0x40000;
+                player->state.targetGroundOffset = 0x40000;
             }
             break;
         case 5:
-            player->stateFlags &= 0xFFF7FFFF;
+            player->state.stateFlags &= 0xFFF7FFFF;
             if (gViewportStates[(u16)player->playerIndex].overlayAlpha == 0) {
-                player->mode = 0;
-                player->updateState = 0;
-                player->updateTimer = 0;
+                player->state.mode = 0;
+                player->state.updateState = 0;
+                player->state.updateTimer = 0;
                 stepRaceMotionAnimationUntilEnd(player);
-                player->stateFlags = 0;
+                player->state.stateFlags = 0;
             }
             break;
     }
@@ -4321,66 +4300,66 @@ void updateRacePlayerMode10TerrainCrashSlide(RacePlayer *player) {
     s32 velocityZ;
     u32 stateFlags;
 
-    updateState = player->updateState;
+    updateState = player->state.updateState;
     if (updateState == 0) {
-        player->updateState = updateState + 1;
-        player->stateFlags &= ~0x200;
-        player->stateFlags &= 0xFE0C1FFB;
-        (*player).stateFlags |= 0x01006000;
-        if (player->animationId != 0x12) {
+        player->state.updateState = updateState + 1;
+        player->state.stateFlags &= ~0x200;
+        player->state.stateFlags &= 0xFE0C1FFB;
+        (*player).state.stateFlags |= 0x01006000;
+        if (player->state.animationId != 0x12) {
             setRaceMotionAnimation(player, 0x12);
         }
-        player->modeValue = 0x1E;
-        player->targetGroundOffset = 0;
+        player->state.modeValue = 0x1E;
+        player->state.targetGroundOffset = 0;
     }
     stepRaceMotionLoopingAnimation(player);
-    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-    player->velocity.y += 0xFFFF6000;
-    player->speedLimit = 0x80000;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
-    stateFlags = player->stateFlags;
+    updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+    player->state.velocity.y += 0xFFFF6000;
+    player->state.speedLimit = 0x80000;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
+    stateFlags = player->state.stateFlags;
     if ((stateFlags & 1) == 0) {
         updateRacePlayerLocalVelocityNoVerticalOffset(player, 0, 0, 0, 0);
-        player->loopSoundVolume = 0x100;
-        player->loopSoundId = SFX_CRASH_SLIDE_LOOP;
-        player->loopSoundPitch = 0.0f;
-        stateFlags = player->stateFlags;
+        player->state.loopSoundVolume = 0x100;
+        player->state.loopSoundId = SFX_CRASH_SLIDE_LOOP;
+        player->state.loopSoundPitch = 0.0f;
+        stateFlags = player->state.stateFlags;
     }
     if ((stateFlags & 1) != 0) {
-        player->stateFlags = stateFlags | 0x200;
+        player->state.stateFlags = stateFlags | 0x200;
     } else {
-        player->stateFlags = stateFlags & ~0x200;
+        player->state.stateFlags = stateFlags & ~0x200;
     }
-    yVel = player->velocity.y;
-    velocityX = player->velocity.x;
-    velocityZ = player->velocity.z;
-    player->pos.y += yVel;
-    player->verticalVelocityLimit = 0;
-    player->pos.x += velocityX;
-    player->pos.y += yVel;
-    player->pos.z += player->velocity.z;
-    player->facingAngle = calculateFixedAngleFromDeltaXZ(velocityX, velocityZ);
-    if (player->stateFlags & 0x400) {
-        player->facingAngle += 0x800;
+    yVel = player->state.velocity.y;
+    velocityX = player->state.velocity.x;
+    velocityZ = player->state.velocity.z;
+    player->state.pos.y += yVel;
+    player->state.verticalVelocityLimit = 0;
+    player->state.pos.x += velocityX;
+    player->state.pos.y += yVel;
+    player->state.pos.z += player->state.velocity.z;
+    player->state.facingAngle = calculateFixedAngleFromDeltaXZ(velocityX, velocityZ);
+    if (player->state.stateFlags & 0x400) {
+        player->state.facingAngle += 0x800;
     }
-    if (player->surfaceType != 3) {
-        if (--player->modeValue == 0) {
-            player->stateFlags &= 0xFE0C1FFB;
-            if (player->stateFlags & 1) {
-                player->mode = 1;
-                player->updateState = 0;
-                player->updateTimer = 0;
+    if (player->state.surfaceType != 3) {
+        if (--player->state.modeValue == 0) {
+            player->state.stateFlags &= 0xFE0C1FFB;
+            if (player->state.stateFlags & 1) {
+                player->state.mode = 1;
+                player->state.updateState = 0;
+                player->state.updateTimer = 0;
             } else {
-                player->mode = 0;
-                player->updateState = 0;
-                player->updateTimer = 0;
+                player->state.mode = 0;
+                player->state.updateState = 0;
+                player->state.updateTimer = 0;
             }
         }
     } else {
-        player->modeValue = 0x1E;
+        player->state.modeValue = 0x1E;
     }
-    player->rumbleTimer = 4;
-    player->rumblePatternId = 2;
+    player->state.rumbleTimer = 4;
+    player->state.rumblePatternId = 2;
 }
 
 void updateRacePlayerMode12LaunchRecover(RacePlayer *player) {
@@ -4388,64 +4367,64 @@ void updateRacePlayerMode12LaunchRecover(RacePlayer *player) {
     u32 stateFlags;
     s32 grounded;
 
-    updateState = player->updateState;
+    updateState = player->state.updateState;
     if (updateState == 0) {
-        player->updateState = updateState + 1;
+        player->state.updateState = updateState + 1;
         setRaceMotionAnimation(player, 0x14);
-        player->stateFlags &= 0xFE0C1FFB;
-        player->stateFlags &= ~0x200;
-        player->stateFlags |= 0x1022000;
-        player->targetGroundOffset = 0;
-        player->unk80 = 0;
+        player->state.stateFlags &= 0xFE0C1FFB;
+        player->state.stateFlags &= ~0x200;
+        player->state.stateFlags |= 0x1022000;
+        player->state.targetGroundOffset = 0;
+        player->state.unk80 = 0;
         /* Rank-scaled recovery timer for humans and CPUs. With zero-based rank,
          * integer truncation gives 60/53/45/38 updates for a base of 60. */
-        player->modeValue = 0x1E - ((player->rankIndex * 0x1E) / 8);
-        player->rumbleTimer = 1;
-        player->rumblePatternId = 0;
+        player->state.modeValue = 0x1E - ((player->state.rankIndex * 0x1E) / 8);
+        player->state.rumbleTimer = 1;
+        player->state.rumblePatternId = 0;
     }
 
     updateRacePlayerLeanAngle(player, 0, 0);
-    player->velocity.y += 0xFFFF6000;
-    grounded = player->stateFlags & 1;
+    player->state.velocity.y += 0xFFFF6000;
+    grounded = player->state.stateFlags & 1;
     if (grounded == 0) {
         updateRacePlayerLocalVelocityNoVerticalOffset(player, 0, 0x6000, 0x6000, 0x6000);
-        grounded = player->stateFlags & 1;
+        grounded = player->state.stateFlags & 1;
     }
 
-    player->pos.x += player->velocity.x;
-    player->pos.y += player->velocity.y;
-    player->pos.z += player->velocity.z;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += player->state.velocity.y;
+    player->state.pos.z += player->state.velocity.z;
 
     if (grounded == 0) {
         updateRacePlayerMotionFeedback(player);
-        if ((player->loopSoundId != SFX_BOARD_SURFACE_RUMBLE_LOOP) && (player->loopSoundId != SFX_BREAKABLE_SURFACE_LOOP)) {
-            player->loopSoundPitch = -6.0f;
+        if ((player->state.loopSoundId != SFX_BOARD_SURFACE_RUMBLE_LOOP) && (player->state.loopSoundId != SFX_BREAKABLE_SURFACE_LOOP)) {
+            player->state.loopSoundPitch = -6.0f;
         }
     }
 
-    stateFlags = player->stateFlags;
+    stateFlags = player->state.stateFlags;
     if (!(stateFlags & 1)) {
-        player->modeValue = player->modeValue - getRaceInputTimerDecrementBonus(player) - 1;
-        if (player->modeValue < 0) {
-            player->modeValue = 0;
+        player->state.modeValue = player->state.modeValue - getRaceInputTimerDecrementBonus(player) - 1;
+        if (player->state.modeValue < 0) {
+            player->state.modeValue = 0;
         }
         if (stepRaceMotionAnimationUntilEnd(player)) {
-            player->stateFlags &= ~0x200;
-            if (player->modeValue == 0) {
-                player->mode = 8;
-                player->updateState = 0;
-                player->updateTimer = 0;
+            player->state.stateFlags &= ~0x200;
+            if (player->state.modeValue == 0) {
+                player->state.mode = 8;
+                player->state.updateState = 0;
+                player->state.updateTimer = 0;
             }
         }
     } else {
-        player->stateFlags = stateFlags | 0x200;
+        player->state.stateFlags = stateFlags | 0x200;
         setRaceMotionAnimation(player, 0x14);
         stepRaceMotionAnimationUntilEnd(player);
-        player->modeValue = 0x1E;
-        player->unk80 = 7;
-        if (!(player->stateFlags & 1)) {
-            player->rumbleTimer = 1;
-            player->rumblePatternId = 0;
+        player->state.modeValue = 0x1E;
+        player->state.unk80 = 7;
+        if (!(player->state.stateFlags & 1)) {
+            player->state.rumbleTimer = 1;
+            player->state.rumblePatternId = 0;
         }
     }
 }
@@ -4455,39 +4434,39 @@ void updateRacePlayerMode11LaunchHit(RacePlayer *player) {
     s32 tempX;
     s32 tempZ;
 
-    updateState = player->updateState;
+    updateState = player->state.updateState;
     if (updateState == 0) {
-        player->updateState = updateState + 1;
+        player->state.updateState = updateState + 1;
         setRaceMotionAnimation(player, 0x13);
-        player->stateFlags &= 0xFE0C1FFB;
-        player->stateFlags |= 0x22200;
-        player->pitchAngle = 0;
+        player->state.stateFlags &= 0xFE0C1FFB;
+        player->state.stateFlags |= 0x22200;
+        player->state.pitchAngle = 0;
         updateRacePlayerLeanAngle(player, 0, 0);
-        player->targetGroundOffset = 0;
-        player->rumbleTimer = 3;
-        player->rumblePatternId = 0;
+        player->state.targetGroundOffset = 0;
+        player->state.rumbleTimer = 3;
+        player->state.rumblePatternId = 0;
     }
 
-    player->speedLimit = 0x60000;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
-    player->velocity.y -= player->aerialGravity;
-    if (!(player->stateFlags & 1)) {
+    player->state.speedLimit = 0x60000;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
+    player->state.velocity.y -= player->state.aerialGravity;
+    if (!(player->state.stateFlags & 1)) {
         updateRacePlayerLocalVelocityNoVerticalOffset(player, 0, 0x4000, 0x4000, 0x4000);
     } else {
-        tempX = player->velocity.x;
-        tempZ = player->velocity.z;
-        player->velocity.x = tempX - (tempX / 16);
-        player->velocity.z = tempZ - (tempZ / 16);
+        tempX = player->state.velocity.x;
+        tempZ = player->state.velocity.z;
+        player->state.velocity.x = tempX - (tempX / 16);
+        player->state.velocity.z = tempZ - (tempZ / 16);
     }
 
-    player->pos.x += player->velocity.x;
-    player->pos.y += player->velocity.y;
-    player->pos.z += player->velocity.z;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += player->state.velocity.y;
+    player->state.pos.z += player->state.velocity.z;
 
-    if ((stepRaceMotionAnimationUntilEnd(player) != 0) && !(player->stateFlags & 1)) {
-        player->mode = 0xC;
-        player->updateState = 0;
-        player->updateTimer = 0;
+    if ((stepRaceMotionAnimationUntilEnd(player) != 0) && !(player->state.stateFlags & 1)) {
+        player->state.mode = 0xC;
+        player->state.updateState = 0;
+        player->state.updateTimer = 0;
     }
 }
 
@@ -4495,41 +4474,41 @@ void updateRacePlayerMode26Tumble(RacePlayer *player) {
     s16 updateState;
     s32 timer;
 
-    updateState = player->updateState;
+    updateState = player->state.updateState;
     if (updateState == 0) {
-        player->updateState = updateState + 1;
+        player->state.updateState = updateState + 1;
         setRaceMotionAnimation(player, 0x12);
-        player->stateFlags &= 0xFE0C1FFB;
-        player->stateFlags |= 0x6204;
-        player->pitchAngle = 0;
+        player->state.stateFlags &= 0xFE0C1FFB;
+        player->state.stateFlags |= 0x6204;
+        player->state.pitchAngle = 0;
         updateRacePlayerLeanAngle(player, 0, 0);
-        player->targetGroundOffset = 0;
-        player->velocity.y = 0x80000;
-        player->modeValue = 0x14;
+        player->state.targetGroundOffset = 0;
+        player->state.velocity.y = 0x80000;
+        player->state.modeValue = 0x14;
     }
 
     if (gFrameCounter & 1) {
         createCallbackTaskWithUserIdPreservingArgs(initRacePlayerRecoverySparkle, 5, 2, (u16)player->playerIndex);
     }
 
-    player->velocity.y -= 0x7000;
-    player->pos.y += player->velocity.y;
+    player->state.velocity.y -= 0x7000;
+    player->state.pos.y += player->state.velocity.y;
     stepRaceMotionLoopingAnimation(player);
 
-    timer = player->modeValue;
+    timer = player->state.modeValue;
     if (timer == 0) {
-        if (!(player->stateFlags & 1)) {
-            player->mode = 0xC;
-            player->updateState = 0;
-            player->updateTimer = 0;
+        if (!(player->state.stateFlags & 1)) {
+            player->state.mode = 0xC;
+            player->state.updateState = 0;
+            player->state.updateTimer = 0;
         }
     } else {
-        player->modeValue = timer - 1;
+        player->state.modeValue = timer - 1;
     }
 
-    if (player->velocity.y > 0) {
-        player->rumbleTimer = 2;
-        player->rumblePatternId = 3;
+    if (player->state.velocity.y > 0) {
+        player->state.rumbleTimer = 2;
+        player->state.rumblePatternId = 3;
     }
 }
 
@@ -4540,46 +4519,46 @@ void updateRacePlayerMode14PushHit(RacePlayer *player) {
     u32 stateFlags;
     s16 nextState;
 
-    updateState = player->updateState;
+    updateState = player->state.updateState;
     nextState = updateState + 1;
     if (updateState == 0) {
-        player->updateState = nextState;
-        player->stateFlags &= 0xFE0C1FFB;
-        player->stateFlags |= 0x01006000;
+        player->state.updateState = nextState;
+        player->state.stateFlags &= 0xFE0C1FFB;
+        player->state.stateFlags |= 0x01006000;
         setRaceMotionAnimation(player, 0x12);
-        player->modeValue = 0xF;
-        player->targetGroundOffset = 0;
+        player->state.modeValue = 0xF;
+        player->state.targetGroundOffset = 0;
     }
     stepRaceMotionLoopingAnimation(player);
     updateRacePlayerLeanAngle(player, 0x10000, 0);
-    player->velocity.y += 0xFFFF6000;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
-    stateFlags = player->stateFlags;
+    player->state.velocity.y += 0xFFFF6000;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
+    stateFlags = player->state.stateFlags;
     if ((stateFlags & 1) == 0) {
-        player->stateFlags = stateFlags & ~0x200;
+        player->state.stateFlags = stateFlags & ~0x200;
         updateRacePlayerLocalVelocityNoVerticalOffset(player, 0, 0, 0, 0);
-        player->loopSoundVolume = 0x100;
-        player->loopSoundId = SFX_CRASH_SLIDE_LOOP;
-        player->loopSoundPitch = 0.0f;
+        player->state.loopSoundVolume = 0x100;
+        player->state.loopSoundId = SFX_CRASH_SLIDE_LOOP;
+        player->state.loopSoundPitch = 0.0f;
     } else {
-        player->stateFlags = stateFlags | 0x200;
+        player->state.stateFlags = stateFlags | 0x200;
     }
-    velocityX = player->velocity.x;
-    player->pos.x += velocityX;
-    player->pos.y += player->velocity.y;
-    velocityZ = player->velocity.z;
-    player->pos.z += velocityZ;
-    player->facingAngle = calculateFixedAngleFromDeltaXZ(velocityX, velocityZ);
-    if (player->stateFlags & 0x400) {
-        player->facingAngle += 0x800;
+    velocityX = player->state.velocity.x;
+    player->state.pos.x += velocityX;
+    player->state.pos.y += player->state.velocity.y;
+    velocityZ = player->state.velocity.z;
+    player->state.pos.z += velocityZ;
+    player->state.facingAngle = calculateFixedAngleFromDeltaXZ(velocityX, velocityZ);
+    if (player->state.stateFlags & 0x400) {
+        player->state.facingAngle += 0x800;
     }
-    if (--player->modeValue == 0) {
-        player->mode = 0xC;
-        player->updateState = 0;
-        player->updateTimer = 0;
+    if (--player->state.modeValue == 0) {
+        player->state.mode = 0xC;
+        player->state.updateState = 0;
+        player->state.updateTimer = 0;
     }
-    player->rumbleTimer = 4;
-    player->rumblePatternId = 2;
+    player->state.rumbleTimer = 4;
+    player->state.rumblePatternId = 2;
 }
 
 void updateRacePlayerMode23ItemSteal(RacePlayer *player) {
@@ -4588,50 +4567,50 @@ void updateRacePlayerMode23ItemSteal(RacePlayer *player) {
     s32 timer;
     u32 stateFlags;
 
-    updateState = player->updateState;
+    updateState = player->state.updateState;
     nextState = updateState + 1;
     if (updateState == 0) {
-        player->updateState = nextState;
-        player->stateFlags &= 0xFE0C1FFB;
-        player->stateFlags |= 0x102000;
+        player->state.updateState = nextState;
+        player->state.stateFlags &= 0xFE0C1FFB;
+        player->state.stateFlags |= 0x102000;
         setRaceMotionAnimation(player, 0xE);
-        player->modeValue = 0x5A;
-        player->targetGroundOffset = 0;
+        player->state.modeValue = 0x5A;
+        player->state.targetGroundOffset = 0;
         stepRaceMotionLoopingAnimation(player);
-        player->velocity.y = 0;
+        player->state.velocity.y = 0;
         createCallbackTaskWithUserIdPreservingArgs(initRaceUiItemStealTrailEffect, 0, 0x64, (u16)player->playerIndex);
-        timer = player->modeValue;
+        timer = player->state.modeValue;
         /* Rank-scaled recovery timer for humans and CPUs. With zero-based rank,
          * integer truncation gives 60/53/45/38 updates for a base of 60. */
-        player->modeValue = timer - ((player->modeValue * player->rankIndex) / 8);
-        player->rumbleTimer = 4;
-        player->rumblePatternId = 0;
+        player->state.modeValue = timer - ((player->state.modeValue * player->state.rankIndex) / 8);
+        player->state.rumbleTimer = 4;
+        player->state.rumblePatternId = 0;
     }
 
-    stateFlags = player->stateFlags;
+    stateFlags = player->state.stateFlags;
     if (!(stateFlags & 1)) {
-        player->stateFlags = stateFlags & ~0x200;
+        player->state.stateFlags = stateFlags & ~0x200;
     } else {
-        player->stateFlags = stateFlags | 0x200;
+        player->state.stateFlags = stateFlags | 0x200;
     }
 
     updateRacePlayerLeanAngle(player, 0, 0);
-    player->velocity.y -= 0xA000;
-    player->pos.y += player->velocity.y;
+    player->state.velocity.y -= 0xA000;
+    player->state.pos.y += player->state.velocity.y;
 
-    player->modeValue -= getRaceInputTimerDecrementBonus(player) + 1;
-    timer = player->modeValue;
+    player->state.modeValue -= getRaceInputTimerDecrementBonus(player) + 1;
+    timer = player->state.modeValue;
     if (timer < 0) {
-        player->modeValue = 0;
+        player->state.modeValue = 0;
         timer = 0;
     }
 
     if (timer == 0) {
-        player->mode = 4;
-        player->updateState = 0;
-        player->updateTimer = 0;
-        player->unk2E0 = 0;
-        player->unk2E4 = 0;
+        player->state.mode = 4;
+        player->state.updateState = 0;
+        player->state.updateTimer = 0;
+        player->state.unk2E0 = 0;
+        player->state.unk2E4 = 0;
     }
 }
 
@@ -4643,76 +4622,76 @@ void updateRacePlayerMode24HeavyKnockdown(RacePlayer *player) {
     s32 ret;
     u32 stateFlags;
 
-    player->leanAngle = 0;
+    player->state.leanAngle = 0;
     updateRacePlayerLeanAngle(player, 0, 0);
-    player->velocity.y += 0xFFFF6000;
-    player->pos.y += player->velocity.y;
+    player->state.velocity.y += 0xFFFF6000;
+    player->state.pos.y += player->state.velocity.y;
 
-    stateFlags = player->stateFlags;
+    stateFlags = player->state.stateFlags;
     if (!(stateFlags & 1)) {
-        player->stateFlags = stateFlags & ~0x200;
+        player->state.stateFlags = stateFlags & ~0x200;
     } else {
-        player->stateFlags = stateFlags | 0x200;
+        player->state.stateFlags = stateFlags | 0x200;
     }
 
-    temp_v1_2 = player->updateState;
+    temp_v1_2 = player->state.updateState;
     temp_v0 = temp_v1_2;
     switch (temp_v0 ^ 0) {
         case 0:
-            player->updateState = temp_v1_2 + 1;
-            player->stateFlags &= 0xFE0C1FFB;
-            player->stateFlags |= 0x1202000;
-            player->unk2D6 = 1;
+            player->state.updateState = temp_v1_2 + 1;
+            player->state.stateFlags &= 0xFE0C1FFB;
+            player->state.stateFlags |= 0x1202000;
+            player->state.unk2D6 = 1;
             setRaceMotionAnimation(player, 1);
-            player->modeValue = 0x5A;
-            player->targetGroundOffset = 0;
+            player->state.modeValue = 0x5A;
+            player->state.targetGroundOffset = 0;
             stepRaceMotionLoopingAnimation(player);
-            timer = player->modeValue;
+            timer = player->state.modeValue;
             /* Rank-scaled recovery timer for humans and CPUs. With zero-based rank,
              * integer truncation gives 60/53/45/38 updates for a base of 60. */
-            player->modeValue = (timer ^ 0) - ((timer * player->rankIndex) / 8);
-            player->velocity.y = 0;
-            player->rumbleTimer = 6;
-            player->rumblePatternId = 0;
+            player->state.modeValue = (timer ^ 0) - ((timer * player->state.rankIndex) / 8);
+            player->state.velocity.y = 0;
+            player->state.rumbleTimer = 6;
+            player->state.rumblePatternId = 0;
             /* fallthrough */
         case 1:
-            temp_2d6 = player->unk2D6;
+            temp_2d6 = player->state.unk2D6;
             if (temp_2d6 != 1) {
-                player->unk2D6 = temp_2d6 - 1;
+                player->state.unk2D6 = temp_2d6 - 1;
             }
 
             ret = getRaceInputTimerDecrementBonus(player);
             if (ret != 0) {
-                player->unk2D6 = 3;
+                player->state.unk2D6 = 3;
             }
 
-            player->modeValue -= ret + 1;
-            timer = player->modeValue;
+            player->state.modeValue -= ret + 1;
+            timer = player->state.modeValue;
             if (timer < 0) {
-                player->modeValue = 0;
+                player->state.modeValue = 0;
                 timer = 0;
             }
 
             if (timer == 0) {
-                player->updateState += 1;
-                player->unk2D6 = 1;
+                player->state.updateState += 1;
+                player->state.unk2D6 = 1;
             }
             break;
         case 2:
-            player->unk2D6 += 1;
-            if (player->unk2D6 == 7) {
-                player->unk2D6 = 2;
-                player->updateState += 1;
+            player->state.unk2D6 += 1;
+            if (player->state.unk2D6 == 7) {
+                player->state.unk2D6 = 2;
+                player->state.updateState += 1;
             }
             break;
         case 3:
-            player->unk2D6 += 1;
-            if (player->unk2D6 == 8) {
-                player->stateFlags &= 0xFE0C1FFB;
-                player->mode = 0;
-                player->updateState = 0;
-                player->updateTimer = 0;
-                player->unk2D4 = 0x3C;
+            player->state.unk2D6 += 1;
+            if (player->state.unk2D6 == 8) {
+                player->state.stateFlags &= 0xFE0C1FFB;
+                player->state.mode = 0;
+                player->state.updateState = 0;
+                player->state.updateTimer = 0;
+                player->state.unk2D4 = 0x3C;
             }
             break;
     }
@@ -4724,13 +4703,13 @@ void updateRacePlayerMode25SpinHit(RacePlayer *player) {
     u32 stateFlags;
     s16 nextState;
 
-    updateState = player->updateState;
+    updateState = player->state.updateState;
     nextState = updateState + 1;
     if (updateState == 0) {
-        player->updateState = nextState;
-        player->stateFlags &= 0xFE0C1FFB;
-        player->stateFlags |= 0x400000;
-        player->modeValue = 0xF0;
+        player->state.updateState = nextState;
+        player->state.stateFlags &= 0xFE0C1FFB;
+        player->state.stateFlags |= 0x400000;
+        player->state.modeValue = 0xF0;
         setRaceMotionAnimation(player, 1);
         stepRaceMotionLoopingAnimation(player);
         createCallbackTaskWithUserIdPreservingArgs(
@@ -4739,52 +4718,52 @@ void updateRacePlayerMode25SpinHit(RacePlayer *player) {
             0x3C,
             (u16)player->playerIndex
         );
-        stateTimer = player->modeValue;
-        player->modeValue = stateTimer;
+        stateTimer = player->state.modeValue;
+        player->state.modeValue = stateTimer;
         /* Rank-scaled recovery timer for humans and CPUs. With zero-based rank,
          * integer truncation gives 60/53/45/38 updates for a base of 60. */
-        player->modeValue = player->modeValue - ((stateTimer * player->rankIndex) / 8);
-        player->rumbleTimer = 4;
-        player->rumblePatternId = 0;
+        player->state.modeValue = player->state.modeValue - ((stateTimer * player->state.rankIndex) / 8);
+        player->state.rumbleTimer = 4;
+        player->state.rumblePatternId = 0;
     }
 
-    stateFlags = player->stateFlags;
+    stateFlags = player->state.stateFlags;
     if (!(stateFlags & 1)) {
-        player->stateFlags = stateFlags & ~0x200;
-        updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
-        player->velocity.y -= player->gravity;
-        updateRacePlayerLocalVelocity(player, 0, 0, player->lateralDeceleration, player->forwardDeceleration, player->reverseDeceleration);
+        player->state.stateFlags = stateFlags & ~0x200;
+        updateRacePlayerLeanAngle(player, player->state.localVelocityZ, 0);
+        player->state.velocity.y -= player->state.gravity;
+        updateRacePlayerLocalVelocity(player, 0, 0, player->state.lateralDeceleration, player->state.forwardDeceleration, player->state.reverseDeceleration);
     } else {
-        player->stateFlags = stateFlags | 0x200;
-        player->velocity.y -= player->aerialGravity;
-        clampRacePlayerVectorXZSpeed(&player->velocity, player);
+        player->state.stateFlags = stateFlags | 0x200;
+        player->state.velocity.y -= player->state.aerialGravity;
+        clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
     }
 
-    player->modeValue -= getRaceInputTimerDecrementBonus(player) + 1;
-    if (player->modeValue < 0) {
-        player->modeValue = 0;
+    player->state.modeValue -= getRaceInputTimerDecrementBonus(player) + 1;
+    if (player->state.modeValue < 0) {
+        player->state.modeValue = 0;
     }
 
-    if (player->modeValue == 0) {
-        stateFlags = player->stateFlags;
+    if (player->state.modeValue == 0) {
+        stateFlags = player->state.stateFlags;
         if (!(stateFlags & 0x200)) {
-            player->stateFlags = stateFlags & 0xFE0C1FFB;
-            player->mode = 0;
-            player->updateState = 0;
-            player->updateTimer = 0;
+            player->state.stateFlags = stateFlags & 0xFE0C1FFB;
+            player->state.mode = 0;
+            player->state.updateState = 0;
+            player->state.updateTimer = 0;
         } else {
-            player->stateFlags = stateFlags & 0xFE0C1FFB;
-            player->mode = 1;
-            player->updateState = 0;
-            player->updateTimer = 0;
+            player->state.stateFlags = stateFlags & 0xFE0C1FFB;
+            player->state.mode = 1;
+            player->state.updateState = 0;
+            player->state.updateTimer = 0;
         }
     }
 
-    player->pos.x += player->velocity.x;
-    player->pos.y += player->velocity.y;
-    player->pos.z += player->velocity.z;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += player->state.velocity.y;
+    player->state.pos.z += player->state.velocity.z;
 
-    if (!(player->stateFlags & 1)) {
+    if (!(player->state.stateFlags & 1)) {
         updateRacePlayerMotionFeedback(player);
     }
 }
@@ -4794,27 +4773,27 @@ void updateRacePlayerMode27Slide(RacePlayer *player) {
     s16 updateTimer;
     u32 stateFlags;
 
-    updateState = player->updateState;
+    updateState = player->state.updateState;
     if (updateState == 0) {
-        player->updateState = updateState + 1;
+        player->state.updateState = updateState + 1;
         setRaceMotionAnimation(player, 0x13);
-        player->stateFlags &= 0xFE0C1FFB;
-        player->stateFlags |= 0x822204;
-        player->pitchAngle = 0;
-        player->targetGroundOffset = 0;
-        player->velocity.y = 0x80000;
-        player->updateTimer = 0;
-        player->rumbleTimer = 4;
-        player->rumblePatternId = 0;
+        player->state.stateFlags &= 0xFE0C1FFB;
+        player->state.stateFlags |= 0x822204;
+        player->state.pitchAngle = 0;
+        player->state.targetGroundOffset = 0;
+        player->state.velocity.y = 0x80000;
+        player->state.updateTimer = 0;
+        player->state.rumbleTimer = 4;
+        player->state.rumblePatternId = 0;
     }
 
     updateRacePlayerLeanAngle(player, 0, 0);
-    if (player->velocity.y > 0) {
-        player->velocity.y -= 0x7000;
+    if (player->state.velocity.y > 0) {
+        player->state.velocity.y -= 0x7000;
     } else {
-        updateTimer = player->updateTimer;
+        updateTimer = player->state.updateTimer;
         if (updateTimer == 0) {
-            player->updateTimer = updateTimer + 1;
+            player->state.updateTimer = updateTimer + 1;
             createCallbackTaskWithUserIdPreservingArgs(
                 initRaceUiSpinHitTransitionEffect,
                 0,
@@ -4822,24 +4801,24 @@ void updateRacePlayerMode27Slide(RacePlayer *player) {
                 (u16)player->playerIndex
             );
         }
-        player->facingAngle += 0x40;
-        player->velocity.y -= 0x800;
+        player->state.facingAngle += 0x40;
+        player->state.velocity.y -= 0x800;
     }
 
-    player->velocity.x -= player->velocity.x >> 6;
-    player->velocity.z -= player->velocity.z >> 6;
-    player->pos.x += player->velocity.x;
-    player->pos.y += player->velocity.y;
-    player->pos.z += player->velocity.z;
+    player->state.velocity.x -= player->state.velocity.x >> 6;
+    player->state.velocity.z -= player->state.velocity.z >> 6;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += player->state.velocity.y;
+    player->state.pos.z += player->state.velocity.z;
 
     stepRaceMotionAnimationUntilEnd(player);
-    if (player->velocity.y < 0) {
-        stateFlags = player->stateFlags;
+    if (player->state.velocity.y < 0) {
+        stateFlags = player->state.stateFlags;
         if (!(stateFlags & 1)) {
-            player->mode = 8;
-            player->updateState = 0;
-            player->updateTimer = 0;
-            player->stateFlags = stateFlags & ~0x200;
+            player->state.mode = 8;
+            player->state.updateState = 0;
+            player->state.updateTimer = 0;
+            player->state.stateFlags = stateFlags & ~0x200;
         }
     }
 }
@@ -4851,52 +4830,52 @@ void updateRacePlayerMode40Stun(RacePlayer *player) {
     u32 stateFlags;
     s16 nextState;
 
-    updateState = player->updateState;
+    updateState = player->state.updateState;
     nextState = updateState + 1;
     if (updateState == 0) {
-        player->updateState = nextState;
-        player->stateFlags &= 0xFE0C1FFB;
-        player->stateFlags |= 0x01006000;
+        player->state.updateState = nextState;
+        player->state.stateFlags &= 0xFE0C1FFB;
+        player->state.stateFlags |= 0x01006000;
         setRaceMotionAnimation(player, 0x12);
-        player->modeValue = 0x1E;
-        player->modeValue += randomNextMain() >> 4;
-        player->targetGroundOffset = 0;
+        player->state.modeValue = 0x1E;
+        player->state.modeValue += randomNextMain() >> 4;
+        player->state.targetGroundOffset = 0;
     }
     stepRaceMotionLoopingAnimation(player);
     updateRacePlayerLeanAngle(player, 0x10000, 0);
-    player->velocity.y += 0xFFFF6000;
-    clampRacePlayerVectorXZSpeed(&player->velocity, player);
-    stateFlags = player->stateFlags;
+    player->state.velocity.y += 0xFFFF6000;
+    clampRacePlayerVectorXZSpeed(&player->state.velocity, player);
+    stateFlags = player->state.stateFlags;
     if ((stateFlags & 1) == 0) {
-        player->stateFlags = stateFlags & ~0x200;
+        player->state.stateFlags = stateFlags & ~0x200;
         updateRacePlayerLocalVelocityNoVerticalOffset(player, 0, 0, 0, 0);
-        player->stateFlags &= ~0x200;
-        player->loopSoundVolume = 0x100;
-        player->loopSoundId = SFX_CRASH_SLIDE_LOOP;
-        player->loopSoundPitch = 0.0f;
+        player->state.stateFlags &= ~0x200;
+        player->state.loopSoundVolume = 0x100;
+        player->state.loopSoundId = SFX_CRASH_SLIDE_LOOP;
+        player->state.loopSoundPitch = 0.0f;
     } else {
-        player->stateFlags = stateFlags | 0x200;
+        player->state.stateFlags = stateFlags | 0x200;
     }
-    velocityX = player->velocity.x;
-    player->pos.x += velocityX;
-    player->pos.y += player->velocity.y;
-    velocityZ = player->velocity.z;
-    player->pos.z += velocityZ;
-    player->facingAngle = calculateFixedAngleFromDeltaXZ(velocityX, velocityZ);
-    if (player->stateFlags & 0x400) {
-        player->facingAngle += 0x800;
+    velocityX = player->state.velocity.x;
+    player->state.pos.x += velocityX;
+    player->state.pos.y += player->state.velocity.y;
+    velocityZ = player->state.velocity.z;
+    player->state.pos.z += velocityZ;
+    player->state.facingAngle = calculateFixedAngleFromDeltaXZ(velocityX, velocityZ);
+    if (player->state.stateFlags & 0x400) {
+        player->state.facingAngle += 0x800;
     }
-    if (--player->modeValue == 0) {
-        player->mode = 0xC;
-        player->updateState = 0;
-        player->updateTimer = 0;
+    if (--player->state.modeValue == 0) {
+        player->state.mode = 0xC;
+        player->state.updateState = 0;
+        player->state.updateTimer = 0;
     }
-    player->rumbleTimer = 4;
-    player->rumblePatternId = 2;
+    player->state.rumbleTimer = 4;
+    player->state.rumblePatternId = 2;
 }
 
 void dispatchRacePlayerMode07CourseObject(RacePlayer *player) {
-    gRacePlayerMode07StateHandlers[player->updateState](player);
+    gRacePlayerMode07StateHandlers[player->state.updateState](player);
 }
 
 void updateRacePlayerMode07AlignToLaunchRamp(RacePlayer *player) {
@@ -4906,52 +4885,52 @@ void updateRacePlayerMode07AlignToLaunchRamp(RacePlayer *player) {
     s32 tempX;
     s32 tempZ;
 
-    updateTimer = player->updateTimer;
+    updateTimer = player->state.updateTimer;
     if (updateTimer == 0) {
-        player->updateTimer = updateTimer + 1;
-        player->modeValue = 0x14;
-        player->unk80 = 0xA;
-        player->modeAngle = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampCourseObjectAngle;
-        if (player->stateFlags & 0x400) {
-            player->modeAngle += 0x800;
+        player->state.updateTimer = updateTimer + 1;
+        player->state.modeValue = 0x14;
+        player->state.unk80 = 0xA;
+        player->state.modeAngle = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampCourseObjectAngle;
+        if (player->state.stateFlags & 0x400) {
+            player->state.modeAngle += 0x800;
         }
         gMenuFlowState |= 4;
         setRaceMotionAnimation(player, 1);
     }
 
     stepRaceMotionLoopingAnimation(player);
-    angleDelta = (player->modeAngle - player->facingAngle) & 0xFFF;
+    angleDelta = (player->state.modeAngle - player->state.facingAngle) & 0xFFF;
     if (angleDelta >= 0x801) {
         angleDelta -= 0x1000;
     }
     updateRacePlayerLeanAngle(player, 0x10000, 0);
 
-    temp_a1 = player->unk80;
+    temp_a1 = player->state.unk80;
     if (1) {}
     if (1) {}
     if (1) {}
     if (temp_a1 != 0) {
         angleDelta /= temp_a1;
         if (gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetZ) {}
-        player->facingAngle += angleDelta;
-        tempX = player->pos.x;
-        tempZ = player->pos.z;
+        player->state.facingAngle += angleDelta;
+        tempX = player->state.pos.x;
+        tempZ = player->state.pos.z;
         if (temp_a1) {}
         if (1) {
-            player->pos.x =
+            player->state.pos.x =
                 tempX -
                 (0 - ((gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetX - tempX) / temp_a1));
         }
-        player->pos.z =
+        player->state.pos.z =
             tempZ - (0 - ((gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetZ - tempZ) / temp_a1));
     }
 
-    if (--player->modeValue == 0) {
-        player->pos.x = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetX;
-        player->pos.z = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetZ;
-        player->updateState++;
-        player->updateTimer = 0;
-        player->modeValue = 0;
+    if (--player->state.modeValue == 0) {
+        player->state.pos.x = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetX;
+        player->state.pos.z = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetZ;
+        player->state.updateState++;
+        player->state.updateTimer = 0;
+        player->state.modeValue = 0;
         setRaceMotionAnimation(player, 5);
         setRaceCameraMode(player->playerIndex, 3);
     }
@@ -4959,11 +4938,11 @@ void updateRacePlayerMode07AlignToLaunchRamp(RacePlayer *player) {
 
 void updateRacePlayerMode07StartLaunchRamp(RacePlayer *player) {
     if (stepRaceMotionAnimationUntilEnd(player) != 0) {
-        player->updateState++;
-        player->updateTimer = 0;
-        player->facingAngle = player->modeAngle;
-        player->pos.x = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetX;
-        player->pos.z = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetZ;
+        player->state.updateState++;
+        player->state.updateTimer = 0;
+        player->state.facingAngle = player->state.modeAngle;
+        player->state.pos.x = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetX;
+        player->state.pos.z = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetZ;
     }
 }
 
@@ -4972,39 +4951,39 @@ void updateRacePlayerMode07LaunchRampTakeoff(RacePlayer *player) {
     s32 unused;
     s32 scratch[14];
 
-    updateTimer = player->updateTimer;
+    updateTimer = player->state.updateTimer;
     if (updateTimer == 0) {
-        player->updateTimer = updateTimer + 1;
-        player->velocity.y = 0x30000;
-        player->modeValue = 0x1E;
+        player->state.updateTimer = updateTimer + 1;
+        player->state.velocity.y = 0x30000;
+        player->state.modeValue = 0x1E;
         setRaceMotionAnimation(player, 4);
-        if (player->stateFlags & 0x400) {
-            player->unk80 = 0x20000;
+        if (player->state.stateFlags & 0x400) {
+            player->state.unk80 = 0x20000;
         } else {
-            player->unk80 = -0x20000;
+            player->state.unk80 = -0x20000;
         }
     }
 
-    makeFixedRotationY((s16 *)&scratch[2], player->facingAngle);
+    makeFixedRotationY((s16 *)&scratch[2], player->state.facingAngle);
     scratch[13] = 0;
     scratch[14] = 0;
-    scratch[15] = player->unk80;
+    scratch[15] = player->state.unk80;
     transformVec3iByFixedMatrix((s16 *)&scratch[2], (Vec3i *)&scratch[13], (Vec3i *)&scratch[10]);
-    player->pos.x += scratch[10];
-    player->pos.z += scratch[12];
+    player->state.pos.x += scratch[10];
+    player->state.pos.z += scratch[12];
 
-    makeFixedRotationY((s16 *)&scratch[2], player->facingAngle);
+    makeFixedRotationY((s16 *)&scratch[2], player->state.facingAngle);
     scratch[13] = 0;
     scratch[14] = 0;
-    scratch[15] = player->unk80;
+    scratch[15] = player->state.unk80;
     transformVec3iByFixedMatrix((s16 *)&scratch[2], (Vec3i *)&scratch[13], (Vec3i *)&scratch[10]);
-    player->pos.x += scratch[10];
-    player->pos.z += scratch[12];
-    player->velocity.y -= 0x7000;
-    player->pos.y += player->velocity.y;
+    player->state.pos.x += scratch[10];
+    player->state.pos.z += scratch[12];
+    player->state.velocity.y -= 0x7000;
+    player->state.pos.y += player->state.velocity.y;
 
-    if ((player->velocity.y < 0) && !(player->stateFlags & 1)) {
-        if (player->animationId != 1) {
+    if ((player->state.velocity.y < 0) && !(player->state.stateFlags & 1)) {
+        if (player->state.animationId != 1) {
             setRaceMotionAnimation(player, 1);
         }
         stepRaceMotionLoopingAnimation(player);
@@ -5013,67 +4992,67 @@ void updateRacePlayerMode07LaunchRampTakeoff(RacePlayer *player) {
         stepRaceMotionAnimationUntilEnd(player);
     }
 
-    if (--player->modeValue == 0) {
-        player->updateState++;
-        player->updateTimer = 0;
-        player->modeValue = 0x20;
+    if (--player->state.modeValue == 0) {
+        player->state.updateState++;
+        player->state.updateTimer = 0;
+        player->state.modeValue = 0x20;
         createCallbackTask((CallbackTaskCallback)initLaunchRampCourseObject, 0, 0x64);
-        player->stateFlags &= ~0x20;
+        player->state.stateFlags &= ~0x20;
     }
 }
 
 void updateRacePlayerMode07LaunchRampSpin(RacePlayer *player) {
     s32 scratch[15];
 
-    player->facingAngle += 0x10;
-    if (player->unk80 > 0) {
-        player->unk80 -= 0x820;
+    player->state.facingAngle += 0x10;
+    if (player->state.unk80 > 0) {
+        player->state.unk80 -= 0x820;
     } else {
-        player->unk80 += 0x820;
+        player->state.unk80 += 0x820;
     }
 
-    makeFixedRotationY((s16 *)&scratch[1], player->facingAngle);
+    makeFixedRotationY((s16 *)&scratch[1], player->state.facingAngle);
     scratch[12] = 0;
     scratch[13] = 0;
-    scratch[14] = player->unk80;
+    scratch[14] = player->state.unk80;
     transformVec3iByFixedMatrix((s16 *)&scratch[1], (Vec3i *)&scratch[12], (Vec3i *)&scratch[9]);
-    player->pos.x += scratch[9];
-    player->pos.z += scratch[11];
+    player->state.pos.x += scratch[9];
+    player->state.pos.z += scratch[11];
 
-    player->facingAngle += 0x10;
-    if (player->unk80 > 0) {
-        player->unk80 -= 0x820;
+    player->state.facingAngle += 0x10;
+    if (player->state.unk80 > 0) {
+        player->state.unk80 -= 0x820;
     } else {
-        player->unk80 += 0x820;
+        player->state.unk80 += 0x820;
     }
 
-    makeFixedRotationY((s16 *)&scratch[1], player->facingAngle);
+    makeFixedRotationY((s16 *)&scratch[1], player->state.facingAngle);
     scratch[12] = 0;
     scratch[13] = 0;
-    scratch[14] = player->unk80;
+    scratch[14] = player->state.unk80;
     transformVec3iByFixedMatrix((s16 *)&scratch[1], (Vec3i *)&scratch[12], (Vec3i *)&scratch[9]);
-    player->pos.x += scratch[9];
-    player->pos.z += scratch[11];
+    player->state.pos.x += scratch[9];
+    player->state.pos.z += scratch[11];
 
     stepRaceMotionAnimationUntilEnd(player);
     updateRacePlayerMotionFeedback(player);
-    if (--player->modeValue == 0) {
-        player->updateTimer = 0;
-        player->updateState++;
+    if (--player->state.modeValue == 0) {
+        player->state.updateTimer = 0;
+        player->state.updateState++;
     }
 }
 
 void updateRacePlayerMode07LaunchRampPose(RacePlayer *player) {
-    if (player->updateTimer == 0) {
-        player->updateTimer++;
+    if (player->state.updateTimer == 0) {
+        player->state.updateTimer++;
         setRaceMotionAnimation(player, 0x1D);
-        player->modeValue = 0x13;
+        player->state.modeValue = 0x13;
     }
     stepRaceMotionAnimationUntilEnd(player);
-    player->modeValue--;
-    if (player->modeValue == 0) {
-        player->updateTimer = 0;
-        player->updateState++;
+    player->state.modeValue--;
+    if (player->state.modeValue == 0) {
+        player->state.updateTimer = 0;
+        player->state.updateState++;
     }
 }
 
@@ -5081,29 +5060,29 @@ void updateRacePlayerMode07LaunchRampDrift(RacePlayer *player) {
     s16 updateTimer;
     s32 scratch[14];
 
-    updateTimer = player->updateTimer;
+    updateTimer = player->state.updateTimer;
     if (updateTimer == 0) {
-        player->updateTimer = updateTimer + 1;
-        player->modeValue = 0x13;
-        if (player->stateFlags & 0x400) {
-            player->unk80 = 0x40000;
+        player->state.updateTimer = updateTimer + 1;
+        player->state.modeValue = 0x13;
+        if (player->state.stateFlags & 0x400) {
+            player->state.unk80 = 0x40000;
         } else {
-            player->unk80 = -0x40000;
+            player->state.unk80 = -0x40000;
         }
     }
 
-    makeFixedRotationY((s16 *)&scratch[1], player->facingAngle);
+    makeFixedRotationY((s16 *)&scratch[1], player->state.facingAngle);
     scratch[12] = 0;
     scratch[13] = 0;
-    scratch[14] = player->unk80;
+    scratch[14] = player->state.unk80;
     transformVec3iByFixedMatrix((s16 *)&scratch[1], (Vec3i *)&scratch[12], (Vec3i *)&scratch[9]);
-    player->pos.x += scratch[9];
-    player->pos.z += scratch[11];
+    player->state.pos.x += scratch[9];
+    player->state.pos.z += scratch[11];
 
-    player->modeValue--;
-    if (player->modeValue == 0) {
-        player->updateTimer = 0;
-        player->updateState++;
+    player->state.modeValue--;
+    if (player->state.modeValue == 0) {
+        player->state.updateTimer = 0;
+        player->state.updateState++;
     }
     stepRaceMotionAnimationUntilEnd(player);
 }
@@ -5121,39 +5100,39 @@ typedef struct {
 void updateRacePlayerMode07LaunchRampClimb(RacePlayer *player) {
     PlayerTransformScratch80095A88 scratch;
 
-    if (player->updateTimer == 0) {
-        player->updateTimer++;
-        player->modeValue = 0x64;
+    if (player->state.updateTimer == 0) {
+        player->state.updateTimer++;
+        player->state.modeValue = 0x64;
     }
 
-    if (player->unk80 > 0) {
-        if (player->unk80 < 0xA0000) {
-            player->unk80 += 0x2000;
+    if (player->state.unk80 > 0) {
+        if (player->state.unk80 < 0xA0000) {
+            player->state.unk80 += 0x2000;
         }
-        makeFixedRotationXY((s16 *)scratch.matrix, -0x100, player->facingAngle);
+        makeFixedRotationXY((s16 *)scratch.matrix, -0x100, player->state.facingAngle);
     } else {
-        if (player->unk80 >= -0x9FFFF) {
-            player->unk80 -= 0x2000;
+        if (player->state.unk80 >= -0x9FFFF) {
+            player->state.unk80 -= 0x2000;
         }
-        makeFixedRotationXY((s16 *)scratch.matrix, 0x100, (0, player)->facingAngle);
+        makeFixedRotationXY((s16 *)scratch.matrix, 0x100, (0, player)->state.facingAngle);
     }
 
     scratch.sourceX = 0;
     scratch.sourceY = 0;
-    scratch.sourceZ = player->unk80;
+    scratch.sourceZ = player->state.unk80;
     transformVec3iByFixedMatrix((s16 *)scratch.matrix, (Vec3i *)&scratch.sourceX, (Vec3i *)&scratch.transformedX);
-    player->pos.x = player->pos.x + scratch.transformedX;
-    player->pos.y += scratch.transformedY;
-    player->pos.z += scratch.transformedZ;
+    player->state.pos.x = player->state.pos.x + scratch.transformedX;
+    player->state.pos.y += scratch.transformedY;
+    player->state.pos.z += scratch.transformedZ;
 
-    player->modeValue--;
-    if (player->modeValue == 0) {
-        player->updateTimer = 0;
-        player->updateState++;
+    player->state.modeValue--;
+    if (player->state.modeValue == 0) {
+        player->state.updateTimer = 0;
+        player->state.updateState++;
     }
 
-    if (player->modeValue < 0x3C) {
-        player->stateFlags |= 0x80000;
+    if (player->state.modeValue < 0x3C) {
+        player->state.stateFlags |= 0x80000;
         if (gRaceCameras[(u16)player->playerIndex].initialized.signedValue != 0) {
             gRaceCameras[(u16)player->playerIndex].initialized.signedValue = 2;
         }
@@ -5163,8 +5142,8 @@ void updateRacePlayerMode07LaunchRampClimb(RacePlayer *player) {
 void updateRacePlayerMode07SpiralExit(RacePlayer *player) {
     PlayerTransformScratch80095A88 scratch;
 
-    if (player->updateTimer == 0) {
-        player->updateTimer++;
+    if (player->state.updateTimer == 0) {
+        player->state.updateTimer++;
         scratch.sourceX = -0x200000;
         scratch.sourceY = 0;
         scratch.sourceZ = 0x400000;
@@ -5172,29 +5151,29 @@ void updateRacePlayerMode07SpiralExit(RacePlayer *player) {
             (s16 *)scratch.matrix,
             gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitObjectAngle
         );
-        transformVec3iByFixedMatrix((s16 *)scratch.matrix, (Vec3i *)&scratch.sourceX, (Vec3i *)&player->pos);
-        player->pos.x += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitOrigin.x;
-        player->pos.y += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitOrigin.y + 0x80000;
-        player->pos.z += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitOrigin.z;
-        player->coursePathIndex = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitSurfaceIndex;
-        player->lapDigit++;
-        player->previousPosition = player->pos;
-        player->modeValue = 0x28;
-        player->stateFlags &= 0xFBFFFBFF;
-        player->facingAngle = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitObjectAngle;
-        player->coursePathOffset =
-            -projectRaceCourseSurfaceProgress(player->coursePathIndex, player->pos.x, player->pos.z);
+        transformVec3iByFixedMatrix((s16 *)scratch.matrix, (Vec3i *)&scratch.sourceX, (Vec3i *)&player->state.pos);
+        player->state.pos.x += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitOrigin.x;
+        player->state.pos.y += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitOrigin.y + 0x80000;
+        player->state.pos.z += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitOrigin.z;
+        player->state.coursePathIndex = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitSurfaceIndex;
+        player->state.lapDigit++;
+        player->state.previousPosition = player->state.pos;
+        player->state.modeValue = 0x28;
+        player->state.stateFlags &= 0xFBFFFBFF;
+        player->state.facingAngle = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitObjectAngle;
+        player->state.coursePathOffset =
+            -projectRaceCourseSurfaceProgress(player->state.coursePathIndex, player->state.pos.x, player->state.pos.z);
         setRaceCameraMode(player->playerIndex, 1);
-        gRaceCameras[player->playerIndex].prevPos.x = player->pos.x;
-        gRaceCameras[player->playerIndex].prevPos.y = player->pos.y;
-        gRaceCameras[player->playerIndex].prevPos.z = player->pos.z;
+        gRaceCameras[player->playerIndex].prevPos.x = player->state.pos.x;
+        gRaceCameras[player->playerIndex].prevPos.y = player->state.pos.y;
+        gRaceCameras[player->playerIndex].prevPos.z = player->state.pos.z;
         createCallbackTask((CallbackTaskCallback)initLiftExitCourseObject, 0, 0x64);
-        if (player->lapDigit >= (gRaceLapCount - 1)) {
+        if (player->state.lapDigit >= (gRaceLapCount - 1)) {
             createCallbackTaskWithUserIdPreservingArgs(waitForRaceSetupNamePlate, 0, 0x64, player->playerIndex);
         }
     }
 
-    player->stateFlags &= ~0x80000;
+    player->state.stateFlags &= ~0x80000;
     scratch.sourceX = 0;
     scratch.sourceY = 0;
     scratch.sourceZ = -0x40000;
@@ -5203,31 +5182,31 @@ void updateRacePlayerMode07SpiralExit(RacePlayer *player) {
         gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitObjectAngle
     );
     transformVec3iByFixedMatrix((s16 *)scratch.matrix, (Vec3i *)&scratch.sourceX, (Vec3i *)&scratch.transformedX);
-    player->pos.x += scratch.transformedX;
-    player->pos.z += scratch.transformedZ;
-    player->modeValue--;
+    player->state.pos.x += scratch.transformedX;
+    player->state.pos.z += scratch.transformedZ;
+    player->state.modeValue--;
 
-    if (player->modeValue == 0) {
-        player->mode = 1;
-        player->updateState = 0;
-        player->updateTimer = 0;
-        player->stateFlags = 0;
+    if (player->state.modeValue == 0) {
+        player->state.mode = 1;
+        player->state.updateState = 0;
+        player->state.updateTimer = 0;
+        player->state.stateFlags = 0;
 
         /* Rank-dependent course-object exit displacement: add 0/1/2/4 times
          * current X/Z velocity for first through fourth, for humans and CPUs. */
-        if (player->rankIndex == 1) {
-            player->pos.x += player->velocity.x;
-            player->pos.z += player->velocity.z;
+        if (player->state.rankIndex == 1) {
+            player->state.pos.x += player->state.velocity.x;
+            player->state.pos.z += player->state.velocity.z;
         }
 
-        if (player->rankIndex == 2) {
-            player->pos.x += player->velocity.x * 2;
-            player->pos.z += player->velocity.z * 2;
+        if (player->state.rankIndex == 2) {
+            player->state.pos.x += player->state.velocity.x * 2;
+            player->state.pos.z += player->state.velocity.z * 2;
         }
 
-        if (player->rankIndex == 3) {
-            player->pos.x += player->velocity.x * 4;
-            player->pos.z += player->velocity.z * 4;
+        if (player->state.rankIndex == 3) {
+            player->state.pos.x += player->state.velocity.x * 4;
+            player->state.pos.z += player->state.velocity.z * 4;
         }
 
         if (gRaceCameras[player->playerIndex].initialized.signedValue != 0) {
@@ -5242,17 +5221,17 @@ s32 tryStartRacePlayerCourseObjectMode(s16 arg0) {
     s32 delta;
     s32 i;
 
-    if (gRacePlayers[arg0].stateFlags & 0x40) {
+    if (gRacePlayers[arg0].state.stateFlags & 0x40) {
         return 0;
     }
     for (i = 0; i < 4; i++) {
         if ((gRacePlayers[i].isActive != 0) && (arg0 != (u16)gRacePlayers[i].playerIndex) &&
-            (gRacePlayers[i].stateFlags & 0x20)) {
+            (gRacePlayers[i].state.stateFlags & 0x20)) {
             return 0;
         }
     }
 
-    delta = gRacePlayers[arg0].pos.x - gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetX;
+    delta = gRacePlayers[arg0].state.pos.x - gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetX;
     if (delta < 0) {
         delta = -delta;
     }
@@ -5260,7 +5239,7 @@ s32 tryStartRacePlayerCourseObjectMode(s16 arg0) {
         return 0;
     }
 
-    delta = gRacePlayers[arg0].pos.z - gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetZ;
+    delta = gRacePlayers[arg0].state.pos.z - gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetZ;
     if (delta < 0) {
         delta = -delta;
     }
@@ -5268,8 +5247,8 @@ s32 tryStartRacePlayerCourseObjectMode(s16 arg0) {
         return 0;
     }
 
-    gRacePlayers[arg0].stateFlags |= 0x04001020;
-    gRacePlayers[arg0].unk57C = gRacePlayerAttackStartTimer;
+    gRacePlayers[arg0].state.stateFlags |= 0x04001020;
+    gRacePlayers[arg0].state.unk57C = gRacePlayerAttackStartTimer;
     if (gRacePlayerAttackStartTimer != 0) {
         gRacePlayerAttackStartTimer--;
     }
@@ -5277,9 +5256,9 @@ s32 tryStartRacePlayerCourseObjectMode(s16 arg0) {
 }
 
 void dispatchRacePlayerMode30Attack(RacePlayer *player) {
-    gRacePlayerMode30StateHandlers[player->updateState](player);
-    if (player->collisionRadius < 0xF0000) {
-        player->collisionRadius += 0x8000;
+    gRacePlayerMode30StateHandlers[player->state.updateState](player);
+    if (player->state.collisionRadius < 0xF0000) {
+        player->state.collisionRadius += 0x8000;
     }
 }
 
@@ -5289,41 +5268,41 @@ void updateRacePlayerMode30AttackApproach(RacePlayer *player) {
     s16 angleDiff;
     s16 roll;
 
-    updateTimer = player->updateTimer;
+    updateTimer = player->state.updateTimer;
     if (updateTimer == 0) {
-        player->updateTimer = updateTimer + 1;
-        player->subState = 0;
+        player->state.updateTimer = updateTimer + 1;
+        player->state.subState = 0;
         setRaceCameraMode(player->playerIndex, 5);
-        if (player->movementSpeed >= 0x20001) {
-            player->unk306 = 1;
-            player->unk31E = calculateFixedAngleFromDeltaXZ(player->velocity.x, player->velocity.z);
-            if (player->stateFlags & 0x400) {
-                player->unk31E += 0x800;
+        if (player->state.movementSpeed >= 0x20001) {
+            player->state.unk306 = 1;
+            player->state.unk31E = calculateFixedAngleFromDeltaXZ(player->state.velocity.x, player->state.velocity.z);
+            if (player->state.stateFlags & 0x400) {
+                player->state.unk31E += 0x800;
             }
 
-            if ((s16)(angleDiff = 0x800 & (player->unk31E - player->facingAngle)) < 0x800) {
-                player->unk31C = 0;
-                if (player->stateFlags & 0x400) {
-                    player->unk31C = 1;
+            if ((s16)(angleDiff = 0x800 & (player->state.unk31E - player->state.facingAngle)) < 0x800) {
+                player->state.unk31C = 0;
+                if (player->state.stateFlags & 0x400) {
+                    player->state.unk31C = 1;
                 }
-                player->unk31E -= 0x400;
+                player->state.unk31E -= 0x400;
             } else {
-                player->unk31C = 1;
-                if (player->stateFlags & 0x400) {
-                    player->unk31C = 0;
+                player->state.unk31C = 1;
+                if (player->state.stateFlags & 0x400) {
+                    player->state.unk31C = 0;
                 }
-                player->unk31E += 0x400;
+                player->state.unk31E += 0x400;
             }
-            player->modeValue = 0;
+            player->state.modeValue = 0;
         } else {
-            player->unk306 = 0;
+            player->state.unk306 = 0;
             setRaceMotionAnimation(player, 1);
         }
     }
 
-    if (player->unk306 != 0) {
-        facingAngle = player->facingAngle;
-        angleDiff = (player->unk31E - facingAngle) & 0xFFF;
+    if (player->state.unk306 != 0) {
+        facingAngle = player->state.facingAngle;
+        angleDiff = (player->state.unk31E - facingAngle) & 0xFFF;
         if (angleDiff >= 0x801) {
             angleDiff -= 0x1000;
         }
@@ -5333,54 +5312,54 @@ void updateRacePlayerMode30AttackApproach(RacePlayer *player) {
         if (angleDiff < -0x40) {
             angleDiff = -0x40;
         }
-        player->facingAngle = facingAngle + angleDiff;
+        player->state.facingAngle = facingAngle + angleDiff;
 
-        if (player->unk31C != 0) {
-            player->modeValue = 0x1F;
+        if (player->state.unk31C != 0) {
+            player->state.modeValue = 0x1F;
         } else {
-            player->modeValue = -0x1F;
+            player->state.modeValue = -0x1F;
         }
 
-        player->leanScale = 0x3F;
-        angleDiff = updateRacePlayerLeanAngle(player, player->movementSpeed, player->modeValue) - player->modeAngle;
-        roll = player->modeAngle;
+        player->state.leanScale = 0x3F;
+        angleDiff = updateRacePlayerLeanAngle(player, player->state.movementSpeed, player->state.modeValue) - player->state.modeAngle;
+        roll = player->state.modeAngle;
         if (angleDiff >= 0x31) {
             angleDiff = 0x30;
         }
         if (angleDiff < -0x30) {
             angleDiff = -0x30;
         }
-        player->modeAngle = player->modeAngle + angleDiff;
+        player->state.modeAngle = player->state.modeAngle + angleDiff;
 
-        if (player->modeAngle == 0) {
-            if (player->animationId != 1) {
+        if (player->state.modeAngle == 0) {
+            if (player->state.animationId != 1) {
                 setRaceMotionAnimation(player, 1);
             }
             stepRaceMotionLoopingJointAnimation(player);
-        } else if (player->modeAngle >= 0) {
+        } else if (player->state.modeAngle >= 0) {
             setRaceMotionAnimation(player, 3);
-            blendRaceMotionJointAnimation(player, 3, player->modeAngle, 0x118);
+            blendRaceMotionJointAnimation(player, 3, player->state.modeAngle, 0x118);
         } else {
             setRaceMotionAnimation(player, 2);
-            blendRaceMotionJointAnimation(player, 2, -player->modeAngle, 0x118);
+            blendRaceMotionJointAnimation(player, 2, -player->state.modeAngle, 0x118);
         }
     } else {
         updateRacePlayerLeanAngle(player, 0, 0);
         stepRaceMotionLoopingJointAnimation(player);
     }
 
-    player->velocity.y -= player->gravity;
+    player->state.velocity.y -= player->state.gravity;
     updateRacePlayerLocalVelocityNoVerticalOffset(player, 0, 0x6000, 0x6000, 0x6000);
-    player->pos.x += player->velocity.x;
-    player->pos.y += player->velocity.y;
-    player->pos.z += player->velocity.z;
+    player->state.pos.x += player->state.velocity.x;
+    player->state.pos.y += player->state.velocity.y;
+    player->state.pos.z += player->state.velocity.z;
     updateRacePlayerMotionFeedback(player);
 
-    if ((player->velocity.x == 0) && (player->velocity.z == 0) && !(player->stateFlags & 1)) {
+    if ((player->state.velocity.x == 0) && (player->state.velocity.z == 0) && !(player->state.stateFlags & 1)) {
         if (player->soundDisabled == 0) {
-            player->updateState++;
-            player->modeValue = 0x1E;
-            if (player->animationId != 1) {
+            player->state.updateState++;
+            player->state.modeValue = 0x1E;
+            if (player->state.animationId != 1) {
                 setRaceMotionAnimation(player, 1);
             }
         }
@@ -5389,23 +5368,23 @@ void updateRacePlayerMode30AttackApproach(RacePlayer *player) {
 
 void updateRacePlayerMode30AttackResolve(RacePlayer *player) {
     if (gRaceResultState != 0) {
-        player->modeValue = 0;
+        player->state.modeValue = 0;
     }
-    if (player->modeValue == 0) {
+    if (player->state.modeValue == 0) {
         if (gRaceSplitscreenMode == 0) {
-            if (player->rankIndex == 0) {
-                player->updateState = 2;
-                player->updateTimer = 0;
+            if (player->state.rankIndex == 0) {
+                player->state.updateState = 2;
+                player->state.updateTimer = 0;
             } else {
-                player->updateState = 3;
-                player->updateTimer = 0;
+                player->state.updateState = 3;
+                player->state.updateTimer = 0;
             }
         } else if (gRaceResultState == 1) {
-            player->updateState = 2;
-            player->updateTimer = 0;
+            player->state.updateState = 2;
+            player->state.updateTimer = 0;
         } else {
-            player->updateState = 3;
-            player->updateTimer = 0;
+            player->state.updateState = 3;
+            player->state.updateTimer = 0;
         }
     }
     updateRacePlayerLeanAngle(player, 0, 0);
@@ -5418,133 +5397,133 @@ void dispatchRacePlayerMode32Character(RacePlayer *player) {
 }
 
 void updateRacePlayerMode32Character0(RacePlayer *player) {
-    if (player->updateTimer == 0) {
-        player->updateTimer++;
-        player->modeValue = 0;
+    if (player->state.updateTimer == 0) {
+        player->state.updateTimer++;
+        player->state.modeValue = 0;
         setRaceMotionAnimation(player, 0x23);
     }
     if (stepRaceMotionAnimationUntilEnd(player)) {
-        if (player->animationId == 0x24) {
-            player->stateFlags |= 0x8000000;
+        if (player->state.animationId == 0x24) {
+            player->state.stateFlags |= 0x8000000;
         }
-        if (player->modeValue == 0) {
-            if (player->updateTimer == 1) {
+        if (player->state.modeValue == 0) {
+            if (player->state.updateTimer == 1) {
                 enqueueRacePlayerVoiceSound(player, RACE_VOICE_CHEER);
-                player->updateTimer++;
+                player->state.updateTimer++;
             }
-            player->modeValue = 0x14;
+            player->state.modeValue = 0x14;
             setRaceMotionAnimation(player, 0x24);
         } else {
-            player->modeValue--;
+            player->state.modeValue--;
         }
     }
 }
 
 void updateRacePlayerMode32Character1(RacePlayer *player) {
-    if (player->updateTimer == 0) {
-        player->updateTimer++;
-        player->modeValue = 0;
+    if (player->state.updateTimer == 0) {
+        player->state.updateTimer++;
+        player->state.modeValue = 0;
         setRaceMotionAnimation(player, 0x24);
     }
     if (stepRaceMotionAnimationUntilEnd(player)) {
-        if (player->animationId == 0x25) {
-            player->stateFlags |= 0x8000000;
+        if (player->state.animationId == 0x25) {
+            player->state.stateFlags |= 0x8000000;
         }
-        if (player->modeValue == 0) {
-            if (player->updateTimer == 1) {
+        if (player->state.modeValue == 0) {
+            if (player->state.updateTimer == 1) {
                 enqueueRacePlayerVoiceSound(player, RACE_VOICE_CHEER);
-                player->updateTimer++;
+                player->state.updateTimer++;
             }
             setRaceMotionAnimation(player, 0x25);
         } else {
-            player->modeValue--;
+            player->state.modeValue--;
         }
     }
 }
 
 void updateRacePlayerMode32Character2(RacePlayer *player) {
-    if (player->updateTimer == 0) {
-        player->updateTimer++;
-        player->modeValue = 0;
+    if (player->state.updateTimer == 0) {
+        player->state.updateTimer++;
+        player->state.modeValue = 0;
         setRaceMotionAnimation(player, 0x23);
     }
     if (stepRaceMotionAnimationUntilEnd(player)) {
-        if (player->animationId == 0x24) {
-            player->stateFlags |= 0x8000000;
+        if (player->state.animationId == 0x24) {
+            player->state.stateFlags |= 0x8000000;
         }
-        if (player->modeValue == 0) {
-            if (player->updateTimer == 1) {
+        if (player->state.modeValue == 0) {
+            if (player->state.updateTimer == 1) {
                 enqueueRacePlayerVoiceSound(player, RACE_VOICE_CHEER);
-                player->updateTimer++;
+                player->state.updateTimer++;
             }
-            player->modeValue = 0x14;
+            player->state.modeValue = 0x14;
             setRaceMotionAnimation(player, 0x24);
         } else {
-            player->modeValue--;
+            player->state.modeValue--;
         }
     }
 }
 
 void updateRacePlayerMode32Character3(RacePlayer *player) {
-    if (player->updateTimer == 0) {
-        player->updateTimer++;
-        player->modeValue = 0;
+    if (player->state.updateTimer == 0) {
+        player->state.updateTimer++;
+        player->state.modeValue = 0;
         setRaceMotionAnimation(player, 0x24);
     }
     if (stepRaceMotionAnimationUntilEnd(player)) {
-        if (player->animationId == 0x25) {
-            player->stateFlags |= 0x8000000;
+        if (player->state.animationId == 0x25) {
+            player->state.stateFlags |= 0x8000000;
         }
-        if (player->modeValue == 0) {
-            if (player->updateTimer == 1) {
+        if (player->state.modeValue == 0) {
+            if (player->state.updateTimer == 1) {
                 enqueueRacePlayerVoiceSound(player, RACE_VOICE_CHEER);
-                player->updateTimer++;
+                player->state.updateTimer++;
             }
-            player->modeValue = 0;
+            player->state.modeValue = 0;
             setRaceMotionAnimation(player, 0x25);
         } else {
-            player->modeValue--;
+            player->state.modeValue--;
         }
     }
 }
 
 void updateRacePlayerMode32Character4(RacePlayer *player) {
-    if (player->updateTimer == 0) {
-        player->updateTimer++;
-        player->modeValue = 0;
+    if (player->state.updateTimer == 0) {
+        player->state.updateTimer++;
+        player->state.modeValue = 0;
         setRaceMotionAnimation(player, 0x24);
     }
     if (stepRaceMotionAnimationUntilEnd(player)) {
-        if (player->animationId == 0x25) {
-            player->stateFlags |= 0x8000000;
+        if (player->state.animationId == 0x25) {
+            player->state.stateFlags |= 0x8000000;
         }
-        if (player->modeValue == 0) {
-            if (player->updateTimer == 1) {
+        if (player->state.modeValue == 0) {
+            if (player->state.updateTimer == 1) {
                 enqueueRacePlayerVoiceSound(player, RACE_VOICE_CHEER);
-                player->updateTimer++;
+                player->state.updateTimer++;
             }
-            player->modeValue = 0x32;
+            player->state.modeValue = 0x32;
             setRaceMotionAnimation(player, 0x25);
         } else {
-            player->modeValue--;
+            player->state.modeValue--;
         }
     }
 }
 
 void updateRacePlayerMode32Character5(RacePlayer *player) {
-    if (player->updateTimer == 0) {
-        player->updateTimer++;
+    if (player->state.updateTimer == 0) {
+        player->state.updateTimer++;
         enqueueRacePlayerVoiceSound(player, RACE_VOICE_CHEER);
-        player->modeValue = 0x1E;
+        player->state.modeValue = 0x1E;
         setRaceMotionAnimation(player, 0x23);
     }
     if (stepRaceMotionAnimationUntilEnd(player)) {
-        player->stateFlags |= 0x8000000;
-        if (player->modeValue == 0) {
-            player->modeValue = 0x1E;
+        player->state.stateFlags |= 0x8000000;
+        if (player->state.modeValue == 0) {
+            player->state.modeValue = 0x1E;
             setRaceMotionAnimation(player, 0x23);
         } else {
-            player->modeValue--;
+            player->state.modeValue--;
         }
     }
 }
@@ -5555,108 +5534,108 @@ void dispatchRacePlayerMode35Character(RacePlayer *player) {
 }
 
 void updateRacePlayerMode35Character0(RacePlayer *player) {
-    if (player->updateTimer == 0) {
-        player->updateTimer++;
-        player->modeValue = 0;
+    if (player->state.updateTimer == 0) {
+        player->state.updateTimer++;
+        player->state.modeValue = 0;
         setRaceMotionAnimation(player, 0x25);
     }
     if (stepRaceMotionAnimationUntilEnd(player)) {
-        if (player->modeValue == 0) {
-            player->stateFlags |= 0x8000000;
-            player->modeValue = 0x1E;
+        if (player->state.modeValue == 0) {
+            player->state.stateFlags |= 0x8000000;
+            player->state.modeValue = 0x1E;
             setRaceMotionAnimation(player, 0x26);
         } else {
-            player->modeValue--;
+            player->state.modeValue--;
         }
     }
 }
 
 void updateRacePlayerMode35Character1(RacePlayer *player) {
-    if (player->updateTimer == 0) {
-        player->updateTimer++;
-        player->modeValue = 0;
+    if (player->state.updateTimer == 0) {
+        player->state.updateTimer++;
+        player->state.modeValue = 0;
         setRaceMotionAnimation(player, 0x26);
     }
     if (stepRaceMotionAnimationUntilEnd(player)) {
-        if (player->modeValue == 0) {
-            player->stateFlags |= 0x8000000;
-            player->modeValue = 0x1E;
+        if (player->state.modeValue == 0) {
+            player->state.stateFlags |= 0x8000000;
+            player->state.modeValue = 0x1E;
             setRaceMotionAnimation(player, 0x27);
         } else {
-            player->modeValue--;
+            player->state.modeValue--;
         }
     }
 }
 
 void updateRacePlayerMode35Character2(RacePlayer *player) {
-    if (player->updateTimer == 0) {
-        player->updateTimer++;
-        player->modeValue = 0;
+    if (player->state.updateTimer == 0) {
+        player->state.updateTimer++;
+        player->state.modeValue = 0;
         setRaceMotionAnimation(player, 0x25);
     }
     if (stepRaceMotionAnimationUntilEnd(player)) {
-        if (player->modeValue == 0) {
-            player->modeValue = 0;
-            player->stateFlags |= 0x8000000;
+        if (player->state.modeValue == 0) {
+            player->state.modeValue = 0;
+            player->state.stateFlags |= 0x8000000;
             setRaceMotionAnimation(player, 0x26);
         } else {
-            player->modeValue--;
+            player->state.modeValue--;
         }
     }
 }
 
 void updateRacePlayerMode35Character3(RacePlayer *player) {
-    if (player->updateTimer == 0) {
-        player->updateTimer++;
-        player->modeValue = 0;
+    if (player->state.updateTimer == 0) {
+        player->state.updateTimer++;
+        player->state.modeValue = 0;
         setRaceMotionAnimation(player, 0x26);
     }
     if (stepRaceMotionAnimationUntilEnd(player)) {
-        if (player->modeValue == 0) {
-            player->stateFlags |= 0x8000000;
-            player->modeValue = 0;
+        if (player->state.modeValue == 0) {
+            player->state.stateFlags |= 0x8000000;
+            player->state.modeValue = 0;
             setRaceMotionAnimation(player, 0x27);
         } else {
-            player->modeValue--;
+            player->state.modeValue--;
         }
     }
 }
 
 void updateRacePlayerMode35Character4(RacePlayer *player) {
-    if (player->updateTimer == 0) {
-        player->updateTimer++;
-        player->modeValue = 0;
+    if (player->state.updateTimer == 0) {
+        player->state.updateTimer++;
+        player->state.modeValue = 0;
         setRaceMotionAnimation(player, 0x26);
     }
     if (stepRaceMotionAnimationUntilEnd(player)) {
-        if (player->modeValue == 0) {
-            player->stateFlags |= 0x8000000;
-            player->modeValue = 0;
+        if (player->state.modeValue == 0) {
+            player->state.stateFlags |= 0x8000000;
+            player->state.modeValue = 0;
             setRaceMotionAnimation(player, 0x27);
         } else {
-            player->modeValue--;
+            player->state.modeValue--;
         }
     }
 }
 
 void updateRacePlayerMode35Character5(RacePlayer *player) {
-    if (player->updateTimer == 0) {
-        player->updateTimer++;
-        player->modeValue = 0;
+    if (player->state.updateTimer == 0) {
+        player->state.updateTimer++;
+        player->state.modeValue = 0;
         setRaceMotionAnimation(player, 0x24);
     }
     if (stepRaceMotionAnimationUntilEnd(player)) {
-        if (player->modeValue == 0) {
-            if (player->animationId == 0x25) {
-                player->modeValue = 0;
+        if (player->state.modeValue == 0) {
+            if (player->state.animationId == 0x25) {
+                player->state.modeValue = 0;
                 setRaceMotionAnimation(player, 0x26);
             } else {
-                player->stateFlags |= 0x8000000;
-                player->modeValue = 0x1E;
+                player->state.stateFlags |= 0x8000000;
+                player->state.modeValue = 0x1E;
                 setRaceMotionAnimation(player, 0x25);
             }
         } else {
-            player->modeValue--;
+            player->state.modeValue--;
         }
     }
 }
@@ -5692,30 +5671,30 @@ void updateRacePlayersPostUpdate(void) {
     if (gRacePlayerCount > 0) {
         do {
             player = &gRacePlayers[i];
-            soundPos = &gRacePlayers[i].pos;
-            nextSoundPos = &gRacePlayers[i].renderPosition;
+            soundPos = &gRacePlayers[i].state.pos;
+            nextSoundPos = &gRacePlayers[i].state.renderPosition;
             if (player->soundDisabled == 0) {
                 enqueuePlayerLoopingPositionalSoundRequest(
-                    player->loopSoundId,
+                    player->state.loopSoundId,
                     soundPos,
-                    player->loopSoundVolume,
+                    player->state.loopSoundVolume,
                     SFX_PRIORITY_PLAYER_LOOP,
-                    player->loopSoundPitch,
+                    player->state.loopSoundPitch,
                     i
                 );
             } else {
                 enqueuePlayerLoopingPositionalSoundRequest(
-                    player->loopSoundId,
+                    player->state.loopSoundId,
                     soundPos,
                     0,
                     SFX_PRIORITY_PLAYER_LOOP,
-                    player->loopSoundPitch,
+                    player->state.loopSoundPitch,
                     i
                 );
             }
 
             *nextSoundPos = *soundPos;
-            player->renderPosition.y = player->groundCorrectionY + player->renderPosition.y - player->groundOffset + 0xA000;
+            player->state.renderPosition.y = player->state.groundCorrectionY + player->state.renderPosition.y - player->state.groundOffset + 0xA000;
             if (player->soundDisabled == 0) {
                 addRenderCallback(&gModelRenderCallbackQueue4Head, (RenderCallback)drawRacePlayerModel, player);
                 addRenderCallback(&gModelRenderCallbackQueue7Head, (RenderCallback)drawRacePlayerGroundShadow, player);
@@ -5730,28 +5709,28 @@ void updateRacePlayersPostUpdate(void) {
 void updateRacePlayerPostUpdate(RacePlayer *player) {
     unsigned long long random;
 
-    gRacePlayerModePostUpdateHandlers[player->mode](player);
-    if (!(gMenuFlowState & 1) && !(player->stateFlags & 0x41000) && (player->soundDisabled == 0)) {
-        if (player->groundContactMask & 3) {
+    gRacePlayerModePostUpdateHandlers[player->state.mode](player);
+    if (!(gMenuFlowState & 1) && !(player->state.stateFlags & 0x41000) && (player->soundDisabled == 0)) {
+        if (player->state.groundContactMask & 3) {
             random = randomNextMain();
             spawnRaceItemTrackSparkBurst(
-                &player->boardContactPoints[0],
-                &player->boardContactPoints[1],
-                &player->boardContactPoints[4],
-                &player->boardContactPoints[5],
+                &player->state.boardContactPoints[0],
+                &player->state.boardContactPoints[1],
+                &player->state.boardContactPoints[4],
+                &player->state.boardContactPoints[5],
                 random,
-                player->surfaceType
+                player->state.surfaceType
             );
         }
-        if (player->groundContactMask & 0xC) {
+        if (player->state.groundContactMask & 0xC) {
             random = randomNextMain();
             spawnRaceItemTrackSparkBurst(
-                &player->boardContactPoints[2],
-                &player->boardContactPoints[3],
-                &player->boardContactPoints[6],
-                &player->boardContactPoints[7],
+                &player->state.boardContactPoints[2],
+                &player->state.boardContactPoints[3],
+                &player->state.boardContactPoints[6],
+                &player->state.boardContactPoints[7],
                 random,
-                player->surfaceType
+                player->state.surfaceType
             );
         }
     }
@@ -5765,27 +5744,27 @@ void updateRacePlayerPostUpdateNoop(RacePlayer *player) {
 }
 
 void updateRacePlayerPostUpdateCourseObject(RacePlayer *player) {
-    if (player->updateState < 7) {
+    if (player->state.updateState < 7) {
         updateRacePlayerGroundAlignment(player);
     } else {
-        player->groundCorrectionY = 0;
+        player->state.groundCorrectionY = 0;
         updateRacePlayerProjectedPosition(player);
-        player->groundOffset = 0x30000;
+        player->state.groundOffset = 0x30000;
     }
 }
 
 void updateRacePlayerPostUpdateMode00(RacePlayer *player) {
     if (updateRacePlayerSurfaceContact(player)) {
-        player->mode = 0x16;
-        player->updateState = 0;
-        player->updateTimer = 0;
-        player->stateFlags |= 0x200;
+        player->state.mode = 0x16;
+        player->state.updateState = 0;
+        player->state.updateTimer = 0;
+        player->state.stateFlags |= 0x200;
     } else if (tryStartRacePlayerCourseObjectMode(player->playerIndex)) {
-        player->mode = 7;
-        player->updateState = 0;
-        player->updateTimer = 0;
+        player->state.mode = 7;
+        player->state.updateState = 0;
+        player->state.updateTimer = 0;
     }
-    interpolateRaceMotionJointAnimationFrame(player, 0, (0x60000 - player->groundOffset) / 0x600, 0x100);
+    interpolateRaceMotionJointAnimationFrame(player, 0, (0x60000 - player->state.groundOffset) / 0x600, 0x100);
 }
 
 void updateRacePlayerVoiceSounds(RacePlayer *player) {
@@ -5798,17 +5777,17 @@ void updateRacePlayerVoiceSounds(RacePlayer *player) {
     s32 bitIndex;
     u16 playerIndex;
 
-    voiceType = player->aerialTrickId;
+    voiceType = player->state.aerialTrickId;
     player2 = player;
     soundId = 0;
     score = 0;
     if (voiceType >= 9) {
-        player->unk57B = 1;
-        voiceType = player2->aerialTrickId;
+        player->state.unk57B = 1;
+        voiceType = player2->state.aerialTrickId;
     }
-    if ((voiceType != 0) && (player->grabTrickId != 0)) {
-        player->unk57B = 1;
-        voiceType = player2->aerialTrickId;
+    if ((voiceType != 0) && (player->state.grabTrickId != 0)) {
+        player->state.unk57B = 1;
+        voiceType = player2->state.aerialTrickId;
     }
     if (voiceType != 0) {
         soundId = gRacePlayerVoiceBaseSoundIds[voiceType];
@@ -5817,11 +5796,11 @@ void updateRacePlayerVoiceSounds(RacePlayer *player) {
         if ((s32)(u32)bitIndex >= 0xA) {
             bitIndex = 9;
         }
-        player->trickAttackCompletedTrickMask |= 1 << bitIndex;
+        player->state.trickAttackCompletedTrickMask |= 1 << bitIndex;
     }
-    splitType = player2->grabTrickId;
+    splitType = player2->state.grabTrickId;
     if (splitType != 0) {
-        if (player->aerialTrickId != 0) {
+        if (player->state.aerialTrickId != 0) {
             soundId += gRacePlayerVoiceSplitSoundOffsets[splitType];
             if (splitType & 1) {
                 score += 5;
@@ -5832,7 +5811,7 @@ void updateRacePlayerVoiceSounds(RacePlayer *player) {
             score += 1;
             soundId += gRacePlayerVoiceLeadSoundOffsets[splitType];
         }
-        soundId += player2->grabHoldFrames;
+        soundId += player2->state.grabHoldFrames;
     }
     if ((soundId != 0) && (gRaceSplitscreenMode == 0) && (gRaceDemoPlaybackEnabled == 0)) {
         addRacePlayerScore(player, soundId);
@@ -5862,13 +5841,13 @@ void updateRacePlayerVoiceSounds(RacePlayer *player) {
                 if (score >= 0x2710) {
                     score = 0x270F;
                 }
-                player->trickAttackPointTotal += score;
-                player->trickAttackMakeCount++;
-                if (player->trickAttackMakeCount >= 0x64) {
-                    player->trickAttackMakeCount = 0x63;
+                player->state.trickAttackPointTotal += score;
+                player->state.trickAttackMakeCount++;
+                if (player->state.trickAttackMakeCount >= 0x64) {
+                    player->state.trickAttackMakeCount = 0x63;
                 }
-                if (player->trickAttackBestMakeCount < player->trickAttackMakeCount) {
-                    player->trickAttackBestMakeCount = player2->trickAttackMakeCount;
+                if (player->state.trickAttackBestMakeCount < player->state.trickAttackMakeCount) {
+                    player->state.trickAttackBestMakeCount = player2->state.trickAttackMakeCount;
                 }
                 if (score >= 0xA) {
                     soundType = SFX_TRICK_SCORE_MEDIUM;
@@ -5882,17 +5861,17 @@ void updateRacePlayerVoiceSounds(RacePlayer *player) {
                 if (score >= 0x28) {
                     soundType = SFX_TRICK_SCORE_TOP;
                 }
-                if (player2->trickAttackCompletedTrickMask == 0x3FE) {
-                    player2->trickAttackPointTotal += 0x12C;
-                    player2->trickAttackCompletedTrickMask = 0x3FF;
+                if (player2->state.trickAttackCompletedTrickMask == 0x3FE) {
+                    player2->state.trickAttackPointTotal += 0x12C;
+                    player2->state.trickAttackCompletedTrickMask = 0x3FF;
                     soundType = SFX_TRICK_BONUS;
                     spawnRaceUiTrickScorePopup((void *)score, 1);
                 } else {
                     spawnRaceUiTrickScorePopup((void *)score, 0);
                 }
                 enqueueSoundEffect((s16)soundType, SFX_PRIORITY_HIGH);
-                if (player2->trickAttackPointTotal >= 0x2710) {
-                    player2->trickAttackPointTotal = 0x270F;
+                if (player2->state.trickAttackPointTotal >= 0x2710) {
+                    player2->state.trickAttackPointTotal = 0x270F;
                 }
             }
         }
@@ -5900,7 +5879,7 @@ void updateRacePlayerVoiceSounds(RacePlayer *player) {
 }
 
 void updateRacePlayerLoopingSound(RacePlayer *player) {
-    s32 v0 = -player->velocity.y >> 13;
+    s32 v0 = -player->state.velocity.y >> 13;
     if (v0 >= 0x80) {
         v0 = 0x7F;
     }
@@ -5908,14 +5887,14 @@ void updateRacePlayerLoopingSound(RacePlayer *player) {
         v0 = 0x46;
     }
     if (v0 >= 0x51) {
-        player->rumbleTimer = 2;
-        player->rumblePatternId = 0;
+        player->state.rumbleTimer = 2;
+        player->state.rumblePatternId = 0;
     } else {
-        player->rumbleTimer = 1;
-        player->rumblePatternId = 0;
+        player->state.rumbleTimer = 1;
+        player->state.rumblePatternId = 0;
     }
     if (player->soundDisabled == 0) {
-        enqueuePositionalSoundEffect(SFX_PLAYER_DESCENT, (Vec3i *)&player->pos.x, (s16)v0, SFX_PRIORITY_NORMAL);
+        enqueuePositionalSoundEffect(SFX_PLAYER_DESCENT, (Vec3i *)&player->state.pos.x, (s16)v0, SFX_PRIORITY_NORMAL);
     }
 }
 
@@ -5923,35 +5902,35 @@ void updateRacePlayerPostUpdateMode22(RacePlayer *player) {
     u32 stateFlags;
 
     if (updateRacePlayerSurfaceContact(player) == 0) {
-        stateFlags = player->stateFlags;
+        stateFlags = player->state.stateFlags;
         if (stateFlags & 8) {
-            player->stateFlags = stateFlags & ~8;
+            player->state.stateFlags = stateFlags & ~8;
         } else if (stateFlags & 0x800) {
-            player->trickAttackMakeCount = 0;
-            player->mode = 0xE;
-            player->updateState = 0;
-            player->updateTimer = 0;
-            player->stateFlags = stateFlags & ~0x200;
+            player->state.trickAttackMakeCount = 0;
+            player->state.mode = 0xE;
+            player->state.updateState = 0;
+            player->state.updateTimer = 0;
+            player->state.stateFlags = stateFlags & ~0x200;
             enqueueRacePlayerVoiceSound(player, RACE_VOICE_HIT);
         } else {
-            player->stateFlags = stateFlags & ~0x200;
+            player->state.stateFlags = stateFlags & ~0x200;
             if (tryStartRacePlayerCourseObjectMode(player->playerIndex) != 0) {
-                player->mode = 7;
-                player->updateState = 0;
-                player->updateTimer = 0;
+                player->state.mode = 7;
+                player->state.updateState = 0;
+                player->state.updateTimer = 0;
                 updateRacePlayerVoiceSounds(player);
                 updateRacePlayerLoopingSound(player);
-            } else if (player->subState == 0) {
-                player->mode = 0;
-                player->updateState = 1;
-                player->updateTimer = 0;
-                player->unk57A = 2;
+            } else if (player->state.subState == 0) {
+                player->state.mode = 0;
+                player->state.updateState = 1;
+                player->state.updateTimer = 0;
+                player->state.unk57A = 2;
                 updateRacePlayerLoopingSound(player);
             } else {
-                player->mode = 0;
-                player->updateState = 0;
-                player->updateTimer = 0;
-                player->unk57A = 2;
+                player->state.mode = 0;
+                player->state.updateState = 0;
+                player->state.updateTimer = 0;
+                player->state.unk57A = 2;
                 updateRacePlayerVoiceSounds(player);
                 updateRacePlayerLoopingSound(player);
             }
@@ -5963,29 +5942,29 @@ void updateRacePlayerPostUpdateAirborneTrick(RacePlayer *player) {
     u32 stateFlags;
 
     if (updateRacePlayerSurfaceContact(player) == 0) {
-        stateFlags = player->stateFlags;
+        stateFlags = player->state.stateFlags;
         if (stateFlags & 8) {
-            player->stateFlags = stateFlags & ~8;
+            player->state.stateFlags = stateFlags & ~8;
         } else if (stateFlags & 0x800) {
-            player->trickAttackMakeCount = 0;
-            player->mode = 0xE;
-            player->updateState = 0;
-            player->updateTimer = 0;
-            player->stateFlags = stateFlags & ~0x200;
+            player->state.trickAttackMakeCount = 0;
+            player->state.mode = 0xE;
+            player->state.updateState = 0;
+            player->state.updateTimer = 0;
+            player->state.stateFlags = stateFlags & ~0x200;
             enqueueRacePlayerVoiceSound(player, RACE_VOICE_HIT);
         } else {
-            player->stateFlags = stateFlags & ~0x200;
+            player->state.stateFlags = stateFlags & ~0x200;
             if (tryStartRacePlayerCourseObjectMode(player->playerIndex) != 0) {
-                player->mode = 7;
-                player->updateState = 0;
-                player->updateTimer = 0;
+                player->state.mode = 7;
+                player->state.updateState = 0;
+                player->state.updateTimer = 0;
                 updateRacePlayerVoiceSounds(player);
                 updateRacePlayerLoopingSound(player);
             } else {
-                player->mode = 0;
-                player->updateState = 0;
-                player->updateTimer = 0;
-                player->unk57A = 2;
+                player->state.mode = 0;
+                player->state.updateState = 0;
+                player->state.updateTimer = 0;
+                player->state.unk57A = 2;
                 updateRacePlayerVoiceSounds(player);
                 updateRacePlayerLoopingSound(player);
             }
@@ -5995,23 +5974,23 @@ void updateRacePlayerPostUpdateAirborneTrick(RacePlayer *player) {
 
 void updateRacePlayerPostUpdateAirborneLaunch(RacePlayer *player) {
     if (updateRacePlayerSurfaceContact(player)) {
-        player->mode = 0x16;
-        player->updateState = 0;
-        player->updateTimer = 0;
-        player->stateFlags |= 0x200;
+        player->state.mode = 0x16;
+        player->state.updateState = 0;
+        player->state.updateTimer = 0;
+        player->state.stateFlags |= 0x200;
     } else if (tryStartRacePlayerCourseObjectMode(player->playerIndex)) {
-        player->mode = 7;
-        player->updateState = 0;
-        player->updateTimer = 0;
+        player->state.mode = 7;
+        player->state.updateState = 0;
+        player->state.updateTimer = 0;
     }
-    interpolateRaceMotionJointAnimationFrame(player, 0, (0x60000 - player->groundOffset) / 0x600, 0x100);
+    interpolateRaceMotionJointAnimationFrame(player, 0, (0x60000 - player->state.groundOffset) / 0x600, 0x100);
 }
 
 void updateRacePlayerPostUpdateNudge(RacePlayer *player) {
     if (updateRacePlayerSurfaceContact(player)) {
-        player->stateFlags |= 0x200;
+        player->state.stateFlags |= 0x200;
     } else {
-        player->stateFlags &= ~0x200;
+        player->state.stateFlags &= ~0x200;
     }
 }
 
@@ -6019,14 +5998,14 @@ void updateRacePlayerPostUpdateMode29(RacePlayer *player) {
     u16 playerIndex;
 
     updateRacePlayerSurfaceContact(player);
-    if (!(player->stateFlags & 0x02000000)) {
-        player->mode = 1;
-        player->updateState = 0;
-        player->updateTimer = 0;
+    if (!(player->state.stateFlags & 0x02000000)) {
+        player->state.mode = 1;
+        player->state.updateState = 0;
+        player->state.updateTimer = 0;
         if ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 2)) {
-            player->trickAttackPointTotal *= 2;
-            if (player->trickAttackPointTotal >= 0x2710) {
-                player->trickAttackPointTotal = 0x270F;
+            player->state.trickAttackPointTotal *= 2;
+            if (player->state.trickAttackPointTotal >= 0x2710) {
+                player->state.trickAttackPointTotal = 0x270F;
             }
             createCallbackTaskPreservingArgs((CallbackTaskCallback)initRaceUiCrashScorePopup, 0, 0x64);
             enqueueSoundEffect(SFX_TRICK_BONUS, SFX_PRIORITY_NORMAL);
@@ -6044,7 +6023,7 @@ void updateRacePlayerPostUpdateMode29(RacePlayer *player) {
 
 void updateRacePlayerPostUpdateAttack(RacePlayer *player) {
     updateRacePlayerSurfaceContact(player);
-    if (player->updateState < 2) {
-        interpolateRaceMotionJointAnimationFrame(player, 0, (0x60000 - player->groundOffset) / 0x600, 0x100);
+    if (player->state.updateState < 2) {
+        interpolateRaceMotionJointAnimationFrame(player, 0, (0x60000 - player->state.groundOffset) / 0x600, 0x100);
     }
 }

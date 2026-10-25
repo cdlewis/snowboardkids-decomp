@@ -29,34 +29,34 @@ void updateRacePlayerShotUse(RacePlayer *player) {
 
     shouldFireShot = FALSE;
     if (player->isCpu == 0) {
-        if (player->pressedInput & Z_TRIG) {
+        if (player->state.pressedInput & Z_TRIG) {
             shouldFireShot = TRUE;
         }
     } else {
-        if (player->cpuShotUseCooldown == 0) {
-            player->cpuShotUseCooldown = CPU_PICKUP_USE_RETRY_COOLDOWN;
+        if (player->state.cpuShotUseCooldown == 0) {
+            player->state.cpuShotUseCooldown = CPU_PICKUP_USE_RETRY_COOLDOWN;
             if (player->cpuShotUseChance >= randomNextMain()) {
                 shouldFireShot = TRUE;
             }
         } else {
-            player->cpuShotUseCooldown--;
+            player->state.cpuShotUseCooldown--;
         }
 
-        if ((shouldFireShot != FALSE) && (player->shotCount != 0)) {
+        if ((shouldFireShot != FALSE) && (player->state.shotCount != 0)) {
             shouldFireShot = FALSE;
             for (targetPlayerIndex = 0; targetPlayerIndex < RACE_PLAYER_COUNT; targetPlayerIndex++) {
                 if (gRacePlayers[targetPlayerIndex].isCpu == 0) {
-                    deltaX = gRacePlayers[targetPlayerIndex].pos.x - player->pos.x;
-                    deltaZ = gRacePlayers[targetPlayerIndex].pos.z - player->pos.z;
+                    deltaX = gRacePlayers[targetPlayerIndex].state.pos.x - player->state.pos.x;
+                    deltaZ = gRacePlayers[targetPlayerIndex].state.pos.z - player->state.pos.z;
                     if ((deltaX < CPU_SHOT_TARGET_AXIS_MAX) && (deltaX >= CPU_SHOT_TARGET_AXIS_MIN) &&
                         (deltaZ < CPU_SHOT_TARGET_AXIS_MAX) && (deltaZ >= CPU_SHOT_TARGET_AXIS_MIN)) {
                         relativeTargetAngle = (s16)((calculateFixedAngleFromDeltaXZ(deltaX, deltaZ) -
-                                                     (s16)(player->facingAngle & 0xFFFFu)) &
+                                                     (s16)(player->state.facingAngle & 0xFFFFu)) &
                                                     0xFFF);
                         if ((relativeTargetAngle >= CPU_SHOT_TARGET_WRAPPED_ANGLE_MIN) ||
                             (relativeTargetAngle < CPU_SHOT_TARGET_FORWARD_ANGLE_MAX)) {
                             shouldFireShot = TRUE;
-                            player->cpuShotUseCooldown = CPU_SHOT_TARGETED_USE_COOLDOWN;
+                            player->state.cpuShotUseCooldown = CPU_SHOT_TARGETED_USE_COOLDOWN;
                         }
                     }
                 }
@@ -65,8 +65,8 @@ void updateRacePlayerShotUse(RacePlayer *player) {
     }
 
     if (shouldFireShot != FALSE) {
-        if (player->shotCount != 0) {
-            if (player->shotType == RACE_SHOT_SLAPSTICK) {
+        if (player->state.shotCount != 0) {
+            if (player->state.shotType == RACE_SHOT_SLAPSTICK) {
                 if (createCallbackTaskWithUserIdPreservingArgs(
                         initWideHomingShotProjectile,
                         (u16)(player->playerIndex + 1),
@@ -74,10 +74,10 @@ void updateRacePlayerShotUse(RacePlayer *player) {
                         player->playerIndex
                     ) != NULL) {
                     createCallbackTaskWithUserIdPreservingArgs(initRacePlayerShockEffect, 5, 4, player->playerIndex);
-                    player->shotCount--;
+                    player->state.shotCount--;
                 }
             }
-            if (player->shotType == RACE_SHOT_PARACHUTE) {
+            if (player->state.shotType == RACE_SHOT_PARACHUTE) {
                 if (createCallbackTaskWithUserIdPreservingArgs(
                         initLongRangeHomingShotProjectile,
                         (u16)(player->playerIndex + 1),
@@ -85,10 +85,10 @@ void updateRacePlayerShotUse(RacePlayer *player) {
                         player->playerIndex
                     ) != NULL) {
                     createCallbackTaskWithUserIdPreservingArgs(initRacePlayerShockEffect, 5, 4, player->playerIndex);
-                    player->shotCount--;
+                    player->state.shotCount--;
                 }
             }
-            if (player->shotType == RACE_SHOT_FREEZE_SHOT) {
+            if (player->state.shotType == RACE_SHOT_FREEZE_SHOT) {
                 if (createCallbackTaskWithUserIdPreservingArgs(
                         initCloseRangeHomingShotProjectile,
                         (u16)(player->playerIndex + 1),
@@ -96,10 +96,10 @@ void updateRacePlayerShotUse(RacePlayer *player) {
                         player->playerIndex
                     ) != NULL) {
                     createCallbackTaskWithUserIdPreservingArgs(initRacePlayerShockEffect, 5, 4, player->playerIndex);
-                    player->shotCount--;
+                    player->state.shotCount--;
                 }
             }
-            if (player->shotType == RACE_SHOT_SNOWMAN) {
+            if (player->state.shotType == RACE_SHOT_SNOWMAN) {
                 if (createCallbackTaskWithUserIdPreservingArgs(
                         initBouncingShotProjectile,
                         (u16)(player->playerIndex + 1),
@@ -107,10 +107,10 @@ void updateRacePlayerShotUse(RacePlayer *player) {
                         player->playerIndex
                     ) != NULL) {
                     createCallbackTaskWithUserIdPreservingArgs(initRacePlayerShockEffect, 5, 4, player->playerIndex);
-                    player->shotCount--;
+                    player->state.shotCount--;
                 }
             }
-            if (player->shotType == RACE_SHOT_BOMB) {
+            if (player->state.shotType == RACE_SHOT_BOMB) {
                 if (createCallbackTaskWithUserIdPreservingArgs(
                         initAreaBlastShotProjectile,
                         (u16)(player->playerIndex + 1),
@@ -118,15 +118,15 @@ void updateRacePlayerShotUse(RacePlayer *player) {
                         player->playerIndex
                     ) != NULL) {
                     createCallbackTaskWithUserIdPreservingArgs(initRacePlayerShockEffect, 5, 4, player->playerIndex);
-                    player->shotCount--;
+                    player->state.shotCount--;
                 }
             }
-            if (player->shotCount == 0) {
-                player->shotType = RACE_SHOT_NONE;
+            if (player->state.shotCount == 0) {
+                player->state.shotType = RACE_SHOT_NONE;
             }
         }
 
-        if (player->shieldShotCount != 0) {
+        if (player->state.shieldShotCount != 0) {
             if (createCallbackTaskWithUserIdPreservingArgs(
                     initShieldProjectile,
                     (u16)(player->playerIndex + 1),
@@ -134,7 +134,7 @@ void updateRacePlayerShotUse(RacePlayer *player) {
                     player->playerIndex
                 ) != NULL) {
                 createCallbackTaskWithUserIdPreservingArgs(initRacePlayerShockEffect, 5, 4, player->playerIndex);
-                player->shieldShotCount--;
+                player->state.shieldShotCount--;
             }
         }
     }
@@ -146,23 +146,23 @@ void updateRacePlayerItemUse(RacePlayer *player) {
 
     shouldUseItem = FALSE;
     if (player->isCpu == 0) {
-        if (player->pressedInput & B_BUTTON) {
+        if (player->state.pressedInput & B_BUTTON) {
             shouldUseItem = TRUE;
         }
     } else {
-        if (player->cpuItemUseCooldown == 0) {
+        if (player->state.cpuItemUseCooldown == 0) {
             if (player->cpuItemUseChance >= randomNextMain()) {
                 shouldUseItem = TRUE;
             }
-            player->cpuItemUseCooldown = CPU_PICKUP_USE_RETRY_COOLDOWN;
+            player->state.cpuItemUseCooldown = CPU_PICKUP_USE_RETRY_COOLDOWN;
         } else {
-            player->cpuItemUseCooldown--;
+            player->state.cpuItemUseCooldown--;
         }
 
-        if (player->itemType == RACE_ITEM_INVISIBLE) {
+        if (player->state.itemType == RACE_ITEM_INVISIBLE) {
             /* CPUs use invisibility reactively when targeted by an attack. */
             shouldUseItem = FALSE;
-            if (player->isTargetedByAttack != 0) {
+            if (player->state.isTargetedByAttack != 0) {
                 shouldUseItem = TRUE;
             } else {
                 shouldUseItem = FALSE;
@@ -171,44 +171,44 @@ void updateRacePlayerItemUse(RacePlayer *player) {
     }
 
     if (shouldUseItem != FALSE) {
-        itemType = player->itemType;
+        itemType = player->state.itemType;
         if (itemType != RACE_ITEM_NONE) {
-            if ((itemType == RACE_ITEM_SPEED_FAN) && (player->trailEffectTimer == 0)) {
+            if ((itemType == RACE_ITEM_SPEED_FAN) && (player->state.trailEffectTimer == 0)) {
                 startSpeedFanEffect(player);
-                player->itemType = RACE_ITEM_NONE;
-                itemType = player->itemType;
+                player->state.itemType = RACE_ITEM_NONE;
+                itemType = player->state.itemType;
             }
 
             if (itemType == RACE_ITEM_GHOST) {
                 spawnGhostItemEffect(player->playerIndex);
-                player->itemType = RACE_ITEM_NONE;
-                itemType = player->itemType;
+                player->state.itemType = RACE_ITEM_NONE;
+                itemType = player->state.itemType;
             }
 
             if (itemType == RACE_ITEM_PAN) {
                 spawnPanItemTargets(player->playerIndex);
-                player->itemType = RACE_ITEM_NONE;
-                itemType = player->itemType;
+                player->state.itemType = RACE_ITEM_NONE;
+                itemType = player->state.itemType;
             }
 
             if (itemType == RACE_ITEM_ROCK) {
                 createCallbackTaskWithUserIdPreservingArgs(initRockItem, 0, 0x3C, (u16)player->playerIndex);
-                player->itemType = RACE_ITEM_NONE;
-                itemType = player->itemType;
+                player->state.itemType = RACE_ITEM_NONE;
+                itemType = player->state.itemType;
             }
 
             if (itemType == RACE_ITEM_RAT_FACE) {
                 if (player->isCpu == 0) {
                     createCallbackTaskWithUserIdPreservingArgs(initRatFaceItemEffect, 0, 3, (u16)player->playerIndex);
                 }
-                player->itemType = RACE_ITEM_NONE;
-                itemType = player->itemType;
+                player->state.itemType = RACE_ITEM_NONE;
+                itemType = player->state.itemType;
             }
 
-            if ((itemType == RACE_ITEM_INVISIBLE) && (player->invisibilityTimer == 0)) {
-                player->invisibilityTimer = RACE_PLAYER_INVISIBILITY_DURATION;
-                player->itemType = RACE_ITEM_NONE;
-                enqueuePositionalSoundEffect(SFX_ITEM_USE, &player->pos, 0x7F, SFX_PRIORITY_NORMAL);
+            if ((itemType == RACE_ITEM_INVISIBLE) && (player->state.invisibilityTimer == 0)) {
+                player->state.invisibilityTimer = RACE_PLAYER_INVISIBILITY_DURATION;
+                player->state.itemType = RACE_ITEM_NONE;
+                enqueuePositionalSoundEffect(SFX_ITEM_USE, &player->state.pos, 0x7F, SFX_PRIORITY_NORMAL);
             }
         }
     }

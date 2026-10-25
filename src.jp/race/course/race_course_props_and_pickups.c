@@ -1182,8 +1182,8 @@ void updateFallingRockSpawner(FallingRockSpawnerActor *arg0) {
             if (gRaceSplitscreenMode != 2) {
                 for (i = 0; i < RACE_PLAYER_COUNT; i++) {
                     if (gRacePlayers[i].isActive != 0) {
-                        diffX = gRacePlayers[i].pos.x - entry->pos.x;
-                        diffZ = gRacePlayers[i].pos.z - entry->pos.z;
+                        diffX = gRacePlayers[i].state.pos.x - entry->pos.x;
+                        diffZ = gRacePlayers[i].state.pos.z - entry->pos.z;
                         if ((((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) && (diffZ < SPAWN_RANGE_MAX)) &&
                             (diffZ >= SPAWN_RANGE_MIN)) {
                             found = TRUE;
@@ -1597,15 +1597,15 @@ void updateRacePickupIdle(RacePickupActor *arg0) {
             player = &gRacePlayers[i];
             playerInsideCylinder = 1;
 
-            if ((player->score < 0x64) && (player->isCpu == 0)) {
+            if ((player->state.score < 0x64) && (player->isCpu == 0)) {
                 continue;
             }
 
             arg0->velY = 0x60000;
-            if (player->score >= 0x64) {
-                player->score -= 0x64;
+            if (player->state.score >= 0x64) {
+                player->state.score -= 0x64;
             } else {
-                player->score = 0;
+                player->state.score = 0;
             }
 
             // Variant 0 is a red shop: three shots in the Z-button slot.
@@ -1617,26 +1617,26 @@ void updateRacePickupIdle(RacePickupActor *arg0) {
             // regardless of box color. Lower rankIndex values are closer to 1st place and
             // skew toward common/weaker tier values; higher values skew rarer/stronger.
             if (arg0->variant == 0) {
-                player->shotType = gShotRollTable[player->rankIndex][randomNextObject(player) & 0xF];
+                player->state.shotType = gShotRollTable[player->state.rankIndex][randomNextObject(player) & 0xF];
                 if (gTrainingCourseLesson != 0) {
-                    player->shotType = RACE_SHOT_SLAPSTICK;
+                    player->state.shotType = RACE_SHOT_SLAPSTICK;
                 }
-                player->shotCount = 3;
-                player->shotPalette = 4;
+                player->state.shotCount = 3;
+                player->state.shotPalette = 4;
             } else {
-                player->itemType = gItemRollTable[player->rankIndex][randomNextObject(player) & 0xF];
+                player->state.itemType = gItemRollTable[player->state.rankIndex][randomNextObject(player) & 0xF];
                 if (gTrainingCourseLesson != 0) {
-                    player->itemType = RACE_ITEM_SPEED_FAN;
+                    player->state.itemType = RACE_ITEM_SPEED_FAN;
                 }
                 // Course index 8 special case, CPU opponents only. When a CPU's item roll
                 // lands on rock, there is a 255/256 chance to replace it with invisibility.
                 if ((gRaceCourseIndex.signedValue == RACE_COURSE_NINJA_LAND) && (player->isCpu != 0) &&
-                    (player->itemType == RACE_ITEM_ROCK)) {
+                    (player->state.itemType == RACE_ITEM_ROCK)) {
                     if (randomNextMain() != 0) {
-                        player->itemType = RACE_ITEM_INVISIBLE;
+                        player->state.itemType = RACE_ITEM_INVISIBLE;
                     }
                 }
-                player->itemPalette = 4;
+                player->state.itemPalette = 4;
             }
 
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePickupCollected);

@@ -44,6 +44,192 @@ typedef enum RaceCpuPaceMode {
     RACE_CPU_PACE_YIELD = 3      /* Subtract 1/16 unless ranked fourth. */
 } RaceCpuPaceMode;
 
+/* Per-race state, cleared together by initRacePlayer.
+ * Offsets are relative to this struct; unk/pad names retain RacePlayer offsets. */
+typedef struct RacePlayerState {
+    /* 0x000 */ Vec3i pos;
+    /* 0x00C */ Vec3i renderPosition; /* pos with ground offset/correction applied for rendering and effects. */
+    /* 0x018 */ Vec3i previousPosition;
+    /* 0x024 */ Vec3i velocity;
+    /* 0x030 */ char pad4C[0xC];
+    /* 0x03C */ s32 groundOffset;
+    /* 0x040 */ s32 collisionBottomY;
+    /* 0x044 */ s32 targetGroundOffset;
+    /* 0x048 */ s32 groundCorrectionY;
+    /* 0x04C */ s32 collisionCenterOffset;
+    /* 0x050 */ s16 modelRotationX;
+    /* 0x052 */ s16 modelRotationY;
+    /* 0x054 */ s16 modelRotationZ;
+    /* 0x056 */ char pad72[2];
+    /* 0x058 */ s32 verticalVelocityLimit;
+    /* 0x05C */ char pad78[4];
+    /* Mode-dependent scratch: frame timer, trick rotation progress, or jump impulse. */
+    /* 0x060 */ s32 modeValue;
+    /* 0x064 */ s32 unk80;
+    /* 0x068 */ u32 heldInput;     /* Buttons and digital stick directions held this frame. */
+    /* 0x06C */ u32 pressedInput;  /* Inputs newly pressed this frame. */
+    /* 0x070 */ u32 previousInput; /* Held input from the previous frame. */
+    /* 0x074 */ s8 stickX;
+    /* 0x075 */ s8 stickY;
+    /* 0x076 */ s8 stanceChangeTimer;
+    /* 0x077 */ s8 stanceTransitionFrame;
+    /* 0x078 */ Transform3D modelPartTransforms[RACE_PLAYER_MODEL_PART_CAPACITY];
+    /* 0x238 */ s32 localVelocityZ;
+    /* 0x23C */ s32 localVelocityX;
+    /* 0x240 */ s32 baseSpeedLimit;
+    /* 0x244 */ s32 gravity;
+    /* 0x248 */ s32 aerialGravity;
+    /* 0x24C */ s32 turnStrength;
+    /* 0x250 */ s32 turnRadiusAtFullLean;
+    /* 0x254 */ s32 turnRadiusAtHalfLean;
+    /* 0x258 */ s32 lateralDeceleration;
+    /* 0x25C */ s32 forwardDeceleration;
+    /* 0x260 */ s32 reverseDeceleration;
+    /* 0x264 */ s32 collisionRadius;
+    /* 0x268 */ s32 collisionHeight;
+    /* 0x26C */ s16 modelBasePitch;
+    /* 0x26E */ s16 modelBaseYaw;
+    /* 0x270 */ s16 modelBaseRoll;
+    /* 0x272 */ char pad28E[2];
+    /* 0x274 */ Vec3i projectedPos;
+    /* 0x280 */ s32 movementSpeed;
+    /* Frames waiting for grab input; a press in the first six selects the early-input variant. */
+    /* 0x284 */ s16 grabInputFrames;
+    /* 0x286 */ s16 grabTrickId;
+    /* 0x288 */ s16 grabHoldFrames; /* Extra hold frames after the grab animation completes. */
+    /* 0x28A */ s16 aerialTrickId;
+    /* 0x28C */ s16 surfaceCueState[6];
+    /* 0x298 */ s16 surfaceCueStep[6];
+    /* 0x2A4 */ s16 trickAttackPointTotal;
+    /* 0x2A6 */ s8 trickAttackBestMakeCount;
+    /* 0x2A7 */ s8 trickAttackMakeCount;
+    /* 0x2A8 */ u16 trickAttackCompletedTrickMask;
+    /* 0x2AA */ u16 pendingItemHitFlags;
+    /* 0x2AC */ s32 collisionVelocityX;
+    /* 0x2B0 */ s32 collisionVelocityZ;
+    /* 0x2B4 */ char pad2D0[2];
+    /* 0x2B6 */ s16 hitSourcePlayerIndex;
+    /* 0x2B8 */ s16 unk2D4;
+    /* 0x2BA */ s16 unk2D6;
+    /* 0x2BC */ s16 activeSparkleEffectCount;
+    /* 0x2BE */ s16 trailEffectTimer;
+    /* 0x2C0 */ u8 snowboardTrailSide;
+    /* 0x2C1 */ char pad2DD[1];
+    /* 0x2C2 */ s16 unk2DE;
+    /* 0x2C4 */ s32 unk2E0;
+    /* 0x2C8 */ s32 unk2E4;
+    /* 0x2CC */ s16 unk2E8;
+    /* 0x2CE */ s16 pitchAngle;
+    /* 0x2D0 */ s16 facingAngle;
+    /* 0x2D2 */ s16 leanAngle;
+    /* 0x2D4 */ s16 surfacePitchAngle;
+    /* 0x2D6 */ char pad2F2[2];
+    /* 0x2D8 */ s16 surfaceRollAngle;
+    /* 0x2DA */ s16 leanInput;
+    /* 0x2DC */ s16 leanScale;
+    /* Grounded lean-animation blend angle; launch-ramp modes reuse it as their target yaw. */
+    /* 0x2DE */ s16 modeAngle;
+    /* 0x2E0 */ u32 stateFlags;
+    /* 0x2E4 */ s16 mode;
+    /* 0x2E6 */ s16 updateState;
+    /* 0x2E8 */ s16 updateTimer;
+    /* 0x2EA */ s16 unk306;
+    /* 0x2EC */ s16 subState;
+    /* 0x2EE */ s16 subStateTimer;
+    /* 0x2F0 */ s16 subStateStep;
+    /* 0x2F2 */ s16 subStateParam;
+    /* 0x2F4 */ s32 targetSpeedLimit;
+    /* 0x2F8 */ s32 speedLimit;
+    /* 0x2FC */ s32 rankSpeedBonus; /* Approaches rank table by at most +0x20/-0x30 per update. */
+    /* 0x300 */ s16 unk31C;
+    /* 0x302 */ s16 unk31E;
+    /* 0x304 */ s16 invisibilityTimer;
+    /* 0x306 */ char pad322[0xE];
+    /* 0x314 */ s8 surfaceType;
+    /* 0x315 */ s8 previousSurfaceType;
+    /* 0x316 */ s16 unk332;
+    /* 0x318 */ s16 unk334;
+    /* 0x31A */ s16 unk336;
+    /* 0x31C */ CharacterModelPart modelParts[RACE_PLAYER_MODEL_PART_CAPACITY];
+    /* 0x434 */ s16 modelPartCount;
+    /* 0x436 */ s16 animationId;
+    /* 0x438 */ s32 animationStartOffset;
+    /* 0x43C */ s32 animationFrameDataOffset;
+    /* 0x440 */ s16 animationFrameCount;
+    /* 0x442 */ s16 animationFramesRemaining;
+    /* 0x444 */ char pad460[4];
+    /* 0x448 */ s16 animationFrameDuration;
+    /* 0x44A */ s16 animationFrameTimer;
+    /* 0x44C */ Vec3i shadowCorners[4]; /* Board corners projected onto the terrain for the shadow. */
+    /* 0x47C */ Vtx *shadowVtx;
+    /* 0x480 */ Mtx *shadowMtx;
+    /* 0x484 */ Vec3i boardContactPoints[8]; /* Current world-space corners [0..3], previous frame [4..7]. */
+    /* 0x4E4 */ u8 groundContactMask;
+    /* 0x4E5 */ char pad501[1];
+    /* 0x4E6 */ s16 coursePathIndex;
+    /* 0x4E8 */ s32 coursePathOffset;
+    /* 0x4EC */ s8 lapDigit;
+    /* 0x4ED */ s8 rankIndex; /* Zero-based: 0 is first, 3 is fourth. */
+    /* 0x4EE */ char pad50A[2];
+    /* 0x4F0 */ union {
+        s16 *anglePtr;
+        RaceScoreAttackRingTrigger *scoreAttackRingTriggerList;
+    };
+    /* Available shield shots: spent on spawn, returned when the projectile is removed. */
+    /* 0x4F4 */ s16 shieldShotCount;
+    /* Red-shop shot inventory (Z); blue-shop item inventory (B). See race_items.h. */
+    /* 0x4F6 */ s8 shotType;
+    /* 0x4F7 */ s8 shotPalette;
+    /* 0x4F8 */ s8 shotCount;
+    /* 0x4F9 */ s8 itemType;
+    /* 0x4FA */ s8 itemPalette;
+    /* 0x4FB */ s8 unk517;
+    /* 0x4FC */ u8 randomIndex;
+    /* 0x4FD */ s8 unk519;
+    /* Set by homing shots and falling pans; cleared after the player mode update. */
+    /* 0x4FE */ u8 isTargetedByAttack;
+    /* 0x4FF */ char pad51B[1];
+    /* 0x500 */ u32 checkpointEventMask;
+    /* 0x504 */ s32 smoothedPathOffset;
+    /* 0x508 */ s8 checkpointHit;
+    /* 0x509 */ s8 unk525;
+    /* 0x50A */ char pad526[1];
+    /* 0x50B */ s8 surfaceCueOverrideMask;
+    /* 0x50C */ s8 unk528;
+    /* 0x50D */ s8 displayRank;
+    /* 0x50E */ s8 cpuPaceMode;
+    /* 0x50F */ s8 rankTargetPlayer;
+    /* Count eligible CPU use-function calls, normally ~30/sec (US); skipped calls pause them.
+     * Signed byte wraparound is intentional for the longer targeted-shot cooldown. */
+    /* 0x510 */ s8 cpuItemUseCooldown;
+    /* 0x511 */ s8 cpuShotUseCooldown;
+    /* 0x512 */ char pad52E[2];
+    /* 0x514 */ Mtx *modelPartMatrices[RACE_PLAYER_MODEL_PART_CAPACITY];
+    /* 0x54C */ s32 score; /* Race gold: pickups spend 100; distinct from menu/save money at 0x00C. */
+    /* 0x550 */ s32 cumulativeRaceScore;
+    /* 0x554 */ s16 collectedCourseCoinMarkerCount;
+    /* 0x556 */ s16 totalCourseCoinMarkerCount;
+    /* 0x558 */ s16 scoreAttackPointTotal;
+    /* 0x55A */ s16 scoreAttackPointTarget;
+    /* 0x55C */ s16 unk578;
+    /* 0x55E */ s8 unk57A;
+    /* 0x55F */ s8 unk57B;
+    /* 0x560 */ s16 unk57C;
+    /* 0x562 */ s16 progressMeterPosition;
+    /* 0x564 */ s8 progressMeterSquashFrame;
+    /* 0x565 */ s8 unk581;
+    /* 0x566 */ s16 loopSoundVolume;
+    /* 0x568 */ s16 loopSoundId;
+    /* 0x56A */ char pad586[2];
+    /* 0x56C */ f32 loopSoundPitch;
+    /* 0x570 */ SpeedFanState speedFan;
+    /* 0x5E8 */ s16 rumbleTimer;
+    /* 0x5EA */ s16 rumblePatternIndex;
+    /* 0x5EC */ s8 rumblePatternId;
+    /* 0x5ED */ char pad609[1];
+    /* 0x5EE */ s16 replayFrame;
+} RacePlayerState;
+
 typedef struct RacePlayer {
     /* 0x000 */ u16 playerIndex;
     /* 0x002 */ s16 unk2;
@@ -71,188 +257,10 @@ typedef struct RacePlayer {
     /* CPU use thresholds, compared inclusively against a random byte; not percentages. */
     /* 0x01A */ u8 cpuItemUseChance;
     /* 0x01B */ u8 cpuShotUseChance;
-    /* 0x01C */ Vec3i pos;
-    /* 0x028 */ Vec3i renderPosition; /* pos with ground offset/correction applied for rendering and effects. */
-    /* 0x034 */ Vec3i previousPosition;
-    /* 0x040 */ Vec3i velocity;
-    /* 0x04C */ char pad4C[0xC];
-    /* 0x058 */ s32 groundOffset;
-    /* 0x05C */ s32 collisionBottomY;
-    /* 0x060 */ s32 targetGroundOffset;
-    /* 0x064 */ s32 groundCorrectionY;
-    /* 0x068 */ s32 collisionCenterOffset;
-    /* 0x06C */ s16 modelRotationX;
-    /* 0x06E */ s16 modelRotationY;
-    /* 0x070 */ s16 modelRotationZ;
-    /* 0x072 */ char pad72[2];
-    /* 0x074 */ s32 verticalVelocityLimit;
-    /* 0x078 */ char pad78[4];
-    /* Mode-dependent scratch: frame timer, trick rotation progress, or jump impulse. */
-    /* 0x07C */ s32 modeValue;
-    /* 0x080 */ s32 unk80;
-    /* 0x084 */ u32 heldInput;     /* Buttons and digital stick directions held this frame. */
-    /* 0x088 */ u32 pressedInput;  /* Inputs newly pressed this frame. */
-    /* 0x08C */ u32 previousInput; /* Held input from the previous frame. */
-    /* 0x090 */ s8 stickX;
-    /* 0x091 */ s8 stickY;
-    /* 0x092 */ s8 stanceChangeTimer;
-    /* 0x093 */ s8 stanceTransitionFrame;
-    /* 0x094 */ Transform3D modelPartTransforms[RACE_PLAYER_MODEL_PART_CAPACITY];
-    /* 0x254 */ s32 localVelocityZ;
-    /* 0x258 */ s32 localVelocityX;
-    /* 0x25C */ s32 baseSpeedLimit;
-    /* 0x260 */ s32 gravity;
-    /* 0x264 */ s32 aerialGravity;
-    /* 0x268 */ s32 turnStrength;
-    /* 0x26C */ s32 turnRadiusAtFullLean;
-    /* 0x270 */ s32 turnRadiusAtHalfLean;
-    /* 0x274 */ s32 lateralDeceleration;
-    /* 0x278 */ s32 forwardDeceleration;
-    /* 0x27C */ s32 reverseDeceleration;
-    /* 0x280 */ s32 collisionRadius;
-    /* 0x284 */ s32 collisionHeight;
-    /* 0x288 */ s16 modelBasePitch;
-    /* 0x28A */ s16 modelBaseYaw;
-    /* 0x28C */ s16 modelBaseRoll;
-    /* 0x28E */ char pad28E[2];
-    /* 0x290 */ Vec3i projectedPos;
-    /* 0x29C */ s32 movementSpeed;
-    /* Frames waiting for grab input; a press in the first six selects the early-input variant. */
-    /* 0x2A0 */ s16 grabInputFrames;
-    /* 0x2A2 */ s16 grabTrickId;
-    /* 0x2A4 */ s16 grabHoldFrames; /* Extra hold frames after the grab animation completes. */
-    /* 0x2A6 */ s16 aerialTrickId;
-    /* 0x2A8 */ s16 surfaceCueState[6];
-    /* 0x2B4 */ s16 surfaceCueStep[6];
-    /* 0x2C0 */ s16 trickAttackPointTotal;
-    /* 0x2C2 */ s8 trickAttackBestMakeCount;
-    /* 0x2C3 */ s8 trickAttackMakeCount;
-    /* 0x2C4 */ u16 trickAttackCompletedTrickMask;
-    /* 0x2C6 */ u16 pendingItemHitFlags;
-    /* 0x2C8 */ s32 collisionVelocityX;
-    /* 0x2CC */ s32 collisionVelocityZ;
-    /* 0x2D0 */ char pad2D0[2];
-    /* 0x2D2 */ s16 hitSourcePlayerIndex;
-    /* 0x2D4 */ s16 unk2D4;
-    /* 0x2D6 */ s16 unk2D6;
-    /* 0x2D8 */ s16 activeSparkleEffectCount;
-    /* 0x2DA */ s16 trailEffectTimer;
-    /* 0x2DC */ u8 snowboardTrailSide;
-    /* 0x2DD */ char pad2DD[1];
-    /* 0x2DE */ s16 unk2DE;
-    /* 0x2E0 */ s32 unk2E0;
-    /* 0x2E4 */ s32 unk2E4;
-    /* 0x2E8 */ s16 unk2E8;
-    /* 0x2EA */ s16 pitchAngle;
-    /* 0x2EC */ s16 facingAngle;
-    /* 0x2EE */ s16 leanAngle;
-    /* 0x2F0 */ s16 surfacePitchAngle;
-    /* 0x2F2 */ char pad2F2[2];
-    /* 0x2F4 */ s16 surfaceRollAngle;
-    /* 0x2F6 */ s16 leanInput;
-    /* 0x2F8 */ s16 leanScale;
-    /* Grounded lean-animation blend angle; launch-ramp modes reuse it as their target yaw. */
-    /* 0x2FA */ s16 modeAngle;
-    /* 0x2FC */ u32 stateFlags;
-    /* 0x300 */ s16 mode;
-    /* 0x302 */ s16 updateState;
-    /* 0x304 */ s16 updateTimer;
-    /* 0x306 */ s16 unk306;
-    /* 0x308 */ s16 subState;
-    /* 0x30A */ s16 subStateTimer;
-    /* 0x30C */ s16 subStateStep;
-    /* 0x30E */ s16 subStateParam;
-    /* 0x310 */ s32 targetSpeedLimit;
-    /* 0x314 */ s32 speedLimit;
-    /* 0x318 */ s32 rankSpeedBonus; /* Approaches rank table by at most +0x20/-0x30 per update. */
-    /* 0x31C */ s16 unk31C;
-    /* 0x31E */ s16 unk31E;
-    /* 0x320 */ s16 invisibilityTimer;
-    /* 0x322 */ char pad322[0xE];
-    /* 0x330 */ s8 surfaceType;
-    /* 0x331 */ s8 previousSurfaceType;
-    /* 0x332 */ s16 unk332;
-    /* 0x334 */ s16 unk334;
-    /* 0x336 */ s16 unk336;
-    /* 0x338 */ CharacterModelPart modelParts[RACE_PLAYER_MODEL_PART_CAPACITY];
-    /* 0x450 */ s16 modelPartCount;
-    /* 0x452 */ s16 animationId;
-    /* 0x454 */ s32 animationStartOffset;
-    /* 0x458 */ s32 animationFrameDataOffset;
-    /* 0x45C */ s16 animationFrameCount;
-    /* 0x45E */ s16 animationFramesRemaining;
-    /* 0x460 */ char pad460[4];
-    /* 0x464 */ s16 animationFrameDuration;
-    /* 0x466 */ s16 animationFrameTimer;
-    /* 0x468 */ Vec3i shadowCorners[4]; /* Board corners projected onto the terrain for the shadow. */
-    /* 0x498 */ Vtx *shadowVtx;
-    /* 0x49C */ Mtx *shadowMtx;
-    /* 0x4A0 */ Vec3i boardContactPoints[8]; /* Current world-space corners [0..3], previous frame [4..7]. */
-    /* 0x500 */ u8 groundContactMask;
-    /* 0x501 */ char pad501[1];
-    /* 0x502 */ s16 coursePathIndex;
-    /* 0x504 */ s32 coursePathOffset;
-    /* 0x508 */ s8 lapDigit;
-    /* 0x509 */ s8 rankIndex; /* Zero-based: 0 is first, 3 is fourth. */
-    /* 0x50A */ char pad50A[2];
-    /* 0x50C */ union {
-        s16 *anglePtr;
-        RaceScoreAttackRingTrigger *scoreAttackRingTriggerList;
-    };
-    /* Available shield shots: spent on spawn, returned when the projectile is removed. */
-    /* 0x510 */ s16 shieldShotCount;
-    /* Red-shop shot inventory (Z); blue-shop item inventory (B). See race_items.h. */
-    /* 0x512 */ s8 shotType;
-    /* 0x513 */ s8 shotPalette;
-    /* 0x514 */ s8 shotCount;
-    /* 0x515 */ s8 itemType;
-    /* 0x516 */ s8 itemPalette;
-    /* 0x517 */ s8 unk517;
-    /* 0x518 */ u8 randomIndex;
-    /* 0x519 */ s8 unk519;
-    /* Set by homing shots and falling pans; cleared after the player mode update. */
-    /* 0x51A */ u8 isTargetedByAttack;
-    /* 0x51B */ char pad51B[1];
-    /* 0x51C */ u32 checkpointEventMask;
-    /* 0x520 */ s32 smoothedPathOffset;
-    /* 0x524 */ s8 checkpointHit;
-    /* 0x525 */ s8 unk525;
-    /* 0x526 */ char pad526[1];
-    /* 0x527 */ s8 surfaceCueOverrideMask;
-    /* 0x528 */ s8 unk528;
-    /* 0x529 */ s8 displayRank;
-    /* 0x52A */ s8 cpuPaceMode;
-    /* 0x52B */ s8 rankTargetPlayer;
-    /* Count eligible CPU use-function calls, normally ~30/sec (US); skipped calls pause them.
-     * Signed byte wraparound is intentional for the longer targeted-shot cooldown. */
-    /* 0x52C */ s8 cpuItemUseCooldown;
-    /* 0x52D */ s8 cpuShotUseCooldown;
-    /* 0x52E */ char pad52E[2];
-    /* 0x530 */ Mtx *modelPartMatrices[RACE_PLAYER_MODEL_PART_CAPACITY];
-    /* 0x568 */ s32 score; /* Race gold: pickups spend 100; distinct from menu/save money at 0x00C. */
-    /* 0x56C */ s32 cumulativeRaceScore;
-    /* 0x570 */ s16 collectedCourseCoinMarkerCount;
-    /* 0x572 */ s16 totalCourseCoinMarkerCount;
-    /* 0x574 */ s16 scoreAttackPointTotal;
-    /* 0x576 */ s16 scoreAttackPointTarget;
-    /* 0x578 */ s16 unk578;
-    /* 0x57A */ s8 unk57A;
-    /* 0x57B */ s8 unk57B;
-    /* 0x57C */ s16 unk57C;
-    /* 0x57E */ s16 progressMeterPosition;
-    /* 0x580 */ s8 progressMeterSquashFrame;
-    /* 0x581 */ s8 unk581;
-    /* 0x582 */ s16 loopSoundVolume;
-    /* 0x584 */ s16 loopSoundId;
-    /* 0x586 */ char pad586[2];
-    /* 0x588 */ f32 loopSoundPitch;
-    /* 0x58C */ SpeedFanState speedFan;
-    /* 0x604 */ s16 rumbleTimer;
-    /* 0x606 */ s16 rumblePatternIndex;
-    /* 0x608 */ s8 rumblePatternId;
-    /* 0x609 */ char pad609[1];
-    /* 0x60A */ s16 replayFrame;
+    /* 0x01C */ RacePlayerState state;
 } RacePlayer;
+
+typedef char RacePlayerStateSizeCheck[(sizeof(RacePlayerState) == 0x5F0) ? 1 : -1];
 
 typedef char RacePlayerSizeCheck[(sizeof(RacePlayer) == 0x60C) ? 1 : -1];
 typedef char RacePlayerArraySizeCheck[((sizeof(RacePlayer) * RACE_PLAYER_COUNT) == 0x1830) ? 1 : -1];

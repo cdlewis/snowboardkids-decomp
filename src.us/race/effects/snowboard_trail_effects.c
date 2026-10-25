@@ -45,20 +45,20 @@ void updateSpeedFanEffect(RacePlayer *player) {
     SpeedFanState *trail;
     Transform3D scratch;
 
-    trail = &player->speedFan;
-    switch (player->speedFan.state) {
+    trail = &player->state.speedFan;
+    switch (player->state.speedFan.state) {
         case 0:
             break;
         case 1:
             trail->spinAngleX += 0x240;
-            transformVec3iByFixedMatrix(player->modelPartTransforms[0].rotation, &trail->localOffset, &trail->worldPos);
-            trail->worldPos.x += player->modelPartTransforms[0].translation.x;
-            trail->worldPos.y += player->modelPartTransforms[0].translation.y;
-            trail->worldPos.z += player->modelPartTransforms[0].translation.z;
+            transformVec3iByFixedMatrix(player->state.modelPartTransforms[0].rotation, &trail->localOffset, &trail->worldPos);
+            trail->worldPos.x += player->state.modelPartTransforms[0].translation.x;
+            trail->worldPos.y += player->state.modelPartTransforms[0].translation.y;
+            trail->worldPos.z += player->state.modelPartTransforms[0].translation.z;
             makeFixedRotationY(scratch.rotation, trail->modelYaw);
             multiplyFixedMatrix3s(
                 scratch.rotation,
-                player->modelPartTransforms[0].rotation,
+                player->state.modelPartTransforms[0].rotation,
                 trail->frontTransform.rotation
             );
             trail->frontTransform.translation.x = trail->worldPos.x;
@@ -90,14 +90,14 @@ void updateSpeedFanEffect(RacePlayer *player) {
             return;
         case 2:
             trail->spinAngleX += 0x240;
-            transformVec3iByFixedMatrix(player->modelPartTransforms[0].rotation, &trail->localOffset, &trail->worldPos);
-            trail->worldPos.x += player->modelPartTransforms[0].translation.x;
-            trail->worldPos.y += player->modelPartTransforms[0].translation.y;
-            trail->worldPos.z += player->modelPartTransforms[0].translation.z;
+            transformVec3iByFixedMatrix(player->state.modelPartTransforms[0].rotation, &trail->localOffset, &trail->worldPos);
+            trail->worldPos.x += player->state.modelPartTransforms[0].translation.x;
+            trail->worldPos.y += player->state.modelPartTransforms[0].translation.y;
+            trail->worldPos.z += player->state.modelPartTransforms[0].translation.z;
             makeFixedRotationY(scratch.rotation, trail->modelYaw);
             multiplyFixedMatrix3s(
                 scratch.rotation,
-                player->modelPartTransforms[0].rotation,
+                player->state.modelPartTransforms[0].rotation,
                 trail->frontTransform.rotation
             );
             trail->frontTransform.translation.x = trail->worldPos.x;
@@ -108,15 +108,15 @@ void updateSpeedFanEffect(RacePlayer *player) {
             scratch.translation.y = trail->backOffset.y;
             scratch.translation.z = trail->backOffset.z;
             composeFixedTransforms(&scratch, &trail->frontTransform, &trail->backTransform);
-            if (player->stateFlags & SNOWBOARD_TRAIL_FLAG_CANCEL) {
-                player->trailEffectTimer = 0;
+            if (player->state.stateFlags & SNOWBOARD_TRAIL_FLAG_CANCEL) {
+                player->state.trailEffectTimer = 0;
             }
             if (gRaceUpdatePaused == 0) {
-                if (player->trailEffectTimer != 0) {
-                    player->trailEffectTimer--;
+                if (player->state.trailEffectTimer != 0) {
+                    player->state.trailEffectTimer--;
                 }
             }
-            if (player->trailEffectTimer == 0) {
+            if (player->state.trailEffectTimer == 0) {
                 trail->state = 0;
                 spawnRaceUiExpiredSpeedFanEffect(player);
                 return;
@@ -131,21 +131,21 @@ void updateSpeedFanEffect(RacePlayer *player) {
 }
 
 void startSpeedFanEffect(RacePlayer *player) {
-    SpeedFanState *trail = &player->speedFan;
+    SpeedFanState *trail = &player->state.speedFan;
 
-    player->trailEffectTimer = SNOWBOARD_TRAIL_TIMER;
-    if (player->stateFlags & SNOWBOARD_TRAIL_FLAG_FACING_BACKWARD) {
+    player->state.trailEffectTimer = SNOWBOARD_TRAIL_TIMER;
+    if (player->state.stateFlags & SNOWBOARD_TRAIL_FLAG_FACING_BACKWARD) {
         trail->localOffset.x = 0x300000;
         trail->localOffset.y = 0;
         trail->localOffset.z = 0;
         trail->modelYaw = 0;
-        player->snowboardTrailSide = 1;
+        player->state.snowboardTrailSide = 1;
     } else {
         trail->localOffset.x = -0x300000;
         trail->localOffset.y = 0;
         trail->localOffset.z = 0;
         trail->modelYaw = 0x800;
-        player->snowboardTrailSide = 0;
+        player->state.snowboardTrailSide = 0;
     }
     trail->spinAngleX = 0;
     trail->backOffset.x = 0xF0000;

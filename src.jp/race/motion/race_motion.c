@@ -931,16 +931,16 @@ void setRaceMotionAnimation(RacePlayer *player, s32 animationIndex) {
                                       ((RaceMotionAnimationAsset *)assetBase)->animationOffsets[animationIndex] *
                                           sizeof(u16));
     frameCount = animationHeader->frameCount;
-    player->animationFramesRemaining = frameCount;
-    player->animationFramesRemaining++;
-    player->animationFrameCount = frameCount;
+    player->state.animationFramesRemaining = frameCount;
+    player->state.animationFramesRemaining++;
+    player->state.animationFrameCount = frameCount;
     animationHeader++;
     frameDataOffset =
         (u8 *)animationHeader - (u8 *)getRelocatableHeapBlockBase(gAssetHandles[0x16 + player->playerIndex]);
-    player->animationStartOffset = frameDataOffset;
-    player->animationFrameDataOffset = frameDataOffset;
-    player->animationFrameTimer = 0;
-    player->animationId = animationIndex;
+    player->state.animationStartOffset = frameDataOffset;
+    player->state.animationFrameDataOffset = frameDataOffset;
+    player->state.animationFrameTimer = 0;
+    player->state.animationId = animationIndex;
 }
 
 void loadRaceMotionAnimationFrame(RacePlayer *player) {
@@ -954,14 +954,14 @@ void loadRaceMotionAnimationFrame(RacePlayer *player) {
 
     base = getRelocatableHeapBlockBase(gAssetHandles[0x16 + player->playerIndex]);
     one = (s32)base;
-    frameData = (s16 *)(((u32)one) + player->animationFrameDataOffset);
-    player->animationFrameDuration = 1;
-    player->animationFrameTimer = player->animationFrameDuration;
+    frameData = (s16 *)(((u32)one) + player->state.animationFrameDataOffset);
+    player->state.animationFrameDuration = 1;
+    player->state.animationFrameTimer = player->state.animationFrameDuration;
 
     for (jointIndex = 0; jointIndex < 2; jointIndex++) {
-        player->modelParts[jointIndex].offset.x = frameData[0] << 14;
-        player->modelParts[jointIndex].offset.y = frameData[1] << 14;
-        player->modelParts[jointIndex].offset.z = frameData[2] << 14;
+        player->state.modelParts[jointIndex].offset.x = frameData[0] << 14;
+        player->state.modelParts[jointIndex].offset.y = frameData[1] << 14;
+        player->state.modelParts[jointIndex].offset.z = frameData[2] << 14;
         frameData += 3;
     }
 
@@ -971,32 +971,32 @@ void loadRaceMotionAnimationFrame(RacePlayer *player) {
         value0 = frameData[0];
         value1 = frameData[1];
         frameData += 2;
-        player->modelParts[jointIndex].rotation.x = (value0 >> 4) & 0xFF0;
-        player->modelParts[jointIndex].rotation.y = (value0 << 4) & 0xFF0;
-        player->modelParts[jointIndex].rotation.z = (value1 >> 4) & 0xFF0;
+        player->state.modelParts[jointIndex].rotation.x = (value0 >> 4) & 0xFF0;
+        player->state.modelParts[jointIndex].rotation.y = (value0 << 4) & 0xFF0;
+        player->state.modelParts[jointIndex].rotation.z = (value1 >> 4) & 0xFF0;
         if (value1 & one) {
-            player->modelParts[jointIndex].rotation.x += 8;
+            player->state.modelParts[jointIndex].rotation.x += 8;
         }
         if (value1 & 2) {
-            player->modelParts[jointIndex].rotation.y += 8;
+            player->state.modelParts[jointIndex].rotation.y += 8;
         }
         if (value1 & 4) {
-            player->modelParts[jointIndex].rotation.z += 8;
+            player->state.modelParts[jointIndex].rotation.z += 8;
         }
         jointIndex++;
     } while (jointIndex != RACE_MOTION_JOINT_COUNT);
 
-    player->animationFrameDataOffset =
+    player->state.animationFrameDataOffset =
         (u8 *)frameData - (u8 *)getRelocatableHeapBlockBase(gAssetHandles[0x16 + player->playerIndex]);
-    angle = player->modelParts[0].rotation.x;
-    player->modelParts[13].rotation.x = angle;
-    player->modelParts[12].rotation.x = angle;
-    angle = player->modelParts[0].rotation.y;
-    player->modelParts[13].rotation.y = angle;
-    player->modelParts[12].rotation.y = angle;
-    angle = player->modelParts[0].rotation.z;
-    player->modelParts[13].rotation.z = angle;
-    player->modelParts[12].rotation.z = angle;
+    angle = player->state.modelParts[0].rotation.x;
+    player->state.modelParts[13].rotation.x = angle;
+    player->state.modelParts[12].rotation.x = angle;
+    angle = player->state.modelParts[0].rotation.y;
+    player->state.modelParts[13].rotation.y = angle;
+    player->state.modelParts[12].rotation.y = angle;
+    angle = player->state.modelParts[0].rotation.z;
+    player->state.modelParts[13].rotation.z = angle;
+    player->state.modelParts[12].rotation.z = angle;
 }
 
 void loadRaceMotionJointAnimationFrame(RacePlayer *player) {
@@ -1006,11 +1006,11 @@ void loadRaceMotionJointAnimationFrame(RacePlayer *player) {
     s32 jointIndex;
 
     base = getRelocatableHeapBlockBase(gAssetHandles[0x16 + player->playerIndex]);
-    packedRotation = (RaceMotionPackedJointRotation *)((one = (s32)base) + player->animationFrameDataOffset +
+    packedRotation = (RaceMotionPackedJointRotation *)((one = (s32)base) + player->state.animationFrameDataOffset +
                                                        RACE_MOTION_PACKED_JOINT_ROTATION_SKIP_BYTES);
-    player->animationFrameDuration = 1;
+    player->state.animationFrameDuration = 1;
     jointIndex = RACE_MOTION_PARTIAL_ANIMATION_START_JOINT;
-    player->animationFrameTimer = player->animationFrameDuration;
+    player->state.animationFrameTimer = player->state.animationFrameDuration;
     one = 1;
 
     do {
@@ -1018,23 +1018,23 @@ void loadRaceMotionJointAnimationFrame(RacePlayer *player) {
         s16 packedZAndFlags = packedRotation->zAndFlags;
 
         packedRotation++;
-        player->modelParts[jointIndex].rotation.x = (packedXY >> 4) & 0xFF0;
-        player->modelParts[jointIndex].rotation.y = (packedXY << 4) & 0xFF0;
-        player->modelParts[jointIndex].rotation.z = (packedZAndFlags >> 4) & 0xFF0;
+        player->state.modelParts[jointIndex].rotation.x = (packedXY >> 4) & 0xFF0;
+        player->state.modelParts[jointIndex].rotation.y = (packedXY << 4) & 0xFF0;
+        player->state.modelParts[jointIndex].rotation.z = (packedZAndFlags >> 4) & 0xFF0;
 
         if (packedZAndFlags & one) {
-            player->modelParts[jointIndex].rotation.x += 8;
+            player->state.modelParts[jointIndex].rotation.x += 8;
         }
         if (packedZAndFlags & 2) {
-            player->modelParts[jointIndex].rotation.y += 8;
+            player->state.modelParts[jointIndex].rotation.y += 8;
         }
         if (packedZAndFlags & 4) {
-            player->modelParts[jointIndex].rotation.z += 8;
+            player->state.modelParts[jointIndex].rotation.z += 8;
         }
         jointIndex++;
     } while (jointIndex != RACE_MOTION_JOINT_COUNT);
 
-    player->animationFrameDataOffset =
+    player->state.animationFrameDataOffset =
         (u8 *)packedRotation - (u8 *)getRelocatableHeapBlockBase(gAssetHandles[0x16 + player->playerIndex]);
 }
 
@@ -1120,21 +1120,21 @@ interpolate_joint:
         angleDelta -= 0x1000;
     }
     blendOffset = (angleDelta * frameTimer) / frameTimerReset;
-    player->modelParts[jointIndex].rotation.x = startX + blendOffset;
+    player->state.modelParts[jointIndex].rotation.x = startX + blendOffset;
 
     angleDelta = (jointData[43] - (startY = jointData[1])) & 0xFFF;
     if (angleDelta >= 0x801) {
         angleDelta -= 0x1000;
     }
     blendOffset = (angleDelta * frameTimer) / frameTimerReset;
-    player->modelParts[jointIndex].rotation.y = startY + blendOffset;
+    player->state.modelParts[jointIndex].rotation.y = startY + blendOffset;
 
     angleDelta = (jointData[44] - (startZ = jointData[2])) & 0xFFF;
     if (angleDelta >= 0x801) {
         angleDelta -= 0x1000;
     }
     blendOffset = (angleDelta * frameTimer) / frameTimerReset;
-    player->modelParts[jointIndex].rotation.z = startZ + blendOffset;
+    player->state.modelParts[jointIndex].rotation.z = startZ + blendOffset;
 
     jointData += 3;
     jointIndex++;
@@ -1143,22 +1143,22 @@ interpolate_joint:
     }
 
     rootData = (s32 *)gRaceMotionRotationFrameBuffer;
-    player->modelParts[0].offset.x =
+    player->state.modelParts[0].offset.x =
         ((rootData[6] - rootData[0]) * frameTimer) / frameTimerReset + rootData[0];
-    player->modelParts[0].offset.y =
+    player->state.modelParts[0].offset.y =
         ((rootData[7] - rootData[1]) * frameTimer) / frameTimerReset + rootData[1];
-    player->modelParts[0].offset.z =
+    player->state.modelParts[0].offset.z =
         ((rootData[8] - rootData[2]) * frameTimer) / frameTimerReset + rootData[2];
-    player->modelParts[1].offset.x =
+    player->state.modelParts[1].offset.x =
         ((rootData[9] - rootData[3]) * frameTimer) / frameTimerReset + rootData[3];
-    player->modelParts[1].offset.y =
+    player->state.modelParts[1].offset.y =
         ((rootData[10] - rootData[4]) * frameTimer) / frameTimerReset + rootData[4];
-    player->modelParts[1].offset.z =
+    player->state.modelParts[1].offset.z =
         ((rootData[11] - rootData[5]) * frameTimer) / frameTimerReset + rootData[5];
 
-    player->modelParts[12].rotation.x = player->modelParts[13].rotation.x = player->modelParts[0].rotation.x;
-    player->modelParts[12].rotation.y = player->modelParts[13].rotation.y = player->modelParts[0].rotation.y;
-    player->modelParts[12].rotation.z = player->modelParts[13].rotation.z = player->modelParts[0].rotation.z;
+    player->state.modelParts[12].rotation.x = player->state.modelParts[13].rotation.x = player->state.modelParts[0].rotation.x;
+    player->state.modelParts[12].rotation.y = player->state.modelParts[13].rotation.y = player->state.modelParts[0].rotation.y;
+    player->state.modelParts[12].rotation.z = player->state.modelParts[13].rotation.z = player->state.modelParts[0].rotation.z;
 }
 // clang-format on
 
@@ -1252,7 +1252,7 @@ interpolate_joint:
         angleDelta -= 0x1000;
     }
     blendOffset = (angleDelta * frameTimer) / frameTimerReset;
-    player->modelParts[jointIndex].rotation.x =
+    player->state.modelParts[jointIndex].rotation.x =
         startX + blendOffset;
 
     angleDelta = (jointData[43] - (startY = jointData[1])) & 0xFFF;
@@ -1260,7 +1260,7 @@ interpolate_joint:
         angleDelta -= 0x1000;
     }
     blendOffset = (angleDelta * frameTimer) / frameTimerReset;
-    player->modelParts[jointIndex].rotation.y =
+    player->state.modelParts[jointIndex].rotation.y =
         startY + blendOffset;
 
     angleDelta = (jointData[44] - (startZ = jointData[2])) & 0xFFF;
@@ -1268,7 +1268,7 @@ interpolate_joint:
         angleDelta -= 0x1000;
     }
     blendOffset = (angleDelta * frameTimer) / frameTimerReset;
-    player->modelParts[jointIndex].rotation.z =
+    player->state.modelParts[jointIndex].rotation.z =
         startZ + blendOffset;
 
     jointData += 3;
@@ -1278,22 +1278,22 @@ interpolate_joint:
     }
 
     rootData = (s32 *)gRaceMotionRotationFrameBuffer;
-    player->modelParts[0].offset.x =
+    player->state.modelParts[0].offset.x =
         ((rootData[6] - rootData[0]) * frameTimer) / frameTimerReset + rootData[0];
-    player->modelParts[0].offset.y =
+    player->state.modelParts[0].offset.y =
         ((rootData[7] - rootData[1]) * frameTimer) / frameTimerReset + rootData[1];
-    player->modelParts[0].offset.z =
+    player->state.modelParts[0].offset.z =
         ((rootData[8] - rootData[2]) * frameTimer) / frameTimerReset + rootData[2];
-    player->modelParts[1].offset.x =
+    player->state.modelParts[1].offset.x =
         ((rootData[9] - rootData[3]) * frameTimer) / frameTimerReset + rootData[3];
-    player->modelParts[1].offset.y =
+    player->state.modelParts[1].offset.y =
         ((rootData[10] - rootData[4]) * frameTimer) / frameTimerReset + rootData[4];
-    player->modelParts[1].offset.z =
+    player->state.modelParts[1].offset.z =
         ((rootData[11] - rootData[5]) * frameTimer) / frameTimerReset + rootData[5];
 
-    player->modelParts[12].rotation.x = player->modelParts[13].rotation.x = player->modelParts[0].rotation.x;
-    player->modelParts[12].rotation.y = player->modelParts[13].rotation.y = player->modelParts[0].rotation.y;
-    player->modelParts[12].rotation.z = player->modelParts[13].rotation.z = player->modelParts[0].rotation.z;
+    player->state.modelParts[12].rotation.x = player->state.modelParts[13].rotation.x = player->state.modelParts[0].rotation.x;
+    player->state.modelParts[12].rotation.y = player->state.modelParts[13].rotation.y = player->state.modelParts[0].rotation.y;
+    player->state.modelParts[12].rotation.z = player->state.modelParts[13].rotation.z = player->state.modelParts[0].rotation.z;
 }
 // clang-format on
 
@@ -1357,7 +1357,7 @@ blend_joint:
         angleDelta -= 0x1000;
     }
     blendOffset = (angleDelta * blendTimer) / blendDuration;
-    player->modelParts[jointIndex].rotation.x = startX + blendOffset;
+    player->state.modelParts[jointIndex].rotation.x = startX + blendOffset;
 
     angleDelta =
         (jointFrameData[RACE_MOTION_DECODED_JOINT_FRAME_STRIDE].y - (startY = jointFrameData->y)) & 0xFFF;
@@ -1365,7 +1365,7 @@ blend_joint:
         angleDelta -= 0x1000;
     }
     blendOffset = (angleDelta * blendTimer) / blendDuration;
-    player->modelParts[jointIndex].rotation.y = startY + blendOffset;
+    player->state.modelParts[jointIndex].rotation.y = startY + blendOffset;
 
     angleDelta =
         (jointFrameData[RACE_MOTION_DECODED_JOINT_FRAME_STRIDE].z - (startZ = jointFrameData->z)) & 0xFFF;
@@ -1373,7 +1373,7 @@ blend_joint:
         angleDelta -= 0x1000;
     }
     blendOffset = (angleDelta * blendTimer) / blendDuration;
-    player->modelParts[jointIndex].rotation.z = startZ + blendOffset;
+    player->state.modelParts[jointIndex].rotation.z = startZ + blendOffset;
 
     jointFrameData++;
     jointIndex++;
@@ -1387,38 +1387,38 @@ void stepRaceMotionLoopingAnimation(RacePlayer *player) {
     s32 frameTimer;
     s32 nextFrameTimer;
 
-    frameTimer = player->animationFrameTimer;
+    frameTimer = player->state.animationFrameTimer;
     nextFrameTimer = frameTimer - 1;
     if (frameTimer == 0) {
-        player->animationFramesRemaining--;
-        if (player->animationFramesRemaining <= 0) {
-            player->animationFramesRemaining = player->animationFrameCount;
-            player->animationFrameDataOffset = player->animationStartOffset;
+        player->state.animationFramesRemaining--;
+        if (player->state.animationFramesRemaining <= 0) {
+            player->state.animationFramesRemaining = player->state.animationFrameCount;
+            player->state.animationFrameDataOffset = player->state.animationStartOffset;
         }
         loadRaceMotionAnimationFrame(player);
-        frameTimer = player->animationFrameTimer;
+        frameTimer = player->state.animationFrameTimer;
         nextFrameTimer = frameTimer - 1;
     }
-    player->animationFrameTimer = nextFrameTimer;
+    player->state.animationFrameTimer = nextFrameTimer;
 }
 
 void stepRaceMotionLoopingJointAnimation(RacePlayer *player) {
     s32 frameTimer;
     s32 nextFrameTimer;
 
-    frameTimer = player->animationFrameTimer;
+    frameTimer = player->state.animationFrameTimer;
     nextFrameTimer = frameTimer - 1;
     if (frameTimer == 0) {
-        player->animationFramesRemaining--;
-        if (player->animationFramesRemaining <= 0) {
-            player->animationFramesRemaining = player->animationFrameCount;
-            player->animationFrameDataOffset = player->animationStartOffset;
+        player->state.animationFramesRemaining--;
+        if (player->state.animationFramesRemaining <= 0) {
+            player->state.animationFramesRemaining = player->state.animationFrameCount;
+            player->state.animationFrameDataOffset = player->state.animationStartOffset;
         }
         loadRaceMotionJointAnimationFrame(player);
-        frameTimer = player->animationFrameTimer;
+        frameTimer = player->state.animationFrameTimer;
         nextFrameTimer = frameTimer - 1;
     }
-    player->animationFrameTimer = nextFrameTimer;
+    player->state.animationFrameTimer = nextFrameTimer;
 }
 
 s32 stepRaceMotionAnimationUntilEnd(RacePlayer *player) {
@@ -1426,23 +1426,23 @@ s32 stepRaceMotionAnimationUntilEnd(RacePlayer *player) {
     s32 nextFrameTimer;
     s16 framesRemaining;
 
-    frameTimer = player->animationFrameTimer;
+    frameTimer = player->state.animationFrameTimer;
     nextFrameTimer = frameTimer - 1;
     if (frameTimer == 0) {
-        framesRemaining = player->animationFramesRemaining;
+        framesRemaining = player->state.animationFramesRemaining;
         if (framesRemaining != 1) {
-            player->animationFramesRemaining = framesRemaining - 1;
+            player->state.animationFramesRemaining = framesRemaining - 1;
             loadRaceMotionAnimationFrame(player);
-            if (player->animationFramesRemaining == 1) {
+            if (player->state.animationFramesRemaining == 1) {
                 return 1;
             }
-            frameTimer = player->animationFrameTimer;
+            frameTimer = player->state.animationFrameTimer;
             nextFrameTimer = frameTimer - 1;
         } else {
             return 1;
         }
     }
-    player->animationFrameTimer = nextFrameTimer;
+    player->state.animationFrameTimer = nextFrameTimer;
     return 0;
 }
 
@@ -1451,23 +1451,23 @@ s32 stepRaceMotionJointAnimationUntilEnd(RacePlayer *player) {
     s32 nextFrameTimer;
     s16 framesRemaining;
 
-    frameTimer = player->animationFrameTimer;
+    frameTimer = player->state.animationFrameTimer;
     nextFrameTimer = frameTimer - 1;
     if (frameTimer == 0) {
-        framesRemaining = player->animationFramesRemaining;
+        framesRemaining = player->state.animationFramesRemaining;
         if (framesRemaining != 1) {
-            player->animationFramesRemaining = framesRemaining - 1;
+            player->state.animationFramesRemaining = framesRemaining - 1;
             loadRaceMotionJointAnimationFrame(player);
-            if (player->animationFramesRemaining == 1) {
+            if (player->state.animationFramesRemaining == 1) {
                 return 1;
             }
-            frameTimer = player->animationFrameTimer;
+            frameTimer = player->state.animationFrameTimer;
             nextFrameTimer = frameTimer - 1;
         } else {
             return 1;
         }
     }
-    player->animationFrameTimer = nextFrameTimer;
+    player->state.animationFrameTimer = nextFrameTimer;
     return 0;
 }
 
@@ -1478,26 +1478,26 @@ void initRaceMotionModelParts(RacePlayer *player) {
     Vec3s *positions;
     s16 zero;
 
-    player->modelPartCount = gRaceMotionModelPartCounts[player->characterId];
+    player->state.modelPartCount = gRaceMotionModelPartCounts[player->characterId];
     parentPartIndices = gRaceMotionModelPartIds[player->characterId];
     mirroredPartIndices = gRaceMotionModelParentPartIds[player->characterId];
 
-    for (i = 0; i < player->modelPartCount; i++) {
-        player->modelParts[i].parentPartIndex = *parentPartIndices;
-        player->modelParts[i].mirroredPartIndex = *mirroredPartIndices;
+    for (i = 0; i < player->state.modelPartCount; i++) {
+        player->state.modelParts[i].parentPartIndex = *parentPartIndices;
+        player->state.modelParts[i].mirroredPartIndex = *mirroredPartIndices;
         parentPartIndices++;
         mirroredPartIndices++;
     }
 
     positions = gRaceMotionModelPartPositions[player->characterId];
 
-    for (i = 0; i < player->modelPartCount; i++, positions++) {
-        player->modelParts[i].rotation.z = 0;
-        zero = player->modelParts[i].rotation.z;
-        player->modelParts[i].rotation.y = zero;
-        player->modelParts[i].rotation.x = zero;
-        player->modelParts[i].offset.x = positions->x << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
-        player->modelParts[i].offset.y = positions->y << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
-        player->modelParts[i].offset.z = positions->z << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
+    for (i = 0; i < player->state.modelPartCount; i++, positions++) {
+        player->state.modelParts[i].rotation.z = 0;
+        zero = player->state.modelParts[i].rotation.z;
+        player->state.modelParts[i].rotation.y = zero;
+        player->state.modelParts[i].rotation.x = zero;
+        player->state.modelParts[i].offset.x = positions->x << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
+        player->state.modelParts[i].offset.y = positions->y << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
+        player->state.modelParts[i].offset.z = positions->z << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
     }
 }

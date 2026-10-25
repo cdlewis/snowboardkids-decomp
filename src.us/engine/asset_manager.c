@@ -55,8 +55,8 @@ void resetSecondaryRng(void) {
 }
 
 u8 randomNextObject(RacePlayer *player) {
-    player->randomIndex++;
-    return gRandomTable[player->randomIndex];
+    player->state.randomIndex++;
+    return gRandomTable[player->state.randomIndex];
 }
 
 void resetGameplayRng(void) {

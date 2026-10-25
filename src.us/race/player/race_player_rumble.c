@@ -34,12 +34,12 @@ void updateRacePlayerRumble(RacePlayer *player) {
     if (player->soundDisabled != 0) {
         return;
     }
-    if (player->rumbleTimer == 0) {
-        player->rumblePatternIndex = 0;
+    if (player->state.rumbleTimer == 0) {
+        player->state.rumblePatternIndex = 0;
         return;
     }
-    player->rumbleTimer = player->rumbleTimer - 1;
-    patternId = player->rumblePatternId;
+    player->state.rumbleTimer = player->state.rumbleTimer - 1;
+    patternId = player->state.rumblePatternId;
     fastPatternId = RUMBLE_PATTERN_FAST;
     pattern = gRacePlayerRumblePatternSolid;
     if (patternId == 1) {
@@ -52,12 +52,12 @@ void updateRacePlayerRumble(RacePlayer *player) {
         pattern = gRacePlayerRumblePatternAlternatingPulse;
     }
     if (fastPatternId == patternId) {
-        if (!(player->rumblePatternIndex < RUMBLE_PATTERN_FAST_LENGTH)) {
-            player->rumblePatternIndex = 0;
+        if (!(player->state.rumblePatternIndex < RUMBLE_PATTERN_FAST_LENGTH)) {
+            player->state.rumblePatternIndex = 0;
         }
     }
-    if (pattern[player->rumblePatternIndex] != 0) {
+    if (pattern[player->state.rumblePatternIndex] != 0) {
         requestRumbleMotorStart(player->playerIndex);
     }
-    player->rumblePatternIndex = (player->rumblePatternIndex + 1) & RUMBLE_PATTERN_WRAP_MASK;
+    player->state.rumblePatternIndex = (player->state.rumblePatternIndex + 1) & RUMBLE_PATTERN_WRAP_MASK;
 }

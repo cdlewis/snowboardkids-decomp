@@ -127,7 +127,7 @@ typedef struct RaceItemEffectActor {
 /*
  * Snow spray and landing snow spray each draw two independently positioned
  * sprites. On every unpaused update, pos1/pos2 are rebuilt from offset1/offset2
- * plus the owning gRacePlayers[task.userId].renderPosition, even for spray already in
+ * plus the owning gRacePlayers[task.userId].state.renderPosition, even for spray already in
  * flight. Restoring a title-demo player snapshot therefore moves existing spray;
  * renderer integrations must invalidate both sprites' interpolation along with
  * the player's. Each actor expires when its timer reaches 0x18.

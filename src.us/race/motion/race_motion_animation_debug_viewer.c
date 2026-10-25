@@ -17,51 +17,51 @@ void initRaceMotionAnimationDebugViewer(void) {
 
     setRaceCameraMode(0, 2);
     state = &gRacePlayers[0];
-    state->leanAngle = 0;
-    temp_v0 = state->leanAngle;
-    state->pos.x = 0;
-    state->pos.y = 0;
-    state->pos.z = 0;
-    state->animationId = 0;
-    state->groundCorrectionY = 0xFFFA0000;
-    state->groundOffset = 0;
-    state->mode = 0;
+    state->state.leanAngle = 0;
+    temp_v0 = state->state.leanAngle;
+    state->state.pos.x = 0;
+    state->state.pos.y = 0;
+    state->state.pos.z = 0;
+    state->state.animationId = 0;
+    state->state.groundCorrectionY = 0xFFFA0000;
+    state->state.groundOffset = 0;
+    state->state.mode = 0;
     state->playerIndex = 0;
-    state->facingAngle = temp_v0;
-    state->pitchAngle = temp_v0;
+    state->state.facingAngle = temp_v0;
+    state->state.pitchAngle = temp_v0;
     initRaceMotionModelParts(state);
 }
 
 void drawRaceMotionAnimationDebugViewerMotionNumber(void *unused) {
     char buf[0x64];
 
-    sprintf(buf, gRaceMotionAnimationDebugViewerMotionNumberFormat, gRacePlayers[0].animationId);
+    sprintf(buf, gRaceMotionAnimationDebugViewerMotionNumberFormat, gRacePlayers[0].state.animationId);
     drawMenuAsciiTextDefaultScale(0x28, 0x28, buf, 1);
 }
 
 void updateRaceMotionAnimationDebugViewer(void) {
     s32 pressedInput;
 
-    if (gRacePlayers[0].mode == 0) {
-        gRacePlayers[0].mode = 1;
-        setRaceMotionAnimation(&gRacePlayers[0], gRacePlayers[0].animationId);
+    if (gRacePlayers[0].state.mode == 0) {
+        gRacePlayers[0].state.mode = 1;
+        setRaceMotionAnimation(&gRacePlayers[0], gRacePlayers[0].state.animationId);
         stepRaceMotionLoopingAnimation(&gRacePlayers[0]);
     } else {
         pressedInput = gPlayerInputPressed[0];
         if (pressedInput & Z_TRIG) {
-            if (gRacePlayers[0].stateFlags != 0) {
-                gRacePlayers[0].stateFlags = 0;
+            if (gRacePlayers[0].state.stateFlags != 0) {
+                gRacePlayers[0].state.stateFlags = 0;
             } else {
-                gRacePlayers[0].stateFlags = 0x400;
+                gRacePlayers[0].state.stateFlags = 0x400;
             }
         }
-        if ((pressedInput & U_CBUTTONS) && (gRacePlayers[0].animationId != 0)) {
-            gRacePlayers[0].animationId--;
-            gRacePlayers[0].mode = 0;
+        if ((pressedInput & U_CBUTTONS) && (gRacePlayers[0].state.animationId != 0)) {
+            gRacePlayers[0].state.animationId--;
+            gRacePlayers[0].state.mode = 0;
         }
         if (pressedInput & D_CBUTTONS) {
-            gRacePlayers[0].mode = 0;
-            gRacePlayers[0].animationId++;
+            gRacePlayers[0].state.mode = 0;
+            gRacePlayers[0].state.animationId++;
         }
         if (gPlayerInputHeld[0] & L_CBUTTONS) {
             stepRaceMotionLoopingAnimation(&gRacePlayers[0]);

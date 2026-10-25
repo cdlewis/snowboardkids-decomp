@@ -158,7 +158,7 @@ void updateRacePlayerRankDisplay(void) {
 
     for (i = 0; i < 3; i++) {
         for (j = i; j < RACE_PLAYER_COUNT; j++) {
-            if (gRacePlayers[order[j]].rankIndex < gRacePlayers[order[i]].rankIndex) {
+            if (gRacePlayers[order[j]].state.rankIndex < gRacePlayers[order[i]].state.rankIndex) {
                 temp = order[i];
                 order[i] = order[j];
                 order[j] = temp;
@@ -169,44 +169,44 @@ void updateRacePlayerRankDisplay(void) {
     switch (gPlayerCount) {
         case 1:
             i = 0;
-            if (gRacePlayers[0].rankIndex == 0) {
+            if (gRacePlayers[0].state.rankIndex == 0) {
                 for (j = 0; j < RACE_PLAYER_COUNT; j++) {
                     if (gRacePlayers[order[j]].isCpu != 0) {
-                        gRacePlayers[order[j]].displayRank = gSinglePlayerRankDisplayPatternFirst[i];
-                        gRacePlayers[order[j]].rankTargetPlayer = 0;
+                        gRacePlayers[order[j]].state.displayRank = gSinglePlayerRankDisplayPatternFirst[i];
+                        gRacePlayers[order[j]].state.rankTargetPlayer = 0;
                         i++;
                     }
                 }
             }
 
             i = 0;
-            if (gRacePlayers[0].rankIndex == 1) {
+            if (gRacePlayers[0].state.rankIndex == 1) {
                 for (j = 0; j < RACE_PLAYER_COUNT; j++) {
                     if (gRacePlayers[order[j]].isCpu != 0) {
-                        gRacePlayers[order[j]].displayRank = gSinglePlayerRankDisplayPatternSecond[i];
-                        gRacePlayers[order[j]].rankTargetPlayer = 0;
+                        gRacePlayers[order[j]].state.displayRank = gSinglePlayerRankDisplayPatternSecond[i];
+                        gRacePlayers[order[j]].state.rankTargetPlayer = 0;
                         i++;
                     }
                 }
             }
 
             i = 0;
-            if (gRacePlayers[0].rankIndex == 2) {
+            if (gRacePlayers[0].state.rankIndex == 2) {
                 for (j = 0; j < RACE_PLAYER_COUNT; j++) {
                     if (gRacePlayers[order[j]].isCpu != 0) {
-                        gRacePlayers[order[j]].displayRank = gSinglePlayerRankDisplayPatternThird[i];
-                        gRacePlayers[order[j]].rankTargetPlayer = 0;
+                        gRacePlayers[order[j]].state.displayRank = gSinglePlayerRankDisplayPatternThird[i];
+                        gRacePlayers[order[j]].state.rankTargetPlayer = 0;
                         i++;
                     }
                 }
             }
 
             i = 0;
-            if (gRacePlayers[0].rankIndex == 3) {
+            if (gRacePlayers[0].state.rankIndex == 3) {
                 for (j = 0; j < RACE_PLAYER_COUNT; j++) {
                     if (gRacePlayers[order[j]].isCpu != 0) {
-                        gRacePlayers[order[j]].displayRank = gSinglePlayerRankDisplayPatternFourth[i];
-                        gRacePlayers[order[j]].rankTargetPlayer = 0;
+                        gRacePlayers[order[j]].state.displayRank = gSinglePlayerRankDisplayPatternFourth[i];
+                        gRacePlayers[order[j]].state.rankTargetPlayer = 0;
                         i++;
                     }
                 }
@@ -214,92 +214,92 @@ void updateRacePlayerRankDisplay(void) {
             break;
 
         case 2:
-            if (gRacePlayers[1].rankIndex >= gRacePlayers[0].rankIndex) {
-                if (gRacePlayers[1].rankIndex == 3) {
-                    if (gRacePlayers[3].rankIndex >= gRacePlayers[2].rankIndex) {
-                        gRacePlayers[2].displayRank = 2;
-                        gRacePlayers[3].displayRank = 1;
+            if (gRacePlayers[1].state.rankIndex >= gRacePlayers[0].state.rankIndex) {
+                if (gRacePlayers[1].state.rankIndex == 3) {
+                    if (gRacePlayers[3].state.rankIndex >= gRacePlayers[2].state.rankIndex) {
+                        gRacePlayers[2].state.displayRank = 2;
+                        gRacePlayers[3].state.displayRank = 1;
                     } else {
-                        gRacePlayers[2].displayRank = 1;
-                        gRacePlayers[3].displayRank = 2;
+                        gRacePlayers[2].state.displayRank = 1;
+                        gRacePlayers[3].state.displayRank = 2;
                     }
-                } else if (gRacePlayers[3].rankIndex >= gRacePlayers[2].rankIndex) {
-                    gRacePlayers[2].displayRank = 1;
-                    gRacePlayers[3].displayRank = 2;
+                } else if (gRacePlayers[3].state.rankIndex >= gRacePlayers[2].state.rankIndex) {
+                    gRacePlayers[2].state.displayRank = 1;
+                    gRacePlayers[3].state.displayRank = 2;
                 } else {
-                    gRacePlayers[2].displayRank = 2;
-                    gRacePlayers[3].displayRank = 1;
+                    gRacePlayers[2].state.displayRank = 2;
+                    gRacePlayers[3].state.displayRank = 1;
                 }
-                gRacePlayers[2].rankTargetPlayer = 1;
-                gRacePlayers[3].rankTargetPlayer = 1;
+                gRacePlayers[2].state.rankTargetPlayer = 1;
+                gRacePlayers[3].state.rankTargetPlayer = 1;
             } else {
-                if (gRacePlayers[0].rankIndex == 3) {
-                    if (gRacePlayers[3].rankIndex >= gRacePlayers[2].rankIndex) {
-                        gRacePlayers[2].displayRank = 2;
-                        gRacePlayers[3].displayRank = 1;
+                if (gRacePlayers[0].state.rankIndex == 3) {
+                    if (gRacePlayers[3].state.rankIndex >= gRacePlayers[2].state.rankIndex) {
+                        gRacePlayers[2].state.displayRank = 2;
+                        gRacePlayers[3].state.displayRank = 1;
                     } else {
-                        gRacePlayers[2].displayRank = 1;
-                        gRacePlayers[3].displayRank = 2;
+                        gRacePlayers[2].state.displayRank = 1;
+                        gRacePlayers[3].state.displayRank = 2;
                     }
-                } else if (gRacePlayers[3].rankIndex >= gRacePlayers[2].rankIndex) {
-                    gRacePlayers[2].displayRank = 1;
-                    gRacePlayers[3].displayRank = 2;
+                } else if (gRacePlayers[3].state.rankIndex >= gRacePlayers[2].state.rankIndex) {
+                    gRacePlayers[2].state.displayRank = 1;
+                    gRacePlayers[3].state.displayRank = 2;
                 } else {
-                    gRacePlayers[2].displayRank = 2;
-                    gRacePlayers[3].displayRank = 1;
+                    gRacePlayers[2].state.displayRank = 2;
+                    gRacePlayers[3].state.displayRank = 1;
                 }
-                gRacePlayers[2].rankTargetPlayer = 0;
-                gRacePlayers[3].rankTargetPlayer = 0;
+                gRacePlayers[2].state.rankTargetPlayer = 0;
+                gRacePlayers[3].state.rankTargetPlayer = 0;
             }
             break;
 
         case 3:
-            gRacePlayers[3].rankTargetPlayer = 0;
-            gRacePlayers[3].displayRank = 1;
-            if (gRacePlayers[gRacePlayers[3].rankTargetPlayer].rankIndex < gRacePlayers[1].rankIndex) {
-                gRacePlayers[3].rankTargetPlayer = 1;
+            gRacePlayers[3].state.rankTargetPlayer = 0;
+            gRacePlayers[3].state.displayRank = 1;
+            if (gRacePlayers[gRacePlayers[3].state.rankTargetPlayer].state.rankIndex < gRacePlayers[1].state.rankIndex) {
+                gRacePlayers[3].state.rankTargetPlayer = 1;
             }
-            if (gRacePlayers[gRacePlayers[3].rankTargetPlayer].rankIndex < gRacePlayers[2].rankIndex) {
-                gRacePlayers[3].rankTargetPlayer = 2;
+            if (gRacePlayers[gRacePlayers[3].state.rankTargetPlayer].state.rankIndex < gRacePlayers[2].state.rankIndex) {
+                gRacePlayers[3].state.rankTargetPlayer = 2;
             }
             break;
     }
 
     for (i = 0; i < RACE_PLAYER_COUNT; i++) {
         if (gRacePlayers[i].isCpu != 0) {
-            switch (gRacePlayers[i].displayRank) {
+            switch (gRacePlayers[i].state.displayRank) {
                 case 0:
-                    gRacePlayers[i].cpuPaceMode = RACE_CPU_PACE_RANK_BONUS;
+                    gRacePlayers[i].state.cpuPaceMode = RACE_CPU_PACE_RANK_BONUS;
                     break;
 
                 case 1:
-                    gRacePlayers[i].cpuPaceMode = RACE_CPU_PACE_RANK_BONUS;
-                    deltaX = gRacePlayers[gRacePlayers[i].rankTargetPlayer].pos.x - gRacePlayers[i].pos.x;
-                    deltaZ = gRacePlayers[gRacePlayers[i].rankTargetPlayer].pos.z - gRacePlayers[i].pos.z;
+                    gRacePlayers[i].state.cpuPaceMode = RACE_CPU_PACE_RANK_BONUS;
+                    deltaX = gRacePlayers[gRacePlayers[i].state.rankTargetPlayer].state.pos.x - gRacePlayers[i].state.pos.x;
+                    deltaZ = gRacePlayers[gRacePlayers[i].state.rankTargetPlayer].state.pos.z - gRacePlayers[i].state.pos.z;
                     if ((deltaX >= RANK_ARROW_DISTANCE) || (deltaX < RANK_ARROW_NEGATIVE_LIMIT) ||
                         (deltaZ >= RANK_ARROW_DISTANCE) || (deltaZ < RANK_ARROW_NEGATIVE_LIMIT)) {
-                        if (gRacePlayers[gRacePlayers[i].rankTargetPlayer].rankIndex < gRacePlayers[i].rankIndex) {
-                            gRacePlayers[i].cpuPaceMode = RACE_CPU_PACE_CATCH_UP;
+                        if (gRacePlayers[gRacePlayers[i].state.rankTargetPlayer].state.rankIndex < gRacePlayers[i].state.rankIndex) {
+                            gRacePlayers[i].state.cpuPaceMode = RACE_CPU_PACE_CATCH_UP;
                         } else {
-                            gRacePlayers[i].cpuPaceMode = RACE_CPU_PACE_SLOW_DOWN;
+                            gRacePlayers[i].state.cpuPaceMode = RACE_CPU_PACE_SLOW_DOWN;
                         }
                     }
                     break;
 
                 case 2:
                     if (gPlayerCount == 1) {
-                        if (gRacePlayers[0].rankIndex < gRacePlayers[i].rankIndex) {
-                            gRacePlayers[i].cpuPaceMode = RACE_CPU_PACE_RANK_BONUS;
+                        if (gRacePlayers[0].state.rankIndex < gRacePlayers[i].state.rankIndex) {
+                            gRacePlayers[i].state.cpuPaceMode = RACE_CPU_PACE_RANK_BONUS;
                         } else {
-                            gRacePlayers[i].cpuPaceMode = RACE_CPU_PACE_YIELD;
+                            gRacePlayers[i].state.cpuPaceMode = RACE_CPU_PACE_YIELD;
                         }
                     } else {
-                        gRacePlayers[i].cpuPaceMode = RACE_CPU_PACE_YIELD;
+                        gRacePlayers[i].state.cpuPaceMode = RACE_CPU_PACE_YIELD;
                     }
                     break;
             }
             if (gRacePlayers[i].characterId == 5) {
-                gRacePlayers[i].cpuPaceMode = RACE_CPU_PACE_RANK_BONUS;
+                gRacePlayers[i].state.cpuPaceMode = RACE_CPU_PACE_RANK_BONUS;
             }
         }
     }
@@ -318,11 +318,11 @@ void updateRacePlayerCheckpointEvents(RacePlayer *player) {
     s32 sine;
     s32 cosine;
 
-    if (player->stateFlags & 0x1000) {
-        player->checkpointEventMask = 0;
+    if (player->state.stateFlags & 0x1000) {
+        player->state.checkpointEventMask = 0;
     }
 
-    player->checkpointHit = 0;
+    player->state.checkpointHit = 0;
     eventList = gRaceCourseCheckpointEventLists[gRaceCourseIndex.signedValue];
     event = eventList;
     eventIndex = 0;
@@ -335,13 +335,13 @@ void updateRacePlayerCheckpointEvents(RacePlayer *player) {
 
         eventMask = 1 << eventIndex;
 
-        if (!(player->checkpointEventMask & eventMask) && (player->coursePathIndex <= pathFrame) &&
-            (player->coursePathIndex > pathFrame - 3)) {
+        if (!(player->state.checkpointEventMask & eventMask) && (player->state.coursePathIndex <= pathFrame) &&
+            (player->state.coursePathIndex > pathFrame - 3)) {
             getRaceCourseSurfaceSpawnTransform(pathFrame, &x, &y, &z, &angle);
 
-            x = player->pos.x - x;
-            y = player->pos.y - y;
-            z = player->pos.z - z;
+            x = player->state.pos.x - x;
+            y = player->state.pos.y - y;
+            z = player->state.pos.z - z;
 
             sine = fixedSine(-angle);
             cosine = fixedCosine(-angle);
@@ -353,9 +353,9 @@ void updateRacePlayerCheckpointEvents(RacePlayer *player) {
             }
 
             if (z < 0x600000 && z > 0) {
-                player->checkpointEventMask |= eventMask;
-                player->checkpointHit = 1;
-                player->surfaceCueOverrideMask = event->surfaceCueMask;
+                player->state.checkpointEventMask |= eventMask;
+                player->state.checkpointHit = 1;
+                player->state.surfaceCueOverrideMask = event->surfaceCueMask;
                 break;
             }
         }
@@ -390,7 +390,7 @@ s32 updateRacePlayerSmoothedPathOffset(s32 playerIndex, s32 pathIndex, s32 rankS
 
     entry = gRaceCoursePlayerPathOffsetTables[(courseIndex * RACE_PLAYER_COUNT) + playerIndex];
     pathIndex = entry[pathIndexCopy] << 0x12;
-    pathIndex -= gRacePlayers[rankSlot].smoothedPathOffset;
+    pathIndex -= gRacePlayers[rankSlot].state.smoothedPathOffset;
 
     if (pathIndex > 0x60000) {
         pathIndex = 0x60000;
@@ -399,8 +399,8 @@ s32 updateRacePlayerSmoothedPathOffset(s32 playerIndex, s32 pathIndex, s32 rankS
         pathIndex = -0x60000;
     }
 
-    gRacePlayers[rankSlot].smoothedPathOffset += pathIndex;
-    return gRacePlayers[rankSlot].smoothedPathOffset;
+    gRacePlayers[rankSlot].state.smoothedPathOffset += pathIndex;
+    return gRacePlayers[rankSlot].state.smoothedPathOffset;
 }
 
 s32 getRacePlayerPathOffset(s32 playerIndex, s32 pathIndex) {

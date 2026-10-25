@@ -202,48 +202,48 @@ s32 advanceRaceSurfaceCueSequence(RaceSurfaceCue *cues, RacePlayer *player, s16 
     s16 cueValue;
     u32 surfaceType;
 
-    surfaceType = (player->heldInput & (STICK_UP | STICK_DOWN | STICK_RIGHT | STICK_LEFT)) >> 0x10;
-    switch (player->surfaceCueState[cueIndex]) {
+    surfaceType = (player->state.heldInput & (STICK_UP | STICK_DOWN | STICK_RIGHT | STICK_LEFT)) >> 0x10;
+    switch (player->state.surfaceCueState[cueIndex]) {
         case 0:
             cue = cues;
-            cue += player->surfaceCueStep[cueIndex];
+            cue += player->state.surfaceCueStep[cueIndex];
             if (surfaceType != cue->surfaceType) {
-                player->surfaceCueStep[cueIndex] = 0;
+                player->state.surfaceCueStep[cueIndex] = 0;
                 return 0;
             }
             cueValue = cue->cueValue;
             if (cueValue != 0) {
                 return cueValue;
             }
-            player->surfaceCueState[cueIndex] = player->surfaceCueState[cueIndex] + 1;
+            player->state.surfaceCueState[cueIndex] = player->state.surfaceCueState[cueIndex] + 1;
         case 1:
-            step = player->surfaceCueStep[cueIndex];
+            step = player->state.surfaceCueStep[cueIndex];
             if (surfaceType == cues[step].surfaceType) {
                 return 0;
             }
             if (surfaceType == 0) {
                 return 0;
             }
-            player->surfaceCueState[cueIndex] = 0;
-            player->surfaceCueStep[cueIndex] = step + 1;
+            player->state.surfaceCueState[cueIndex] = 0;
+            player->state.surfaceCueStep[cueIndex] = step + 1;
         default:
             return 0;
     }
 }
 
 void resetRacePlayerSurfaceCueState(RacePlayer *player) {
-    player->surfaceCueState[0] = 0;
-    player->surfaceCueState[1] = 0;
-    player->surfaceCueState[2] = 0;
-    player->surfaceCueState[3] = 0;
-    player->surfaceCueState[4] = 0;
-    player->surfaceCueState[5] = 0;
-    player->surfaceCueStep[0] = 0;
-    player->surfaceCueStep[1] = 0;
-    player->surfaceCueStep[2] = 0;
-    player->surfaceCueStep[3] = 0;
-    player->surfaceCueStep[4] = 0;
-    player->surfaceCueStep[5] = 0;
+    player->state.surfaceCueState[0] = 0;
+    player->state.surfaceCueState[1] = 0;
+    player->state.surfaceCueState[2] = 0;
+    player->state.surfaceCueState[3] = 0;
+    player->state.surfaceCueState[4] = 0;
+    player->state.surfaceCueState[5] = 0;
+    player->state.surfaceCueStep[0] = 0;
+    player->state.surfaceCueStep[1] = 0;
+    player->state.surfaceCueStep[2] = 0;
+    player->state.surfaceCueStep[3] = 0;
+    player->state.surfaceCueStep[4] = 0;
+    player->state.surfaceCueStep[5] = 0;
 }
 
 s32 updateRacePlayerSurfaceCue(RacePlayer *player) {
@@ -254,12 +254,12 @@ s32 updateRacePlayerSurfaceCue(RacePlayer *player) {
 
     cue = 0;
     if (player->isCpu != 0) {
-        value = randomNextMain() & player->surfaceCueOverrideMask;
+        value = randomNextMain() & player->state.surfaceCueOverrideMask;
         cue = value;
         return cue;
     }
 
-    stickY = player->stickY;
+    stickY = player->state.stickY;
     if (stickY >= 30) {
         cue = 1;
     }
@@ -267,7 +267,7 @@ s32 updateRacePlayerSurfaceCue(RacePlayer *player) {
         cue = 2;
     }
 
-    stickX = player->stickX;
+    stickX = player->state.stickX;
     if (stickX >= 30) {
         cue = 3;
     }

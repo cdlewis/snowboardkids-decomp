@@ -226,7 +226,7 @@ void runTrainingCourseUntilLessonEnd(void) {
     gCurrentGameTask->callbackData0 = 0;
     switch (gTrainingCourseLesson) {
         case 1:
-            if (gRacePlayers[0].coursePathIndex == 0x50) {
+            if (gRacePlayers[0].state.coursePathIndex == 0x50) {
                 setCurrentGameTaskCallback(fadeInTrainingCourseLessonEndMenu, 0);
                 requestMusicSequenceStop(0x40);
                 return;
@@ -236,14 +236,14 @@ void runTrainingCourseUntilLessonEnd(void) {
         case 3:
         case 4:
         case 5:
-            if (gRacePlayers[0].coursePathIndex == 0x9C) {
+            if (gRacePlayers[0].state.coursePathIndex == 0x9C) {
                 setCurrentGameTaskCallback(fadeInTrainingCourseLessonEndMenu, 0);
                 requestMusicSequenceStop(0x40);
                 return;
             }
             break;
         case 6:
-            if (gRacePlayers[0].coursePathIndex == 0xB4) {
+            if (gRacePlayers[0].state.coursePathIndex == 0xB4) {
                 setCurrentGameTaskCallback(fadeInTrainingCourseLessonEndMenu, 0);
                 requestMusicSequenceStop(0x40);
                 return;
@@ -251,14 +251,14 @@ void runTrainingCourseUntilLessonEnd(void) {
             break;
         case 7:
         case 8:
-            if (gRacePlayers[0].coursePathIndex == 0x16) {
+            if (gRacePlayers[0].state.coursePathIndex == 0x16) {
                 setCurrentGameTaskCallback(fadeInTrainingCourseLessonEndMenu, 0);
                 requestMusicSequenceStop(0x40);
                 return;
             }
             break;
         case 9:
-            if (gRacePlayers[0].coursePathIndex == 0x36) {
+            if (gRacePlayers[0].state.coursePathIndex == 0x36) {
                 setCurrentGameTaskCallback(fadeInTrainingCourseLessonEndMenu, 0);
                 requestMusicSequenceStop(0x40);
             }

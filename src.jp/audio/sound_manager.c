@@ -467,7 +467,7 @@ void updatePlayerLoopingPositionalSound(s32 soundId, s32 mode, s32 volume, f32 p
         pitch = -6.0f;
     }
 
-    adjustedVolume = calculatePositionalSoundVolume(&gRacePlayers[mode].pos, volume);
+    adjustedVolume = calculatePositionalSoundVolume(&gRacePlayers[mode].state.pos, volume);
 
     activeCameras = 0;
     if (gRaceCameras[0].initialized.signedValue != 0) {
@@ -514,7 +514,7 @@ void updatePlayerLoopingPositionalSound(s32 soundId, s32 mode, s32 volume, f32 p
 void playPlayerPositionalSound(s32 soundId, s32 playerIndex, s32 volume, s32 minVolume) {
     s32 adjustedVolume;
 
-    adjustedVolume = calculatePositionalSoundVolume(&gRacePlayers[playerIndex].pos, volume);
+    adjustedVolume = calculatePositionalSoundVolume(&gRacePlayers[playerIndex].state.pos, volume);
     if (adjustedVolume < minVolume) {
         adjustedVolume = minVolume;
     }

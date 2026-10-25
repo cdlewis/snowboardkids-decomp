@@ -222,14 +222,14 @@ void drawRaceUiBoardReversePrompt(RaceUiPromptActor *arg0) {
 }
 
 void updateRaceUiBoardReversePrompt(RaceUiPromptActor *arg0) {
-    if (gRacePlayers[arg0->task.userId].stateFlags & 0x400) {
+    if (gRacePlayers[arg0->task.userId].state.stateFlags & 0x400) {
         if (arg0->timer < 0x1E) {
             arg0->timer++;
         }
     } else {
         arg0->timer = 0;
     }
-    if (gRacePlayers[arg0->task.userId].stateFlags & 0x1040) {
+    if (gRacePlayers[arg0->task.userId].state.stateFlags & 0x1040) {
         arg0->timer = 0;
     }
     if (arg0->timer >= 0x1E) {
@@ -404,7 +404,7 @@ void updateRaceUiPrizePayoutContinuePrompt(void *arg0) {
 }
 
 void drawRaceUiPrizePayoutRankPanel(RaceUiAlpha18Actor *arg0) {
-    if (gRacePlayers[0].rankIndex != 0) {
+    if (gRacePlayers[0].state.rankIndex != 0) {
         if (arg0->alpha != 0xFF) {
             gDPPipeSync(gRegionAllocPtr++);
             gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
@@ -412,12 +412,12 @@ void drawRaceUiPrizePayoutRankPanel(RaceUiAlpha18Actor *arg0) {
             gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 255, 255, 255, arg0->alpha);
         }
         drawAssetTableSprite(-0x68, -0x2C, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x4D);
-        drawAssetTableSprite(-0x42, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), gRacePlayers[0].rankIndex);
+        drawAssetTableSprite(-0x42, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), gRacePlayers[0].state.rankIndex);
         drawAssetTableSprite(
             -0x22,
             4,
             getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)),
-            gRacePlayers[0].rankIndex + 0x48
+            gRacePlayers[0].state.rankIndex + 0x48
         );
         drawAssetTableSprite(
             -0x68,
@@ -467,9 +467,9 @@ void drawRaceUiPrizePayoutCollectedCoins(void *arg0) {
 
     i = 0;
     do {
-        sprintf(&buffer[i], gRaceUiCoinCounterFormat, gRacePlayers[0].score);
+        sprintf(&buffer[i], gRaceUiCoinCounterFormat, gRacePlayers[0].state.score);
         x = 0x20;
-        if (gRacePlayers[0].rankIndex == 3) {
+        if (gRacePlayers[0].state.rankIndex == 3) {
             // clang-format off
             colorValue = 0xD; \
         } else { \
@@ -499,7 +499,7 @@ void drawRaceUiPrizePayoutCollectedCoins(void *arg0) {
         } while (0);
         drawAssetTableSpriteWithExplicitPalette((s16)x, -0xF, getRelocatableHeapBlockBase(assets[0x1F]), 0x37, color);
     } while (0);
-    if (gRacePlayers[0].rankIndex == 3) {
+    if (gRacePlayers[0].state.rankIndex == 3) {
         drawAssetTableSprite(0x18, -0xB, getRelocatableHeapBlockBase(assets[0x1F]), 0x4E);
     }
 }
@@ -585,25 +585,25 @@ void updateRaceUiPrizePayoutCountMoney(RaceUiAlpha18Actor *arg0) {
         arg0->score = 0;
     }
 
-    if (player->rankIndex != 3) {
-        value = player->score;
+    if (player->state.rankIndex != 3) {
+        value = player->state.score;
         if (value != 0) {
             shouldPlaySound = 1;
         }
         if (value >= 9) {
             player->money += 8;
-            player->score = value - 8;
+            player->state.score = value - 8;
         } else {
-            player->score = 0;
+            player->state.score = 0;
             player->money += value;
         }
     }
 
     if (gPlayerInputPressed[0] & A_BUTTON) {
         gRacePlayers[0].money = player->money + arg0->score;
-        if (player->rankIndex != 3) {
-            player->money += player->score;
-            player->score = 0;
+        if (player->state.rankIndex != 3) {
+            player->money += player->state.score;
+            player->state.score = 0;
         }
         arg0->score = 0;
     }
@@ -612,8 +612,8 @@ void updateRaceUiPrizePayoutCountMoney(RaceUiAlpha18Actor *arg0) {
         player->money = 999999;
     }
 
-    if (player->rankIndex != 3) {
-        if ((arg0->score == 0) && (player->score == 0)) {
+    if (player->state.rankIndex != 3) {
+        if ((arg0->score == 0) && (player->state.score == 0)) {
             enqueueSoundEffect(SFX_RESULTS_TALLY_COMPLETE, SFX_PRIORITY_NORMAL);
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiPrizePayoutWaitForConfirm);
         }
@@ -703,7 +703,7 @@ void updateRaceUiPrizePayoutFadeIn(RaceUiPrizePayoutActor *arg0) {
 void initRaceUiPrizePayout(RaceUiPrizePayoutActor *arg0) {
     arg0->alpha = 0;
     arg0->prizeAmount =
-        gRacePrizeAmountsByCourseAndRank[0][gRacePlayers[0].rankIndex + gRaceCourseIndex.signedValue * 4];
+        gRacePrizeAmountsByCourseAndRank[0][gRacePlayers[0].state.rankIndex + gRaceCourseIndex.signedValue * 4];
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiPrizePayoutFadeIn);
 }
 
@@ -854,7 +854,7 @@ void sortRaceUiResultsBannerPlayers(RaceUiResultsBannerActor *arg0) {
         // clang-format on
         if (next < 4) {
             do {
-                if (gRacePlayers[actor->playerIndices[j]].rankIndex < gRacePlayers[actor->playerIndices[i]].rankIndex) {
+                if (gRacePlayers[actor->playerIndices[j]].state.rankIndex < gRacePlayers[actor->playerIndices[i]].state.rankIndex) {
                     temp = actor->playerIndices[i];
                     actor->playerIndices[i] = actor->playerIndices[j];
                     actor->playerIndices[j] = temp;
@@ -868,7 +868,7 @@ void sortRaceUiResultsBannerPlayers(RaceUiResultsBannerActor *arg0) {
 
     i = 0;
     do {
-        if (!(gRacePlayers[actor->playerIndices[i]].stateFlags & 0x40)) {
+        if (!(gRacePlayers[actor->playerIndices[i]].state.stateFlags & 0x40)) {
             actor->playerIndices[i] = -1;
         }
         i++;
@@ -1154,7 +1154,7 @@ void drawRaceUiScoreAttackPointTotal(RaceUiAlpha18Actor *arg0) {
     }
 
     drawAssetTableSprite(-0x6C, -0x24, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x20);
-    sprintf(buffer + -8, gRaceUiScoreAttackPointTotalFormat, gRacePlayers[0].scoreAttackPointTotal);
+    sprintf(buffer + -8, gRaceUiScoreAttackPointTotalFormat, gRacePlayers[0].state.scoreAttackPointTotal);
 
     if (buffer[-8] != ' ') {
         drawAssetTableSprite(-0x4C, -0x1C, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), buffer[-8] - 5);
@@ -1367,7 +1367,7 @@ void drawRaceUiScoreAttackTargetStatus(RaceUiAlpha18Actor *arg0) {
             gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
             gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 255, 255, 255, arg0->alpha);
         }
-        sprintf(text, gRaceUiScoreAttackTargetFormat, gRacePlayers[0].scoreAttackPointTarget);
+        sprintf(text, gRaceUiScoreAttackTargetFormat, gRacePlayers[0].state.scoreAttackPointTarget);
         drawMenuAsciiTextDefaultScale(-0x54, -0x14, gRaceUiScoreAttackAsteriskLabel, 6);
         drawMenuAsciiTextDefaultScale(-0x3C, -0x14, text, 6);
         if (gRaceChallengeFailed != 0) {
@@ -1621,10 +1621,10 @@ void initRaceUiHitPrizePayout(RaceUiCounterActor *arg0) {
         arg0->pendingCompleteBonus = RACE_UI_HIT_PRIZE_QUICKSAND_VALLEY_SCORE_RATE;
     }
     if (gRaceChallengeFailed != 0) {
-        arg0->pendingHitPrize = gRacePlayers[0].scoreAttackPointTotal;
+        arg0->pendingHitPrize = gRacePlayers[0].state.scoreAttackPointTotal;
     } else {
-        arg0->pendingHitPrize = gRacePlayers[0].scoreAttackPointTotal * 0x32;
-        if (gRacePlayers[0].scoreAttackPointTotal == gRacePlayers[0].scoreAttackPointTarget) {
+        arg0->pendingHitPrize = gRacePlayers[0].state.scoreAttackPointTotal * 0x32;
+        if (gRacePlayers[0].state.scoreAttackPointTotal == gRacePlayers[0].state.scoreAttackPointTarget) {
             arg0->hasPerfectHitBonus = TRUE;
             arg0->pendingPerfectHitBonus = RACE_UI_HIT_PRIZE_PERFECT_HIT_BONUS;
         }
@@ -2123,13 +2123,13 @@ void initRaceUiCourseRecordPayout(RaceUiDualCounterActor *arg0) {
         &gRaceElapsedTimer,
         (RaceTimer *)&arg0->row
     );
-    new_var = &gRacePlayers[0].collectedCourseCoinMarkerCount;
+    new_var = &gRacePlayers[0].state.collectedCourseCoinMarkerCount;
     if (gRaceChallengeFailed != 0) {
         arg0->leftValue = 0;
         temp_v0 = *new_var;
     } else {
         arg0->leftValue = ((arg0->row * 0x3C) + arg0->column) * 0x14;
-        if (gRacePlayers[0].totalCourseCoinMarkerCount == (temp_v0 = gRacePlayers[0].collectedCourseCoinMarkerCount)) {
+        if (gRacePlayers[0].state.totalCourseCoinMarkerCount == (temp_v0 = gRacePlayers[0].state.collectedCourseCoinMarkerCount)) {
             arg0->flag = 1;
             arg0->bonus = 0x12C;
             temp_v0 = *new_var;
@@ -2151,16 +2151,16 @@ void drawRaceUiTrickAttackTotals(RaceUiDualCounterActor *arg0) {
         gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha18);
     }
 
-    sprintf(buffer, gRaceUiTrickAttackPointTotalFormat, gRacePlayers[0].trickAttackPointTotal);
+    sprintf(buffer, gRaceUiTrickAttackPointTotalFormat, gRacePlayers[0].state.trickAttackPointTotal);
 
     x = -0x50;
-    if (gRacePlayers[0].trickAttackPointTotal >= 10) {
+    if (gRacePlayers[0].state.trickAttackPointTotal >= 10) {
         x = -0x54;
     }
-    if (gRacePlayers[0].trickAttackPointTotal >= 100) {
+    if (gRacePlayers[0].state.trickAttackPointTotal >= 100) {
         x = -0x58;
     }
-    if (gRacePlayers[0].trickAttackPointTotal >= 1000) {
+    if (gRacePlayers[0].state.trickAttackPointTotal >= 1000) {
         x = -0x5C;
     }
 
@@ -2177,8 +2177,8 @@ void drawRaceUiTrickAttackTotals(RaceUiDualCounterActor *arg0) {
     }
 
     x = -0x50;
-    sprintf(buffer, gRaceUiTrickAttackSecondaryCounterFormat, gRacePlayers[0].trickAttackMakeCount);
-    if (gRacePlayers[0].trickAttackMakeCount >= 10) {
+    sprintf(buffer, gRaceUiTrickAttackSecondaryCounterFormat, gRacePlayers[0].state.trickAttackMakeCount);
+    if (gRacePlayers[0].state.trickAttackMakeCount >= 10) {
         x = -0x54;
     }
 
@@ -2658,16 +2658,16 @@ void initRaceUiTrickPrizePayout(RaceUiCourseStatsActor *arg0) {
         arg0->pendingTrickPrize = 0;
         *(volatile s16 *)&arg0->pendingMakeBonus = 0;
     } else {
-        arg0->pendingTrickPrize = gRacePlayers[0].trickAttackPointTotal * 3;
-        arg0->pendingMakeBonus = gRacePlayers[0].trickAttackMakeCount * 10;
+        arg0->pendingTrickPrize = gRacePlayers[0].state.trickAttackPointTotal * 3;
+        arg0->pendingMakeBonus = gRacePlayers[0].state.trickAttackMakeCount * 10;
     }
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiTrickPrizePayoutFadeIn);
 }
 
 void drawRaceUiResultAwardBadge(CallbackTask *task) {
     drawAssetTableSprite(-0x68, -0x2C, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x4D);
-    drawAssetTableSprite(-0x42, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), gRacePlayers[0].rankIndex);
-    drawAssetTableSprite(-0x22, 4, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), gRacePlayers[0].rankIndex + 0x48);
+    drawAssetTableSprite(-0x42, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), gRacePlayers[0].state.rankIndex);
+    drawAssetTableSprite(-0x22, 4, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), gRacePlayers[0].state.rankIndex + 0x48);
     drawAssetTableSprite(-0x68, 6, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), gRacePlayers[0].characterId + 0x91);
 }
 
@@ -2758,25 +2758,25 @@ void updateRacePlayerSparkleOrbit(RaceUiSparkleActor *arg0) {
             arg0->alpha -= 0x10;
             if (arg0->alpha <= 0) {
                 player = &gRacePlayers[arg0->playerIndex];
-                player->activeSparkleEffectCount--;
+                player->state.activeSparkleEffectCount--;
                 removeCallbackTask((CallbackTask *)arg0);
                 return;
             }
         }
 
         arg0->unk28 += 0x60;
-        angle = arg0->unk28 - gRacePlayers[arg0->playerIndex].facingAngle;
+        angle = arg0->unk28 - gRacePlayers[arg0->playerIndex].state.facingAngle;
         makeFixedRotationY(stack.matrix, angle);
         transformVec3iByFixedMatrix(stack.matrix, &gRacePlayerSparkleOrbitOffset, &stack.vec);
 
         player = &gRacePlayers[arg0->playerIndex];
-        makeFixedRotationXY(stack.matrix, player->pitchAngle, player->facingAngle);
+        makeFixedRotationXY(stack.matrix, player->state.pitchAngle, player->state.facingAngle);
         transformVec3iByFixedMatrix(stack.matrix, &stack.vec, &arg0->pos);
 
         player = &gRacePlayers[arg0->playerIndex];
-        arg0->pos.x += player->renderPosition.x;
-        arg0->pos.y += player->renderPosition.y;
-        arg0->pos.z += player->renderPosition.z;
+        arg0->pos.x += player->state.renderPosition.x;
+        arg0->pos.y += player->state.renderPosition.y;
+        arg0->pos.z += player->state.renderPosition.z;
     }
 
     addRenderCallback(&gModelRenderCallbackQueue7Head, (RenderCallback)renderRacePlayerSparkleEffect, (void *)arg0);
@@ -2800,13 +2800,13 @@ void updateRacePlayerSparkleRetarget(RaceUiSparkleActor *arg0) {
 
         player = &gRacePlayers[arg0->playerIndex];
         if (arg0) {}
-        makeFixedRotationXY(scratch.matrix, player->pitchAngle, player->facingAngle);
+        makeFixedRotationXY(scratch.matrix, player->state.pitchAngle, player->state.facingAngle);
         transformVec3iByFixedMatrix(scratch.matrix, &scratch.vec, &arg0->pos);
 
         player = &gRacePlayers[arg0->playerIndex];
-        arg0->pos.x += player->renderPosition.x;
-        arg0->pos.y += player->renderPosition.y;
-        arg0->pos.z += player->renderPosition.z;
+        arg0->pos.x += player->state.renderPosition.x;
+        arg0->pos.y += player->state.renderPosition.y;
+        arg0->pos.z += player->state.renderPosition.z;
         selectedPlayerIndex = gRaceOrderPlayerIds[1];
 
         timer = arg0->timer;
@@ -2826,28 +2826,28 @@ void updateRacePlayerSparkleRetarget(RaceUiSparkleActor *arg0) {
                         selectedPlayerIndex = gRaceOrderPlayerIds[3];
                     }
                     if ((gRacePlayerCount >= 3) && (arg0->playerIndex != gRaceOrderPlayerIds[2]) &&
-                        (activeCount >= 2) && !(gRacePlayers[gRaceOrderPlayerIds[2]].stateFlags & 0x40)) {
+                        (activeCount >= 2) && !(gRacePlayers[gRaceOrderPlayerIds[2]].state.stateFlags & 0x40)) {
                         selectedPlayerIndex = gRaceOrderPlayerIds[2];
                     }
                     if ((gRacePlayerCount >= 2) && (arg0->playerIndex != gRaceOrderPlayerIds[1]) &&
-                        (activeCount >= 3) && !(gRacePlayers[gRaceOrderPlayerIds[1]].stateFlags & 0x40)) {
+                        (activeCount >= 3) && !(gRacePlayers[gRaceOrderPlayerIds[1]].state.stateFlags & 0x40)) {
                         selectedPlayerIndex = gRaceOrderPlayerIds[1];
                     }
                     if ((gRacePlayerCount > 0) && (arg0->playerIndex != gRaceOrderPlayerIds[0]) && (activeCount >= 4) &&
-                        !(gRacePlayers[gRaceOrderPlayerIds[0]].stateFlags & 0x40)) {
+                        !(gRacePlayers[gRaceOrderPlayerIds[0]].state.stateFlags & 0x40)) {
                         selectedPlayerIndex = gRaceOrderPlayerIds[0];
                     }
                     arg0->playerIndex = selectedPlayerIndex & 3;
                 }
 
                 player = &gRacePlayers[arg0->playerIndex];
-                player->activeSparkleEffectCount++;
+                player->state.activeSparkleEffectCount++;
                 if (gRacePlayerHudStatuses[arg0->playerIndex].active != 0) {
                     enqueueSoundEffect(SFX_SPARKLE_RETARGET, SFX_PRIORITY_HIGH);
                 }
                 enqueuePositionalSoundEffect(
                     SFX_ITEM_USE,
-                    &gRacePlayers[arg0->playerIndex].pos,
+                    &gRacePlayers[arg0->playerIndex].state.pos,
                     0x7F,
                     SFX_PRIORITY_NORMAL
                 );
@@ -2877,13 +2877,13 @@ void updateRacePlayerSparkleRise(RaceUiSparkleActor *arg0) {
         sp2C.y = arg0->zOffset;
         sp2C.z = 0;
         player = &gRacePlayers[arg0->playerIndex];
-        makeFixedRotationXY(sp38, player->pitchAngle, player->facingAngle);
+        makeFixedRotationXY(sp38, player->state.pitchAngle, player->state.facingAngle);
         transformVec3iByFixedMatrix(sp38, &sp2C, &arg0->pos);
 
         player = &gRacePlayers[arg0->playerIndex];
-        arg0->pos.x += player->renderPosition.x;
-        arg0->pos.y += player->renderPosition.y;
-        arg0->pos.z += player->renderPosition.z;
+        arg0->pos.x += player->state.renderPosition.x;
+        arg0->pos.y += player->state.renderPosition.y;
+        arg0->pos.z += player->state.renderPosition.z;
         arg0->alpha += arg0->alphaStep;
         if (arg0->alpha >= 0x100) {
             arg0->alpha = 0xFF;
@@ -2929,7 +2929,7 @@ void initRacePlayerSparkleEffect(RaceUiSparkleActor *arg0) {
         &arg0->images[3],
         &arg0->palettes[3]
     );
-    enqueuePositionalSoundEffect(SFX_ITEM_USE, &gRacePlayers[arg0->playerIndex].pos, 0x7F, SFX_PRIORITY_NORMAL);
+    enqueuePositionalSoundEffect(SFX_ITEM_USE, &gRacePlayers[arg0->playerIndex].state.pos, 0x7F, SFX_PRIORITY_NORMAL);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerSparkleRise);
 }
 
@@ -3016,9 +3016,9 @@ void spawnRaceUiExpiredSpeedFanEffect(RacePlayer *player) {
 
     if (actor != NULL) {
         actor->playerIndex = player->playerIndex;
-        actor->worldPos = player->speedFan.worldPos;
-        actor->frontTransform = player->speedFan.frontTransform;
-        actor->spinAngleX = player->speedFan.spinAngleX;
+        actor->worldPos = player->state.speedFan.worldPos;
+        actor->frontTransform = player->state.speedFan.frontTransform;
+        actor->spinAngleX = player->state.speedFan.spinAngleX;
     }
 }
 
@@ -3033,9 +3033,9 @@ void renderRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
         player = &gRacePlayers[arg0->task.userId];
-        arg0->copyBlock.translation.x = player->renderPosition.x;
-        arg0->copyBlock.translation.y = player->renderPosition.y + 0x100000;
-        arg0->copyBlock.translation.z = player->renderPosition.z;
+        arg0->copyBlock.translation.x = player->state.renderPosition.x;
+        arg0->copyBlock.translation.y = player->state.renderPosition.y + 0x100000;
+        arg0->copyBlock.translation.z = player->state.renderPosition.z;
         arg0->matrix = allocFixedTransformMatrix(&arg0->copyBlock);
     }
 
@@ -3055,9 +3055,9 @@ void updateRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
 
     arg0->copyBlock = gIdentityFixedTransform;
     player = &gRacePlayers[arg0->task.userId];
-    arg0->pos.x = player->renderPosition.x;
-    arg0->pos.y = player->renderPosition.y;
-    arg0->pos.z = player->renderPosition.z;
+    arg0->pos.x = player->state.renderPosition.x;
+    arg0->pos.y = player->state.renderPosition.y;
+    arg0->pos.z = player->state.renderPosition.z;
 
     for (i = 0; i < 4; i++) {
         if (i != arg0->task.userId) {
@@ -3080,7 +3080,7 @@ void updateRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
         arg0->scale = scale + 2;
     }
 
-    if (gRacePlayers[arg0->task.userId].stateFlags & 0x100000) {
+    if (gRacePlayers[arg0->task.userId].state.stateFlags & 0x100000) {
         addRenderCallback(
             &gModelRenderCallbackQueue7Head,
             (RenderCallback)renderRaceUiItemStealTrailEffect,
@@ -3093,13 +3093,13 @@ void updateRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
         spawnRaceUiBurstTextParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, i);
     }
 
-    enqueuePositionalSoundEffect(SFX_ITEM_STEAL_END, &gRacePlayers[arg0->task.userId].pos, 0x7F, SFX_PRIORITY_NORMAL);
+    enqueuePositionalSoundEffect(SFX_ITEM_STEAL_END, &gRacePlayers[arg0->task.userId].state.pos, 0x7F, SFX_PRIORITY_NORMAL);
     removeCallbackTask(arg0);
 }
 
 void initRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
     arg0->scale = 2;
-    enqueuePositionalSoundEffect(SFX_ITEM_STEAL_START, &gRacePlayers[arg0->task.userId].pos, 0x7F, SFX_PRIORITY_NORMAL);
+    enqueuePositionalSoundEffect(SFX_ITEM_STEAL_START, &gRacePlayers[arg0->task.userId].state.pos, 0x7F, SFX_PRIORITY_NORMAL);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiItemStealTrailEffect);
 }
 
@@ -3341,12 +3341,12 @@ void updateGhostSlowdownImpact(RaceUiPodiumTrailActor *arg0) {
         if ((height < 0x200000) && ((arg0->playImpactSound & 0xFF) != 0)) {
             enqueuePositionalSoundEffect(
                 SFX_GHOST_HIT,
-                &gRacePlayers[arg0->targetPlayerIndex].pos,
+                &gRacePlayers[arg0->targetPlayerIndex].state.pos,
                 0x7F,
                 SFX_PRIORITY_NORMAL
             );
-            gRacePlayers[arg0->targetPlayerIndex].pendingItemHitFlags |= PLAYER_HITFLAG_GHOST_SLOWDOWN;
-            gRacePlayers[arg0->targetPlayerIndex].hitSourcePlayerIndex = arg0->playerIndex;
+            gRacePlayers[arg0->targetPlayerIndex].state.pendingItemHitFlags |= PLAYER_HITFLAG_GHOST_SLOWDOWN;
+            gRacePlayers[arg0->targetPlayerIndex].state.hitSourcePlayerIndex = arg0->playerIndex;
             height = arg0->height;
             arg0->playImpactSound = 0;
         }
@@ -3359,12 +3359,12 @@ void updateGhostSlowdownImpact(RaceUiPodiumTrailActor *arg0) {
         }
 
         player = &gRacePlayers[arg0->targetPlayerIndex];
-        arg0->pos.x = player->renderPosition.x;
-        arg0->pos.y = player->renderPosition.y + height;
-        arg0->pos.z = player->renderPosition.z;
+        arg0->pos.x = player->state.renderPosition.x;
+        arg0->pos.y = player->state.renderPosition.y + height;
+        arg0->pos.z = player->state.renderPosition.z;
     }
 
-    gRacePlayers[arg0->targetPlayerIndex].isTargetedByAttack = 1;
+    gRacePlayers[arg0->targetPlayerIndex].state.isTargetedByAttack = 1;
     addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)renderGhostSlowdownActor, arg0);
 }
 
@@ -3378,9 +3378,9 @@ void updateGhostSlowdownRise(RaceUiPodiumTrailActor *arg0) {
             arg0->height += arg0->velocity;
             arg0->copyBlock = gIdentityFixedTransform;
             player = &gRacePlayers[arg0->playerIndex];
-            arg0->pos.x = player->renderPosition.x;
-            arg0->pos.y = player->renderPosition.y + arg0->height;
-            arg0->pos.z = player->renderPosition.z;
+            arg0->pos.x = player->state.renderPosition.x;
+            arg0->pos.y = player->state.renderPosition.y + arg0->height;
+            arg0->pos.z = player->state.renderPosition.z;
 
             scale = arg0->state;
             arg0->copyBlock.rotation[0] = (arg0->copyBlock.rotation[0] * scale) / 64;
@@ -3402,7 +3402,7 @@ void updateGhostSlowdownRise(RaceUiPodiumTrailActor *arg0) {
                 setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateGhostSlowdownImpact);
             }
         }
-        gRacePlayers[arg0->targetPlayerIndex].isTargetedByAttack = 1;
+        gRacePlayers[arg0->targetPlayerIndex].state.isTargetedByAttack = 1;
         addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)renderGhostSlowdownActor, (void *)arg0);
     } else if (gRaceUpdatePaused == 0) {
         arg0->timer--;
@@ -3414,7 +3414,7 @@ void initGhostSlowdownActor(RaceUiPodiumTrailActor *arg0) {
     arg0->height = 0;
     arg0->velocity = 0;
     arg0->playImpactSound = 1;
-    enqueuePositionalSoundEffect(SFX_GHOST_SLOWDOWN, &gRacePlayers[arg0->playerIndex].pos, 0x7F, SFX_PRIORITY_NORMAL);
+    enqueuePositionalSoundEffect(SFX_GHOST_SLOWDOWN, &gRacePlayers[arg0->playerIndex].state.pos, 0x7F, SFX_PRIORITY_NORMAL);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateGhostSlowdownRise);
 }
 
@@ -3618,7 +3618,7 @@ void updateRaceUiHeavyKnockdownTrailEffect(RaceUiRankTrailActor *arg0) {
     RacePlayer *player;
     s32 i;
 
-    arg0->copyBlock = gRacePlayers[arg0->task.userId].modelPartTransforms[0];
+    arg0->copyBlock = gRacePlayers[arg0->task.userId].state.modelPartTransforms[0];
     arg0->copyBlock.rotation[0] = arg0->copyBlock.rotation[0] / 4;
     arg0->copyBlock.rotation[1] = arg0->copyBlock.rotation[1] / 4;
     arg0->copyBlock.rotation[2] = arg0->copyBlock.rotation[2] / 4;
@@ -3630,7 +3630,7 @@ void updateRaceUiHeavyKnockdownTrailEffect(RaceUiRankTrailActor *arg0) {
     arg0->copyBlock.rotation[8] = arg0->copyBlock.rotation[8] / 4;
 
     player = &gRacePlayers[arg0->task.userId];
-    if (player->stateFlags & 0x400000) {
+    if (player->state.stateFlags & 0x400000) {
         addRenderCallback(
             &gRaceModelEffectRenderCallbackList,
             (RenderCallback)renderRaceUiHeavyKnockdownTrailEffect,
@@ -3639,7 +3639,7 @@ void updateRaceUiHeavyKnockdownTrailEffect(RaceUiRankTrailActor *arg0) {
         return;
     }
 
-    enqueuePositionalSoundEffect(SFX_ITEM_IMPACT, &player->pos, 0x7F, SFX_PRIORITY_NORMAL);
+    enqueuePositionalSoundEffect(SFX_ITEM_IMPACT, &player->state.pos, 0x7F, SFX_PRIORITY_NORMAL);
 
     for (i = 0; i < 8; i++) {
         spawnRaceUiAltBurstTextParticle(
@@ -3769,13 +3769,13 @@ void renderRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
 void updateRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
     composeFixedTransforms(
         &arg0->localTransform,
-        &gRacePlayers[arg0->task.userId].modelPartTransforms[7],
+        &gRacePlayers[arg0->task.userId].state.modelPartTransforms[7],
         &arg0->copyBlock
     );
 
     if (gRaceUpdatePaused == 0) {
         arg0->timer--;
-        if (!(gRacePlayers[arg0->task.userId].stateFlags & 0x2000)) {
+        if (!(gRacePlayers[arg0->task.userId].state.stateFlags & 0x2000)) {
             arg0->timer = 0;
         }
     }
@@ -3856,16 +3856,16 @@ void updateRaceUiFadingImpact(RaceUiFadingImpactActor *arg0) {
             sp24 = &arg0->pos;
             sp2C = (new_var->scale * 0x480000) / 64;
             if (tryApplyRacePlayerItemHit(sp24, sp2C, 0x80, 0) != 0) {
-                gRacePlayers[0].hitSourcePlayerIndex = new_var->task.userId;
+                gRacePlayers[0].state.hitSourcePlayerIndex = new_var->task.userId;
             }
             if (tryApplyRacePlayerItemHit(sp24, sp2C, 0x80, 1) != 0) {
-                gRacePlayers[1].hitSourcePlayerIndex = new_var->task.userId;
+                gRacePlayers[1].state.hitSourcePlayerIndex = new_var->task.userId;
             }
             if (tryApplyRacePlayerItemHit(sp24, sp2C, 0x80, 2) != 0) {
-                gRacePlayers[2].hitSourcePlayerIndex = arg0->task.userId;
+                gRacePlayers[2].state.hitSourcePlayerIndex = arg0->task.userId;
             }
             if (tryApplyRacePlayerItemHit(sp24, sp2C, 0x80, 3) != 0) {
-                gRacePlayers[3].hitSourcePlayerIndex = arg0->task.userId;
+                gRacePlayers[3].state.hitSourcePlayerIndex = arg0->task.userId;
             }
         }
     }
@@ -3926,14 +3926,14 @@ void updateRaceUiSpinHitTransitionEffect(RaceUiTransitionActor *arg0) {
     s16 temp_a0;
 
     if (gRaceUpdatePaused == 0) {
-        if (!(gRacePlayers[arg0->task.userId].stateFlags & 0x800000)) {
+        if (!(gRacePlayers[arg0->task.userId].state.stateFlags & 0x800000)) {
             arg0->unk6C = 0;
         }
         if (arg0->unk6C != 0) {
             player = &gRacePlayers[arg0->task.userId];
-            arg0->transformSource.translation.x = player->modelPartTransforms[1].translation.x;
-            arg0->transformSource.translation.y = player->modelPartTransforms[1].translation.y;
-            arg0->transformSource.translation.z = player->modelPartTransforms[1].translation.z;
+            arg0->transformSource.translation.x = player->state.modelPartTransforms[1].translation.x;
+            arg0->transformSource.translation.y = player->state.modelPartTransforms[1].translation.y;
+            arg0->transformSource.translation.z = player->state.modelPartTransforms[1].translation.z;
         } else {
             if (arg0->unk6E == 0) {
                 removeCallbackTask(arg0);
@@ -3961,7 +3961,7 @@ void initRaceUiSpinHitTransitionEffect(RaceUiTransitionActor *arg0) {
     scaleFixedMatrix3sByQuarter(transform);
     arg0->unk6C = 1;
     arg0->unk6E = 0xF;
-    enqueuePositionalSoundEffect(SFX_SPIN_HIT, &gRacePlayers[arg0->task.userId].pos, 0x7F, SFX_PRIORITY_NORMAL);
+    enqueuePositionalSoundEffect(SFX_SPIN_HIT, &gRacePlayers[arg0->task.userId].state.pos, 0x7F, SFX_PRIORITY_NORMAL);
     updateRaceUiSpinHitTransitionEffect(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiSpinHitTransitionEffect);
 }
@@ -4011,16 +4011,16 @@ void updateRaceUiStunOrbitingIcon(RaceUiOrbitingSpriteActor *arg0) {
     RacePlayer *player;
 
     player = &gRacePlayers[arg0->playerIndex];
-    if (!(player->stateFlags & 0x10000)) {
+    if (!(player->state.stateFlags & 0x10000)) {
         removeCallbackTask(arg0);
         return;
     }
 
-    transformVec3iByFixedMatrix(player->modelPartTransforms[7].rotation, &gRaceUiStunIconHeadOffset, &arg0->pos);
+    transformVec3iByFixedMatrix(player->state.modelPartTransforms[7].rotation, &gRaceUiStunIconHeadOffset, &arg0->pos);
     player = &gRacePlayers[arg0->playerIndex];
-    arg0->pos.x += player->modelPartTransforms[7].translation.x;
-    arg0->pos.y += player->modelPartTransforms[7].translation.y + 0x80000;
-    arg0->pos.z += player->modelPartTransforms[7].translation.z;
+    arg0->pos.x += player->state.modelPartTransforms[7].translation.x;
+    arg0->pos.y += player->state.modelPartTransforms[7].translation.y + 0x80000;
+    arg0->pos.z += player->state.modelPartTransforms[7].translation.z;
     arg0->angle += 0xC0;
     arg0->pos.x -= fixedSine(arg0->angle) << 7;
     arg0->pos.z += fixedCosine(arg0->angle) << 7;
@@ -4285,7 +4285,7 @@ void renderCourseStartFinishSprite(RaceUiCourseSpriteActor *arg0) {
 
         if (new_var->vertices != NULL) {
             imageIndex = 0;
-            if ((gRacePlayers[gCurrentViewportIndex].lapDigit + 1) >= gRaceLapCount) {
+            if ((gRacePlayers[gCurrentViewportIndex].state.lapDigit + 1) >= gRaceLapCount) {
                 imageIndex = 1;
             }
 
@@ -4475,7 +4475,7 @@ void renderRaceCourseRankModel(RaceUiRankParticleActor *arg0) {
 
         if (arg0->matrix != NULL) {
             displayListIndex = 0;
-            if (gRaceLapCount <= gRacePlayers[gCurrentViewportIndex].lapDigit + 1) {
+            if (gRaceLapCount <= gRacePlayers[gCurrentViewportIndex].state.lapDigit + 1) {
                 displayListIndex = 1;
             }
 
@@ -4617,13 +4617,13 @@ void updateRaceUiProjectileFlyAway(RaceUiProjectileActor *arg0) {
     if (!gRaceUpdatePaused) {
         makeFixedRotationXY(
             sp24.mtx,
-            gRacePlayers[actor->task.userId].pitchAngle,
-            gRacePlayers[actor->task.userId].facingAngle
+            gRacePlayers[actor->task.userId].state.pitchAngle,
+            gRacePlayers[actor->task.userId].state.facingAngle
         );
         transformVec3iByFixedMatrix(sp24.mtx, &actor->velocity, &actor->pos);
-        actor->pos.x += gRacePlayers[actor->task.userId].renderPosition.x;
-        actor->pos.y += gRacePlayers[actor->task.userId].renderPosition.y + actor->verticalVelocity;
-        actor->pos.z += gRacePlayers[actor->task.userId].renderPosition.z;
+        actor->pos.x += gRacePlayers[actor->task.userId].state.renderPosition.x;
+        actor->pos.y += gRacePlayers[actor->task.userId].state.renderPosition.y + actor->verticalVelocity;
+        actor->pos.z += gRacePlayers[actor->task.userId].state.renderPosition.z;
         temp = (actor->verticalVelocity += actor->verticalAcceleration);
         actor->verticalAcceleration += 0x10000;
         if (temp >= 0x300001) {
@@ -4647,24 +4647,24 @@ void updateRaceUiProjectileStealScores(RaceUiProjectileActor *arg0) {
         player = &gRacePlayers[arg0->task.userId];
         makeFixedRotationXY(
             sp44,
-            gRacePlayers[arg0->task.userId].pitchAngle,
-            gRacePlayers[arg0->task.userId].facingAngle
+            gRacePlayers[arg0->task.userId].state.pitchAngle,
+            gRacePlayers[arg0->task.userId].state.facingAngle
         );
         transformVec3iByFixedMatrix(sp44, &arg0->velocity, &arg0->pos);
 
         player = &gRacePlayers[arg0->task.userId];
-        arg0->pos.x += player->renderPosition.x;
-        arg0->pos.y += player->renderPosition.y;
-        arg0->pos.z += player->renderPosition.z;
+        arg0->pos.x += player->state.renderPosition.x;
+        arg0->pos.y += player->state.renderPosition.y;
+        arg0->pos.z += player->state.renderPosition.z;
         advanceRaceUiProjectileAnimation(arg0);
 
         i = 0;
         do {
             otherPlayer = &gRacePlayers[i];
             if ((otherPlayer->isActive != 0) && (otherPlayer->playerIndex != arg0->task.userId)) {
-                value = otherPlayer->score;
+                value = otherPlayer->state.score;
                 amount = (value >= 0xA6) ? 0xA6 : value;
-                otherPlayer->score = value - amount;
+                otherPlayer->state.score = value - amount;
                 addRacePlayerScore(&gRacePlayers[arg0->task.userId], amount);
             }
             i++;
@@ -4675,7 +4675,7 @@ void updateRaceUiProjectileStealScores(RaceUiProjectileActor *arg0) {
         if (flags & 8) {
             enqueuePositionalSoundEffect(
                 SFX_RAT_FACE_STEAL,
-                &gRacePlayers[arg0->task.userId].renderPosition,
+                &gRacePlayers[arg0->task.userId].state.renderPosition,
                 0x7F,
                 SFX_PRIORITY_NORMAL
             );
@@ -4688,7 +4688,7 @@ void updateRaceUiProjectileStealScores(RaceUiProjectileActor *arg0) {
             arg0->verticalVelocity = 0;
             enqueuePositionalSoundEffect(
                 SFX_PROJECTILE_LAUNCH,
-                &gRacePlayers[arg0->task.userId].renderPosition,
+                &gRacePlayers[arg0->task.userId].state.renderPosition,
                 0x7F,
                 SFX_PRIORITY_NORMAL
             );
@@ -4710,18 +4710,18 @@ void updateRaceUiProjectileBounceDown(RaceUiProjectileActor *arg0) {
         arg0 += 0;
         if (((!actor) && (!actor)) && (!actor)) {}
         player = &gRacePlayers[actor->task.userId];
-        makeFixedRotationXY(sp2C, player->pitchAngle, player->facingAngle);
+        makeFixedRotationXY(sp2C, player->state.pitchAngle, player->state.facingAngle);
         transformVec3iByFixedMatrix(sp2C, &actor->velocity, &actor->pos);
 
         player = &gRacePlayers[actor->task.userId];
-        actor->pos.x += player->renderPosition.x;
-        actor->pos.y += player->renderPosition.y + actor->verticalVelocity;
-        actor->pos.z += player->renderPosition.z;
+        actor->pos.x += player->state.renderPosition.x;
+        actor->pos.y += player->state.renderPosition.y + actor->verticalVelocity;
+        actor->pos.z += player->state.renderPosition.z;
         actor->verticalAcceleration += 0xFFFF0000;
         actor->verticalVelocity += actor->verticalAcceleration;
         if (actor->verticalVelocity <= 0) {
             actor->verticalVelocity = 0;
-            enqueuePositionalSoundEffect(SFX_RAT_FACE_LAND, &player->renderPosition, 0x7F, SFX_PRIORITY_NORMAL);
+            enqueuePositionalSoundEffect(SFX_RAT_FACE_LAND, &player->state.renderPosition, 0x7F, SFX_PRIORITY_NORMAL);
             advanceRaceUiProjectileAnimation(actor);
             setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiProjectileStealScores);
         }
@@ -4738,15 +4738,15 @@ void updateRaceUiProjectileGrounded(RaceUiProjectileActor *arg0) {
     if (gRaceUpdatePaused == 0) {
         makeFixedRotationXY(
             sp2C,
-            gRacePlayers[actor->task.userId].pitchAngle,
-            gRacePlayers[actor->task.userId].facingAngle
+            gRacePlayers[actor->task.userId].state.pitchAngle,
+            gRacePlayers[actor->task.userId].state.facingAngle
         );
         transformVec3iByFixedMatrix(sp2C, &actor->velocity, &actor->pos);
 
         player = &gRacePlayers[actor->task.userId];
-        actor->pos.x += player->renderPosition.x;
-        actor->pos.y += player->renderPosition.y;
-        actor->pos.z += player->renderPosition.z;
+        actor->pos.x += player->state.renderPosition.x;
+        actor->pos.y += player->state.renderPosition.y;
+        actor->pos.z += player->state.renderPosition.z;
         advanceRaceUiProjectileAnimation(actor);
         if (actor->flags != 0) {
             setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiProjectileBounceDown);
@@ -4766,15 +4766,15 @@ void updateRaceUiProjectileInitialFall(RaceUiProjectileActor *arg0) {
     if (gRaceUpdatePaused == 0) {
         makeFixedRotationXY(
             sp2C,
-            gRacePlayers[actor->task.userId].pitchAngle,
-            gRacePlayers[actor->task.userId].facingAngle
+            gRacePlayers[actor->task.userId].state.pitchAngle,
+            gRacePlayers[actor->task.userId].state.facingAngle
         );
         transformVec3iByFixedMatrix(sp2C, &actor->velocity, &actor->pos);
 
         player = &gRacePlayers[actor->task.userId];
-        actor->pos.x += player->renderPosition.x;
-        actor->pos.y += player->renderPosition.y + actor->verticalVelocity;
-        actor->pos.z += player->renderPosition.z;
+        actor->pos.x += player->state.renderPosition.x;
+        actor->pos.y += player->state.renderPosition.y + actor->verticalVelocity;
+        actor->pos.z += player->state.renderPosition.z;
         actor->verticalVelocity += actor->verticalAcceleration;
         actor->verticalAcceleration += 0xFFFF0000;
         if (actor->verticalVelocity <= 0) {
@@ -4796,7 +4796,7 @@ void initRatFaceItemEffect(RaceUiProjectileActor *arg0) {
     setRaceUiProjectileAnimation(arg0, gRatFaceItemAnimation);
     enqueuePositionalSoundEffect(
         SFX_RAT_FACE_APPEAR,
-        &gRacePlayers[arg0->task.userId].renderPosition,
+        &gRacePlayers[arg0->task.userId].state.renderPosition,
         0x7F,
         SFX_PRIORITY_NORMAL
     );
@@ -4957,13 +4957,13 @@ loop:
             if (isRacePlayerInsideCylinder(pos, xzSize, ySize, 0) != 0) {
                 entry->active = 0;
                 enqueuePositionalSoundEffect(SFX_CONFIRM, pos, 0x7F, SFX_PRIORITY_NORMAL);
-                gRacePlayers[0].collectedCourseCoinMarkerCount++;
-                if (gRacePlayers[0].trailEffectTimer != 0) {
-                    gRacePlayers[0].trailEffectTimer = 0xF0;
+                gRacePlayers[0].state.collectedCourseCoinMarkerCount++;
+                if (gRacePlayers[0].state.trailEffectTimer != 0) {
+                    gRacePlayers[0].state.trailEffectTimer = 0xF0;
                 } else {
                     startSpeedFanEffect(gRacePlayers);
                 }
-                if (gRacePlayers[0].trailEffectTimer) {}
+                if (gRacePlayers[0].state.trailEffectTimer) {}
             }
         }
     }
@@ -5017,7 +5017,7 @@ void initRaceCourseCoinMarkers(RaceUiGfxCommandActor *actor) {
         markerCount++;
         marker++;
     }
-    gRacePlayers[0].totalCourseCoinMarkerCount = markerCount;
+    gRacePlayers[0].state.totalCourseCoinMarkerCount = markerCount;
     actor->count = markerCount;
     if (markerCount != 0) {
         gAssetHandles[0x24] = allocRelocatableHeapBlock(markerCount * sizeof(Mtx));
@@ -5161,7 +5161,7 @@ void initRaceStartOverlay(RaceUiOverlayActor *arg0) {
     s32 i;
 
     arg0->pos.x = 0;
-    arg0->pos.z = gRacePlayers[0].pos.z + 0xFF900000;
+    arg0->pos.z = gRacePlayers[0].state.pos.z + 0xFF900000;
     arg0->velocity = 0;
     arg0->pos.y =
         getRaceCourseSurfaceHeight(findRaceCourseSurfaceFromHint(0, 0, arg0->pos.z), arg0->pos.x, arg0->pos.z) +
@@ -5239,7 +5239,7 @@ void updateRaceScoreAttackRings(void *arg0) {
         for (;;) {
             if (entry->active != 0) {
                 pushRacePlayersOutOfCylinderAndApplyItemHit(&entry->position, 0xE0000, 0x100000, 2);
-                trigger = gRacePlayers[0].scoreAttackRingTriggerList;
+                trigger = gRacePlayers[0].state.scoreAttackRingTriggerList;
                 if (trigger != NULL) {
                     for (;;) {
                         if (trigger->triggered == 0) {
@@ -5267,7 +5267,7 @@ void updateRaceScoreAttackRings(void *arg0) {
                                             }
                                         }
                                         entry->active = 0;
-                                        gRacePlayers[0].scoreAttackPointTotal++;
+                                        gRacePlayers[0].state.scoreAttackPointTotal++;
                                         break;
                                     }
                                 }
@@ -5343,7 +5343,7 @@ void initRaceScoreAttackRings(RaceUiRankTextRenderActor *arg0) {
         var_v1++;
         var_v0++;
     }
-    gRacePlayers[0].scoreAttackPointTarget = var_v1;
+    gRacePlayers[0].state.scoreAttackPointTarget = var_v1;
     arg0->count = var_v1;
     if (var_v1 != 0) {
         gAssetHandles[0x26] = allocRelocatableHeapBlock(var_v1 << 6);

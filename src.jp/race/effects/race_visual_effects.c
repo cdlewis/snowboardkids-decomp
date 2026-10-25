@@ -327,9 +327,9 @@ void initRacePlayerHitEffect(RaceItemEffectActor *arg0) {
         sp24.y = arg0->vector24.fields.word28.word;
         sp24.z = arg0->vector24.fields.word2C.word;
         transformVec3iByFixedMatrix(sp30.rotation, &sp24, &arg0->payload.vec);
-        arg0->payload.vec.x += sp58->pos.x;
-        arg0->payload.vec.y += sp58->pos.y;
-        arg0->payload.vec.z += sp58->pos.z;
+        arg0->payload.vec.x += sp58->state.pos.x;
+        arg0->payload.vec.y += sp58->state.pos.y;
+        arg0->payload.vec.z += sp58->state.pos.z;
     }
     updateRacePlayerHitEffect(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerHitEffect);
@@ -513,14 +513,14 @@ void updateRacePlayerShockEffect(RaceItemEffectActor *arg0) {
         actor->unk34.shorts.height.byte = 0;
     }
     transformVec3iByFixedMatrix(
-        gRacePlayers[actor->task.userId].modelPartTransforms[0].rotation,
+        gRacePlayers[actor->task.userId].state.modelPartTransforms[0].rotation,
         &actor->vector24.vec,
         &actor->payload.vec
     );
     player = &gRacePlayers[actor->task.userId];
-    actor->payload.vec.x += player->modelPartTransforms[0].translation.x;
-    actor->payload.vec.y += player->modelPartTransforms[0].translation.y;
-    actor->payload.vec.z += player->modelPartTransforms[0].translation.z;
+    actor->payload.vec.x += player->state.modelPartTransforms[0].translation.x;
+    actor->payload.vec.y += player->state.modelPartTransforms[0].translation.y;
+    actor->payload.vec.z += player->state.modelPartTransforms[0].translation.z;
     addRenderCallback(&gModelRenderCallbackQueue4Head, (RenderCallback)renderRacePlayerShockEffect, actor);
 }
 
@@ -532,11 +532,11 @@ void initRacePlayerShockEffect(RaceItemEffectActor *arg0) {
     arg0->vector24.fields.word28.word = 0x280000;
     arg0->vector24.fields.word24.velocityX = 0x400000;
     player = &gRacePlayers[arg0->task.userId];
-    if (player->stateFlags & 0x400) {
+    if (player->state.stateFlags & 0x400) {
         arg0->vector24.fields.word24.velocityX = -arg0->vector24.fields.word24.velocityX;
     }
     player = &gRacePlayers[arg0->task.userId];
-    enqueuePositionalSoundEffect(SFX_SHOCK, (Vec3i *)&player->pos, 0x7F, SFX_PRIORITY_NORMAL);
+    enqueuePositionalSoundEffect(SFX_SHOCK, (Vec3i *)&player->state.pos, 0x7F, SFX_PRIORITY_NORMAL);
     updateRacePlayerShockEffect(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerShockEffect);
 }
@@ -634,9 +634,9 @@ void initRaceItemBreakParticle(RaceItemEffectActor *arg0) {
     );
 
     player = &gRacePlayers[arg0->followPlayerIndex];
-    arg0->payload.vec.x = player->renderPosition.x;
-    arg0->payload.vec.y = player->renderPosition.y;
-    arg0->payload.vec.z = player->renderPosition.z;
+    arg0->payload.vec.x = player->state.renderPosition.x;
+    arg0->payload.vec.y = player->state.renderPosition.y;
+    arg0->payload.vec.z = player->state.renderPosition.z;
 
     angles = &gRaceItemBreakParticleAngles[arg0->angleIndex & 0xFF];
     makeFixedRotationXY(sp3C, angles->x, angles->y);
@@ -666,14 +666,14 @@ void spawnRaceItemBreakParticles(s16 playerIndex, s16 itemIndex) {
         if (itemType == 1) {
             enqueuePositionalSoundEffect(
                 SFX_ITEM_BREAK,
-                (Vec3i *)&gRacePlayers[playerIndex].pos,
+                (Vec3i *)&gRacePlayers[playerIndex].state.pos,
                 0x7F,
                 SFX_PRIORITY_NORMAL
             );
         } else {
             enqueuePositionalSoundEffect(
                 SFX_ITEM_IMPACT,
-                (Vec3i *)&gRacePlayers[playerIndex].pos,
+                (Vec3i *)&gRacePlayers[playerIndex].state.pos,
                 0x7F,
                 SFX_PRIORITY_NORMAL
             );
@@ -762,11 +762,11 @@ void updateRacePlayerRecoverySparkle(RaceItemEffectActor *arg0) {
 void initRacePlayerRecoverySparkle(RaceItemEffectActor *arg0) {
     arg0->vector24.fields.word28.bytes.phase = -1;
     arg0->payload.vec.x =
-        gRacePlayers[arg0->task.userId].modelPartTransforms[6].translation.x + ((randomNextMain() - 0x80) << 10);
+        gRacePlayers[arg0->task.userId].state.modelPartTransforms[6].translation.x + ((randomNextMain() - 0x80) << 10);
     arg0->payload.vec.y =
-        gRacePlayers[arg0->task.userId].modelPartTransforms[6].translation.y + ((randomNextMain() - 0x80) << 10);
+        gRacePlayers[arg0->task.userId].state.modelPartTransforms[6].translation.y + ((randomNextMain() - 0x80) << 10);
     arg0->payload.vec.z =
-        gRacePlayers[arg0->task.userId].modelPartTransforms[6].translation.z + ((randomNextMain() - 0x80) << 10);
+        gRacePlayers[arg0->task.userId].state.modelPartTransforms[6].translation.z + ((randomNextMain() - 0x80) << 10);
     updateRacePlayerRecoverySparkle(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerRecoverySparkle);
 }
@@ -840,12 +840,12 @@ void updateRacePlayerYellowTrickSparkles(RaceItemFollowActor *arg0) {
     if (gRaceUpdatePaused == 0) {
         arg0->timer++;
         player = &gRacePlayers[arg0->task.userId];
-        arg0->pos1.x = arg0->offset1.x + player->renderPosition.x;
-        arg0->pos1.y = arg0->offset1.y + player->renderPosition.y;
-        arg0->pos1.z = arg0->offset1.z + player->renderPosition.z;
-        arg0->pos2.x = arg0->offset2.x + player->renderPosition.x;
-        arg0->pos2.y = arg0->offset2.y + player->renderPosition.y;
-        arg0->pos2.z = arg0->offset2.z + player->renderPosition.z;
+        arg0->pos1.x = arg0->offset1.x + player->state.renderPosition.x;
+        arg0->pos1.y = arg0->offset1.y + player->state.renderPosition.y;
+        arg0->pos1.z = arg0->offset1.z + player->state.renderPosition.z;
+        arg0->pos2.x = arg0->offset2.x + player->state.renderPosition.x;
+        arg0->pos2.y = arg0->offset2.y + player->state.renderPosition.y;
+        arg0->pos2.z = arg0->offset2.z + player->state.renderPosition.z;
         if (arg0->timer == 0x18) {
             removeCallbackTask(arg0);
             return;
@@ -862,20 +862,20 @@ void initRacePlayerYellowTrickSparkles(RaceItemFollowActor *arg0) {
 
     arg0->timer = -1;
     player = &gRacePlayers[arg0->task.userId];
-    if (player->stateFlags & 0x400) {
-        arg0->offset1.x = player->boardContactPoints[0].x - player->renderPosition.x;
-        arg0->offset1.y = player->boardContactPoints[0].y - player->renderPosition.y;
-        arg0->offset1.z = player->boardContactPoints[0].z - player->renderPosition.z;
-        arg0->offset2.x = player->boardContactPoints[2].x - player->renderPosition.x;
-        arg0->offset2.y = player->boardContactPoints[2].y - player->renderPosition.y;
-        arg0->offset2.z = player->boardContactPoints[2].z - player->renderPosition.z;
+    if (player->state.stateFlags & 0x400) {
+        arg0->offset1.x = player->state.boardContactPoints[0].x - player->state.renderPosition.x;
+        arg0->offset1.y = player->state.boardContactPoints[0].y - player->state.renderPosition.y;
+        arg0->offset1.z = player->state.boardContactPoints[0].z - player->state.renderPosition.z;
+        arg0->offset2.x = player->state.boardContactPoints[2].x - player->state.renderPosition.x;
+        arg0->offset2.y = player->state.boardContactPoints[2].y - player->state.renderPosition.y;
+        arg0->offset2.z = player->state.boardContactPoints[2].z - player->state.renderPosition.z;
     } else {
-        arg0->offset1.x = player->boardContactPoints[1].x - player->renderPosition.x;
-        arg0->offset1.y = player->boardContactPoints[1].y - player->renderPosition.y;
-        arg0->offset1.z = player->boardContactPoints[1].z - player->renderPosition.z;
-        arg0->offset2.x = player->boardContactPoints[3].x - player->renderPosition.x;
-        arg0->offset2.y = player->boardContactPoints[3].y - player->renderPosition.y;
-        arg0->offset2.z = player->boardContactPoints[3].z - player->renderPosition.z;
+        arg0->offset1.x = player->state.boardContactPoints[1].x - player->state.renderPosition.x;
+        arg0->offset1.y = player->state.boardContactPoints[1].y - player->state.renderPosition.y;
+        arg0->offset1.z = player->state.boardContactPoints[1].z - player->state.renderPosition.z;
+        arg0->offset2.x = player->state.boardContactPoints[3].x - player->state.renderPosition.x;
+        arg0->offset2.y = player->state.boardContactPoints[3].y - player->state.renderPosition.y;
+        arg0->offset2.z = player->state.boardContactPoints[3].z - player->state.renderPosition.z;
     }
     updateRacePlayerYellowTrickSparkles(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerYellowTrickSparkles);
@@ -1162,12 +1162,12 @@ void updateRacePlayerBlueTrickSparkles(RaceItemFollowActor *arg0) {
     if (gRaceUpdatePaused == 0) {
         arg0->timer++;
         player = &gRacePlayers[arg0->task.userId];
-        arg0->pos1.x = arg0->offset1.x + player->renderPosition.x;
-        arg0->pos1.y = arg0->offset1.y + player->renderPosition.y;
-        arg0->pos1.z = arg0->offset1.z + player->renderPosition.z;
-        arg0->pos2.x = arg0->offset2.x + player->renderPosition.x;
-        arg0->pos2.y = arg0->offset2.y + player->renderPosition.y;
-        arg0->pos2.z = arg0->offset2.z + player->renderPosition.z;
+        arg0->pos1.x = arg0->offset1.x + player->state.renderPosition.x;
+        arg0->pos1.y = arg0->offset1.y + player->state.renderPosition.y;
+        arg0->pos1.z = arg0->offset1.z + player->state.renderPosition.z;
+        arg0->pos2.x = arg0->offset2.x + player->state.renderPosition.x;
+        arg0->pos2.y = arg0->offset2.y + player->state.renderPosition.y;
+        arg0->pos2.z = arg0->offset2.z + player->state.renderPosition.z;
         if (arg0->timer == 0x18) {
             removeCallbackTask(arg0);
             return;
@@ -1184,20 +1184,20 @@ void initRacePlayerBlueTrickSparkles(RaceItemFollowActor *arg0) {
 
     arg0->timer = -1;
     player = &gRacePlayers[arg0->task.userId];
-    if (player->stateFlags & 0x400) {
-        arg0->offset1.x = player->boardContactPoints[0].x - player->renderPosition.x;
-        arg0->offset1.y = player->boardContactPoints[0].y - player->renderPosition.y;
-        arg0->offset1.z = player->boardContactPoints[0].z - player->renderPosition.z;
-        arg0->offset2.x = player->boardContactPoints[2].x - player->renderPosition.x;
-        arg0->offset2.y = player->boardContactPoints[2].y - player->renderPosition.y;
-        arg0->offset2.z = player->boardContactPoints[2].z - player->renderPosition.z;
+    if (player->state.stateFlags & 0x400) {
+        arg0->offset1.x = player->state.boardContactPoints[0].x - player->state.renderPosition.x;
+        arg0->offset1.y = player->state.boardContactPoints[0].y - player->state.renderPosition.y;
+        arg0->offset1.z = player->state.boardContactPoints[0].z - player->state.renderPosition.z;
+        arg0->offset2.x = player->state.boardContactPoints[2].x - player->state.renderPosition.x;
+        arg0->offset2.y = player->state.boardContactPoints[2].y - player->state.renderPosition.y;
+        arg0->offset2.z = player->state.boardContactPoints[2].z - player->state.renderPosition.z;
     } else {
-        arg0->offset1.x = player->boardContactPoints[1].x - player->renderPosition.x;
-        arg0->offset1.y = player->boardContactPoints[1].y - player->renderPosition.y;
-        arg0->offset1.z = player->boardContactPoints[1].z - player->renderPosition.z;
-        arg0->offset2.x = player->boardContactPoints[3].x - player->renderPosition.x;
-        arg0->offset2.y = player->boardContactPoints[3].y - player->renderPosition.y;
-        arg0->offset2.z = player->boardContactPoints[3].z - player->renderPosition.z;
+        arg0->offset1.x = player->state.boardContactPoints[1].x - player->state.renderPosition.x;
+        arg0->offset1.y = player->state.boardContactPoints[1].y - player->state.renderPosition.y;
+        arg0->offset1.z = player->state.boardContactPoints[1].z - player->state.renderPosition.z;
+        arg0->offset2.x = player->state.boardContactPoints[3].x - player->state.renderPosition.x;
+        arg0->offset2.y = player->state.boardContactPoints[3].y - player->state.renderPosition.y;
+        arg0->offset2.z = player->state.boardContactPoints[3].z - player->state.renderPosition.z;
     }
     updateRacePlayerBlueTrickSparkles(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerBlueTrickSparkles);

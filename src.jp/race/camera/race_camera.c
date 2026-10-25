@@ -400,21 +400,21 @@ void initRaceCameraFollowPlayer(void) {
     offset.x = 0;
     offset.z = 0x400000;
     player = &gRacePlayers[gCurrentRaceCamera->playerIndex];
-    if (player->stateFlags & 0x400) {
+    if (player->state.stateFlags & 0x400) {
         offset.z = 0xFFC00000;
         player = (RacePlayer *)(s32)&gRacePlayers[gCurrentRaceCamera->playerIndex];
     }
-    makeFixedRotationY(matrix, player->facingAngle);
+    makeFixedRotationY(matrix, player->state.facingAngle);
     transformVec3iByFixedMatrix(matrix, &offset, &transformedOffset);
-    gCurrentRaceCamera->focus.x = gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.x;
-    gCurrentRaceCamera->focus.y = gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.y;
-    gCurrentRaceCamera->focus.z = gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.z;
-    gCurrentRaceCamera->pos.x = gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.x + transformedOffset.x;
-    gCurrentRaceCamera->pos.y = gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.y + transformedOffset.y;
-    gCurrentRaceCamera->pos.z = gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.z + transformedOffset.z;
-    gCurrentRaceCamera->prevPos.x = gRacePlayers[gCurrentRaceCamera->playerIndex].pos.x;
-    gCurrentRaceCamera->prevPos.y = gRacePlayers[gCurrentRaceCamera->playerIndex].pos.y;
-    gCurrentRaceCamera->prevPos.z = gRacePlayers[gCurrentRaceCamera->playerIndex].pos.z;
+    gCurrentRaceCamera->focus.x = gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.x;
+    gCurrentRaceCamera->focus.y = gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.y;
+    gCurrentRaceCamera->focus.z = gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.z;
+    gCurrentRaceCamera->pos.x = gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.x + transformedOffset.x;
+    gCurrentRaceCamera->pos.y = gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.y + transformedOffset.y;
+    gCurrentRaceCamera->pos.z = gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.z + transformedOffset.z;
+    gCurrentRaceCamera->prevPos.x = gRacePlayers[gCurrentRaceCamera->playerIndex].state.pos.x;
+    gCurrentRaceCamera->prevPos.y = gRacePlayers[gCurrentRaceCamera->playerIndex].state.pos.y;
+    gCurrentRaceCamera->prevPos.z = gRacePlayers[gCurrentRaceCamera->playerIndex].state.pos.z;
     gCurrentRaceCamera->distance = 0;
     gCurrentRaceCamera->unk28 = 0x012C0000;
     gCurrentRaceCamera->update = updateRaceCameraFollowPlayer;
@@ -433,11 +433,11 @@ void updateRaceCameraFollowPlayer(void) {
 
     if (gRaceUpdatePaused == 0) {
         gCurrentRaceCamera->focus.x +=
-            (gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.x - gCurrentRaceCamera->focus.x) >> 1;
+            (gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.x - gCurrentRaceCamera->focus.x) >> 1;
         gCurrentRaceCamera->focus.y +=
-            (gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.y - gCurrentRaceCamera->focus.y) >> 1;
+            (gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.y - gCurrentRaceCamera->focus.y) >> 1;
         gCurrentRaceCamera->focus.z +=
-            (gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.z - gCurrentRaceCamera->focus.z) >> 1;
+            (gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.z - gCurrentRaceCamera->focus.z) >> 1;
 
         x = gCurrentRaceCamera->pos.x;
         y = gCurrentRaceCamera->pos.y;
@@ -483,9 +483,9 @@ void updateRaceCameraFollowPlayer(void) {
             z = gCurrentRaceCamera->focus.z - dz;
         }
 
-        if (!(gRacePlayers[gCurrentRaceCamera->playerIndex].stateFlags & 0x1000)) {
+        if (!(gRacePlayers[gCurrentRaceCamera->playerIndex].state.stateFlags & 0x1000)) {
             distance =
-                findRaceCourseSurfaceFromHint(gRacePlayers[gCurrentRaceCamera->playerIndex].coursePathIndex, x, z);
+                findRaceCourseSurfaceFromHint(gRacePlayers[gCurrentRaceCamera->playerIndex].state.coursePathIndex, x, z);
             delta = getRaceCourseSurfaceHeight((s16)distance, x, z) - 0x40000;
 
             if (y < delta) {
@@ -499,7 +499,7 @@ void updateRaceCameraFollowPlayer(void) {
 
         delta = 0x12C0000;
 
-        if (gRacePlayers[gCurrentRaceCamera->playerIndex].stateFlags & 0x800) {
+        if (gRacePlayers[gCurrentRaceCamera->playerIndex].state.stateFlags & 0x800) {
             delta = 0;
         }
 
@@ -517,7 +517,7 @@ void updateRaceCameraFollowPlayer(void) {
 
         delta = 0;
 
-        if (gRacePlayers[gCurrentRaceCamera->playerIndex].stateFlags & 0x800) {
+        if (gRacePlayers[gCurrentRaceCamera->playerIndex].state.stateFlags & 0x800) {
             delta = 0x280000;
         }
 
@@ -534,9 +534,9 @@ void updateRaceCameraFollowPlayer(void) {
         gCurrentRaceCamera->distance += delta;
     }
 
-    gCurrentRaceCamera->prevPos.x = gRacePlayers[gCurrentRaceCamera->playerIndex].pos.x;
-    gCurrentRaceCamera->prevPos.y = gRacePlayers[gCurrentRaceCamera->playerIndex].pos.y;
-    gCurrentRaceCamera->prevPos.z = gRacePlayers[gCurrentRaceCamera->playerIndex].pos.z;
+    gCurrentRaceCamera->prevPos.x = gRacePlayers[gCurrentRaceCamera->playerIndex].state.pos.x;
+    gCurrentRaceCamera->prevPos.y = gRacePlayers[gCurrentRaceCamera->playerIndex].state.pos.y;
+    gCurrentRaceCamera->prevPos.z = gRacePlayers[gCurrentRaceCamera->playerIndex].state.pos.z;
 
     updateRaceCameraAlternateLookAtTransform();
 }
@@ -557,11 +557,11 @@ void updateRaceCameraCourseStart(void) {
 
     if (gRaceUpdatePaused == 0) {
         gCurrentRaceCamera->focus.x +=
-            (gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.x - gCurrentRaceCamera->focus.x) >> 1;
+            (gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.x - gCurrentRaceCamera->focus.x) >> 1;
         gCurrentRaceCamera->focus.y +=
-            (gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.y - gCurrentRaceCamera->focus.y) >> 1;
+            (gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.y - gCurrentRaceCamera->focus.y) >> 1;
         gCurrentRaceCamera->focus.z +=
-            (gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.z - gCurrentRaceCamera->focus.z) >> 1;
+            (gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.z - gCurrentRaceCamera->focus.z) >> 1;
 
         diff = 0x640000 - gCurrentRaceCamera->unk28;
         if (diff >= 0x10001) {
@@ -613,11 +613,11 @@ void initRaceCameraFixedPositionFollow(void) {
 void updateRaceCameraFixedPositionFollow(void) {
     if (gRaceUpdatePaused == 0) {
         gCurrentRaceCamera->focus.x +=
-            (gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.x - gCurrentRaceCamera->focus.x) >> 1;
+            (gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.x - gCurrentRaceCamera->focus.x) >> 1;
         gCurrentRaceCamera->focus.y +=
-            (gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.y - gCurrentRaceCamera->focus.y) >> 1;
+            (gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.y - gCurrentRaceCamera->focus.y) >> 1;
         gCurrentRaceCamera->focus.z +=
-            (gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.z - gCurrentRaceCamera->focus.z) >> 1;
+            (gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.z - gCurrentRaceCamera->focus.z) >> 1;
     }
     updateRaceCameraLookAtTransform();
 }
@@ -643,20 +643,20 @@ void updateRaceCameraChase(void) {
 
     if (gRaceUpdatePaused == 0) {
         gCurrentRaceCamera->focus.x +=
-            (gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.x - gCurrentRaceCamera->focus.x) >> 1;
+            (gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.x - gCurrentRaceCamera->focus.x) >> 1;
         gCurrentRaceCamera->focus.y +=
-            (gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.y - gCurrentRaceCamera->focus.y) >> 1;
+            (gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.y - gCurrentRaceCamera->focus.y) >> 1;
         gCurrentRaceCamera->focus.z +=
-            (gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.z - gCurrentRaceCamera->focus.z) >> 1;
-        targetYaw = gRacePlayers[gCurrentRaceCamera->playerIndex].facingAngle - 0x300;
+            (gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.z - gCurrentRaceCamera->focus.z) >> 1;
+        targetYaw = gRacePlayers[gCurrentRaceCamera->playerIndex].state.facingAngle - 0x300;
         blockedAngles = targetYaw * 0;
         i = 0;
 
         if (gRacePlayerCount > 0) {
             do {
                 if (i != gCurrentRaceCamera->playerIndex) {
-                    dx = gRacePlayers[gCurrentRaceCamera->playerIndex].pos.x - gRacePlayers[i].pos.x;
-                    dz = gRacePlayers[gCurrentRaceCamera->playerIndex].pos.z - gRacePlayers[i].pos.z;
+                    dx = gRacePlayers[gCurrentRaceCamera->playerIndex].state.pos.x - gRacePlayers[i].state.pos.x;
+                    dz = gRacePlayers[gCurrentRaceCamera->playerIndex].state.pos.z - gRacePlayers[i].state.pos.z;
                     if ((s64)dx * dx + (s64)dz * dz < 0xE1000000000LL) {
                         angle = calculateFixedAngleFromDeltaXZ(dx, dz) + 0x800;
                         blockedAngles |= 1 << (s16)((((angle - targetYaw) + 0x100) & 0xFFF) >> 9);
@@ -716,9 +716,9 @@ void updateRaceCameraChase(void) {
         }
     }
 
-    gCurrentRaceCamera->prevPos.x = gRacePlayers[gCurrentRaceCamera->playerIndex].pos.x;
-    gCurrentRaceCamera->prevPos.y = gRacePlayers[gCurrentRaceCamera->playerIndex].pos.y;
-    gCurrentRaceCamera->prevPos.z = gRacePlayers[gCurrentRaceCamera->playerIndex].pos.z;
+    gCurrentRaceCamera->prevPos.x = gRacePlayers[gCurrentRaceCamera->playerIndex].state.pos.x;
+    gCurrentRaceCamera->prevPos.y = gRacePlayers[gCurrentRaceCamera->playerIndex].state.pos.y;
+    gCurrentRaceCamera->prevPos.z = gRacePlayers[gCurrentRaceCamera->playerIndex].state.pos.z;
     updateRaceCameraLookAtTransform();
 }
 
@@ -733,11 +733,11 @@ void updateRaceCameraFinishOrbit(void) {
 
     if (gRaceUpdatePaused == 0) {
         gCurrentRaceCamera->focus.x +=
-            (gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.x - gCurrentRaceCamera->focus.x) >> 1;
+            (gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.x - gCurrentRaceCamera->focus.x) >> 1;
         gCurrentRaceCamera->focus.y +=
-            (gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.y - gCurrentRaceCamera->focus.y) >> 1;
+            (gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.y - gCurrentRaceCamera->focus.y) >> 1;
         gCurrentRaceCamera->focus.z +=
-            (gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.z - gCurrentRaceCamera->focus.z) >> 1;
+            (gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.z - gCurrentRaceCamera->focus.z) >> 1;
 
         dx = gCurrentRaceCamera->pos.x - gCurrentRaceCamera->focus.x;
         dz = gCurrentRaceCamera->pos.z - gCurrentRaceCamera->focus.z;
@@ -754,9 +754,9 @@ void updateRaceCameraFinishOrbit(void) {
         gCurrentRaceCamera->unk28 += (0x960000 - gCurrentRaceCamera->unk28) >> 1;
     }
 
-    gCurrentRaceCamera->prevPos.x = gRacePlayers[gCurrentRaceCamera->playerIndex].pos.x;
-    gCurrentRaceCamera->prevPos.y = gRacePlayers[gCurrentRaceCamera->playerIndex].pos.y;
-    gCurrentRaceCamera->prevPos.z = gRacePlayers[gCurrentRaceCamera->playerIndex].pos.z;
+    gCurrentRaceCamera->prevPos.x = gRacePlayers[gCurrentRaceCamera->playerIndex].state.pos.x;
+    gCurrentRaceCamera->prevPos.y = gRacePlayers[gCurrentRaceCamera->playerIndex].state.pos.y;
+    gCurrentRaceCamera->prevPos.z = gRacePlayers[gCurrentRaceCamera->playerIndex].state.pos.z;
     updateRaceCameraLookAtTransform();
 }
 
@@ -781,9 +781,9 @@ void initRaceCameraReplayPosition(void) {
 
 void updateRaceCameraReplayPosition(void) {
 
-    gCurrentRaceCamera->focus.x = gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.x;
-    gCurrentRaceCamera->focus.y = gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.y;
-    gCurrentRaceCamera->focus.z = gRacePlayers[gCurrentRaceCamera->playerIndex].projectedPos.z;
+    gCurrentRaceCamera->focus.x = gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.x;
+    gCurrentRaceCamera->focus.y = gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.y;
+    gCurrentRaceCamera->focus.z = gRacePlayers[gCurrentRaceCamera->playerIndex].state.projectedPos.z;
     updateRaceCameraLookAtTransform();
 }
 
@@ -904,11 +904,11 @@ void updateRaceCameraPositionTransition(void) {
                                 gRaceCameraPositionTransitions[gCurrentRaceCamera->mode - 16].startPos.z;
 
     gCurrentRaceCamera->focus.x =
-        gRacePlayers[gRaceCameraPositionTransitions[gCurrentRaceCamera->mode - 16].playerIndex].projectedPos.x;
+        gRacePlayers[gRaceCameraPositionTransitions[gCurrentRaceCamera->mode - 16].playerIndex].state.projectedPos.x;
     gCurrentRaceCamera->focus.y =
-        gRacePlayers[gRaceCameraPositionTransitions[gCurrentRaceCamera->mode - 16].playerIndex].projectedPos.y;
+        gRacePlayers[gRaceCameraPositionTransitions[gCurrentRaceCamera->mode - 16].playerIndex].state.projectedPos.y;
     gCurrentRaceCamera->focus.z =
-        gRacePlayers[gRaceCameraPositionTransitions[gCurrentRaceCamera->mode - 16].playerIndex].projectedPos.z;
+        gRacePlayers[gRaceCameraPositionTransitions[gCurrentRaceCamera->mode - 16].playerIndex].state.projectedPos.z;
     gCurrentRaceCamera->prevPos.x = gCurrentRaceCamera->pos.x;
     gCurrentRaceCamera->prevPos.y = gCurrentRaceCamera->pos.y;
     gCurrentRaceCamera->prevPos.z = gCurrentRaceCamera->pos.z;
@@ -938,10 +938,10 @@ void initRaceCameraIntroPan(void) {
 
     gCurrentRaceCamera->pos.x = 0;
     gCurrentRaceCamera->pos.y = 0;
-    gCurrentRaceCamera->pos.z = player->pos.z + 0xFE600000;
-    gCurrentRaceCamera->focus.x = player->pos.x;
-    gCurrentRaceCamera->focus.y = player->pos.y + 0xF0000;
-    gCurrentRaceCamera->focus.z = player->pos.z;
+    gCurrentRaceCamera->pos.z = player->state.pos.z + 0xFE600000;
+    gCurrentRaceCamera->focus.x = player->state.pos.x;
+    gCurrentRaceCamera->focus.y = player->state.pos.y + 0xF0000;
+    gCurrentRaceCamera->focus.z = player->state.pos.z;
     gCurrentRaceCamera->timer = 0;
     gCurrentRaceCamera->distance = 0;
     gCurrentRaceCamera->unk28 = 0;

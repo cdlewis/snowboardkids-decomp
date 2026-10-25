@@ -1456,10 +1456,10 @@ void collidePlayerWithCourseTriggerVolume(RacePlayer *player, RaceCourseTriggerE
         -gCourseTriggerEntries[trigger->task.userId].yaw
     );
 
-    if ((player->stateFlags & 0x2000) == 0) {
-        delta.x = player->pos.x - gCourseTriggerEntries[trigger->task.userId].position.x;
-        delta.y = player->collisionBottomY - gCourseTriggerEntries[trigger->task.userId].position.y;
-        delta.z = player->pos.z - gCourseTriggerEntries[trigger->task.userId].position.z;
+    if ((player->state.stateFlags & 0x2000) == 0) {
+        delta.x = player->state.pos.x - gCourseTriggerEntries[trigger->task.userId].position.x;
+        delta.y = player->state.collisionBottomY - gCourseTriggerEntries[trigger->task.userId].position.y;
+        delta.z = player->state.pos.z - gCourseTriggerEntries[trigger->task.userId].position.z;
         transformVec3iByFixedMatrix(matrix, &delta, &transformed);
 
         if ((transformed.z >= -trigger->halfDepth) && (trigger->halfDepth >= transformed.z) &&
@@ -1473,17 +1473,17 @@ void collidePlayerWithCourseTriggerVolume(RacePlayer *player, RaceCourseTriggerE
             makeFixedRotationXY(matrix, entry->pitch, entry->yaw);
             transformVec3iByFixedMatrix(matrix, &delta, &transformed);
 
-            player->pos.x += transformed.x;
-            player->collisionBottomY += transformed.y;
-            player->pos.z += transformed.z;
-            player->stateFlags |= 0x02000000;
-            player->unk332 = gCourseTriggerEntries[trigger->task.userId].yaw ^ 0;
-            player->unk334 = gCourseTriggerEntries[trigger->task.userId].pitch;
+            player->state.pos.x += transformed.x;
+            player->state.collisionBottomY += transformed.y;
+            player->state.pos.z += transformed.z;
+            player->state.stateFlags |= 0x02000000;
+            player->state.unk332 = gCourseTriggerEntries[trigger->task.userId].yaw ^ 0;
+            player->state.unk334 = gCourseTriggerEntries[trigger->task.userId].pitch;
             return;
         }
     }
 
-    if (player->unk578 == 0) {
+    if (player->state.unk578 == 0) {
         pushRacePlayerOutOfCylinder(
             &trigger->positiveDepthCollisionCenter,
             trigger->halfWidth + 0x30000,
@@ -1498,20 +1498,20 @@ void collidePlayerWithCourseTriggerVolume(RacePlayer *player, RaceCourseTriggerE
         );
     }
 
-    delta.x = player->pos.x - gCourseTriggerEntries[trigger->task.userId].position.x;
-    delta.y = player->collisionBottomY - gCourseTriggerEntries[trigger->task.userId].position.y;
-    delta.z = player->pos.z - gCourseTriggerEntries[trigger->task.userId].position.z;
+    delta.x = player->state.pos.x - gCourseTriggerEntries[trigger->task.userId].position.x;
+    delta.y = player->state.collisionBottomY - gCourseTriggerEntries[trigger->task.userId].position.y;
+    delta.z = player->state.pos.z - gCourseTriggerEntries[trigger->task.userId].position.z;
     transformVec3iByFixedMatrix(matrix, &delta, &transformed);
 
     if (transformed.y > 0 || -0x160000 > transformed.y || -trigger->halfDepth > transformed.z) {
         return;
     }
     if (trigger->halfDepth < transformed.z ||
-        transformed.x < ((-trigger->halfWidth - player->collisionRadius) - 0x30000)) {
+        transformed.x < ((-trigger->halfWidth - player->state.collisionRadius) - 0x30000)) {
         return;
     }
 
-    limit = trigger->halfWidth + player->collisionRadius;
+    limit = trigger->halfWidth + player->state.collisionRadius;
     if ((limit + 0x30000) < transformed.x) {
         return;
     }
@@ -1535,8 +1535,8 @@ void collidePlayerWithCourseTriggerVolume(RacePlayer *player, RaceCourseTriggerE
         delta.y = 0;
         delta.z = 0;
         transformVec3iByFixedMatrix(matrix, &delta, &transformed);
-        player->pos.x += transformed.x;
-        player->pos.z += transformed.z;
+        player->state.pos.x += transformed.x;
+        player->state.pos.z += transformed.z;
     }
 }
 

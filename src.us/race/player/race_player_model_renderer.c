@@ -166,44 +166,44 @@ void drawRacePlayerGroundShadow(RacePlayer *player) {
     s32 i;
 
     if (gRenderMatricesDirty != 0) {
-        player->stateFlags &= ~RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY;
-        player->shadowVtx = allocMenuRenderScratch(0x40);
-        if (player->shadowVtx == NULL) {
+        player->state.stateFlags &= ~RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY;
+        player->state.shadowVtx = allocMenuRenderScratch(0x40);
+        if (player->state.shadowVtx == NULL) {
             return;
         }
 
         for (i = 0; i < RACE_PLAYER_SHADOW_VERTEX_COUNT; i++) {
-            player->shadowVtx[i].v.ob[0] = (player->shadowCorners[i].x - player->shadowCorners[0].x) >> 14;
-            player->shadowVtx[i].v.ob[1] = (player->shadowCorners[i].y - player->shadowCorners[0].y) >> 14;
-            player->shadowVtx[i].v.ob[2] = (player->shadowCorners[i].z - player->shadowCorners[0].z) >> 14;
-            player->shadowVtx[i].v.flag = 0;
-            player->shadowVtx[i].v.cn[0] = 0;
-            player->shadowVtx[i].v.cn[1] = 0;
-            player->shadowVtx[i].v.cn[2] = 0;
-            player->shadowVtx[i].v.cn[3] = 0x30;
+            player->state.shadowVtx[i].v.ob[0] = (player->state.shadowCorners[i].x - player->state.shadowCorners[0].x) >> 14;
+            player->state.shadowVtx[i].v.ob[1] = (player->state.shadowCorners[i].y - player->state.shadowCorners[0].y) >> 14;
+            player->state.shadowVtx[i].v.ob[2] = (player->state.shadowCorners[i].z - player->state.shadowCorners[0].z) >> 14;
+            player->state.shadowVtx[i].v.flag = 0;
+            player->state.shadowVtx[i].v.cn[0] = 0;
+            player->state.shadowVtx[i].v.cn[1] = 0;
+            player->state.shadowVtx[i].v.cn[2] = 0;
+            player->state.shadowVtx[i].v.cn[3] = 0x30;
         }
 
-        player->shadowMtx = allocMenuRenderScratch(0x100);
-        if (player->shadowMtx == NULL) {
+        player->state.shadowMtx = allocMenuRenderScratch(0x100);
+        if (player->state.shadowMtx == NULL) {
             return;
         }
 
-        *player->shadowMtx = gRacePlayerShadowMatrixTemplate;
+        *player->state.shadowMtx = gRacePlayerShadowMatrixTemplate;
 
-        player->shadowMtx->m[1][2] =
-            (player->shadowCorners[0].x & 0xFFFF0000) | (((player->shadowCorners[0].y + 0xA000) >> 16) & 0xFFFF);
-        player->shadowMtx->m[1][3] = (player->shadowCorners[0].z & 0xFFFF0000) | 1;
-        player->shadowMtx->m[3][2] =
-            ((player->shadowCorners[0].x << 16) & 0xFFFF0000) | ((player->shadowCorners[0].y + 0xA000) & 0xFFFF);
-        player->shadowMtx->m[3][3] = (player->shadowCorners[0].z << 16) & 0xFFFF0000;
-        player->stateFlags |= RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY;
+        player->state.shadowMtx->m[1][2] =
+            (player->state.shadowCorners[0].x & 0xFFFF0000) | (((player->state.shadowCorners[0].y + 0xA000) >> 16) & 0xFFFF);
+        player->state.shadowMtx->m[1][3] = (player->state.shadowCorners[0].z & 0xFFFF0000) | 1;
+        player->state.shadowMtx->m[3][2] =
+            ((player->state.shadowCorners[0].x << 16) & 0xFFFF0000) | ((player->state.shadowCorners[0].y + 0xA000) & 0xFFFF);
+        player->state.shadowMtx->m[3][3] = (player->state.shadowCorners[0].z << 16) & 0xFFFF0000;
+        player->state.stateFlags |= RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY;
     }
 
-    if (isPositionNearCurrentRaceViewportCamera(player->shadowCorners) != 0 &&
-        (player->stateFlags & RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(player->state.shadowCorners) != 0 &&
+        (player->state.stateFlags & RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY) != 0) {
         gSPDisplayList(gRegionAllocPtr++, gRacePlayerShadowRenderSetupDisplayList);
-        gSPMatrix(gRegionAllocPtr++, player->shadowMtx, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPVertex(gRegionAllocPtr++, player->shadowVtx, RACE_PLAYER_SHADOW_VERTEX_COUNT, 0);
+        gSPMatrix(gRegionAllocPtr++, player->state.shadowMtx, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPVertex(gRegionAllocPtr++, player->state.shadowVtx, RACE_PLAYER_SHADOW_VERTEX_COUNT, 0);
         gSP1Quadrangle(gRegionAllocPtr++, 1, 3, 2, 0, 0);
         gSP1Quadrangle(gRegionAllocPtr++, 2, 3, 1, 0, 0);
     }
@@ -293,37 +293,37 @@ void drawRacePlayerModel(RacePlayer *player) {
 
     countPlayer = player;
     if (gRenderMatricesDirty != 0) {
-        player->stateFlags |= RACE_PLAYER_MODEL_RENDERER_FLAG_MODEL_MATRICES_READY;
+        player->state.stateFlags |= RACE_PLAYER_MODEL_RENDERER_FLAG_MODEL_MATRICES_READY;
         i = 0;
-        if (player->modelPartCount > 0) {
+        if (player->state.modelPartCount > 0) {
             partMatrixPlayer = player;
-            partSource = player->modelPartTransforms;
+            partSource = player->state.modelPartTransforms;
             do {
-                partMatrixPlayer->modelPartMatrices[0] = allocFixedTransformMatrix(partSource);
-                if (partMatrixPlayer->modelPartMatrices[0] == NULL) {
-                    player->stateFlags &= ~RACE_PLAYER_MODEL_RENDERER_FLAG_MODEL_MATRICES_READY;
+                partMatrixPlayer->state.modelPartMatrices[0] = allocFixedTransformMatrix(partSource);
+                if (partMatrixPlayer->state.modelPartMatrices[0] == NULL) {
+                    player->state.stateFlags &= ~RACE_PLAYER_MODEL_RENDERER_FLAG_MODEL_MATRICES_READY;
                 }
                 i++;
                 // Advance one matrix slot while retaining the source's matching induction-variable shape.
                 partMatrixPlayer = (RacePlayer *)((Mtx **)partMatrixPlayer + 1);
                 partSource++;
-            } while (i < countPlayer->modelPartCount);
+            } while (i < countPlayer->state.modelPartCount);
         }
     }
 
     drawPlayer = player;
-    if ((drawPlayer->stateFlags & RACE_PLAYER_MODEL_RENDERER_FLAG_MODEL_MATRICES_READY) == 0) {
+    if ((drawPlayer->state.stateFlags & RACE_PLAYER_MODEL_RENDERER_FLAG_MODEL_MATRICES_READY) == 0) {
         return;
     }
 
     drawSnowboardModel(
-        drawPlayer->modelPartMatrices[0],
+        drawPlayer->state.modelPartMatrices[0],
         drawPlayer->snowboardIndex,
         drawPlayer->snowboardTextureIndex
     );
 
-    if (drawPlayer->invisibilityTimer != 0) {
-        if (drawPlayer->invisibilityTimer < 0xA5 && drawPlayer->invisibilityTimer >= 0x10) {
+    if (drawPlayer->state.invisibilityTimer != 0) {
+        if (drawPlayer->state.invisibilityTimer < 0xA5 && drawPlayer->state.invisibilityTimer >= 0x10) {
             return;
         }
         if ((gUiBlinkTimer & 1) != 0) {
@@ -331,36 +331,36 @@ void drawRacePlayerModel(RacePlayer *player) {
         }
     }
 
-    if ((drawPlayer->stateFlags & RACE_PLAYER_MODEL_RENDERER_FLAG_HIDE_MESHES) == 0) {
+    if ((drawPlayer->state.stateFlags & RACE_PLAYER_MODEL_RENDERER_FLAG_HIDE_MESHES) == 0) {
         gDPPipeSync(gRegionAllocPtr++);
         gSPSegment(gRegionAllocPtr++, 2, getRelocatableHeapBlockBase(gAssetHandles[drawPlayer->playerIndex + 0xE]));
         gSPSegment(gRegionAllocPtr++, 3, getRelocatableHeapBlockBase(gAssetHandles[drawPlayer->playerIndex + 0x12]));
 
-        gSPMatrix(gRegionAllocPtr++, drawPlayer->modelPartMatrices[1], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->state.modelPartMatrices[1], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart0DisplayLists[drawPlayer->characterId]);
-        gSPMatrix(gRegionAllocPtr++, drawPlayer->modelPartMatrices[2], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->state.modelPartMatrices[2], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart1DisplayLists[drawPlayer->characterId]);
-        gSPMatrix(gRegionAllocPtr++, drawPlayer->modelPartMatrices[3], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->state.modelPartMatrices[3], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart2DisplayLists[drawPlayer->characterId]);
-        gSPMatrix(gRegionAllocPtr++, drawPlayer->modelPartMatrices[4], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->state.modelPartMatrices[4], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart3DisplayLists[drawPlayer->characterId]);
-        gSPMatrix(gRegionAllocPtr++, drawPlayer->modelPartMatrices[5], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->state.modelPartMatrices[5], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart4DisplayLists[drawPlayer->characterId]);
-        gSPMatrix(gRegionAllocPtr++, drawPlayer->modelPartMatrices[6], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->state.modelPartMatrices[6], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart5DisplayLists[drawPlayer->characterId]);
-        gSPMatrix(gRegionAllocPtr++, drawPlayer->modelPartMatrices[7], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->state.modelPartMatrices[7], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart6DisplayLists[drawPlayer->characterId]);
-        gSPMatrix(gRegionAllocPtr++, drawPlayer->modelPartMatrices[8], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->state.modelPartMatrices[8], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart7DisplayLists[drawPlayer->characterId]);
-        gSPMatrix(gRegionAllocPtr++, drawPlayer->modelPartMatrices[9], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->state.modelPartMatrices[9], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart8DisplayLists[drawPlayer->characterId]);
-        gSPMatrix(gRegionAllocPtr++, drawPlayer->modelPartMatrices[10], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->state.modelPartMatrices[10], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart9DisplayLists[drawPlayer->characterId]);
-        gSPMatrix(gRegionAllocPtr++, drawPlayer->modelPartMatrices[11], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->state.modelPartMatrices[11], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart10DisplayLists[drawPlayer->characterId]);
-        gSPMatrix(gRegionAllocPtr++, drawPlayer->modelPartMatrices[12], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->state.modelPartMatrices[12], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart11DisplayLists[drawPlayer->characterId]);
-        gSPMatrix(gRegionAllocPtr++, drawPlayer->modelPartMatrices[13], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->state.modelPartMatrices[13], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart12DisplayLists[drawPlayer->characterId]);
     }
 }
@@ -375,27 +375,27 @@ void drawRaceGhostPlayerModel(RacePlayer *player) {
 
     countPlayer = player;
     if (gRenderMatricesDirty != 0) {
-        player->stateFlags |= RACE_PLAYER_MODEL_RENDERER_FLAG_MODEL_MATRICES_READY;
+        player->state.stateFlags |= RACE_PLAYER_MODEL_RENDERER_FLAG_MODEL_MATRICES_READY;
         i = 0;
-        if (player->modelPartCount > 0) {
+        if (player->state.modelPartCount > 0) {
             partMatrixPlayer = player;
-            partSource = player->modelPartTransforms;
+            partSource = player->state.modelPartTransforms;
             do {
                 // Folded away by IDO, but preserves the target's saved-register allocation.
                 if ((partMatrixPlayer && partMatrixPlayer) && partMatrixPlayer) {}
-                partMatrixPlayer->modelPartMatrices[0] = allocFixedTransformMatrix(partSource);
-                if (partMatrixPlayer->modelPartMatrices[0] == NULL) {
-                    player->stateFlags &= ~RACE_PLAYER_MODEL_RENDERER_FLAG_MODEL_MATRICES_READY;
+                partMatrixPlayer->state.modelPartMatrices[0] = allocFixedTransformMatrix(partSource);
+                if (partMatrixPlayer->state.modelPartMatrices[0] == NULL) {
+                    player->state.stateFlags &= ~RACE_PLAYER_MODEL_RENDERER_FLAG_MODEL_MATRICES_READY;
                 }
                 i++;
                 // Advance one matrix slot while retaining the source's matching induction-variable shape.
                 partMatrixPlayer = (RacePlayer *)((Mtx **)partMatrixPlayer + 1);
                 partSource++;
-            } while (i < countPlayer->modelPartCount);
+            } while (i < countPlayer->state.modelPartCount);
         }
     }
 
-    if ((player->stateFlags & RACE_PLAYER_MODEL_RENDERER_FLAG_MODEL_MATRICES_READY) == 0) {
+    if ((player->state.stateFlags & RACE_PLAYER_MODEL_RENDERER_FLAG_MODEL_MATRICES_READY) == 0) {
         return;
     }
 
@@ -406,38 +406,38 @@ void drawRaceGhostPlayerModel(RacePlayer *player) {
     alphaPulse = (alphaPulse * 4) + 0x26;
     gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0, 0, 0, alphaPulse);
 
-    drawGhostSnowboardModel(player->modelPartMatrices[0], player->snowboardIndex, player->snowboardTextureIndex);
+    drawGhostSnowboardModel(player->state.modelPartMatrices[0], player->snowboardIndex, player->snowboardTextureIndex);
 
-    if ((player->stateFlags & RACE_PLAYER_MODEL_RENDERER_FLAG_HIDE_MESHES) == 0) {
+    if ((player->state.stateFlags & RACE_PLAYER_MODEL_RENDERER_FLAG_HIDE_MESHES) == 0) {
         gDPPipeSync(gRegionAllocPtr++);
         gSPSegment(gRegionAllocPtr++, 2, getRelocatableHeapBlockBase(gAssetHandles[player->playerIndex + 0xE]));
         segmentGfx = gRegionAllocPtr++;
         gSPSegment(segmentGfx, 3, getRelocatableHeapBlockBase(gAssetHandles[player->playerIndex + 0x12]));
-        gSPMatrix(gRegionAllocPtr++, player->modelPartMatrices[1], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, player->state.modelPartMatrices[1], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart0DisplayLists[player->characterId]);
-        gSPMatrix(gRegionAllocPtr++, player->modelPartMatrices[2], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, player->state.modelPartMatrices[2], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart1DisplayLists[player->characterId]);
-        gSPMatrix(gRegionAllocPtr++, player->modelPartMatrices[3], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, player->state.modelPartMatrices[3], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart2DisplayLists[player->characterId]);
-        gSPMatrix(gRegionAllocPtr++, player->modelPartMatrices[4], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, player->state.modelPartMatrices[4], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart3DisplayLists[player->characterId]);
-        gSPMatrix(gRegionAllocPtr++, player->modelPartMatrices[5], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, player->state.modelPartMatrices[5], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart4DisplayLists[player->characterId]);
-        gSPMatrix(gRegionAllocPtr++, player->modelPartMatrices[6], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, player->state.modelPartMatrices[6], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart5DisplayLists[player->characterId]);
-        gSPMatrix(gRegionAllocPtr++, player->modelPartMatrices[7], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, player->state.modelPartMatrices[7], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart6DisplayLists[player->characterId]);
-        gSPMatrix(gRegionAllocPtr++, player->modelPartMatrices[8], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, player->state.modelPartMatrices[8], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart7DisplayLists[player->characterId]);
-        gSPMatrix(gRegionAllocPtr++, player->modelPartMatrices[9], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, player->state.modelPartMatrices[9], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart8DisplayLists[player->characterId]);
-        gSPMatrix(gRegionAllocPtr++, player->modelPartMatrices[10], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, player->state.modelPartMatrices[10], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart9DisplayLists[player->characterId]);
-        gSPMatrix(gRegionAllocPtr++, player->modelPartMatrices[11], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, player->state.modelPartMatrices[11], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart10DisplayLists[player->characterId]);
-        gSPMatrix(gRegionAllocPtr++, player->modelPartMatrices[12], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, player->state.modelPartMatrices[12], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart11DisplayLists[player->characterId]);
-        gSPMatrix(gRegionAllocPtr++, player->modelPartMatrices[13], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, player->state.modelPartMatrices[13], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart12DisplayLists[player->characterId]);
     }
 }

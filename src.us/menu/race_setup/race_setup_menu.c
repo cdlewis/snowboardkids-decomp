@@ -338,7 +338,7 @@ void updateRaceSetupSaveMenu(void) {
                                 requestControllerPakSaveRead((u16)i);
                                 if (gControllerPakRetryCounts[i] == 0) {
                                     gRacePlayers[i].money = gGameSaveDataBuffer[i].money;
-                                    gRacePlayers[i].score = 0;
+                                    gRacePlayers[i].state.score = 0;
                                     gControllerPakStatusCodes[i] = CONTROLLER_PAK_STATUS_SAVE_FOUND;
                                     *(&gMenuChoicePromptState[i]) = 1;
                                 } else if (gControllerPakRetryCounts[i] == CONTROLLER_PAK_RETRY_LIMIT) {
