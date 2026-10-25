@@ -86,7 +86,7 @@ void initMultiplayerCourseSelectMenu(void) {
         gCourseSelectSelectedRows[l] = 0;
     }
     gFramebufferRenderInterval.value = 0;
-    D_800EC9E5 = 0;
+    gCharacterSelectFromRaceSetup = 0;
     gCourseSelectPurchaseFlowActive = 0;
     gCourseSelectInputLocked = 0;
     gCurrentGameTask->callbackData0 = 0xFF;

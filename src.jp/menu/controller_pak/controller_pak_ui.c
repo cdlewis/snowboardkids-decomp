@@ -16,7 +16,6 @@
 #include "game/menu/controller_pak/controller_pak_file_delete_flow.h"
 
 #ifdef NON_MATCHING
-extern u8 D_8010A2B4;
 #endif
 
 void drawControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
@@ -882,7 +881,7 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
     if (gControllerPakMenuCursorState) {
         drawMenuSpriteWithAlpha(
             arg0->positions[3].x,
-            arg0->positions[3].y + (D_8010A2B4 * 0x10),
+            arg0->positions[3].y + (gControllerPakMenuState.visibleFileIndex * 0x10),
             getRelocatableHeapBlockBase(gAssetHandles[0x21]),
             0,
             0x20,

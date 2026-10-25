@@ -484,10 +484,10 @@ extern Gfx gAlphaSpriteRenderModeDl[];
 #if defined(VERSION_JP)
 extern Vec3i D_800D6030[];
 extern RaceCoursePropModelEntry D_800D7650[];
-extern const char D_800E05AC[];
-extern const char D_800E05B8[];
-extern const char D_800E05C4[];
-extern const char D_800E05D0[];
+extern const char gRaceResultsSlot0WinCountFormat[];
+extern const char gRaceResultsSlot1WinCountFormat[];
+extern const char gRaceResultsSlot2WinCountFormat[];
+extern const char gRaceResultsSlot3WinCountFormat[];
 extern RaceUiGfxCommandScriptEntry *gCourseCoinMarkerEntryLists[];
 extern Vtx gCourseCoinMarkerQuadVertices[];
 extern RaceUiRankTextRenderEntry *gCourseScoreAttackRingEntryLists[];

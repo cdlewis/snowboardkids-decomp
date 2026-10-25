@@ -1,1 +1,5 @@
 // Japanese relocation overrides. Add verified Japanese ROM offsets here.
+
+// Second framebuffer in the shared framebuffer array.
+rom:0x09B654 reloc:MIPS_HI16 symbol:gFramebuffers addend:0x25800
+rom:0x09B66C reloc:MIPS_LO16 symbol:gFramebuffers addend:0x25800

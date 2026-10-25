@@ -49,9 +49,9 @@ typedef struct {
     s32 sourceZ;
 } PlayerTransformScratch80095A88;
 
-extern RacePlayerPreviewStart D_800DDC48[];
-extern s32 D_800DDFF0[];
-extern void (*D_800DDF08[])(RacePlayer *);
+extern RacePlayerPreviewStart gRacePlayerPreviewStartPositions[];
+extern s32 gRaceRankSpeedBonuses[];
+extern void (*gRacePlayerModeUpdateHandlers[])(RacePlayer *);
 
 void initRacePlayers(void) {
     gRacePlayers[0].playerIndex = 0;
@@ -286,9 +286,9 @@ void initRacePlayer(RacePlayer *player) {
     }
 
     if (gMainMenuModeSelection != 0) {
-        player->state.pos = D_800DDC48[(gMainMenuModeSelection - 1) * 4 + player->playerIndex].position;
-        player->state.facingAngle = D_800DDC48[(gMainMenuModeSelection - 1) * 4 + player->playerIndex].facingAngle;
-        player->state.coursePathIndex = D_800DDC48[(gMainMenuModeSelection - 1) * 4 + player->playerIndex].surfaceHint;
+        player->state.pos = gRacePlayerPreviewStartPositions[(gMainMenuModeSelection - 1) * 4 + player->playerIndex].position;
+        player->state.facingAngle = gRacePlayerPreviewStartPositions[(gMainMenuModeSelection - 1) * 4 + player->playerIndex].facingAngle;
+        player->state.coursePathIndex = gRacePlayerPreviewStartPositions[(gMainMenuModeSelection - 1) * 4 + player->playerIndex].surfaceHint;
     }
 
     player->state.coursePathIndex = findRaceCourseSurfaceFromHint(player->state.coursePathIndex, player->state.pos.x, player->state.pos.z);
@@ -406,7 +406,7 @@ void updateRacePlayer(RacePlayer *player) {
     resolveRacePlayerHitReactions(player);
 
     if ((player->isCpu == 0) || (player->state.cpuPaceMode == RACE_CPU_PACE_RANK_BONUS)) {
-        speedDelta = D_800DDFF0[player->state.rankIndex];
+        speedDelta = gRaceRankSpeedBonuses[player->state.rankIndex];
         catchupDelta = speedDelta - player->state.rankSpeedBonus;
         if (catchupDelta >= 0x21) {
             catchupDelta = 0x20;
@@ -453,7 +453,7 @@ void updateRacePlayer(RacePlayer *player) {
         player->state.unk578--;
     }
 
-    D_800DDF08[player->state.mode](player);
+    gRacePlayerModeUpdateHandlers[player->state.mode](player);
     player->state.unk517 = 0;
     player->state.unk57B = 0;
     player->state.isTargetedByAttack = 0;

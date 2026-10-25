@@ -85,10 +85,10 @@ void initSoundManager(void) {
     init.heapLen = SOUND_HEAP_SIZE;
     init.soundBank = (PlayerCommandBank *)getRelocatableHeapBlockBase(gAssetHandles[4]);
     init.sampleBaseOffset = (s32)&_27E290_ROM_START;
-    init.tuningTable = D_800D9EE0;
-    init.pitchOffsetTable = D_800D9FDC;
-    init.fxHeader = D_800DAC2C;
-    init.unk28 = D_800DADDC;
+    init.tuningTable = gSoundBankWaveTuning;
+    init.pitchOffsetTable = gSoundBankWavePitchOffsets;
+    init.fxHeader = gSoundEffectCommandPointers;
+    init.unk28 = gSoundEffectDefaultPriorities;
     init.maxUpdates = 0x100;
     init.outputRate = 0x5622;
     init.commandListCapacity = 0x2000;

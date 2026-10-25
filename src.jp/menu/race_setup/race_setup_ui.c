@@ -27,7 +27,7 @@
 #define SAVE_STATUS_TRANSITION_FADE_OUT 2
 #define SAVE_STATUS_TRANSITION_DONE 3
 
-extern MenuGlyphScript D_800B4D30[][38];
+extern MenuGlyphScript gRaceSetupSaveStatusMessages[][38];
 
 void drawRaceSetupPlayerCountPrompt(MenuIntroActor *arg0) {
     s32 i;
@@ -888,11 +888,11 @@ void drawRaceSetupSavePlayerPanels(TitleMenuWidgetItemView *actor) {
             playerNumber
         );
 
-        sprintf(text, D_800DFDB0, playerNumber);
+        sprintf(text, gRaceSetupPlayerNumberFormat, playerNumber);
         drawMenuAsciiText((s16)(actor->x[i] + 0x32), (s16)(panel->y[i] + 2), text, 0, alpha);
 
         if (alpha == 0x100) {
-            sprintf(text, D_800DFDB4, gRacePlayers[i].money);
+            sprintf(text, gRaceSetupMoneyFormat, gRacePlayers[i].money);
             drawMenuAsciiText((s16)(actor->x[i] + 0x44), (s16)(panel->y[i] + 0x1B), text, 0, alpha);
         } else {
             if ((!panel) && (!panel)) {}
@@ -1152,7 +1152,7 @@ void drawRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
                 0
             );
 
-            text = D_800B4D30[gControllerPakStatusCodes[i]];
+            text = gRaceSetupSaveStatusMessages[gControllerPakStatusCodes[i]];
             state = 2;
             drawMenuGlyphScript((s16)(actor->x[i] + state), (s16)(actor->y[i] + 0x10), text, 1, actor->alpha[i], 0);
 

@@ -38,10 +38,10 @@ void initCharacterSelectMenu(void) {
     s32 i;
     s32 j;
 
-    if ((D_800EBD05 == 0) || (gMenuExitSelection == 1)) {
+    if ((gCharacterSelectFromRaceSetup == 0) || (gMenuExitSelection == 1)) {
         requestMusicSequenceBank(1);
         resetAllViewports();
-        configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800DFCB0);
+        configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, gCharacterSelectViewportAspectRatio);
         gFramebufferRenderInterval.value = 0;
         gMenuSelectionConfirmTimer = 0;
         gMenuExitSelection = 0;

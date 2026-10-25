@@ -271,7 +271,7 @@ void createPassAwardOpponent(s32 arg0, s32 arg1) {
 }
 
 void drawTitleScreenStartPrompt(MenuScreenEffectActor *arg0) {
-    drawMenuAsciiTextDefaultScale(-0x44, 0x38, D_800E0520, 0);
+    drawMenuAsciiTextDefaultScale(-0x44, 0x38, gTitleScreenStartPromptText, 0);
 }
 
 void updateTitleScreenStartPrompt(void *arg0) {

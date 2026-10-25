@@ -67,7 +67,7 @@ u8 gCourseSelectFromRaceTypeMenu;
 static u16 sCourseSelectFromRaceTypeMenuPadding;
 u8 gControllerPakOperationCounts[4];
 u8 gRaceSetupSavePanelCreateTimer;
-u8 D_800EC9E5;
+u8 gCharacterSelectFromRaceSetup;
 u8 gCourseSelectModeSelection;
 static u8 sGameSaveDataBufferPadding;
 static u32 sGameSaveDataBufferPaddingWords[2];

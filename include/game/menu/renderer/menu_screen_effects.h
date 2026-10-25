@@ -38,7 +38,7 @@ typedef struct MenuScreenEffectActor {
 extern s16 courseRecordDigitTileOffsets[];
 
 #if defined(VERSION_JP)
-extern char D_800E0520[];
+extern char gTitleScreenStartPromptText[];
 extern Vtx congratulationsBannerModelVertices[];
 extern s16 congratulationsBannerSpriteTileOffsets[];
 extern s16 passAwardLabelFlashTileOffsets[];

@@ -163,10 +163,17 @@ typedef union {
     u8 values[0x18];
 } CourseSelectCourseRatingTable;
 
+#if defined(VERSION_JP)
+extern MenuGlyphScript gCourseSelectBoardLevelByCourseText[4][0x18];
+extern MenuGlyphScript gCourseSelectExtraCourseBoardLevelText[3][0x20];
+extern MenuGlyphScript gCourseSelectModeDescriptionText[7][0x23];
+extern MenuGlyphScript gCourseSelectPurchaseMessageText[2][0xF];
+#else
 extern CourseBoardLevelByCourseText gCourseSelectBoardLevelByCourseText[4];
 extern CourseExtraBoardLevelText gCourseSelectExtraCourseBoardLevelText[3];
 extern CourseModeDescriptionText gCourseSelectModeDescriptionText[7];
 extern CoursePurchaseMessageText gCourseSelectPurchaseMessageText[2];
+#endif
 extern MenuGlyphScript gCourseSelectBoardLevelText[];
 
 /* Separate snowboard preview actors owned by gMenuScratch0.task (incoming,

@@ -107,8 +107,8 @@ typedef struct {
 extern s16 gRaceSetupSavePanelRects[2][4];
 
 #if defined(VERSION_JP)
-extern const char D_800DFDB0[];
-extern const char D_800DFDB4[];
+extern const char gRaceSetupPlayerNumberFormat[];
+extern const char gRaceSetupMoneyFormat[];
 extern MenuGlyphScript gRaceSetupFourPlayerOptionText[];
 extern MenuGlyphScript gRaceSetupOnePlayerOptionText[];
 extern MenuGlyphScript gRaceSetupPlayerCountPromptText[][0x34];

@@ -44,10 +44,10 @@ extern s32 gPlayerPositionalSoundHandle2;
 extern s32 gPlayerPositionalSoundHandle3;
 
 #if defined(VERSION_JP)
-extern u8 D_800D9EE0[];
-extern f32 D_800D9FDC[];
-extern u8 *D_800DAC2C[];
-extern s32 D_800DADDC[];
+extern u8 gSoundBankWaveTuning[];
+extern f32 gSoundBankWavePitchOffsets[];
+extern u8 *gSoundEffectCommandPointers[];
+extern s32 gSoundEffectDefaultPriorities[];
 extern SoundHandleNode *gActiveSoundHandleListHead;
 extern SoundHandleNode *gActiveSoundHandleListTail;
 extern u16 gCourseMusicSequenceBanks[];

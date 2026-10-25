@@ -31,7 +31,7 @@
 #define MENU_GLYPH_DEFAULT_FONT_BANK 0x22
 #define MENU_GLYPH_SCRIPT_COLOR 0xFFFC
 
-extern u16 D_800B4AD0[];
+extern u16 gMenuTransparentPalette[];
 
 void drawMenuAssetRegion(
     s16 x,
@@ -276,7 +276,7 @@ void drawMenuSpriteClipped(
     if (selectedPalette != 0xFE) {
         gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, (selectedPalette << 5) + (u8 *)palette);
     } else {
-        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, D_800B4AD0);
+        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, gMenuTransparentPalette);
     }
     gSPTextureRectangle(
         gRegionAllocPtr++,

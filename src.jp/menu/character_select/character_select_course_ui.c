@@ -2505,13 +2505,13 @@ void drawCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor 
  if (gPlayerCount==1) {
  drawMenuSprite(arg0->x,arg0->y,getRelocatableHeapBlockBase(gAssetHandles[0x21]),0x21,0x20,0x20,0,0);
  drawMenuSprite(arg0->x+0x30,arg0->y,getRelocatableHeapBlockBase(gAssetHandles[0x21]),0x22,0x20,0x20,0,0);
- sprintf(buf,D_800DFEB4,(&gGameSaveDataBuffer[0].highScores[1])[characterIds[gRaceCourseIndex.signedValue]]);
+ sprintf(buf,gCharacterSelectCourseBestScoreFormat,(&gGameSaveDataBuffer[0].highScores[1])[characterIds[gRaceCourseIndex.signedValue]]);
  drawMenuAsciiText(arg0->x+0x14,arg0->y+0x2A,(u8*)buf,0,0x100);
- valueOffset=0;  yOffset=0;  three=3;  while(yOffset != 0x18) {  sprintf(buf,D_800DFEB8,D_800B5A7C[gRaceCourseIndex.signedValue * three + valueOffset]);  drawMenuAsciiText(arg0->x+0x28,arg0->y+yOffset+9,(u8*)buf,0,0x100);  yOffset += 8;  valueOffset++;  }  } else {
+ valueOffset=0;  yOffset=0;  three=3;  while(yOffset != 0x18) {  sprintf(buf,gCharacterSelectCourseMedalScoreFormat,gCharacterSelectCourseMedalScoreThresholds[gRaceCourseIndex.signedValue * three + valueOffset]);  drawMenuAsciiText(arg0->x+0x28,arg0->y+yOffset+9,(u8*)buf,0,0x100);  yOffset += 8;  valueOffset++;  }  } else {
  drawMenuSprite(arg0->x,arg0->y,getRelocatableHeapBlockBase(gAssetHandles[0x21]),0x26,0x20,0x20,0,0);
  drawMenuSprite(arg0->x,arg0->y+0x10,getRelocatableHeapBlockBase(gAssetHandles[0x21]),0x27,0x20,0x20,0,0);
  for(valueOffset=0,yOffset=0;valueOffset<4;valueOffset++,yOffset+=8) {
- sprintf(buf,D_800DFEBC,gRacePlayers[valueOffset].unk18);
+ sprintf(buf,gCharacterSelectCoursePlayerRankFormat,gRacePlayers[valueOffset].unk18);
  drawMenuAsciiText(arg0->x+0x40,arg0->y+yOffset+0x10,(u8*)buf,0,0x100);
  }
  }
@@ -2874,14 +2874,14 @@ void drawCharacterSelectCourseDescriptionPopup(CharacterSelectCourseWidgetActor 
     if (threshold >= gRaceCourseIndex.signedValue) {
         idx = (u16)gRaceCourseIndex.signedValue;
         if (gRaceTypeSelection == 0) {
-            text = D_800B6088[idx];
+            text = gCharacterSelectBeginnerCourseDescriptionText[idx];
         } else if (gRaceTypeSelection == 1) {
-            text = D_800B61A8[idx];
+            text = gCharacterSelectAdvancedCourseDescriptionText[idx];
         } else {
-            text = D_800B62C8[idx];
+            text = gCharacterSelectExpertCourseDescriptionText[idx];
         }
     } else {
-        text = D_800B63A8;
+        text = gCharacterSelectCourseReturnDescriptionText;
     }
     drawMenuGlyphScript(arg0->x, arg0->y, text, 1, arg0->sprite.index, 0);
 }
@@ -3486,7 +3486,7 @@ void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, 
     record = arg0;
     y = arg2;
     color = arg3;
-    sprintf(&buffer[-0x10], D_800DFEC8, record->minutes);
+    sprintf(&buffer[-0x10], gCharacterSelectRecordMinutesFormat, record->minutes);
     i = -0x10;
     while (i < -0xE) {
         {}
@@ -3514,7 +3514,7 @@ void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, 
         x += 8;
     }
 
-    sprintf(&buffer[-0x10], D_800DFED0, record->seconds);
+    sprintf(&buffer[-0x10], gCharacterSelectRecordSecondsFormat, record->seconds);
     i = -0x10;
     while (i < -0xE) {
         drawAssetTableSpriteWithExplicitPaletteWideIndex(
@@ -3536,7 +3536,7 @@ void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, 
     );
 
     x += 8;
-    sprintf(&buffer[-0x10], D_800DFED8, record->centiseconds >> 8);
+    sprintf(&buffer[-0x10], gCharacterSelectRecordCentisecondsFormat, record->centiseconds >> 8);
     i = -0x10;
     while (i != -0xE) {
         drawAssetTableSpriteWithExplicitPaletteWideIndex(

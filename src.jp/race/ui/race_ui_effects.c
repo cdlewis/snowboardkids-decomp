@@ -136,7 +136,7 @@ typedef struct {
     RaceTimer timeTrialRecordSplitTimes[11];
 } RaceUiTimeTrialSaveData;
 
-extern const char D_800E07F0[];
+extern const char D_800E14D0[];
 
 void renderRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0) {
     volatile u8 pad[8];
@@ -783,7 +783,7 @@ void drawRaceUiResultsBannerPlayerLabels(RaceUiResultsBannerActor *arg0) {
     }
 
     if (actor->player0 != -1) {
-        sprintf(text, D_800E05AC, gRacePlayers[actor->player0].unk18);
+        sprintf(text, gRaceResultsSlot0WinCountFormat, gRacePlayers[actor->player0].unk18);
         if (gUiBlinkTimer & 1) {
             drawMenuAsciiTextDefaultScale(-0x20, -0x38, text, 6);
         } else {
@@ -798,7 +798,7 @@ void drawRaceUiResultsBannerPlayerLabels(RaceUiResultsBannerActor *arg0) {
     }
 
     if (actor->player1 != -1) {
-        sprintf(text, D_800E05B8, gRacePlayers[actor->player1].unk18);
+        sprintf(text, gRaceResultsSlot1WinCountFormat, gRacePlayers[actor->player1].unk18);
         drawMenuAsciiTextDefaultScale(0x70, -0x18, text, 6);
         if (gRacePlayers[actor->player1].isCpu == 0) {
             sprintf(text, gRaceResultsSlot1PlayerLabelFormat, gRacePlayers[actor->player1].playerIndex + 1);
@@ -809,7 +809,7 @@ void drawRaceUiResultsBannerPlayerLabels(RaceUiResultsBannerActor *arg0) {
     }
 
     if (actor->player2 != -1) {
-        sprintf(text, D_800E05C4, gRacePlayers[actor->player2].unk18);
+        sprintf(text, gRaceResultsSlot2WinCountFormat, gRacePlayers[actor->player2].unk18);
         drawMenuAsciiTextDefaultScale(-0x20, 8, text, 6);
         if (gRacePlayers[actor->player2].isCpu == 0) {
             sprintf(text, gRaceResultsSlot2PlayerLabelFormat, gRacePlayers[actor->player2].playerIndex + 1);
@@ -820,7 +820,7 @@ void drawRaceUiResultsBannerPlayerLabels(RaceUiResultsBannerActor *arg0) {
     }
 
     if (actor->player3 != -1) {
-        sprintf(text, D_800E05D0, gRacePlayers[actor->player3].unk18);
+        sprintf(text, gRaceResultsSlot3WinCountFormat, gRacePlayers[actor->player3].unk18);
         drawMenuAsciiTextDefaultScale(0x70, 0x28, text, 6);
         if (gRacePlayers[actor->player3].isCpu == 0) {
             sprintf(text, gRaceResultsSlot3PlayerLabelFormat, gRacePlayers[actor->player3].playerIndex + 1);
@@ -3455,7 +3455,7 @@ void drawRaceUiScorePopup(RaceUiPopupActor *arg0) {
         );
         drawAssetTableSprite((s16)(arg0->x + 0x28), (s16)(arg0->y.word - 8),
             getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x8C);
-        sprintf(buffer, D_800E07F0, arg0->parent);
+        sprintf(buffer, D_800E14D0, arg0->parent);
         for (i = 0; i != 4; i++) {
             if (buffer[i] != ' ') {
                 drawAssetTableSpriteWithExplicitPalette(

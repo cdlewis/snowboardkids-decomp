@@ -12,9 +12,8 @@
 
 #define TRAINING_COURSE_UI_TEXTURE_HANDLE (gAssetHandles[0x2A])
 
-extern MenuGlyphScript D_800B4940[];
-extern MenuGlyphScript D_800B4954[][0x14];
-extern s16 D_800B4ABA[];
+extern MenuGlyphScript gTrainingCourseLessonTitleLabelTemplate[];
+extern MenuGlyphScript gTrainingCourseLessonTitleText[][0x14];
 
 void updateTrainingCourseDialog(TrainingCourseUiActor *);
 
@@ -580,10 +579,10 @@ void initTrainingCourseEndingDialog(TrainingCourseUiActor *arg0) {
 }
 
 void drawTrainingCourseLessonTitlePanel(TrainingCourseUiActor *arg0) {
-    D_800B4940[7] = gTrainingCourseLesson;
-    drawMenuColoredGlyphScript(arg0->x, arg0->y, D_800B4940, 0, 0x100, 5, 0x29);
-    drawMenuColoredGlyphScript(D_800B4ABA[gTrainingCourseLesson], arg0->y + 0x18,
-        D_800B4954[gTrainingCourseLesson - 1], 0, 0x100, 4, 0x29);
+    gTrainingCourseLessonTitleLabelTemplate[7] = gTrainingCourseLesson;
+    drawMenuColoredGlyphScript(arg0->x, arg0->y, gTrainingCourseLessonTitleLabelTemplate, 0, 0x100, 5, 0x29);
+    drawMenuColoredGlyphScript(gTrainingCourseLessonTitleXPositions[gTrainingCourseLesson], arg0->y + 0x18,
+        gTrainingCourseLessonTitleText[gTrainingCourseLesson - 1], 0, 0x100, 4, 0x29);
 }
 
 void updateTrainingCourseLessonTitlePanelScrollOut(TrainingCourseUiActor *arg0) {

@@ -28,11 +28,6 @@ typedef enum {
     COURSE_RATING_COUNT
 } CourseSelectCourseRatingType;
 
-extern MenuGlyphScript D_800B6424[][0x23];
-extern MenuGlyphScript D_800B6610[];
-extern MenuGlyphScript D_800B666C[][0x18];
-extern MenuGlyphScript D_800B672C[][0x20];
-extern MenuGlyphScript D_800B67EC[][0xF];
 
 void drawCourseSelectSnowboardPreviewIn(CourseSelectCoursePreviewActor *arg0) {
     u8 sp2F;
@@ -1450,7 +1445,7 @@ void drawCourseSelectCourseDescription(CourseSelectCourseDescriptionActor *arg0)
             } else {
                 descriptionIndex = gRacePlayers[0].menuSelection % 3;
             }
-            text = D_800B6424[descriptionIndex];
+            text = gCourseSelectModeDescriptionText[descriptionIndex];
         } else {
             if ((gMenuChoicePromptState[0] < 2) || (gMenuChoicePromptState[0] == 9)) {
                 selectedIndex = 1;
@@ -1466,13 +1461,13 @@ void drawCourseSelectCourseDescription(CourseSelectCourseDescriptionActor *arg0)
                 selectedIndex = arg0->selectedBoardLevel;
             }
             if ((gRaceSplitscreenMode == 3) && (gRacePlayers[0].menuSelection < 9)) {
-                text = D_800B666C[gRacePlayers[0].menuSelection % 3];
+                text = gCourseSelectBoardLevelByCourseText[gRacePlayers[0].menuSelection % 3];
             } else {
                 if ((gRacePlayers[0].menuSelection >= 9) && (gRacePlayers[0].menuSelection < 12)) {
                     i = gCourseSelectCourseIds[4][selectedIndex - 1] % 3;
-                    text = D_800B672C[i];
+                    text = gCourseSelectExtraCourseBoardLevelText[i];
                 } else {
-                    text = D_800B6610;
+                    text = gCourseSelectBoardLevelText;
                 }
             }
         }
@@ -1522,7 +1517,7 @@ void drawCourseSelectCourseDescription(CourseSelectCourseDescriptionActor *arg0)
             }
         }
     } else {
-        text = D_800B67EC[COURSE_SELECT_STATUS_LAYOUT.purchaseMessageState - 1];
+        text = gCourseSelectPurchaseMessageText[COURSE_SELECT_STATUS_LAYOUT.purchaseMessageState - 1];
         drawMenuGlyphScript(arg0->x, arg0->y, text, 1, arg0->alpha, 0);
     }
 }

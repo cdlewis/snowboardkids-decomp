@@ -43,7 +43,7 @@ void initCharacterSelectMenu(void) {
     s32 i;
     s32 j;
 
-    if ((D_800EC9E5 == 0) || (gMenuExitSelection == 1)) {
+    if ((gCharacterSelectFromRaceSetup == 0) || (gMenuExitSelection == 1)) {
         requestMusicSequenceBank(1);
         resetAllViewports();
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);

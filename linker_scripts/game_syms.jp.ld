@@ -365,4 +365,18 @@ _27E290_ROM_START = 0x0027E320;
 
 gControllerPakFileNos = gControllerSubsystemBssPadding;
 
-gRaceSetupSavePanelFrameState = gRaceSetupMenuSubState + 4;
+gRaceSetupSavePanelFrameState = gRaceSetupMenuSubState + 0x4;
+gCourseSelectCameraUpdateEnd = gRaceCameras + 0x160;
+gCourseUnlockScanEnd = gGameSaveDataBuffer + 0x9;
+gCourseUnlockScanStart = gGameSaveDataBuffer + 0x1;
+gPrimaryCourseUnlockStates = gGameSaveDataBuffer + 0x3F;
+gRacePlayerHudStatuses = gRaceCameras + 0xAC;
+gFrameRenderTaskStatuses = gFrameRenderTasks + 0x66;
+gRaceSetupPlayerCountPromptAlpha = gRaceSetupMenuSubState + 0x2;
+gRaceSetupSaveStatusSelections = gRaceSetupMenuSubState + 0x6;
+gRaceSetupSaveStatusTransitionStates = gRaceSetupMenuSubState + 0xE;
+gRaceSetupSaveStatusNextSelections = gRaceSetupMenuSubState + 0x12;
+gControllerPakMenuCursorState = gControllerPakMenuState + 0x3;
+gControllerPakDeletePromptState = gControllerPakMenuState + 0x6;
+gControllerPakMenuConfirmChoice = gControllerPakMenuState + 0x2;
+gControllerPakRumbleCheckPromptConfirmSelection = gControllerPakRumbleCheckPromptState + 0x7;

@@ -80,17 +80,17 @@ typedef struct {
 } CharacterSelectCourseExitPreviewData;
 
 #if defined(VERSION_JP)
-extern u16 D_800B5A7C[];
-extern MenuGlyphScript D_800B6088[][0x30];
-extern MenuGlyphScript D_800B61A8[][0x30];
-extern MenuGlyphScript D_800B62C8[][0x38];
-extern MenuGlyphScript D_800B63A8[];
-extern const char D_800DFEB4[];
-extern const char D_800DFEB8[];
-extern const char D_800DFEBC[];
-extern const char D_800DFEC8[];
-extern const char D_800DFED0[];
-extern const char D_800DFED8[];
+extern u16 gCharacterSelectCourseMedalScoreThresholds[];
+extern MenuGlyphScript gCharacterSelectBeginnerCourseDescriptionText[][0x30];
+extern MenuGlyphScript gCharacterSelectAdvancedCourseDescriptionText[][0x30];
+extern MenuGlyphScript gCharacterSelectExpertCourseDescriptionText[][0x38];
+extern MenuGlyphScript gCharacterSelectCourseReturnDescriptionText[];
+extern const char gCharacterSelectCourseBestScoreFormat[];
+extern const char gCharacterSelectCourseMedalScoreFormat[];
+extern const char gCharacterSelectCoursePlayerRankFormat[];
+extern const char gCharacterSelectRecordMinutesFormat[];
+extern const char gCharacterSelectRecordSecondsFormat[];
+extern const char gCharacterSelectRecordCentisecondsFormat[];
 extern u8 gCharacterSelectCourseDifficultyRatings[];
 extern CharacterSelectCourseExitPreviewData gCharacterSelectCourseExitPreviewData;
 extern CharacterSelectCourseText gCharacterSelectCourseNameText[];

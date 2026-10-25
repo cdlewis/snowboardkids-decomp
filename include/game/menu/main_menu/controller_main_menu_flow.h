@@ -97,15 +97,11 @@ extern u8 D_800EC9C0;
 extern u8 D_800EC9DC;
 extern u8 gConnectedControllerBitmask;
 extern u8 gCourseSelectFromRaceTypeMenu;
+extern u8 gCharacterSelectFromRaceSetup;
 
 #if defined(VERSION_JP)
-extern u8 D_800EBD05;
 extern u8 gControllerPakSaveExtNameBytesEnd[];
 extern u8 gMainMenuReturnFromRace;
-#endif
-
-#if defined(VERSION_US)
-extern u8 D_800EC9E5;
 #endif
 
 void initControllerSubsystem(void);

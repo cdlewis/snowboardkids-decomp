@@ -34,7 +34,7 @@ extern CharacterSelectState gCharacterSelectHudState;
 extern s8 gCharacterSelectHighlightedRosterIndices[4];
 
 #if defined(VERSION_JP)
-extern f32 D_800DFCB0;
+extern f32 gCharacterSelectViewportAspectRatio;
 extern u16 gCharacterSelectIdOrder[];
 extern s16 gCharacterSelectVoiceSoundIds[];
 #endif

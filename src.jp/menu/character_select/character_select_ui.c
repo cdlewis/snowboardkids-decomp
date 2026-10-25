@@ -17,7 +17,7 @@
 #define CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE (gAssetHandles[0x29])
 #define CHARACTER_SELECT_UI_UNUSED_HANDLE (gAssetHandles[0x1F])
 
-extern u16 D_800B53E0[];
+extern u16 gCharacterSelectPlayerMarkerTiles[];
 
 void drawCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0) {
     s32 i;
@@ -609,7 +609,7 @@ void drawCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
     if (arg0->mode != 0) {
         for (i = 0; i < (s32)gPlayerCount; i++) {
             player = &gRacePlayers[i];
-            tiles = &D_800B53E0[i * 4];
+            tiles = &gCharacterSelectPlayerMarkerTiles[i * 4];
             evenMatch = 0;
             oddMatch = 0;
             j = 0;

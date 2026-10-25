@@ -7,12 +7,12 @@
 #define RANK_ARROW_DISTANCE 0x04000000
 #define RANK_ARROW_NEGATIVE_LIMIT ((s32)0xFC000001)
 
-extern u8 D_800DD388[];
-extern u8 D_800DD38C[];
-extern u8 D_800DD390[];
-extern u8 D_800DD394[];
-extern s8 *D_800DD1A4[];
-extern RacePlayerCheckpointEvent *D_800DD360[];
+extern u8 gSinglePlayerRankDisplayPatternFirst[];
+extern u8 gSinglePlayerRankDisplayPatternSecond[];
+extern u8 gSinglePlayerRankDisplayPatternThird[];
+extern u8 gSinglePlayerRankDisplayPatternFourth[];
+extern s8 *gRaceCoursePlayerPathOffsetTables[];
+extern RacePlayerCheckpointEvent *gRaceCourseCheckpointEventLists[];
 
 // updateRacePlayerRankDisplay best match: 90.276%
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/race/player/race_player_progress/updateRacePlayerRankDisplay.s")
@@ -51,7 +51,7 @@ void updateRacePlayerRankDisplay(void) {
             if (gRacePlayers[0].state.rankIndex == 0) {
                 for (j = 0; j < RACE_PLAYER_COUNT; j++) {
                     if (gRacePlayers[j].isCpu != 0) {
-                        gRacePlayers[j].state.displayRank = D_800DD388[i];
+                        gRacePlayers[j].state.displayRank = gSinglePlayerRankDisplayPatternFirst[i];
                         gRacePlayers[j].state.rankTargetPlayer = 0;
                         i++;
                     }
@@ -62,7 +62,7 @@ void updateRacePlayerRankDisplay(void) {
             if (gRacePlayers[0].state.rankIndex == 1) {
                 for (j = 0; j < RACE_PLAYER_COUNT; j++) {
                     if (gRacePlayers[j].isCpu != 0) {
-                        gRacePlayers[j].state.displayRank = D_800DD38C[i];
+                        gRacePlayers[j].state.displayRank = gSinglePlayerRankDisplayPatternSecond[i];
                         gRacePlayers[j].state.rankTargetPlayer = 0;
                         i++;
                     }
@@ -73,7 +73,7 @@ void updateRacePlayerRankDisplay(void) {
             if (gRacePlayers[0].state.rankIndex == 2) {
                 for (j = 0; j < RACE_PLAYER_COUNT; j++) {
                     if (gRacePlayers[j].isCpu != 0) {
-                        gRacePlayers[j].state.displayRank = D_800DD390[i];
+                        gRacePlayers[j].state.displayRank = gSinglePlayerRankDisplayPatternThird[i];
                         gRacePlayers[j].state.rankTargetPlayer = 0;
                         i++;
                     }
@@ -84,7 +84,7 @@ void updateRacePlayerRankDisplay(void) {
             if (gRacePlayers[0].state.rankIndex == 3) {
                 for (j = 0; j < RACE_PLAYER_COUNT; j++) {
                     if (gRacePlayers[j].isCpu != 0) {
-                        gRacePlayers[j].state.displayRank = D_800DD394[i];
+                        gRacePlayers[j].state.displayRank = gSinglePlayerRankDisplayPatternFourth[i];
                         gRacePlayers[j].state.rankTargetPlayer = 0;
                         i++;
                     }
@@ -195,7 +195,7 @@ void updateRacePlayerCheckpointEvents(RacePlayer *player) {
     }
 
     player->state.checkpointHit = 0;
-    eventList = D_800DD360[gRaceCourseIndex.signedValue];
+    eventList = gRaceCourseCheckpointEventLists[gRaceCourseIndex.signedValue];
     event = eventList;
     eventIndex = 0;
 
@@ -243,7 +243,7 @@ s32 updateRacePlayerSmoothedPathOffset(s32 playerIndex, s32 pathIndex, s32 rankS
     s8 *entry;
 
     courseIndex = gRaceCourseIndex.signedValue;
-    entry = D_800DD1A4[(courseIndex * RACE_PLAYER_COUNT) + playerIndex];
+    entry = gRaceCoursePlayerPathOffsetTables[(courseIndex * RACE_PLAYER_COUNT) + playerIndex];
     pathIndexCopy = pathIndex;
     if (courseIndex == RACE_COURSE_ANIMAL_LAND) {
         if (playerIndex == 0) {
@@ -260,7 +260,7 @@ s32 updateRacePlayerSmoothedPathOffset(s32 playerIndex, s32 pathIndex, s32 rankS
         }
     }
 
-    entry = D_800DD1A4[(courseIndex * RACE_PLAYER_COUNT) + playerIndex];
+    entry = gRaceCoursePlayerPathOffsetTables[(courseIndex * RACE_PLAYER_COUNT) + playerIndex];
     pathIndex = entry[pathIndexCopy] << 0x12;
     pathIndex -= gRacePlayers[rankSlot].state.smoothedPathOffset;
 
@@ -293,6 +293,6 @@ s32 getRacePlayerPathOffset(s32 playerIndex, s32 pathIndex) {
         }
     }
 
-    entry = D_800DD1A4[(gRaceCourseIndex.signedValue * RACE_PLAYER_COUNT) + playerIndex];
+    entry = gRaceCoursePlayerPathOffsetTables[(gRaceCourseIndex.signedValue * RACE_PLAYER_COUNT) + playerIndex];
     return entry[pathIndex] << 0x12;
 }

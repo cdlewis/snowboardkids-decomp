@@ -40,9 +40,7 @@ extern TrainingCourseUiScript gTrainingCourseEndingDialogScript[];
 extern TrainingCourseUiScript gTrainingCourseOpeningDialogScripts[][0x17C];
 #endif
 
-#if defined(VERSION_US)
 extern s16 gTrainingCourseLessonTitleXPositions[];
-#endif
 
 #if defined(VERSION_JP)
 void drawTrainingCourseDialog(TrainingCourseUiActor *);

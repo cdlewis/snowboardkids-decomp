@@ -23,8 +23,8 @@ typedef struct EndingCreditsPageTextLineLayout {
     /* 0x16 */ s16 pad16;
 } EndingCreditsPageTextLineLayout;
 
-extern MenuGlyphScript D_800B78D0[][60];
-extern EndingCreditsPageTextLineLayout D_800B8488[];
+extern MenuGlyphScript gEndingCreditsPageTextScripts[][60];
+extern EndingCreditsPageTextLineLayout gEndingCreditsPageTextLineLayouts[];
 
 CLANG_DIAGNOSTIC_PUSH
 CLANG_DIAGNOSTIC_IGNORE_UNINITIALIZED
@@ -39,14 +39,14 @@ void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
     // The original function passes this local without initializing it.
     u16 colorMode;
 
-    lineCount = D_800B8488[arg0->pageIndex].count;
+    lineCount = gEndingCreditsPageTextLineLayouts[arg0->pageIndex].count;
     scriptIndex = 0;
     for (lineIndex = 0; lineIndex < lineCount; lineIndex++) {
-        x = D_800B8488[arg0->pageIndex].positions[lineIndex].x;
-        y = D_800B8488[arg0->pageIndex].positions[lineIndex].y;
+        x = gEndingCreditsPageTextLineLayouts[arg0->pageIndex].positions[lineIndex].x;
+        y = gEndingCreditsPageTextLineLayouts[arg0->pageIndex].positions[lineIndex].y;
         lineLength = 0;
-        while (D_800B78D0[arg0->pageIndex][scriptIndex] != 0xFFFF) {
-            lineText[lineLength] = D_800B78D0[arg0->pageIndex][scriptIndex];
+        while (gEndingCreditsPageTextScripts[arg0->pageIndex][scriptIndex] != 0xFFFF) {
+            lineText[lineLength] = gEndingCreditsPageTextScripts[arg0->pageIndex][scriptIndex];
             scriptIndex++;
             lineLength++;
         }

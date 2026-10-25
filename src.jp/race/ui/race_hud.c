@@ -21,21 +21,20 @@
 #define RACE_HUD_POPUP_FONT_HANDLE (gAssetHandles[0x1F])
 #define ASSET_HANDLE(index) (gAssetHandles[index])
 
-extern const char D_800E0AE0[];
-extern const char D_800E0AE8[];
-extern const char D_800E0AF0[];
+extern const char gRaceHudTimeTrialMinutesFormat[];
+extern const char gRaceHudTimeTrialSecondsFormat[];
+extern const char gRaceHudTimeTrialFractionFormat[];
 
-extern const char D_800E0A30[];
-extern const char D_800E0A38[];
-extern const char D_800E0A40[];
-extern const char D_800E0A48[];
-extern const char D_800E0A4C[];
-extern const char D_800E0A64[];
-extern const char D_800E0A6C[];
-extern const char D_800E0A74[];
-extern const char D_800E0A7C[];
+extern const char gRaceHudChallengeTimeLimitMinutesFormat[];
+extern const char gRaceHudChallengeTimeLimitSecondsFormat[];
+extern const char gRaceHudChallengeTimeLimitFractionFormat[];
+extern const char gRaceHudTrickAttackPointTotalFormat[];
+extern const char gRaceHudTrickAttackSecondaryCounterFormat[];
+extern const char gRaceHudScoreAttackTimeLimitMinutesFormat[];
+extern const char gRaceHudScoreAttackTimeLimitSecondsFormat[];
+extern const char gRaceHudScoreAttackTimeLimitFractionFormat[];
+extern const char gRaceHudScoreAttackPointTotalFormat[];
 
-extern const char D_800E0B34[];
 
 void initRaceHud(void) {
     LOAD_ASSET(SHARED_UI_SPRITES, 0x1F);
@@ -91,7 +90,7 @@ void drawTrickAttackChallengeHud(void *arg0) {
     }
 
     {
-        sprintf(buffer, D_800E0A30, gRaceChallengeTimeLimit.minutes);
+        sprintf(buffer, gRaceHudChallengeTimeLimitMinutesFormat, gRaceChallengeTimeLimit.minutes);
         finalPalette = (u16)palette;
         x = 0x40;
         for (i = 0; i < 2; i++, x += 8) {
@@ -105,7 +104,7 @@ void drawTrickAttackChallengeHud(void *arg0) {
         }
 
         x += 8;
-        sprintf(buffer, D_800E0A38, gRaceChallengeTimeLimit.seconds);
+        sprintf(buffer, gRaceHudChallengeTimeLimitSecondsFormat, gRaceChallengeTimeLimit.seconds);
         for (i = 0; i < 2; i++, x += 8) {
             drawAssetTableSpriteWithExplicitPalette(
                 (s16)x,
@@ -117,7 +116,7 @@ void drawTrickAttackChallengeHud(void *arg0) {
         }
 
         x += 8;
-        sprintf(buffer, D_800E0A40, gRaceChallengeTimeLimit.fraction >> 8);
+        sprintf(buffer, gRaceHudChallengeTimeLimitFractionFormat, gRaceChallengeTimeLimit.fraction >> 8);
         for (i = 0; i < 2; i++, x += 8) {
             drawAssetTableSpriteWithExplicitPalette(
                 (s16)x,
@@ -170,7 +169,7 @@ void drawTrickAttackChallengeHud(void *arg0) {
     {
 
         x = 0x64;
-        sprintf(buffer, D_800E0A48, gRacePlayers[0].state.trickAttackPointTotal);
+        sprintf(buffer, gRaceHudTrickAttackPointTotalFormat, gRacePlayers[0].state.trickAttackPointTotal);
         for (i = 0; i != 4; i++, x += 8) {
             if ((u8)buffer[i] != ' ') {
                 drawAssetTableSprite(
@@ -190,7 +189,7 @@ void drawTrickAttackChallengeHud(void *arg0) {
     }
 
     if (gRacePlayers[0].state.trickAttackMakeCount >= 10) {
-        sprintf(buffer, D_800E0A4C, gRacePlayers[0].state.trickAttackMakeCount);
+        sprintf(buffer, gRaceHudTrickAttackSecondaryCounterFormat, gRacePlayers[0].state.trickAttackMakeCount);
         drawAssetTableSprite(-0x64, -0x59, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), (u8)buffer[0] - 5);
         drawAssetTableSprite(-0x5C, -0x59, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), (u8)buffer[1] - 5);
     }
@@ -215,7 +214,7 @@ void drawScoreAttackChallengeHud(void *arg0) {
     }
 
     {
-        sprintf(buffer, D_800E0A64, gRaceChallengeTimeLimit.minutes);
+        sprintf(buffer, gRaceHudScoreAttackTimeLimitMinutesFormat, gRaceChallengeTimeLimit.minutes);
         finalPalette = (u16)palette;
         x = 0x40;
         for (i = 0; i < 2; i++, x += 8) {
@@ -229,7 +228,7 @@ void drawScoreAttackChallengeHud(void *arg0) {
         }
 
         x += 8;
-        sprintf(buffer, D_800E0A6C, gRaceChallengeTimeLimit.seconds);
+        sprintf(buffer, gRaceHudScoreAttackTimeLimitSecondsFormat, gRaceChallengeTimeLimit.seconds);
         for (i = 0; i < 2; i++, x += 8) {
             drawAssetTableSpriteWithExplicitPalette(
                 (s16)x,
@@ -241,7 +240,7 @@ void drawScoreAttackChallengeHud(void *arg0) {
         }
 
         x += 8;
-        sprintf(buffer, D_800E0A74, gRaceChallengeTimeLimit.fraction >> 8);
+        sprintf(buffer, gRaceHudScoreAttackTimeLimitFractionFormat, gRaceChallengeTimeLimit.fraction >> 8);
         for (i = 0; i < 2; i++, x += 8) {
             drawAssetTableSpriteWithExplicitPalette(
                 (s16)x,
@@ -271,7 +270,7 @@ void drawScoreAttackChallengeHud(void *arg0) {
 
     {
 
-        sprintf(buffer, D_800E0A7C, gRacePlayers[0].state.scoreAttackPointTotal);
+        sprintf(buffer, gRaceHudScoreAttackPointTotalFormat, gRacePlayers[0].state.scoreAttackPointTotal);
         x = 0;
         for (i = 0; i < 2; i++, x += 8) {
             if ((u8)buffer[i] != ' ') {
@@ -390,20 +389,20 @@ void drawTimeTrialHud(void *arg0) {
     s32 x;
     s32 i;
 
-    sprintf(buffer, D_800E0AE0, gRaceElapsedTimer.minutes);
+    sprintf(buffer, gRaceHudTimeTrialMinutesFormat, gRaceElapsedTimer.minutes);
     x = 0x48;
     for (i = 0; i < 2; i++, x += 8) {
         drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), (u8)buffer[i] - 5);
     }
 
     x += 8;
-    sprintf(buffer, D_800E0AE8, gRaceElapsedTimer.seconds);
+    sprintf(buffer, gRaceHudTimeTrialSecondsFormat, gRaceElapsedTimer.seconds);
     for (i = 0; i < 2; i++, x += 8) {
         drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), (u8)buffer[i] - 5);
     }
 
     x += 8;
-    sprintf(buffer, D_800E0AF0, gRaceElapsedTimer.fraction >> 8);
+    sprintf(buffer, gRaceHudTimeTrialFractionFormat, gRaceElapsedTimer.fraction >> 8);
     for (i = 0; i != 2; i++, x += 8) {
         drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), (u8)buffer[i] - 5);
     }
@@ -616,7 +615,7 @@ void drawTwoPlayerRaceHud(void *arg0) {
         y = 0x1A;
     }
 
-    sprintf(buffer, D_800E0B34, gRacePlayers[gCurrentViewportIndex].state.score);
+    sprintf(buffer, gRaceHudTwoPlayerScoreFormat, gRacePlayers[gCurrentViewportIndex].state.score);
     x = 0x50;
     if (gRacePlayers[gCurrentViewportIndex].state.score < 0x64) {
         color = 0x10;

@@ -32,7 +32,7 @@ typedef struct {
     s32 w8, w9, w10, w11, w12, w13, w14, w15;
 } PackedMtxWords;
 
-extern void *D_801114D4;
+extern void *gMenuAsciiFontPaletteBase;
 
 void initMenuAssetHandles(void) {
     s16 *end;
@@ -907,7 +907,7 @@ void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, volatile u16 paletteIndex
                 palette = paletteIndex;
                 if (gMenuAsciiFontPaletteIndex != palette) {
                     gMenuAsciiFontPaletteIndex = palette;
-                    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, (paletteIndex << 5) + (u8 *)D_801114D4);
+                    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, (paletteIndex << 5) + (u8 *)gMenuAsciiFontPaletteBase);
                 }
 
                 gSPTextureRectangle(
@@ -932,11 +932,11 @@ void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, volatile u16 paletteIndex
 
 void initMenuAsciiFontTexture(void) {
     MenuAsciiFontAsset *font = getRelocatableHeapBlockBase(gAssetHandles[6]);
-    D_801114D4 = (font->entryCount * sizeof(AssetTableEntry)) + (u8 *)font + sizeof(AssetTableEntry);
+    gMenuAsciiFontPaletteBase = (font->entryCount * sizeof(AssetTableEntry)) + (u8 *)font + sizeof(AssetTableEntry);
     gDPLoadTextureTile_4b(gRegionAllocPtr++, font->imageOffset + (u8 *)font, G_IM_FMT_CI,
         font->width, font->height, 0, 0, font->width, font->height, 0,
         G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
-    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, (font->paletteIndex << 5) + (u8 *)D_801114D4);
+    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, (font->paletteIndex << 5) + (u8 *)gMenuAsciiFontPaletteBase);
     gMenuAsciiFontPaletteIndex = font->paletteIndex;
 }
 

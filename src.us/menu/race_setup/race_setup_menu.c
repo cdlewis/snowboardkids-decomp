@@ -111,7 +111,7 @@ void initRaceSetupMenu(void) {
     gCurrentGameTask->callbackData0 = 0;
     gCurrentGameTask->callbackData1 = 0;
     gMenuSelectionConfirmTimer = 0;
-    D_800EC9E5 = 1;
+    gCharacterSelectFromRaceSetup = 1;
     gCourseSelectModeSelection = 0;
     gHighestUnlockedCourse = 0;
     gRaceRumbleEnabled = 0;
