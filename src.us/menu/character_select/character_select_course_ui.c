@@ -97,16 +97,13 @@ u8 gCharacterSelectCourseDifficultyRatings[12] = {
     0x04, 0x05, 0x00, 0x00, 
 };
 
-u8 gCharacterSelectCourseMedalScoreThresholds[68] = {
-    0x0B, 0xB8, 0x03, 0x20, 0x01, 0x90, 0x0E, 0x10,
-    0x03, 0x84, 0x01, 0xF4, 0x0F, 0xA0, 0x03, 0xE8,
-    0x01, 0xF4, 0x11, 0x30, 0x04, 0x4C, 0x02, 0x58,
-    0x14, 0x50, 0x05, 0x14, 0x02, 0xBC, 0x17, 0x70,
-    0x05, 0xDC, 0x03, 0x20, 0x1B, 0x58, 0x07, 0x08,
-    0x03, 0x84, 0x1F, 0x40, 0x07, 0xD0, 0x03, 0xE8,
-    0x27, 0x10, 0x09, 0xC4, 0x05, 0x14, 0x01, 0x2C,
-    0x00, 0xC8, 0x00, 0x64, 0x01, 0x2C, 0x00, 0xC8,
-    0x00, 0x64, 0x00, 0x00,
+u16 gCharacterSelectCourseMedalScoreThresholds[34] = {
+    3000, 800, 400, 3600, 900, 500,
+    4000, 1000, 500, 4400, 1100, 600,
+    5200, 1300, 700, 6000, 1500, 800,
+    7000, 1800, 900, 8000, 2000, 1000,
+    10000, 2500, 1300, 300, 200, 100,
+    300, 200, 100, 0,
 };
 
 CharacterSelectCourseText gCharacterSelectCourseNameText[10] = {
@@ -2701,89 +2698,74 @@ const char gCharacterSelectCourseBestScoreFormat[] = "%5d";
 const char gCharacterSelectCourseMedalScoreFormat[] = "%5d";
 const char gCharacterSelectCoursePlayerRankFormat[] = "%2d";
 
-// IDO code generation for this function is sensitive to source line layout.
-// clang-format off
 void drawCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor *arg0) {
-    char buf[4];
     s16 *characterIds;
-    s32 yOffset;
-    s32 valueOffset;
-    s32 three;
     s32 i;
-    do { \
-        characterIds = gCharacterSelectCourseMenuData.courseOptionsByUnlock[gHighestUnlockedCourse]; \
-        if (gPlayerCount == 1) { \
-            drawMenuSprite( \
-                arg0->x, \
-                arg0->y, \
-                getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), \
-                0x21, \
-                0x20, \
-                0x20, \
-                0, \
-                0 \
-            ); \
-            drawMenuSprite( \
-                (s16)(arg0->x + 0x30), \
-                arg0->y, \
-                getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), \
-                0x22, \
-                0x20, \
-                0x20, \
-                0, \
-                0 \
-            ); \
-            sprintf( \
-                buf - 0x10, \
-                gCharacterSelectCourseBestScoreFormat, \
-                (&gGameSaveDataBuffer[0].highScores[1])[characterIds[*(&gRaceCourseIndex.signedValue)]] \
-            ); \
-            drawMenuAsciiText((s16)(arg0->x + 0x14), (s16)(arg0->y + 0x2A), buf - 0x10, 0, 0x100); \
-            valueOffset = 0; \
-            yOffset = 0; \
-            three = 3; \
-            do { \
-                sprintf( \
-                    buf - 0x10, \
-                    gCharacterSelectCourseMedalScoreFormat, \
-                    *((u16 *)(&gCharacterSelectCourseMedalScoreThresholds \
-                                  [(((*(&gRaceCourseIndex.signedValue)) * three) * 2) + valueOffset])) \
-                ); \
-                drawMenuAsciiText((s16)(arg0->x + 0x28), (s16)((arg0->y + yOffset) + 9), buf - 0x10, 0, 0x100); \
-                yOffset += 8; \
-                valueOffset += 2; \
-            } while (yOffset != 0x18); \
-        } else { \
-            drawMenuSprite( \
-                arg0->x, \
-                arg0->y, \
-                getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), \
-                0x26, \
-                0x20, \
-                0x20, \
-                0, \
-                0 \
-            ); \
-            drawMenuSprite( \
-                arg0->x, \
-                (s16)(arg0->y + 0x10), \
-                getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), \
-                0x27, \
-                0x20, \
-                0x20, \
-                0, \
-                0 \
-            ); \
-            yOffset = 0; \
-            for (i = 0; i < RACE_PLAYER_COUNT; i++) { \
-                sprintf(buf - 0x10, gCharacterSelectCoursePlayerRankFormat, gRacePlayers[i].unk18); \
-                drawMenuAsciiText((s16)(arg0->x + 0x40), (s16)((arg0->y + yOffset) + 0x10), buf - 0x10, 0, 0x100); \
-                yOffset += 8; \
-            } \
-        } \
-    } while (0);
+    char buf[12];
+
+    characterIds = gCharacterSelectCourseMenuData.courseOptionsByUnlock[gHighestUnlockedCourse];
+    if (gPlayerCount == 1) {
+        drawMenuSprite(
+            arg0->x,
+            arg0->y,
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            0x21,
+            0x20,
+            0x20,
+            0,
+            0
+        );
+        drawMenuSprite(
+            arg0->x + 0x30,
+            arg0->y,
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            0x22,
+            0x20,
+            0x20,
+            0,
+            0
+        );
+        sprintf(
+            buf,
+            gCharacterSelectCourseBestScoreFormat,
+            (&gGameSaveDataBuffer[0].highScores[1])[characterIds[gRaceCourseIndex.signedValue]]
+        );
+        drawMenuAsciiText(arg0->x + 0x14, arg0->y + 0x2A, (u8 *)buf, 0, 0x100);
+        for (i = 0; i < 3; i++) {
+            sprintf(
+                buf,
+                gCharacterSelectCourseMedalScoreFormat,
+                gCharacterSelectCourseMedalScoreThresholds[gRaceCourseIndex.signedValue * 3 + i]
+            );
+            drawMenuAsciiText(arg0->x + 0x28, arg0->y + (i * 8) + 9, (u8 *)buf, 0, 0x100);
+        }
+    } else {
+        drawMenuSprite(
+            arg0->x,
+            arg0->y,
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            0x26,
+            0x20,
+            0x20,
+            0,
+            0
+        );
+        drawMenuSprite(
+            arg0->x,
+            arg0->y + 0x10,
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            0x27,
+            0x20,
+            0x20,
+            0,
+            0
+        );
+        for (i = 0; i < 4; i++) {
+            sprintf(buf, gCharacterSelectCoursePlayerRankFormat, gRacePlayers[i].unk18);
+            drawMenuAsciiText(arg0->x + 0x40, arg0->y + (i * 8) + 0x10, (u8 *)buf, 0, 0x100);
+        }
+    }
 }
-// clang-format on
 
 void updateCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor *arg0) {
     u8 state = arg0->sprite.bytes.state;
