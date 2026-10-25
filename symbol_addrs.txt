@@ -3257,3 +3257,4 @@ gControllerPakContinuePromptViewportAspectRatio = 0x800E0A40; // rom:0xE1640 siz
 gControllerPakFileDeleteViewportAspectRatio = 0x800E0A50; // rom:0xE1650 size:0x4
 gMainMenuViewportAspectRatio = 0x800E08B0; // rom:0xE14B0 size:0x4
 gMainMenuTitleTrademarkText = 0x800E1050; // rom:0xE1C50 size:0x3
+gRaceUiScorePopupValueFormat = 0x800E14D0; // rom:0xE20D0 size:0x4

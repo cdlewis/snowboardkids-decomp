@@ -136,7 +136,7 @@ typedef struct {
     RaceTimer timeTrialRecordSplitTimes[11];
 } RaceUiTimeTrialSaveData;
 
-extern const char D_800E14D0[];
+extern const char gRaceUiScorePopupValueFormat[];
 
 void renderRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0) {
     volatile u8 pad[8];
@@ -3455,7 +3455,7 @@ void drawRaceUiScorePopup(RaceUiPopupActor *arg0) {
         );
         drawAssetTableSprite((s16)(arg0->x + 0x28), (s16)(arg0->y.word - 8),
             getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x8C);
-        sprintf(buffer, D_800E14D0, arg0->parent);
+        sprintf(buffer, gRaceUiScorePopupValueFormat, arg0->parent);
         for (i = 0; i != 4; i++) {
             if (buffer[i] != ' ') {
                 drawAssetTableSpriteWithExplicitPalette(
