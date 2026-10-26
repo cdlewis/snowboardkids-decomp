@@ -81,7 +81,11 @@ create_unique_dir() {
 }
 
 run_cli() {
-    "$CLI" "${CLI_ARGS[@]}" "$1"
+    local prompt="$1"
+    if [[ "$ASM_ROOT" == "asm.jp" || "$ASM_PATH" == asm.jp/* ]]; then
+        prompt="$prompt This is the JP version of the function."
+    fi
+    "$CLI" "${CLI_ARGS[@]}" "$prompt"
 }
 
 # Check if argument is provided
