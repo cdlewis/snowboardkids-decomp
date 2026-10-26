@@ -11,9 +11,14 @@ ID=""
 ARG=""
 CLI="claude"
 CLI_ARGS=()
+ASM_ROOT="asm"
 
 while [[ $# -gt 0 ]]; do
     case $1 in
+        --jp)
+            ASM_ROOT="asm.jp"
+            shift
+            ;;
         --bootstrap)
             BOOTSTRAP=true
             shift
@@ -81,7 +86,7 @@ run_cli() {
 
 # Check if argument is provided
 if [ -z "$ARG" ]; then
-    echo "Usage: $0 [--bootstrap] [--bootstrap-only] [--glaude] [--codex] [--id ID] <function_name_or_path_or_scratch_id>"
+    echo "Usage: $0 [--bootstrap] [--bootstrap-only] [--glaude] [--codex] [--jp] [--id ID] <function_name_or_path_or_scratch_id>"
     exit 1
 fi
 
@@ -170,11 +175,11 @@ else
         FUNC_NAME="${FUNC_NAME}.s"
     fi
 
-    # Find the file anywhere under asm, including standalone asm subsegments.
-    ASM_PATH=$(find asm -name "$FUNC_NAME" -type f 2>/dev/null | head -1)
+    # Search the selected region, including standalone asm subsegments.
+    ASM_PATH=$(find "$ASM_ROOT" -name "$FUNC_NAME" -type f 2>/dev/null | head -1)
 
     if [ -z "$ASM_PATH" ]; then
-        echo "Error: Could not find assembly file for function: $FUNC_NAME"
+        echo "Error: Could not find assembly file for function: $FUNC_NAME in $ASM_ROOT"
         exit 1
     fi
 
