@@ -38,9 +38,7 @@ extern OSMesgQueue gRomDmaQueue;
 extern OSMesgQueue gSchedulerClientQueue;
 #endif
 
-#if defined(VERSION_US)
 extern u8 gDepthBufferPhysicalAddress[];
-#endif
 
 void dmaReadRom(u32 romOffset, void *ramAddress, s32 size);
 void appendFadeOverlayDisplayList(void);

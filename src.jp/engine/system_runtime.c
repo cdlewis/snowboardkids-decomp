@@ -630,14 +630,8 @@ void appendFadeOverlayDisplayList(void) {
     gDPSetFogColor(gRegionAllocPtr++, gFadeColorRed, gFadeColorGreen, gFadeColorBlue, 255);
 }
 
-// submitFramebufferRenderTask best match: 99.952%
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/engine/system_runtime/submitFramebufferRenderTask.s")
-
-#ifdef NON_MATCHING
 void submitFramebufferRenderTask(u8 frameIndex) {
     SchedulerTask *schedulerTask;
-    FrameRenderData *renderData;
-    Gfx *prepareDisplayList;
     s32 nextFramebufferIndex;
 
     gFramebufferColorBufferIndex++;
@@ -649,8 +643,7 @@ void submitFramebufferRenderTask(u8 frameIndex) {
     selectMenuRenderScratchBuffer(frameIndex);
 
     gRegionAllocPtr = gFrameRenderTasks[frameIndex].displayList;
-    renderData = &gFrameRenderTasks[frameIndex].renderData;
-    gCurrentFrameRenderData = renderData;
+    gCurrentFrameRenderData = &gFrameRenderTasks[frameIndex].renderData;
     schedulerTask = &gFrameRenderTasks[frameIndex].schedulerTask;
 
     gSPSegment(gRegionAllocPtr++, 0, 0);
@@ -834,7 +827,10 @@ void submitFramebufferRenderTask(u8 frameIndex) {
     gSPEndDisplayList(gRegionAllocPtr++);
 
     writebackMenuRenderScratchBuffer(frameIndex);
-    osWritebackDCache(renderData, (u8 *)gRegionAllocPtr - (u8 *)renderData);
+    osWritebackDCache(
+        &gFrameRenderTasks[frameIndex].renderData,
+        (u32)gRegionAllocPtr - (u32)&gFrameRenderTasks[frameIndex].renderData
+    );
 
     schedulerTask->rspTask.t.data_ptr = (u64 *)(gCurrentFrameRenderData + 1);
     schedulerTask->rspTask.t.data_size = (gRegionAllocPtr - (Gfx *)(gCurrentFrameRenderData + 1)) * sizeof(Gfx);
@@ -848,7 +844,8 @@ void submitFramebufferRenderTask(u8 frameIndex) {
     schedulerTask->rspTask.t.dram_stack = (u64 *)gRspDramStack;
     schedulerTask->rspTask.t.dram_stack_size = RSP_DRAM_STACK_SIZE;
     schedulerTask->rspTask.t.output_buff = (u64 *)gRspOutputBuffer;
-    schedulerTask->rspTask.t.output_buff_size = (u64 *)((unsigned long)gRspOutputBuffer + (long long)RSP_OUTPUT_BUFFER_SIZE);
+    schedulerTask->rspTask.t.output_buff_size =
+        (u64 *)((unsigned long)gRspOutputBuffer + (long long)RSP_OUTPUT_BUFFER_SIZE);
     schedulerTask->rspTask.t.yield_data_ptr = (u64 *)gRspYieldBuffer;
     schedulerTask->rspTask.t.yield_data_size = RSP_YIELD_BUFFER_SIZE;
     schedulerTask->next = NULL;
@@ -868,8 +865,7 @@ void submitFramebufferRenderTask(u8 frameIndex) {
     }
 
     schedulerTask = &gFramebufferPrepareTasks[frameIndex].schedulerTask;
-    prepareDisplayList = gFramebufferPrepareTasks[frameIndex].displayList;
-    gRegionAllocPtr = prepareDisplayList;
+    gRegionAllocPtr = gFramebufferPrepareTasks[frameIndex].displayList;
     gSPSegment(gRegionAllocPtr++, 0, 0);
     gDPSetScissor(gRegionAllocPtr++, G_SC_NON_INTERLACE, 0, 0, FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT);
     gSPClearGeometryMode(gRegionAllocPtr++, G_ZBUFFER | G_SHADE | G_CULL_BOTH | G_FOG | G_LIGHTING | G_SHADING_SMOOTH);
@@ -895,10 +891,14 @@ void submitFramebufferRenderTask(u8 frameIndex) {
     gDPFullSync(gRegionAllocPtr++);
     gSPEndDisplayList(gRegionAllocPtr++);
 
-    osWritebackDCache(prepareDisplayList, (u8 *)gRegionAllocPtr - (u8 *)prepareDisplayList);
+    osWritebackDCache(
+        gFramebufferPrepareTasks[frameIndex].displayList,
+        (u32)gRegionAllocPtr - (u32)gFramebufferPrepareTasks[frameIndex].displayList
+    );
 
     schedulerTask->rspTask.t.data_ptr = (u64 *)gFramebufferPrepareTasks[frameIndex].displayList;
-    schedulerTask->rspTask.t.data_size = (gRegionAllocPtr - gFramebufferPrepareTasks[frameIndex].displayList) * sizeof(Gfx);
+    schedulerTask->rspTask.t.data_size =
+        (gRegionAllocPtr - gFramebufferPrepareTasks[frameIndex].displayList) * sizeof(Gfx);
     schedulerTask->rspTask.t.type = M_GFXTASK;
     schedulerTask->rspTask.t.ucode_boot = (u64 *)rspbootTextStart;
     schedulerTask->rspTask.t.ucode_boot_size = (unsigned long)aspMainTextStart - (unsigned long)rspbootTextStart;
@@ -908,7 +908,8 @@ void submitFramebufferRenderTask(u8 frameIndex) {
     schedulerTask->rspTask.t.dram_stack = (u64 *)gRspDramStack;
     schedulerTask->rspTask.t.dram_stack_size = RSP_DRAM_STACK_SIZE;
     schedulerTask->rspTask.t.output_buff = (u64 *)gRspOutputBuffer;
-    schedulerTask->rspTask.t.output_buff_size = (u64 *)((unsigned long)gRspOutputBuffer + (long long)RSP_OUTPUT_BUFFER_SIZE);
+    schedulerTask->rspTask.t.output_buff_size =
+        (u64 *)((unsigned long)gRspOutputBuffer + (long long)RSP_OUTPUT_BUFFER_SIZE);
     schedulerTask->rspTask.t.yield_data_ptr = (u64 *)gRspYieldBuffer;
     schedulerTask->rspTask.t.yield_data_size = RSP_YIELD_BUFFER_SIZE;
     schedulerTask->next = NULL;
@@ -919,4 +920,3 @@ void submitFramebufferRenderTask(u8 frameIndex) {
 
     osSendMesg(getSchedulerGraphicsTaskQueue(&gSchedulerState), schedulerTask, OS_MESG_BLOCK);
 }
-#endif
