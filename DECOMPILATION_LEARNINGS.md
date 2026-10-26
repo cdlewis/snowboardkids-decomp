@@ -187,6 +187,14 @@ that extra load can shift a base pointer into the register the target uses.
 The nudges below are semantics-preserving; use them when instruction sequence
 and control flow already match and only register *names* differ.
 
+- **Let the compiler carry actor state through a switch.** In JP
+  `updateCharacterSelectSelectedCharacterTokens`, an explicit cached state local
+  and manual reload after a flight loop produced the wrong zero-step and landing
+  exits. Comparing, switching on, and finally publishing the actor's state field
+  directly reproduced all target reloads with an ordinary indexed `for` loop.
+  This also removed the need for XOR-zero dispatch, volatile reads, or goto exits.
+  A near-match's state local can be a decompiler artifact rather than original
+  source; reconstruct field accesses before reshaping the loop around it.
 - **Don't cache a value the target keeps reloading.** If a field/global is
   read several times across `jal` calls and the target reloads it fresh before
   each use, reference it directly each time rather than hoisting it into a
