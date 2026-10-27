@@ -471,37 +471,42 @@ void initCourseSelectPreviewModelOut(void *arg0) {
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateCourseSelectPreviewModelOut);
 }
 
-// drawCourseSelectCourseIconList best standalone match: 99.922% (drawCourseSelectCourseIconList-7/base_9.c)
+// drawCourseSelectCourseIconList best standalone match: 99.961% (drawCourseSelectCourseIconList-10/base_23.c; frame 0xA8 vs target 0x90)
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectCourseIconList.s")
 
 #ifdef NON_MATCHING
 void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
     CourseSelectIconListActor *playerItemCountActor;
+    CourseSelectIconListActor *playerIconActor;
     s32 playerIndex;
     s32 iconIndex;
     s32 highlightAlpha;
-    s32 iconTileIndex;
+    u16 iconTileIndex;
+    CourseSelectIconListActor *itemCountActor;
     s32 leftClipOffset;
     s32 selectedCourseId;
     s32 selectionState;
 
     playerItemCountActor = iconList;
+    itemCountActor = playerItemCountActor;
 
     for (playerIndex = 0; playerIndex < (s32)gPlayerCount; playerIndex++) {
         leftClipOffset = (playerIndex >= 2) * 0x88;
 
-        for (iconIndex = 0; iconIndex < playerItemCountActor->itemCounts[playerIndex]; iconIndex++) {
-            if (iconIndex < (iconList->itemCounts[playerIndex] - 1)) {
+        playerIconActor = iconList;
+
+        for (iconIndex = 0; iconIndex < itemCountActor->itemCounts[playerIndex]; iconIndex++) {
+            if (iconIndex < (playerIconActor->itemCounts[playerIndex] - 1)) {
                 if (gPlayerCount == 1) {
                     if (gRacePlayers[playerIndex].selectedCharacterId != 5) {
-                        iconTileIndex = (iconIndex + 1) & 0xFFFF;
+                        iconTileIndex = (iconIndex + 1);
                     } else {
-                        iconTileIndex = (iconIndex + 6) & 0xFFFF;
+                        iconTileIndex = (iconIndex + 6);
                     }
                 } else if (gRacePlayers[playerIndex].selectedCharacterId != 5) {
-                    iconTileIndex = (iconIndex + 0x14) & 0xFFFF;
+                    iconTileIndex = (iconIndex + 0x14);
                 } else {
-                    iconTileIndex = (iconIndex + 0x18) & 0xFFFF;
+                    iconTileIndex = (iconIndex + 0x18);
                 }
 
                 highlightAlpha = 0;
