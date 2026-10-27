@@ -478,8 +478,8 @@ segments:
 
   - name: buffers
     type: code
+    start: 0xE35C0
     vram: 0x80160480
-    exclusive_ram_id: memory
     bss_size: 0x29EB80
     subsegments:
       - { type: .bss, vram: 0x80160480, name: engine/system_runtime_buffers }
@@ -1420,12 +1420,14 @@ segments:
   - type: course_display_list
     start: 0x145380
     name: _145380
-    vram: 0
+    vram: 0x02000000
+    exclusive_ram_id: asset__145380
 
   - type: course_display_list
     start: 0x1467B0
     name: _1467B0
-    vram: 0
+    vram: 0x02000000
+    exclusive_ram_id: asset__1467B0
 
   - type: course_display_list
     start: 0x147910
@@ -1575,6 +1577,7 @@ segments:
     start: 0x14B450
     name: SNOWBOARD_MODELS
     vram: 0
+    exclusive_ram_id: asset_SNOWBOARD_MODELS
     # Snowboard geometry, including ghost variants; vertices share segment 2.
     compression: none
     root_offsets: [0x180, 0x4B8, 0x828, 0x1AE0, 0x1F80, 0x2300, 0x2F68, 0x3408, 0x3768, 0x3A48, 0x3BC0, 0x3DB0, 0x3F68, 0x4228, 0x43E8, 0x4720, 0x4A10, 0x4B70]
@@ -1583,37 +1586,44 @@ segments:
     type: course_display_list
     name: SLASH_GRAPHICS
     vram: 0
+    exclusive_ram_id: asset_SLASH_GRAPHICS
 
   - start: 0x152930
     type: course_display_list
     name: WENDY_GRAPHICS
     vram: 0
+    exclusive_ram_id: asset_WENDY_GRAPHICS
 
   - start: 0x155A20
     type: course_display_list
     name: JAM_GRAPHICS
     vram: 0
+    exclusive_ram_id: asset_JAM_GRAPHICS
 
   - start: 0x158D90
     type: course_display_list
     name: LINDA_GRAPHICS
     vram: 0
+    exclusive_ram_id: asset_LINDA_GRAPHICS
 
   - start: 0x15C750
     type: course_display_list
     name: TOMMY_GRAPHICS
     vram: 0
+    exclusive_ram_id: asset_TOMMY_GRAPHICS
 
   - start: 0x160360
     type: course_display_list
     name: NINJA_GRAPHICS
     vram: 0
+    exclusive_ram_id: asset_NINJA_GRAPHICS
 
   - type: course_model_resources
     start: 0x163410
     name: BIG_SNOWMAN_COURSE_MODEL_RESOURCES
     # Texture +0x5B80: 16x32 scenery figure; exact placed object unconfirmed.
     vram: 0
+    exclusive_ram_id: asset_BIG_SNOWMAN_COURSE_MODEL_RESOURCES
     graphics_start: 0xE35C0
     graphics_end: 0xEC9A0
     root_offsets: [0x8900, 0x89E0, 0x8D50, 0x8E40]
@@ -1622,6 +1632,7 @@ segments:
     start: 0x171480
     name: SUNSET_ROCK_COURSE_MODEL_RESOURCES
     vram: 0
+    exclusive_ram_id: asset_SUNSET_ROCK_COURSE_MODEL_RESOURCES
     graphics_start: 0xEC9A0
     graphics_end: 0xF6160
     root_offsets: [0x8E30, 0x8F80, 0x9148]
@@ -1630,6 +1641,7 @@ segments:
     start: 0x17D220
     name: NIGHT_HIGHWAY_COURSE_MODEL_RESOURCES
     vram: 0
+    exclusive_ram_id: asset_NIGHT_HIGHWAY_COURSE_MODEL_RESOURCES
     graphics_start: 0xF6160
     graphics_end: 0xFEDA0
     root_offsets: [0x8628, 0x8790, 0x8B40]
@@ -1638,6 +1650,7 @@ segments:
     start: 0x186910
     name: GRASS_VALLEY_COURSE_MODEL_RESOURCES
     vram: 0
+    exclusive_ram_id: asset_GRASS_VALLEY_COURSE_MODEL_RESOURCES
     graphics_start: 0xFEDA0
     graphics_end: 0x10AAB0
     root_offsets: [0xB400, 0xB4E0, 0xB6F0]
@@ -1646,6 +1659,7 @@ segments:
     start: 0x197490
     name: DIZZY_LAND_COURSE_MODEL_RESOURCES
     vram: 0
+    exclusive_ram_id: asset_DIZZY_LAND_COURSE_MODEL_RESOURCES
     graphics_start: 0x10AAB0
     graphics_end: 0x118670
     root_offsets: [0xBD48, 0xBF40, 0xC1C8, 0xC6A0, 0xC7D8, 0xC910, 0xCC20, 0xCE48, 0xCFB0, 0xD3A8, 0xD448]
@@ -1655,6 +1669,7 @@ segments:
     name: QUICKSAND_VALLEY_COURSE_MODEL_RESOURCES
     # Texture +0x6980: 32x32 LIFT IN sign.
     vram: 0
+    exclusive_ram_id: asset_QUICKSAND_VALLEY_COURSE_MODEL_RESOURCES
     graphics_start: 0x118670
     graphics_end: 0x125C90
     root_offsets: [0xC060, 0xC238, 0xC428, 0xC7A8, 0xC808]
@@ -1664,6 +1679,7 @@ segments:
     name: SILVER_MOUNTAIN_COURSE_MODEL_RESOURCES
     # Texture +0x2600: 32x16 artwork; wood-like identification remains tentative.
     vram: 0
+    exclusive_ram_id: asset_SILVER_MOUNTAIN_COURSE_MODEL_RESOURCES
     graphics_start: 0x125C90
     graphics_end: 0x131A90
     root_offsets: [0xB7B8, 0xB8C8, 0xBAD8]
@@ -1672,6 +1688,7 @@ segments:
     start: 0x1C24B0
     name: ANIMAL_LAND_COURSE_MODEL_RESOURCES
     vram: 0
+    exclusive_ram_id: asset_ANIMAL_LAND_COURSE_MODEL_RESOURCES
     graphics_start: 0x131A90
     graphics_end: 0x1384B0
     root_offsets: [0x6430, 0x6548, 0x6858]
@@ -1680,6 +1697,7 @@ segments:
     start: 0x1C9630
     name: NINJA_LAND_COURSE_MODEL_RESOURCES
     vram: 0
+    exclusive_ram_id: asset_NINJA_LAND_COURSE_MODEL_RESOURCES
     graphics_start: 0x1384B0
     graphics_end: 0x13F3B0
     root_offsets: [0x67B0, 0x6880, 0x6BA0]
@@ -1688,6 +1706,7 @@ segments:
     start: 0x1D3070
     name: ROOKIE_MOUNTAIN_COURSE_MODEL_RESOURCES
     vram: 0
+    exclusive_ram_id: asset_ROOKIE_MOUNTAIN_COURSE_MODEL_RESOURCES
     graphics_start: 0x13F3B0
     graphics_end: 0x145380
     root_offsets: [0x57D8, 0x58A8, 0x5BA8]
@@ -1696,6 +1715,7 @@ segments:
     start: 0x1D82B0
     name: SHARED_RACE_MODEL_RESOURCES
     vram: 0
+    exclusive_ram_id: asset_SHARED_RACE_MODEL_RESOURCES
     graphics_start: 0x147910
     graphics_end: 0x14B450
     root_offsets: [0]
@@ -1704,6 +1724,7 @@ segments:
     start: 0x1DCED0
     name: _1DCED0
     vram: 0
+    exclusive_ram_id: asset__1DCED0
     graphics_start: 0x145380
     graphics_end: 0x1467B0
     root_offsets: [0]
@@ -1712,6 +1733,7 @@ segments:
     start: 0x1DE360
     name: _1DE360
     vram: 0
+    exclusive_ram_id: asset__1DE360
     graphics_start: 0x1467B0
     graphics_end: 0x147910
     root_offsets: [0]
@@ -1722,11 +1744,13 @@ segments:
     start: 0x1E0F70
     name: _1E0F70
     vram: 0
+    exclusive_ram_id: asset__1E0F70
 
   - type: model_resources
     start: 0x1E19C0
     name: SLASH_MODEL_RESOURCES
     vram: 0
+    exclusive_ram_id: asset_SLASH_MODEL_RESOURCES
     graphics_start: 0x1502A0
     graphics_end: 0x152930
     root_offsets: [0x0, 0x68, 0xD8, 0x168, 0x1D8, 0x268, 0x540, 0xA28, 0xAA0, 0xC48, 0xCC0, 0xE68, 0x10C0, 0x1348, 0x13B0, 0x1420, 0x14B0, 0x1520, 0x15B0, 0x1888, 0x1D70, 0x1DE8, 0x1F90, 0x2008, 0x21B0, 0x2408]
@@ -1735,6 +1759,7 @@ segments:
     start: 0x1E2380
     name: WENDY_MODEL_RESOURCES
     vram: 0
+    exclusive_ram_id: asset_WENDY_MODEL_RESOURCES
     graphics_start: 0x152930
     graphics_end: 0x155A20
     root_offsets: [0x0, 0x128, 0x218, 0x308, 0x3F8, 0x4F0, 0x850, 0xBE8, 0xD10, 0xFD0, 0x1128, 0x13E8, 0x1630, 0x1878, 0x19A0, 0x1A90, 0x1B80, 0x1C70, 0x1D68, 0x20C8, 0x2460, 0x2588, 0x2848, 0x29A0, 0x2C60, 0x2EA8]
@@ -1743,6 +1768,7 @@ segments:
     start: 0x1E2DE0
     name: JAM_MODEL_RESOURCES
     vram: 0
+    exclusive_ram_id: asset_JAM_MODEL_RESOURCES
     graphics_start: 0x155A20
     graphics_end: 0x158D90
     root_offsets: [0x0, 0xE0, 0x1D0, 0x338, 0x428, 0x4F0, 0x8A0, 0xDD8, 0xF50, 0x1178, 0x12F0, 0x1508, 0x1760, 0x19B8, 0x1A98, 0x1B88, 0x1CF0, 0x1DE0, 0x1EA8, 0x2258, 0x2790, 0x2908, 0x2B30, 0x2CA8, 0x2EC0, 0x3118]
@@ -1751,6 +1777,7 @@ segments:
     start: 0x1E3FE0
     name: LINDA_MODEL_RESOURCES
     vram: 0
+    exclusive_ram_id: asset_LINDA_MODEL_RESOURCES
     graphics_start: 0x158D90
     graphics_end: 0x15C750
     root_offsets: [0x0, 0x1C8, 0x378, 0x528, 0x6D8, 0x888, 0xCD8, 0x1148, 0x1210, 0x14D0, 0x1590, 0x1850, 0x1A98, 0x1CE0, 0x1EA8, 0x2058, 0x2208, 0x23B8, 0x2568, 0x29B8, 0x2E28, 0x2EF0, 0x31B0, 0x3270, 0x3530, 0x3778]
@@ -1759,6 +1786,7 @@ segments:
     start: 0x1E4AB0
     name: TOMMY_MODEL_RESOURCES
     vram: 0
+    exclusive_ram_id: asset_TOMMY_MODEL_RESOURCES
     graphics_start: 0x15C750
     graphics_end: 0x160360
     root_offsets: [0x0, 0xE0, 0x2D0, 0x4E0, 0x6B0, 0x8C0, 0xCE0, 0x1298, 0x1408, 0x1608, 0x1778, 0x1978, 0x1BA0, 0x1E08, 0x1EE8, 0x20D8, 0x22E8, 0x24B8, 0x26C8, 0x2AE8, 0x30A0, 0x3210, 0x3410, 0x3580, 0x3780, 0x39A8]
@@ -1767,6 +1795,7 @@ segments:
     start: 0x1E68A0
     name: NINJA_MODEL_RESOURCES
     vram: 0
+    exclusive_ram_id: asset_NINJA_MODEL_RESOURCES
     graphics_start: 0x160360
     graphics_end: 0x163410
     root_offsets: [0x0, 0x2A0, 0x330, 0x518, 0x5B8, 0x7B0, 0xCF0, 0x10E8, 0x1170, 0x1410, 0x1498, 0x1738, 0x17C8, 0x1858, 0x1AF8, 0x1B88, 0x1D70, 0x1E10, 0x2008, 0x2548, 0x2940, 0x29C8, 0x2C68, 0x2CF0, 0x2F90, 0x3020]
@@ -1777,6 +1806,7 @@ segments:
     # Entry 18/palette 7: star +0x1FE0 (hit-effect group).
     # Entry 41/palette 12: fragment +0x4EE0 (burst-text entries 39..42).
     vram: 0
+    exclusive_ram_id: asset_RACE_EFFECT_SPRITES
 
   # Optional compressed course sprite tables. Animal Land (course 7) has no
   # sprite-table asset; the sequence therefore skips from Silver Mountain to
@@ -1786,46 +1816,55 @@ segments:
     start: 0x1EC0F0
     name: BIG_SNOWMAN_COURSE_SPRITES
     vram: 0
+    exclusive_ram_id: asset_BIG_SNOWMAN_COURSE_SPRITES
 
   - type: course_sprite_table
     start: 0x1EC4A0
     name: SUNSET_ROCK_COURSE_SPRITES
     vram: 0
+    exclusive_ram_id: asset_SUNSET_ROCK_COURSE_SPRITES
 
   - type: course_sprite_table
     start: 0x1EC810
     name: NIGHT_HIGHWAY_COURSE_SPRITES
     vram: 0
+    exclusive_ram_id: asset_NIGHT_HIGHWAY_COURSE_SPRITES
 
   - type: course_sprite_table
     start: 0x1ECD00
     name: GRASS_VALLEY_COURSE_SPRITES
     vram: 0
+    exclusive_ram_id: asset_GRASS_VALLEY_COURSE_SPRITES
 
   - type: course_sprite_table
     start: 0x1ED910
     name: DIZZY_LAND_COURSE_SPRITES
     vram: 0
+    exclusive_ram_id: asset_DIZZY_LAND_COURSE_SPRITES
 
   - type: course_sprite_table
     start: 0x1EDC80
     name: QUICKSAND_VALLEY_COURSE_SPRITES
     vram: 0
+    exclusive_ram_id: asset_QUICKSAND_VALLEY_COURSE_SPRITES
 
   - type: course_sprite_table
     start: 0x1EE060
     name: SILVER_MOUNTAIN_COURSE_SPRITES
     vram: 0
+    exclusive_ram_id: asset_SILVER_MOUNTAIN_COURSE_SPRITES
 
   - type: course_sprite_table
     start: 0x1EEEA0
     name: NINJA_LAND_COURSE_SPRITES
     vram: 0
+    exclusive_ram_id: asset_NINJA_LAND_COURSE_SPRITES
 
   - type: course_sprite_table
     start: 0x1EF1D0
     name: ROOKIE_MOUNTAIN_COURSE_SPRITES
     vram: 0
+    exclusive_ram_id: asset_ROOKIE_MOUNTAIN_COURSE_SPRITES
 
   - type: sprite_table
     start: 0x1EF530
@@ -1833,52 +1872,61 @@ segments:
     # Entry 9/palette 9 at +0x4258 is declared 64x57. Board renderers load
     # 64x64; the extra seven sampled rows lie outside the declared image.
     vram: 0
+    exclusive_ram_id: asset_SNOWBOARD_TEXTURES
 
   - type: sprite_table
     start: 0x1F1A90
     name: _1F1A90
     vram: 0
+    exclusive_ram_id: asset__1F1A90
 
   - start: 0x1F2220
     type: race_animation
     name: SLASH_RACE_ANIMATIONS
     vram: 0
+    exclusive_ram_id: asset_SLASH_RACE_ANIMATIONS
     part_count: 12
 
   - start: 0x1F7D20
     type: race_animation
     name: WENDY_RACE_ANIMATIONS
     vram: 0
+    exclusive_ram_id: asset_WENDY_RACE_ANIMATIONS
     part_count: 12
 
   - start: 0x1FE860
     type: race_animation
     name: JAM_RACE_ANIMATIONS
     vram: 0
+    exclusive_ram_id: asset_JAM_RACE_ANIMATIONS
     part_count: 12
 
   - start: 0x2044B0
     type: race_animation
     name: LINDA_RACE_ANIMATIONS
     vram: 0
+    exclusive_ram_id: asset_LINDA_RACE_ANIMATIONS
     part_count: 12
 
   - start: 0x20A940
     type: race_animation
     name: TOMMY_RACE_ANIMATIONS
     vram: 0
+    exclusive_ram_id: asset_TOMMY_RACE_ANIMATIONS
     part_count: 12
 
   - start: 0x211470
     type: race_animation
     name: NINJA_RACE_ANIMATIONS
     vram: 0
+    exclusive_ram_id: asset_NINJA_RACE_ANIMATIONS
     part_count: 12
 
   - start: 0x215BE0
     type: scene_animation
     name: _215BE0
     vram: 0
+    exclusive_ram_id: asset__215BE0
     part_count: 14
 
   # Per-course compressed collision/path surface data, in course-index order.
@@ -1887,162 +1935,194 @@ segments:
     start: 0x21D9D0
     name: BIG_SNOWMAN_COURSE_SURFACE_DATA
     vram: 0
+    exclusive_ram_id: asset_BIG_SNOWMAN_COURSE_SURFACE_DATA
 
   - type: course_surface_data
     start: 0x222500
     name: SUNSET_ROCK_COURSE_SURFACE_DATA
     vram: 0
+    exclusive_ram_id: asset_SUNSET_ROCK_COURSE_SURFACE_DATA
 
   - type: course_surface_data
     start: 0x2274A0
     name: NIGHT_HIGHWAY_COURSE_SURFACE_DATA
     vram: 0
+    exclusive_ram_id: asset_NIGHT_HIGHWAY_COURSE_SURFACE_DATA
 
   - type: course_surface_data
     start: 0x22AE50
     name: GRASS_VALLEY_COURSE_SURFACE_DATA
     vram: 0
+    exclusive_ram_id: asset_GRASS_VALLEY_COURSE_SURFACE_DATA
 
   - type: course_surface_data
     start: 0x2308E0
     name: DIZZY_LAND_COURSE_SURFACE_DATA
     vram: 0
+    exclusive_ram_id: asset_DIZZY_LAND_COURSE_SURFACE_DATA
 
   - type: course_surface_data
     start: 0x2349E0
     name: QUICKSAND_VALLEY_COURSE_SURFACE_DATA
     vram: 0
+    exclusive_ram_id: asset_QUICKSAND_VALLEY_COURSE_SURFACE_DATA
 
   - type: course_surface_data
     start: 0x23A7D0
     name: SILVER_MOUNTAIN_COURSE_SURFACE_DATA
     vram: 0
+    exclusive_ram_id: asset_SILVER_MOUNTAIN_COURSE_SURFACE_DATA
 
   - type: course_surface_data
     start: 0x23E9D0
     name: ANIMAL_LAND_COURSE_SURFACE_DATA
     vram: 0
+    exclusive_ram_id: asset_ANIMAL_LAND_COURSE_SURFACE_DATA
 
   - type: course_surface_data
     start: 0x23FCC0
     name: NINJA_LAND_COURSE_SURFACE_DATA
     vram: 0
+    exclusive_ram_id: asset_NINJA_LAND_COURSE_SURFACE_DATA
 
   - type: course_surface_data
     start: 0x241160
     name: ROOKIE_MOUNTAIN_COURSE_SURFACE_DATA
     vram: 0
+    exclusive_ram_id: asset_ROOKIE_MOUNTAIN_COURSE_SURFACE_DATA
 
   - type: sprite_table
     start: 0x2427D0
     name: _2427D0
     vram: 0
+    exclusive_ram_id: asset__2427D0
 
   - type: sprite_table
     start: 0x243270
     name: RACE_ITEM_SPRITES
     vram: 0
+    exclusive_ram_id: asset_RACE_ITEM_SPRITES
 
   - type: sprite_table
     start: 0x245A80
     name: SHARED_UI_SPRITES
     vram: 0
+    exclusive_ram_id: asset_SHARED_UI_SPRITES
     ci8_entry_ranges: [[65, 72]]
 
   - type: replay
     start: 0x24C8E0
     name: _24C8E0
     vram: 0
+    exclusive_ram_id: asset__24C8E0
 
   - type: replay
     start: 0x24DBE0
     name: MAIN_MENU_DEMO_ROOKIE_MOUNTAIN_REPLAY
     vram: 0
+    exclusive_ram_id: asset_MAIN_MENU_DEMO_ROOKIE_MOUNTAIN_REPLAY
 
   - type: replay
     start: 0x250260
     name: MAIN_MENU_DEMO_BIG_SNOWMAN_REPLAY
     vram: 0
+    exclusive_ram_id: asset_MAIN_MENU_DEMO_BIG_SNOWMAN_REPLAY
 
   - type: replay
     start: 0x2521F0
     name: MAIN_MENU_DEMO_SUNSET_ROCK_REPLAY
     vram: 0
+    exclusive_ram_id: asset_MAIN_MENU_DEMO_SUNSET_ROCK_REPLAY
 
   - type: replay
     start: 0x254380
     name: MAIN_MENU_DEMO_ANIMAL_LAND_REPLAY
     vram: 0
+    exclusive_ram_id: asset_MAIN_MENU_DEMO_ANIMAL_LAND_REPLAY
 
   - type: replay
     start: 0x256420
     name: MAIN_MENU_DEMO_GRASS_VALLEY_REPLAY
     vram: 0
+    exclusive_ram_id: asset_MAIN_MENU_DEMO_GRASS_VALLEY_REPLAY
 
   - type: replay
     start: 0x258C80
     name: _258C80
     vram: 0
+    exclusive_ram_id: asset__258C80
 
   - type: replay
     start: 0x25B410
     name: _25B410
     vram: 0
+    exclusive_ram_id: asset__25B410
 
   - type: replay
     start: 0x25DF80
     name: _25DF80
     vram: 0
+    exclusive_ram_id: asset__25DF80
 
   - type: replay
     start: 0x260A30
     name: _260A30
     vram: 0
+    exclusive_ram_id: asset__260A30
 
   - type: replay
     start: 0x263520
     name: _263520
     vram: 0
+    exclusive_ram_id: asset__263520
 
   - type: replay
     start: 0x265D30
     name: _265D30
     vram: 0
+    exclusive_ram_id: asset__265D30
 
   - type: replay
     start: 0x2688C0
     name: _2688C0
     vram: 0
+    exclusive_ram_id: asset__2688C0
 
   - type: replay
     start: 0x26B1D0
     name: _26B1D0
     vram: 0
+    exclusive_ram_id: asset__26B1D0
 
   - type: replay
     start: 0x26DE60
     name: _26DE60
     vram: 0
+    exclusive_ram_id: asset__26DE60
 
   - type: replay
     start: 0x270730
     name: _270730
     vram: 0
+    exclusive_ram_id: asset__270730
 
   - type: replay
     start: 0x2732E0
     name: _2732E0
     vram: 0
+    exclusive_ram_id: asset__2732E0
 
   - type: pointer_bank
     start: 0x275A90
     name: SOUND_POINTER_BANK
     vram: 0
+    exclusive_ram_id: asset_SOUND_POINTER_BANK
 
   - type: sample_bank
     start: 0x27E290
     name: _27E290
     vram: 0
+    exclusive_ram_id: asset__27E290
     compression: none
     bank_asset: SOUND_POINTER_BANK
     sample_base_asset: _27E290
@@ -2051,6 +2131,7 @@ segments:
     type: sample_bank
     name: '369000'
     vram: 0
+    exclusive_ram_id: asset_'369000'
     compression: none
     bank_asset: SOUND_POINTER_BANK
     sample_base_asset: _27E290
@@ -2059,225 +2140,264 @@ segments:
     type: music_sequence
     name: _541D50
     vram: 0
+    exclusive_ram_id: asset__541D50
     compression: none
 
   - start: 0x5457B0
     type: music_sequence
     name: _5457B0
     vram: 0
+    exclusive_ram_id: asset__5457B0
     compression: none
 
   - start: 0x546940
     type: music_sequence
     name: _546940
     vram: 0
+    exclusive_ram_id: asset__546940
     compression: none
 
   - start: 0x546EE0
     type: music_sequence
     name: _546EE0
     vram: 0
+    exclusive_ram_id: asset__546EE0
     compression: none
 
   - start: 0x5487A0
     type: music_sequence
     name: _5487A0
     vram: 0
+    exclusive_ram_id: asset__5487A0
     compression: none
 
   - start: 0x549650
     type: music_sequence
     name: _549650
     vram: 0
+    exclusive_ram_id: asset__549650
     compression: none
 
   - start: 0x549AA0
     type: music_sequence
     name: _549AA0
     vram: 0
+    exclusive_ram_id: asset__549AA0
     compression: none
 
   - start: 0x549EF0
     type: music_sequence
     name: _549EF0
     vram: 0
+    exclusive_ram_id: asset__549EF0
     compression: none
 
   - start: 0x54AFE0
     type: music_sequence
     name: _54AFE0
     vram: 0
+    exclusive_ram_id: asset__54AFE0
     compression: none
 
   - start: 0x552640
     type: music_sequence
     name: _552640
     vram: 0
+    exclusive_ram_id: asset__552640
     compression: none
 
   - start: 0x55C020
     type: music_sequence
     name: _55C020
     vram: 0
+    exclusive_ram_id: asset__55C020
     compression: none
 
   - start: 0x563F20
     type: music_sequence
     name: _563F20
     vram: 0
+    exclusive_ram_id: asset__563F20
     compression: none
 
   - start: 0x56CFF0
     type: music_sequence
     name: _56CFF0
     vram: 0
+    exclusive_ram_id: asset__56CFF0
     compression: none
 
   - start: 0x5757B0
     type: music_sequence
     name: _5757B0
     vram: 0
+    exclusive_ram_id: asset__5757B0
     compression: none
 
   - start: 0x57E350
     type: music_sequence
     name: _57E350
     vram: 0
+    exclusive_ram_id: asset__57E350
     compression: none
 
   - start: 0x585570
     type: music_sequence
     name: _585570
     vram: 0
+    exclusive_ram_id: asset__585570
     compression: none
 
   - start: 0x58F6B0
     type: music_sequence
     name: _58F6B0
     vram: 0
+    exclusive_ram_id: asset__58F6B0
     compression: none
 
   - type: sprite_table
     start: 0x593D10
     name: _593D10
     vram: 0
+    exclusive_ram_id: asset__593D10
 
   - type: sprite_table
     start: 0x598A70
     name: _598A70
     vram: 0
+    exclusive_ram_id: asset__598A70
 
   - type: sprite_table
     start: 0x59AAA0
     name: _59AAA0
     vram: 0
+    exclusive_ram_id: asset__59AAA0
     ci8_entry_ranges: [[55, 67]]
 
   - type: tilemap
     start: 0x59DFE0
     name: _59DFE0
     vram: 0
+    exclusive_ram_id: asset__59DFE0
     image_format: ci4
 
   - start: 0x59E7F0
     type: sprite_table
     name: 59E7F0
     vram: 0
+    exclusive_ram_id: asset_59E7F0
 
   - type: sprite_table
     start: 0x5A1ED0
     name: _5A1ED0
     vram: 0
+    exclusive_ram_id: asset__5A1ED0
     ci8_entry_ranges: [[59, 395]]
 
   - type: sprite_table
     start: 0x5C5320
     name: _5C5320
     vram: 0
+    exclusive_ram_id: asset__5C5320
 
   - type: sprite_table
     start: 0x5CBA80
     name: _5CBA80
     vram: 0
+    exclusive_ram_id: asset__5CBA80
 
   - type: sprite_table
     start: 0x5CCD40
     name: _5CCD40
     vram: 0
+    exclusive_ram_id: asset__5CCD40
     ci8_entry_ranges: [[0, 63]]
 
   - type: sprite_table
     start: 0x5D4280
     name: _5D4280
     vram: 0
+    exclusive_ram_id: asset__5D4280
     ci8_entry_ranges: [[26, 96]]
 
   - type: sprite_table
     start: 0x5DAF30
     name: _5DAF30
     vram: 0
+    exclusive_ram_id: asset__5DAF30
 
   - type: sprite_table
     start: 0x5DB9D0
     name: _5DB9D0
     vram: 0
+    exclusive_ram_id: asset__5DB9D0
 
   - type: tilemap
     start: 0x5DCBE0
     name: _5DCBE0
     vram: 0
+    exclusive_ram_id: asset__5DCBE0
     image_format: ci8
 
   - type: sprite_table
     start: 0x5DFDD0
     name: _5DFDD0
     vram: 0
+    exclusive_ram_id: asset__5DFDD0
 
   - type: tilemap
     start: 0x5E0350
     name: _5E0350
     vram: 0
+    exclusive_ram_id: asset__5E0350
     image_format: ci4
 
   - type: tilemap
     start: 0x5E0E40
     name: _5E0E40
     vram: 0
+    exclusive_ram_id: asset__5E0E40
     image_format: ci8
 
   - type: tilemap
     start: 0x5E26E0
     name: _5E26E0
     vram: 0
+    exclusive_ram_id: asset__5E26E0
     image_format: ci8
 
   - start: 0x5E34A0
     type: scene_animation
     name: _5E34A0
     vram: 0
+    exclusive_ram_id: asset__5E34A0
     part_count: 14
 
   - type: sprite_table
     start: 0x608560
     name: _608560
     vram: 0
+    exclusive_ram_id: asset__608560
 
   - type: tilemap
     start: 0x609AA0
     name: _609AA0
     vram: 0
+    exclusive_ram_id: asset__609AA0
     image_format: ci8
 
   - type: tilemap
     start: 0x60ECB0
     name: _60ECB0
     vram: 0
+    exclusive_ram_id: asset__60ECB0
     image_format: ci4
 
   - type: sprite_table
     start: 0x60F1A0
     name: _60F1A0
     vram: 0
+    exclusive_ram_id: asset__60F1A0
 
   - [0x60F990, bin] # everything beyond this point is blank
 

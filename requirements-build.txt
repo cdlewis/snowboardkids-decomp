@@ -1,5 +1,6 @@
 # ROM build and progress reporting
-splat64[mips]==0.39.1
+# Splat 0.50.1 with standalone rodata matching-directory fix.
+splat64[mips] @ git+https://github.com/cdlewis/splat.git@bb20f93fc37f730547d50cdf90f54bf1fd2ef2aa
 sortedcontainers
 pypng==0.20220715.0
-mapfile_parser>=2.12.1
+mapfile_parser>=2.13.2
