@@ -780,24 +780,18 @@ void initControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) 
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakFileDeleteFreeSpaceInfo);
 }
 
-// drawControllerPakFileDeleteFileList best match: 98.097% (base_8.c)
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/controller_pak/controller_pak_ui/drawControllerPakFileDeleteFileList.s")
-
-#ifdef NON_MATCHING
-// clang-format off
 void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
     s32 i;
     s32 digits;
     u8 insertIndex;
     u32 var_a3;
     s32 temp;
-    u16 alpha; // s5
+    u16 alpha;
     u16 fileIndex;
     s32 state;
     s32 j;
     u16 textB0[4];
     u16 fileNameText[19];
-    u16 textPadding[1];
     s32 var_a0;
 
     if (gControllerPakMenuState.visibleFileIndex == 0) {
@@ -829,59 +823,58 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
         drawMenuGlyphScript(arg0->positions[0].x + state, arg0->positions[0].y + j * 0x10, textB0, 1, alpha, 8);
 
         for (;;) {
-        if (gControllerPakFileStates[fileIndex].company_code != 0) {
-            var_a3 = 0;
-            for (i = 0; i < 0x10; i++) {
-                insertIndex = gControllerPakFileStates[fileIndex].game_name[i];
-                if (insertIndex == 0 && var_a3 == 0) {
-                    var_a3 = i;
+            if (gControllerPakFileStates[fileIndex].company_code != 0) {
+                var_a3 = 0;
+                for (i = 0; i < 0x10; i++) {
+                    insertIndex = gControllerPakFileStates[fileIndex].game_name[i];
+                    if (insertIndex == 0 && var_a3 == 0) {
+                        var_a3 = i;
+                    }
+                    if (insertIndex < 0x10) {
+                        fileNameText[i] = 0xFFFE;
+                    } else {
+                        fileNameText[i] = insertIndex - 0x10;
+                    }
                 }
-                if (insertIndex < 0x10) {
-                    fileNameText[i] = 0xFFFE;
-                } else {
-                    fileNameText[i] = insertIndex - 0x10;
-                }
-            }
 
-            fileNameText[16] = 0xFFFE;
-            fileNameText[17] = 0xFFFE;
-            insertIndex = gControllerPakFileStates[fileIndex].ext_name[0];
-            if (insertIndex != 0) {
-                if (var_a3 == 0) {
-                    var_a3 = 0x10;
+                fileNameText[16] = 0xFFFE;
+                fileNameText[17] = 0xFFFE;
+                if (gControllerPakFileStates[fileIndex].ext_name[0] != 0) {
+                    if (var_a3 == 0) {
+                        var_a3 = 0x10;
+                    }
+                    fileNameText[var_a3] = 0x2C;
+                    fileNameText[var_a3 + 1] = gControllerPakFileStates[fileIndex].ext_name[0] - 0x10;
                 }
-                fileNameText[var_a3] = 0x2C;
-                fileNameText[var_a3 + 1] = insertIndex - 0x10;
-            }
-            fileNameText[18] = 0xFFFF;
-            drawMenuGlyphScript(arg0->positions[1].x, arg0->positions[1].y + j * 0x10, fileNameText, 1, alpha, 8);
+                fileNameText[18] = 0xFFFF;
+                drawMenuGlyphScript(arg0->positions[1].x, arg0->positions[1].y + j * 0x10, fileNameText, 1, alpha, 8);
 
-            for (i = 0; i < 3; i++) {
-                textB0[i] = 0xFFFE;
-            }
-            digits = gControllerPakFileStates[fileIndex].file_size >> 8;
-            i = 0;
-            var_a0 = 0;
-            while (1) {
-                textB0[2 - var_a0] = digits % 10;
-                digits = digits / 10;
-                var_a0++;
-                if (digits == 0) {
-                    break;
+                for (i = 0; i < 3; i++) {
+                    textB0[i] = 0xFFFE;
                 }
+                digits = gControllerPakFileStates[fileIndex].file_size >> 8;
+                i = 0;
+                var_a0 = 0;
+                while (1) {
+                    textB0[2 - var_a0] = digits % 10;
+                    digits = digits / 10;
+                    var_a0++;
+                    if (digits == 0) {
+                        break;
+                    }
+                }
+                textB0[3] = 0xFFFF;
+                drawMenuGlyphScript(arg0->positions[2].x, arg0->positions[2].y + j * 0x10, textB0, 1, alpha, 8);
             }
-            textB0[3] = 0xFFFF;
-            drawMenuGlyphScript(arg0->positions[2].x, arg0->positions[2].y + j * 0x10, textB0, 1, alpha, 8);
-        }
             break;
         }
         fileIndex++;
     }
 
-    if (gControllerPakMenuCursorState) {
-        drawMenuSpriteWithAlpha(
+    if (gControllerPakMenuState.state) {
+        drawMenuSpriteWithAlphaWideArgs(
             arg0->positions[3].x,
-            arg0->positions[3].y + (gControllerPakMenuState.visibleFileIndex * 0x10),
+            (s16)(arg0->positions[3].y + (gControllerPakMenuState.visibleFileIndex * 0x10)),
             getRelocatableHeapBlockBase(gAssetHandles[0x21]),
             0,
             0x20,
@@ -892,8 +885,6 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
         );
     }
 }
-// clang-format on
-#endif
 
 void updateControllerPakFileDeleteFileListUi(ControllerPakFileListActor *arg0) {
     if (gControllerPakMenuCursorState == 1) {
