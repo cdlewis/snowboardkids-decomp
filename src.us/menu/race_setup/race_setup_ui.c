@@ -36,13 +36,6 @@
 #define SAVE_STATUS_TRANSITION_FADE_OUT 2
 #define SAVE_STATUS_TRANSITION_DONE 3
 
-typedef struct {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ s16 x;
-    /* 0x1A */ u8 pad1A[0x20 - 0x1A];
-    /* 0x20 */ s16 y;
-} RaceSetupSavePanelPlayerCoordinates;
-
 #define gRaceSetupNoControllerPakMessage (gRaceSetupSavePromptData.noControllerPakMessage)
 #define gRaceSetupSaveChoicePromptBottomSprites (gRaceSetupSavePromptData.saveChoicePromptBottomSprites)
 #define gRaceSetupSaveChoicePromptTopSprites (gRaceSetupSavePromptData.saveChoicePromptTopSprites)
@@ -1156,107 +1149,69 @@ void initRaceSetupSavePanelFrame(RectListActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSetupSavePanelFrame);
 }
 
-// IDO code generation for this function is sensitive to source line layout.
-// clang-format off
-void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *actor) {
-    volatile s32 unusedStackPadding;
-    union {
-        s32 value;
-        volatile s32 reloaded;
-    } playerIndex;
-    s32 unusedStackPadding2[6];
-    s32 playerCoordinateOffset;
-    s16 *controllerPakStatus;
-    s16 *badgeDisplayOrderStart;
-    GameSaveData *saveData;
-    RaceSetupSavePanelPlayerCoordinates *coordinateCursor;
-    s32 xOffset;
-    s32 alpha;
-    s32 nextIconOrBadgeOffset;
+void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *arg0) {
+    TitleMenuIconStripActor *actor = arg0;
+    s32 playerIndex;
     s16 *badgeOrder;
-    GameSaveData *badgeSaveData;
     s32 iconIndex;
     s32 displayCount;
+    s32 alpha;
     s32 paletteIndex;
-    u16 tileIndex;
 
-    do {
-        playerIndex.value = 0;
-        if ((s32)gPlayerCount > 0) {
-            controllerPakStatus = gControllerPakStatusCodes;
-            playerCoordinateOffset = 0;
-            do {
-                if (*controllerPakStatus != CONTROLLER_PAK_STATUS_UNUSED) {
-                    saveData = &gGameSaveDataBuffer[playerIndex.value];
-                    iconIndex = 0;
-                    if (saveData->progressionLevel == SAVE_PANEL_MAX_RECORD_ICONS) {
-                        displayCount = SAVE_PANEL_MAX_RECORD_ICONS;
-                    } else {
-                        displayCount = saveData->progressionLevel + 1;
-                    }
-                    if (displayCount > 0) {
-                        xOffset = 0;
-                        coordinateCursor = (RaceSetupSavePanelPlayerCoordinates *)&actor->pad0[playerCoordinateOffset];
-                        do {
-                            nextIconOrBadgeOffset = iconIndex + 1;
-                            if ((s32)saveData->progressionLevel < nextIconOrBadgeOffset) {
-                                alpha = SAVE_PANEL_LOCKED_ICON_ALPHA;
-                            } else {
-                                alpha = SAVE_PANEL_UNLOCKED_ICON_ALPHA;
-                            }
-                            drawMenuSpriteWithAlpha((s16)(coordinateCursor->x + actor->iconOffsetX + xOffset),
-                                                    (s16)(coordinateCursor->y + actor->iconOffsetY),
-                                                    getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
-                                                    SAVE_PANEL_RECORD_ICON_TILE, 0x20, 0x20, 0, alpha,
-                                                    SAVE_PANEL_EMPTY_BADGE_TILE - iconIndex);
-                            iconIndex = nextIconOrBadgeOffset;
-                            xOffset += SAVE_PANEL_RECORD_ICON_SPACING;
-                        } while (nextIconOrBadgeOffset != displayCount);
-                        iconIndex = 0;
-                    }
-
-                    displayCount = SAVE_PANEL_BASE_BADGE_COUNT;
-                    if (saveData->progressionLevel == 1) {
-                        displayCount = 7;
-                    } else if (saveData->progressionLevel == 2) {
-                        displayCount = 8;
-                    } else if (saveData->progressionLevel == SAVE_PANEL_MAX_RECORD_ICONS) {
-                        displayCount = 9;
-                    }
-
-                    if (displayCount > 0) {
-                        badgeSaveData = &gGameSaveDataBuffer[playerIndex.reloaded]; \
-                        badgeDisplayOrderStart = gCharacterSelectCourseMenuData.playerBadgeDisplayOrder; \
-                        badgeOrder = badgeDisplayOrderStart; \
-                        nextIconOrBadgeOffset = 0;
-                        coordinateCursor = (RaceSetupSavePanelPlayerCoordinates *)&actor->pad0[playerCoordinateOffset];
-                        do {
-                            paletteIndex = badgeSaveData->cupPlacements[*badgeOrder];
-                            alpha = SAVE_PANEL_LOCKED_ICON_ALPHA;
-                            if (paletteIndex != 0) {
-                                alpha = SAVE_PANEL_UNLOCKED_ICON_ALPHA;
-                                paletteIndex += SAVE_PANEL_BASE_BADGE_COUNT;
-                            } else {
-                                paletteIndex = SAVE_PANEL_EMPTY_BADGE_TILE;
-                            }
-                            tileIndex = iconIndex + SAVE_PANEL_FIRST_BADGE_TILE;
-                            drawMenuSpriteWithAlpha((s16)(coordinateCursor->x + actor->badgeOffsetX + nextIconOrBadgeOffset),
-                                                    (s16)(coordinateCursor->y + actor->badgeOffsetY),
-                                                    getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
-                                                    tileIndex,
-                                                    0x20, 0x20, 0, alpha, paletteIndex);
-                            iconIndex++;
-                            nextIconOrBadgeOffset += SAVE_PANEL_BADGE_SPACING;
-                            badgeOrder++;
-                        } while (iconIndex != displayCount);
-                    }
+    for (playerIndex = 0; playerIndex < gPlayerCount; playerIndex++) {
+        if (gControllerPakStatusCodes[playerIndex] != CONTROLLER_PAK_STATUS_UNUSED) {
+            displayCount = gGameSaveDataBuffer[playerIndex].progressionLevel == SAVE_PANEL_MAX_RECORD_ICONS
+                               ? SAVE_PANEL_MAX_RECORD_ICONS
+                               : gGameSaveDataBuffer[playerIndex].progressionLevel + 1;
+            for (iconIndex = 0; iconIndex < displayCount; iconIndex++) {
+                alpha = gGameSaveDataBuffer[playerIndex].progressionLevel < iconIndex + 1
+                            ? SAVE_PANEL_LOCKED_ICON_ALPHA
+                            : SAVE_PANEL_UNLOCKED_ICON_ALPHA;
+                drawMenuSpriteWithAlpha(
+                    (s16)(actor->panelX[playerIndex] + actor->iconOffsetX + iconIndex * SAVE_PANEL_RECORD_ICON_SPACING),
+                    (s16)(actor->panelY[playerIndex] + actor->iconOffsetY),
+                    getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+                    SAVE_PANEL_RECORD_ICON_TILE,
+                    32,
+                    32,
+                    0,
+                    alpha,
+                    SAVE_PANEL_EMPTY_BADGE_TILE - iconIndex
+                );
+            }
+            displayCount = SAVE_PANEL_BASE_BADGE_COUNT;
+            if (gGameSaveDataBuffer[playerIndex].progressionLevel == 1) {
+                displayCount = 7;
+            } else if (gGameSaveDataBuffer[playerIndex].progressionLevel == 2) {
+                displayCount = 8;
+            } else if (gGameSaveDataBuffer[playerIndex].progressionLevel == SAVE_PANEL_MAX_RECORD_ICONS) {
+                displayCount = 9;
+            }
+            badgeOrder = gCharacterSelectCourseMenuData.playerBadgeDisplayOrder;
+            for (iconIndex = 0; iconIndex < displayCount; iconIndex++) {
+                paletteIndex = gGameSaveDataBuffer[playerIndex].cupPlacements[badgeOrder[iconIndex]];
+                alpha = SAVE_PANEL_LOCKED_ICON_ALPHA;
+                if (paletteIndex != 0) {
+                    alpha = SAVE_PANEL_UNLOCKED_ICON_ALPHA;
+                    paletteIndex += SAVE_PANEL_BASE_BADGE_COUNT;
+                } else {
+                    paletteIndex = SAVE_PANEL_EMPTY_BADGE_TILE;
                 }
-                playerIndex.value++; playerCoordinateOffset += sizeof(s16); controllerPakStatus++;
-            } while (playerIndex.value < (s32)gPlayerCount);
+                drawMenuSpriteWithAlpha(
+                    (s16)(actor->panelX[playerIndex] + actor->badgeOffsetX + iconIndex * SAVE_PANEL_BADGE_SPACING),
+                    (s16)(actor->panelY[playerIndex] + actor->badgeOffsetY),
+                    getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+                    (u16)(iconIndex + SAVE_PANEL_FIRST_BADGE_TILE),
+                    32,
+                    32,
+                    0,
+                    alpha,
+                    paletteIndex
+                );
+            }
         }
-    } while (0);
+    }
 }
-// clang-format on
 
 void updateRaceSetupSavePanelIcons(void *arg0) {
     RectListActor *temp_a2;
