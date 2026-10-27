@@ -2173,7 +2173,7 @@ void drawCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
     }
 }
 
-// updateCourseSelectPlayerPanels standalone match: 99.850% (updateCourseSelectPlayerPanels-8/cleanup.c)
+// updateCourseSelectPlayerPanels standalone match: 99.950% (updateCourseSelectPlayerPanels-8/permuted_clean.c; spill 0x40 vs target 0x44)
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectPlayerPanels.s")
 
 #ifdef NON_MATCHING
@@ -2232,9 +2232,7 @@ void updateCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
                         if (((gPlayerCount == 2) && (actor->x[0] >= actor->exitTargetX)) ||
                             ((gPlayerCount >= 3) && (actor->exitTargetX >= actor->x[0]))) {
                             s32 j;
-                            for (j = 0; j < count; j++) {
-                                actor->state[j] = 3;
-                            }
+                            for (j = 0; j < count; j++) { actor->state[j] = 3; }
                             break;
                         }
                     }
