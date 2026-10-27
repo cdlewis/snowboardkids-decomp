@@ -471,7 +471,7 @@ void initCourseSelectPreviewModelOut(void *arg0) {
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateCourseSelectPreviewModelOut);
 }
 
-// drawCourseSelectCourseIconList best standalone match: 99.729% (drawCourseSelectCourseIconList-5/base_3.c)
+// drawCourseSelectCourseIconList best standalone match: 99.922% (drawCourseSelectCourseIconList-7/base_9.c)
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectCourseIconList.s")
 
 #ifdef NON_MATCHING
@@ -484,41 +484,31 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
     s32 leftClipOffset;
     s32 selectedCourseId;
     s32 selectionState;
-    s32 splitScreenClipOffset;
-    RacePlayer *player;
 
     playerItemCountActor = iconList;
-    playerIndex = 0;
 
-    for (; playerIndex < (s32)gPlayerCount;) {
-        iconIndex = 0;
+    for (playerIndex = 0; playerIndex < (s32)gPlayerCount; playerIndex++) {
         leftClipOffset = (playerIndex >= 2) * 0x88;
 
-        for (; iconIndex < playerItemCountActor->itemCounts[playerIndex];) {
+        for (iconIndex = 0; iconIndex < playerItemCountActor->itemCounts[playerIndex]; iconIndex++) {
             if (iconIndex < (iconList->itemCounts[playerIndex] - 1)) {
-                for (;;) {
-                    player = &gRacePlayers[playerIndex];
-
-                    if (!(0))
-                        break;
-                }
-                highlightAlpha = 0;
                 if (gPlayerCount == 1) {
-                    if (player->selectedCharacterId != 5) {
+                    if (gRacePlayers[playerIndex].selectedCharacterId != 5) {
                         iconTileIndex = (iconIndex + 1) & 0xFFFF;
                     } else {
                         iconTileIndex = (iconIndex + 6) & 0xFFFF;
                     }
-                } else if (player->selectedCharacterId != 5) {
+                } else if (gRacePlayers[playerIndex].selectedCharacterId != 5) {
                     iconTileIndex = (iconIndex + 0x14) & 0xFFFF;
                 } else {
                     iconTileIndex = (iconIndex + 0x18) & 0xFFFF;
                 }
 
+                highlightAlpha = 0;
                 selectionState = gCourseSelectSelectionTimers[playerIndex];
-                splitScreenClipOffset = (playerIndex >= 2) * 0x8C;
+                leftClipOffset = (playerIndex >= 2) * 0x8C;
                 if ((selectionState > 0) && (selectionState < 8)) {
-                    selectedCourseId = player->menuSelection;
+                    selectedCourseId = gRacePlayers[playerIndex].menuSelection;
                     if (selectedCourseId >= 9) {
                         if ((iconIndex == 3) && (selectionState & 1)) {
                             highlightAlpha = 0xFF;
@@ -537,7 +527,7 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
                     0x20,
                     0,
                     highlightAlpha,
-                    iconList->clipLeft - splitScreenClipOffset,
+                    iconList->clipLeft - leftClipOffset,
                     iconList->clipTop,
                     iconList->clipRight,
                     iconList->clipBottom
@@ -583,10 +573,7 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
                     );
                 }
             }
-            iconIndex++;
         }
-
-        playerIndex++;
     }
 }
 #endif
