@@ -1034,47 +1034,67 @@ void initRaceSetupSavePanelFrame(RectListActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSetupSavePanelFrame);
 }
 
-// drawRaceSetupSavePanelIcons best match: 99.208% (drawRaceSetupSavePanelIcons-16/base_3.c)
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/race_setup/race_setup_ui/drawRaceSetupSavePanelIcons.s")
-
-#ifdef NON_MATCHING
-void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *actor) {
-    s16 *badgeOrder;
+void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *arg0) {
+    TitleMenuIconStripActor *actor = arg0;
     s32 playerIndex;
+    s16 *badgeOrder;
     s32 iconIndex;
     s32 displayCount;
     s32 alpha;
     s32 paletteIndex;
-    GameSaveData *saveData;
 
     for (playerIndex = 0; playerIndex < gPlayerCount; playerIndex++) {
         if (gControllerPakStatusCodes[playerIndex] != 0x13) {
-            saveData = &gGameSaveDataBuffer[playerIndex];
-            displayCount = saveData->progressionLevel == 3 ? 3 : saveData->progressionLevel + 1;
+            displayCount = gGameSaveDataBuffer[playerIndex].progressionLevel == 3
+                               ? 3
+                               : gGameSaveDataBuffer[playerIndex].progressionLevel + 1;
             for (iconIndex = 0; iconIndex < displayCount; iconIndex++) {
-                alpha = saveData->progressionLevel < iconIndex + 1 ? 0x70 : 0x100;
-                drawMenuSpriteWithAlpha(actor->panelX[playerIndex] + actor->iconOffsetX + iconIndex * 0x10,
-                    actor->panelY[playerIndex] + actor->iconOffsetY,
-                    getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0x19, 32, 32, 0, alpha, 9 - iconIndex);
+                alpha = gGameSaveDataBuffer[playerIndex].progressionLevel < iconIndex + 1 ? 0x70 : 0x100;
+                drawMenuSpriteWithAlphaWideArgs(
+                    (s16)(actor->panelX[playerIndex] + actor->iconOffsetX + iconIndex * 0x10),
+                    (s16)(actor->panelY[playerIndex] + actor->iconOffsetY),
+                    getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+                    0x19,
+                    32,
+                    32,
+                    0,
+                    alpha,
+                    9 - iconIndex
+                );
             }
             displayCount = 6;
-            if (saveData->progressionLevel == 1) displayCount = 7;
-            else if (saveData->progressionLevel == 2) displayCount = 8;
-            else if (saveData->progressionLevel == 3) displayCount = 9;
+            if (gGameSaveDataBuffer[playerIndex].progressionLevel == 1) {
+                displayCount = 7;
+            } else if (gGameSaveDataBuffer[playerIndex].progressionLevel == 2) {
+                displayCount = 8;
+            } else if (gGameSaveDataBuffer[playerIndex].progressionLevel == 3) {
+                displayCount = 9;
+            }
             badgeOrder = gCharacterSelectCourseMenuData.playerBadgeDisplayOrder;
             for (iconIndex = 0; iconIndex < displayCount; iconIndex++) {
                 paletteIndex = gGameSaveDataBuffer[playerIndex].cupPlacements[badgeOrder[iconIndex]];
                 alpha = 0x70;
-                if (paletteIndex != 0) {alpha = 0x100; paletteIndex += 6;}
-                else paletteIndex = 9;
-                drawMenuSpriteWithAlpha(actor->panelX[playerIndex] + actor->badgeOffsetX + iconIndex * 14,
-                    actor->panelY[playerIndex] + actor->badgeOffsetY,
-                    getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), iconIndex + 0x1A, 32, 32, 0, alpha, paletteIndex);
+                if (paletteIndex != 0) {
+                    alpha = 0x100;
+                    paletteIndex += 6;
+                } else {
+                    paletteIndex = 9;
+                }
+                drawMenuSpriteWithAlphaWideArgs(
+                    (s16)(actor->panelX[playerIndex] + actor->badgeOffsetX + iconIndex * 14),
+                    (s16)(actor->panelY[playerIndex] + actor->badgeOffsetY),
+                    getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+                    (u16)(iconIndex + 0x1A),
+                    32,
+                    32,
+                    0,
+                    alpha,
+                    paletteIndex
+                );
             }
         }
     }
 }
-#endif
 
 void updateRaceSetupSavePanelIcons(void *arg0) {
     RectListActor *temp_a2;
