@@ -459,24 +459,15 @@ void initShopMenuSelectedModePanel(ShopMenuWidgetActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateShopMenuSelectedModePanel);
 }
 
-// drawShopMenuUnselectedModePanel best match: 99.952%
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/course_select/course_select_shop_ui/drawShopMenuUnselectedModePanel.s")
-
-#ifdef NON_MATCHING
 void drawShopMenuUnselectedModePanel(ShopMenuWidgetActor *arg0) {
-    s32 shouldDraw;
     s32 i;
-    s32 tileOffset;
-    s32 offset;
 
-    tileOffset = 0;
-    shouldDraw = 1;
-    for (i = 0; i < 16; i++, tileOffset++) {
+    for (i = 0; i < 16; i++) {
         drawMenuSpriteTileClipped(
             arg0->x + ((i & 3) << 5),
             arg0->y + ((i / 4) << 5),
             getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-            gShopMenuPanelFrameTilemaps[(u16)arg0->sprite.index].center[tileOffset],
+            gShopMenuPanelFrameTilemaps[(u16)arg0->sprite.index].center[i],
             0,
             0x100,
             gMenuViewportWidth / 2,
@@ -484,39 +475,28 @@ void drawShopMenuUnselectedModePanel(ShopMenuWidgetActor *arg0) {
         );
     }
 
-    tileOffset = 0;
-    i = 0x80;
-    offset = 0;
-    for (;;) {
+    for (i = 0; i < 2; i++) {
         drawMenuSpriteTileClipped(
             arg0->x + 0x80,
-            arg0->y + offset,
+            arg0->y + i * 0x40,
             getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-            gShopMenuPanelFrameTilemaps[(u16)arg0->sprite.index].right[tileOffset],
+            gShopMenuPanelFrameTilemaps[(u16)arg0->sprite.index].right[i],
             0,
             0x100,
             gMenuViewportWidth / 2,
             (gMenuViewportHeight / 2) - 0x2F
         );
         drawMenuSpriteTileClipped(
-            arg0->x + offset,
+            arg0->x + i * 0x40,
             arg0->y + 0x80,
             getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-            gShopMenuPanelFrameTilemaps[(u16)arg0->sprite.index].bottom[tileOffset],
+            gShopMenuPanelFrameTilemaps[(u16)arg0->sprite.index].bottom[i],
             0,
             0x100,
             gMenuViewportWidth / 2,
             (gMenuViewportHeight / 2) - 0x2F
         );
-        i = 0x80;
-        offset += 0x40;
-        tileOffset++;
-
-        if (!(offset != i))
-            break;
     }
-    i++;
-    i--;
 
     drawMenuSpriteTileClipped(
         arg0->x + 0x80,
@@ -529,7 +509,6 @@ void drawShopMenuUnselectedModePanel(ShopMenuWidgetActor *arg0) {
         (gMenuViewportHeight / 2) - 0x2F
     );
 }
-#endif
 
 void updateShopMenuUnselectedModePanel(ShopMenuWidgetActor *arg0) {
     int state;
