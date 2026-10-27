@@ -919,69 +919,51 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
     }
 }
 
-// IDO code generation for this function is sensitive to source line layout.
-// clang-format off
 void initCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
     CourseSelectIconListActor *actor;
-    u8 *courseUnlocked;
-    s16 *yLayout;
-    s16 *xLayout;
     s16 hasExtraCourse;
     s32 iconIndex;
     s32 playerIndex;
     s32 layoutIndex;
 
     actor = arg0;
-    if ((s32) gPlayerCount < 3) {
+    if ((s32)gPlayerCount < 3) {
         layoutIndex = gPlayerCount - 1;
     } else {
         layoutIndex = 2;
     }
-    do { \
-        playerIndex = 0; \
-        if ((s32)gPlayerCount > 0) { \
-            courseUnlocked = gCourseSelectHasExtraCourse; \
-            yLayout = gCourseSelectIconListYLayout[layoutIndex]; \
-            xLayout = gCourseSelectIconListXLayout[layoutIndex]; \
-            do { \
-                if ((*courseUnlocked == 0) || (gRacePlayers[playerIndex].selectedCharacterId == 5)) { \
-                    hasExtraCourse = 0; \
-                } else { \
-                    hasExtraCourse = 1; \
-                } \
-                actor->speed[playerIndex] = yLayout[hasExtraCourse]; \
-                actor->baseX[playerIndex] = yLayout[((playerIndex & 1) * 2) + hasExtraCourse + 2]; \
-                actor->targetX[playerIndex] = yLayout[((playerIndex & 1) * 2) + 2]; \
-                actor->targetY[playerIndex] = xLayout[((playerIndex >= 2) * 2) + 1]; \
-                actor->startY[playerIndex] = xLayout[(playerIndex >= 2) * 2]; \
-                actor->clipBottom = 0x78; \
-                actor->clipRight = 0xA0; \
-                actor->clipTop = 0x78; \
-                if (gPlayerCount == 1) { \
-                    actor->clipLeft = 0xA0; \
-                } else if (gPlayerCount == 2) { \
-                    actor->clipLeft = 0x7E; \
-                } else { \
-                    actor->clipLeft = 0x88; \
-                } \
-                iconIndex = 0; \
-                do { \
-                    actor->y[playerIndex][iconIndex] = actor->startY[playerIndex]; \
-                    actor->x[playerIndex][iconIndex] = \
-                        actor->baseX[playerIndex] + (actor->speed[playerIndex] * iconIndex); \
-                    iconIndex++; \
-                } while (iconIndex < 5); \
-                actor->state[playerIndex] = 0; \
-                actor->itemCounts[playerIndex] = 1; \
-                actor->timer[playerIndex] = 0; \
-                courseUnlocked++; \
-                playerIndex++; \
-            } while (playerIndex < (s32)gPlayerCount); \
-        } \
-        setCallbackTaskCallback(actor, (CallbackTaskCallback)updateCourseSelectCourseIconList); \
-    } while (0);
+    for (playerIndex = 0; playerIndex < (s32)gPlayerCount; playerIndex++) {
+        if ((gCourseSelectHasExtraCourse[playerIndex] == 0) || (gRacePlayers[playerIndex].selectedCharacterId == 5)) {
+            hasExtraCourse = 0;
+        } else {
+            hasExtraCourse = 1;
+        }
+        actor->speed[playerIndex] = gCourseSelectIconListYLayout[layoutIndex][hasExtraCourse];
+        actor->baseX[playerIndex] = gCourseSelectIconListYLayout[layoutIndex][((playerIndex & 1) * 2) + hasExtraCourse + 2];
+        actor->targetX[playerIndex] = gCourseSelectIconListYLayout[layoutIndex][((playerIndex & 1) * 2) + 2];
+        actor->targetY[playerIndex] = gCourseSelectIconListXLayout[layoutIndex][((playerIndex >= 2) * 2) + 1];
+        actor->startY[playerIndex] = gCourseSelectIconListXLayout[layoutIndex][(playerIndex >= 2) * 2];
+        actor->clipTop = 0x78;
+        actor->clipRight = 0xA0;
+        actor->clipBottom = 0x78;
+        if (gPlayerCount == 1) {
+            actor->clipLeft = 0xA0;
+        } else if (gPlayerCount == 2) {
+            actor->clipLeft = 0x7E;
+        } else {
+            actor->clipLeft = 0x88;
+        }
+        for (iconIndex = 0; iconIndex < 5; iconIndex++) {
+            actor->y[playerIndex][iconIndex] = actor->startY[playerIndex];
+            actor->x[playerIndex][iconIndex] =
+                actor->baseX[playerIndex] + (actor->speed[playerIndex] * iconIndex);
+        }
+        actor->timer[playerIndex] = 0;
+        actor->itemCounts[playerIndex] = 1;
+        actor->state[playerIndex] = 0;
+    }
+    setCallbackTaskCallback(actor, (CallbackTaskCallback)updateCourseSelectCourseIconList);
 }
-// clang-format on
 
 void drawCourseSelectCourseCursors(CourseSelectCourseCursorsActor *arg0) {
     u8 *actor;
