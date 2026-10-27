@@ -2173,12 +2173,11 @@ void drawCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
     }
 }
 
-// updateCourseSelectPlayerPanels best standalone match: 99.950% (updateCourseSelectPlayerPanels-8/base_34.c; frame 0x78 vs target 0x70)
+// updateCourseSelectPlayerPanels standalone match: 99.850% (updateCourseSelectPlayerPanels-8/cleanup.c)
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectPlayerPanels.s")
 
 #ifdef NON_MATCHING
 void updateCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
-    s32 next;
     CourseSelectPlayerPanelListActor *actor;
     s32 i;
     s32 count;
@@ -2192,62 +2191,57 @@ void updateCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
         count = 4;
     }
 
-    {
-        for (i = 0; i < count; i++) {
-            next = i + 1;
-            switch (actor->state[i]) {
-                case 0:
-                    step = 0;
-                    while (step != 0x18) {
-                        actor->x[i] += actor->deltaX[i];
-                        timer = (actor->timer[i] += actor->speed[i]);
-                        if (timer >= actor->period[i]) {
-                            actor->y[i] += actor->deltaY[i];
-                            actor->timer[i] = (unsigned long)timer - actor->period[i];
+    for (i = 0; i < count; i++) {
+        switch (actor->state[i]) {
+            case 0:
+                for (step = 0; step < 0x18; step++) {
+                    actor->x[i] += actor->deltaX[i];
+                    timer = (actor->timer[i] += actor->speed[i]);
+                    if (timer >= actor->period[i]) {
+                        actor->y[i] += actor->deltaY[i];
+                        actor->timer[i] = (unsigned long)timer - actor->period[i];
+                    }
+                    if (actor->x[i] == actor->targetX[i]) {
+                        actor->state[i] = 1;
+                        if (i == count - 1) {
+                            gMenuScratch0.task =
+                                createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelIn, 0, 0x62);
+                            gMenuScratch1.task =
+                                createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelOut, 0, 0x62);
+                            createCallbackTask((CallbackTaskCallback)initCourseSelectCourseIconList, 0, 0x62);
                         }
-                        step++;
-                        if (actor->x[i] == actor->targetX[i]) {
-                            actor->state[i] = 1;
-                            if (count == next) {
-                                gMenuScratch0.task =
-                                    createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelIn, 0, 0x62);
-                                gMenuScratch1.task =
-                                    createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelOut, 0, 0x62);
-                                createCallbackTask((CallbackTaskCallback)initCourseSelectCourseIconList, 0, 0x62);
+                        break;
+                    }
+                }
+                break;
+            case 1:
+                if (gRacePlayers[i].menuState == 4) {
+                    actor->state[i] = 2;
+                    actor->timer[i] = 0;
+                }
+                break;
+            case 2:
+                for (step = 0; step < 0x18; step++) {
+                    actor->x[i] -= actor->deltaX[i];
+                    timer = (actor->timer[i] += actor->speed[i]);
+                    if (timer >= actor->period[i]) {
+                        actor->y[i] -= actor->deltaY[i];
+                        actor->timer[i] = timer - actor->period[i];
+                    }
+                    if (i == count - 1) {
+                        if (((gPlayerCount == 2) && (actor->x[0] >= actor->exitTargetX)) ||
+                            ((gPlayerCount >= 3) && (actor->exitTargetX >= actor->x[0]))) {
+                            s32 j;
+                            for (j = 0; j < count; j++) {
+                                actor->state[j] = 3;
                             }
                             break;
                         }
                     }
-                    break;
-                case 1:
-                    if (gRacePlayers[i].menuState == 4) {
-                        actor->state[i] = 2;
-                        actor->timer[i] = 0;
-                    }
-                    break;
-                case 2:
-                    step = 0;
-                    while (step != 0x18) {
-                        actor->x[i] -= actor->deltaX[i];
-                        timer = (actor->timer[i] += actor->speed[i]);
-                        if (timer >= actor->period[i]) {
-                            actor->y[i] -= actor->deltaY[i];
-                            actor->timer[i] = timer - actor->period[i];
-                        }
-                        step++;
-                        if (count == next) {
-                            if (((gPlayerCount == 2) && (actor->x[0] >= actor->exitTargetX)) ||
-                                ((gPlayerCount >= 3) && (actor->exitTargetX >= actor->x[0]))) {
-                                s32 j;
-                                for (j = 0; j < count;) { actor->state[j] = 3; j++; }
-                                break;
-                            }
-                        }
-                    }
-                    break;
-                case 3:
-                    break;
-            }
+                }
+                break;
+            case 3:
+                break;
         }
     }
 
