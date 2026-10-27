@@ -2296,94 +2296,68 @@ void drawCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
 }
 
 void updateCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
-    volatile u8 pad[8];
-    s32 next;
     CourseSelectPlayerPanelListActor *actor;
     s32 i;
-    s16 *deltaX;
     s32 count;
     s32 step;
-    u16 period;
-    u16 timer;
-    s32 zero;
-    u8 *statePtr;
+    s32 value;
 
-    actor = (CourseSelectPlayerPanelListActor *)arg0;
+    actor = arg0;
     if (gPlayerCount == 2) {
         count = 2;
     } else {
         count = 4;
     }
 
-    i = 0;
-    if (count > 0) {
-        statePtr = (u8 *)actor;
-        do {
-            next = i + 1;
-            switch (((CourseSelectPlayerPanelListActor *)statePtr)->state[0]) {
-                case 0:
-                    step = actor->x[i] * 0;
-                    period = actor->period[i];
-                    do {
-                        actor->x[i] += *(deltaX = &actor->deltaX[i]);
-                        timer = (actor->timer[i] += actor->speed[i]);
-                        if (timer >= period) {
-                            actor->y[i] += actor->deltaY[i];
-                            actor->timer[i] = (unsigned long)timer - period;
+    for (i = 0; i < count; i++) {
+        switch (actor->state[i]) {
+            case 0:
+                for (step = 0; step < 0x18; step++) {
+                    actor->x[i] += actor->deltaX[i];
+                    value = (actor->timer[i] += actor->speed[i]);
+                    if (value >= actor->period[i]) {
+                        actor->y[i] += actor->deltaY[i];
+                        actor->timer[i] = (unsigned long)value - actor->period[i];
+                    }
+                    if (actor->x[i] == actor->targetX[i]) {
+                        actor->state[i] = 1;
+                        if (i == count - 1) {
+                            gMenuScratch0.task =
+                                createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelIn, 0, 0x62);
+                            gMenuScratch1.task =
+                                createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelOut, 0, 0x62);
+                            createCallbackTask((CallbackTaskCallback)initCourseSelectCourseIconList, 0, 0x62);
                         }
-                        step++;
-                        if (actor->x[i] == actor->targetX[i]) {
-                            ((CourseSelectPlayerPanelListActor *)statePtr)->state[0] = 1;
-                            if (count == next) {
-                                gMenuScratch0.task =
-                                    createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelIn, 0, 0x62);
-                                gMenuScratch1.task =
-                                    createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelOut, 0, 0x62);
-                                createCallbackTask((CallbackTaskCallback)initCourseSelectCourseIconList, 0, 0x62);
-                            }
+                        break;
+                    }
+                }
+                break;
+            case 1:
+                if (gRacePlayers[i].menuState == 4) {
+                    actor->state[i] = 2;
+                    actor->timer[i] = 0;
+                }
+                break;
+            case 2:
+                for (step = 0; step < 0x18; step++) {
+                    actor->x[i] -= actor->deltaX[i];
+                    value = (actor->timer[i] += actor->speed[i]);
+                    if (value >= actor->period[i]) {
+                        actor->y[i] -= actor->deltaY[i];
+                        actor->timer[i] = value - actor->period[i];
+                    }
+                    if (i == count - 1) {
+                        if (((gPlayerCount == 2) && (actor->x[0] >= actor->exitTargetX)) ||
+                            ((gPlayerCount >= 3) && (actor->exitTargetX >= actor->x[0]))) {
+                            for (value = 0; value < count; value++) { actor->state[value] = 3; }
                             break;
                         }
-                    } while (step != 0x18);
-                    break;
-                case 1:
-                    if (gRacePlayers[i].menuState == 4) {
-                        ((CourseSelectPlayerPanelListActor *)statePtr)->state[0] = 2;
-                        actor->timer[i] = 0;
                     }
-                    break;
-                case 2:
-                    step = 0;
-                    period = actor->period[i];
-                    do {
-                        actor->x[i] -= actor->deltaX[i];
-                        timer = (actor->timer[i] += actor->speed[i]);
-                        if (timer >= period) {
-                            actor->y[i] -= actor->deltaY[i];
-                            actor->timer[i] = timer - period;
-                        }
-                        step++;
-                        if (count == next) {
-                            zero = 0;
-                            if (((gPlayerCount == 2) && (actor->x[0] >= actor->exitTargetX)) ||
-                                ((gPlayerCount >= 3) && (actor->exitTargetX >= actor->x[zero]))) {
-                                s32 j = zero;
-                                if (count > zero) {
-                                    do {
-                                        actor->state[j] = 3;
-                                        j++;
-                                    } while (j != count);
-                                }
-                                break;
-                            }
-                        }
-                    } while (step != 0x18);
-                    break;
-                case 3:
-                    break;
-            }
-            i++;
-            statePtr++;
-        } while (i != count);
+                }
+                break;
+            case 3:
+                break;
+        }
     }
 
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseSelectPlayerPanels, arg0);
