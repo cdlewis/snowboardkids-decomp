@@ -2173,16 +2173,12 @@ void drawCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
     }
 }
 
-// updateCourseSelectPlayerPanels standalone match: 99.950% (updateCourseSelectPlayerPanels-8/permuted_clean.c; spill 0x40 vs target 0x44)
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectPlayerPanels.s")
-
-#ifdef NON_MATCHING
 void updateCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
     CourseSelectPlayerPanelListActor *actor;
     s32 i;
     s32 count;
     s32 step;
-    u16 timer;
+    s32 value;
 
     actor = arg0;
     if (gPlayerCount == 2) {
@@ -2196,10 +2192,10 @@ void updateCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
             case 0:
                 for (step = 0; step < 0x18; step++) {
                     actor->x[i] += actor->deltaX[i];
-                    timer = (actor->timer[i] += actor->speed[i]);
-                    if (timer >= actor->period[i]) {
+                    value = (actor->timer[i] += actor->speed[i]);
+                    if (value >= actor->period[i]) {
                         actor->y[i] += actor->deltaY[i];
-                        actor->timer[i] = (unsigned long)timer - actor->period[i];
+                        actor->timer[i] = (unsigned long)value - actor->period[i];
                     }
                     if (actor->x[i] == actor->targetX[i]) {
                         actor->state[i] = 1;
@@ -2223,16 +2219,15 @@ void updateCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
             case 2:
                 for (step = 0; step < 0x18; step++) {
                     actor->x[i] -= actor->deltaX[i];
-                    timer = (actor->timer[i] += actor->speed[i]);
-                    if (timer >= actor->period[i]) {
+                    value = (actor->timer[i] += actor->speed[i]);
+                    if (value >= actor->period[i]) {
                         actor->y[i] -= actor->deltaY[i];
-                        actor->timer[i] = timer - actor->period[i];
+                        actor->timer[i] = value - actor->period[i];
                     }
                     if (i == count - 1) {
                         if (((gPlayerCount == 2) && (actor->x[0] >= actor->exitTargetX)) ||
                             ((gPlayerCount >= 3) && (actor->exitTargetX >= actor->x[0]))) {
-                            s32 j;
-                            for (j = 0; j < count; j++) { actor->state[j] = 3; }
+                            for (value = 0; value < count; value++) { actor->state[value] = 3; }
                             break;
                         }
                     }
@@ -2245,7 +2240,6 @@ void updateCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
 
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseSelectPlayerPanels, arg0);
 }
-#endif
 
 void initCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
     if (gPlayerCount == 2) {
