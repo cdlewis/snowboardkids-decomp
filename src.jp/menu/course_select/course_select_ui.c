@@ -2173,7 +2173,7 @@ void drawCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
     }
 }
 
-// updateCourseSelectPlayerPanels best standalone match: 99.550% (updateCourseSelectPlayerPanels-6/base_10.c)
+// updateCourseSelectPlayerPanels best standalone match: 99.950% (updateCourseSelectPlayerPanels-8/base_34.c; frame 0x78 vs target 0x70)
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectPlayerPanels.s")
 
 #ifdef NON_MATCHING
@@ -2183,31 +2183,27 @@ void updateCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
     s32 i;
     s32 count;
     s32 step;
-    u16 period;
     u16 timer;
 
-    actor = (CourseSelectPlayerPanelListActor *)arg0;
+    actor = arg0;
     if (gPlayerCount == 2) {
         count = 2;
     } else {
         count = 4;
     }
 
-    i = 0;
-    if (count > 0) {
-
-        for (;;) {
+    {
+        for (i = 0; i < count; i++) {
             next = i + 1;
             switch (actor->state[i]) {
                 case 0:
                     step = 0;
-                    period = actor->period[i];
-                    for (; step != 0x18;) {
+                    while (step != 0x18) {
                         actor->x[i] += actor->deltaX[i];
                         timer = (actor->timer[i] += actor->speed[i]);
-                        if (timer >= period) {
+                        if (timer >= actor->period[i]) {
                             actor->y[i] += actor->deltaY[i];
-                            actor->timer[i] = (unsigned long)timer - period;
+                            actor->timer[i] = (unsigned long)timer - actor->period[i];
                         }
                         step++;
                         if (actor->x[i] == actor->targetX[i]) {
@@ -2231,22 +2227,19 @@ void updateCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
                     break;
                 case 2:
                     step = 0;
-                    period = actor->period[i];
-                    for (; step != 0x18;) {
+                    while (step != 0x18) {
                         actor->x[i] -= actor->deltaX[i];
                         timer = (actor->timer[i] += actor->speed[i]);
-                        if (timer >= period) {
+                        if (timer >= actor->period[i]) {
                             actor->y[i] -= actor->deltaY[i];
-                            actor->timer[i] = timer - period;
+                            actor->timer[i] = timer - actor->period[i];
                         }
                         step++;
                         if (count == next) {
                             if (((gPlayerCount == 2) && (actor->x[0] >= actor->exitTargetX)) ||
                                 ((gPlayerCount >= 3) && (actor->exitTargetX >= actor->x[0]))) {
                                 s32 j;
-                                for (j = 0; j < count; j++) {
-                                    actor->state[j] = 3;
-                                }
+                                for (j = 0; j < count;) { actor->state[j] = 3; j++; }
                                 break;
                             }
                         }
@@ -2255,11 +2248,6 @@ void updateCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
                 case 3:
                     break;
             }
-            i++;
-
-
-            if (!(i != count))
-                break;
         }
     }
 
