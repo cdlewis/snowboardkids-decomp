@@ -687,19 +687,14 @@ void initRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectOptionFrameActor
 }
 
 void drawRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectOptionFrameActor *arg0) {
-    s32 shouldDraw;
     s32 i;
-    s32 tileIndex;
-    s32 offset;
 
-    tileIndex = 0;
-    shouldDraw = 1;
-    for (i = 0; i < 16; i++, tileIndex++) {
+    for (i = 0; i < 16; i++) {
         drawMenuSpriteTileClipped(
             (s16)(arg0->x + ((i & 3) << 5)),
             (s16)(arg0->y + ((i / 4) << 5)),
             getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-            gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].centerTiles[tileIndex],
+            gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].centerTiles[i],
             0,
             0x100,
             0xA0,
@@ -707,38 +702,28 @@ void drawRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectOptionFrameActor
         );
     }
 
-    if (shouldDraw) {
-        tileIndex = 0;
-        i = 0x80;
-    }
-    offset = 0;
-    do {
+    for (i = 0; i < 2; i++) {
         drawMenuSpriteTileClipped(
             (s16)(arg0->x + 0x80),
-            (s16)(arg0->y + offset),
+            (s16)(arg0->y + i * 0x40),
             getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-            gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].rightEdgeTiles[tileIndex],
+            gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].rightEdgeTiles[i],
             0,
             0x100,
             0xA0,
             0x49
         );
         drawMenuSpriteTileClipped(
-            (s16)(arg0->x + offset),
+            (s16)(arg0->x + i * 0x40),
             (s16)(arg0->y + 0x80),
             getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-            gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].bottomEdgeTiles[tileIndex],
+            gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].bottomEdgeTiles[i],
             0,
             0x100,
             0xA0,
             0x49
         );
-        i = 0x80;
-        offset += 0x40;
-        tileIndex++;
-    } while (offset != i);
-    i++;
-    i--;
+    }
 
     drawMenuSpriteTileClipped(
         (s16)(arg0->x + 0x80),
