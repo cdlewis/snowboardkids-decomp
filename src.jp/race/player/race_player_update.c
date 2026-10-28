@@ -1161,7 +1161,7 @@ void updateRacePlayerAirborneLaunch(RacePlayer *player) {
     }
 }
 
-// updateRacePlayerAirborneCruise best match: 99.550%
+// updateRacePlayerAirborneCruise best match: 99.696%
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/race/player/race_player_update/updateRacePlayerAirborneCruise.s")
 
 #ifdef NON_MATCHING
@@ -1214,8 +1214,7 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
     }
 
     if (player->state.stanceTransitionFrame != 0) {
-        player->state.stanceTransitionFrame--;
-        setRaceMotionAnimation(player, player->state.stanceTransitionFrame + 8);
+        setRaceMotionAnimation(player, player->state.stanceTransitionFrame-- + 7);
     } else if (player->state.animationId != 5) {
         setRaceMotionAnimation(player, 5);
     }
