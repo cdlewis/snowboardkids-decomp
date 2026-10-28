@@ -13,13 +13,6 @@
 #include <PR/os_cache.h>
 #include "game/engine/system_render.h"
 
-#define FONT_GFX_CMD(pkt, cmd0, cmd1) \
-    {                                 \
-        Gfx *_g = (Gfx *)(pkt);       \
-        _g->words.w0 = (cmd0);        \
-        _g->words.w1 = (cmd1);        \
-    }
-
 #define PACKED_MTX_WORD(matrix, index) ((matrix)->m[(index) / 4][(index) % 4])
 
 /* Named components preserve IDO's operand scheduling in the matrix packers. */
@@ -965,16 +958,11 @@ void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
 
                 if (gMenuAsciiFontPaletteIndex != paletteIndex) {
                     gMenuAsciiFontPaletteIndex = paletteIndex;
-                    FONT_GFX_CMD(
+                    gDPLoadTLUT_pal16(
                         gRegionAllocPtr++,
-                        0xFD100000,
-                        (SPRITE_PALETTE_INDEX(sMenuAsciiFontAsset, paletteIndex) << 5) + (u32)gMenuAsciiFontPaletteBase
+                        0,
+                        (SPRITE_PALETTE_INDEX(sMenuAsciiFontAsset, paletteIndex) << 5) + (u8 *)gMenuAsciiFontPaletteBase
                     );
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
                 }
 
                 gSPTextureRectangle(
