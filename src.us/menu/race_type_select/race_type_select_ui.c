@@ -587,17 +587,14 @@ void initRaceTypeSelectOption1Frame(RaceTypeSelectOptionFrameActor *arg0) {
 }
 
 void drawRaceTypeSelectOption2Frame(RaceTypeSelectOptionFrameActor *arg0) {
-    s32 shouldDraw;
     s32 i;
     s32 tileOffset;
-    s32 offset;
 
     tileOffset = 0;
-    shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         drawMenuSpriteTileClipped(
-            arg0->x + ((i & 3) << 5),
-            arg0->y + ((i / 4) << 5),
+            (s16)(arg0->x + ((i & 3) << 5)),
+            (s16)(arg0->y + ((i / 4) << 5)),
             getRelocatableHeapBlockBase(gAssetHandles[0x25]),
             gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].centerTiles[tileOffset],
             0,
@@ -607,15 +604,11 @@ void drawRaceTypeSelectOption2Frame(RaceTypeSelectOptionFrameActor *arg0) {
         );
     }
 
-    if (shouldDraw) {
-        tileOffset = 0;
-        i = 0x80;
-    }
-    offset = 0;
-    do {
+    tileOffset = 0;
+    for (i = 0; i < 2; i++, tileOffset++) {
         drawMenuSpriteTileClipped(
-            arg0->x + 0x80,
-            arg0->y + offset,
+            (s16)(arg0->x + 0x80),
+            (s16)(arg0->y + i * 0x40),
             getRelocatableHeapBlockBase(gAssetHandles[0x25]),
             gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].rightEdgeTiles[tileOffset],
             0,
@@ -624,8 +617,8 @@ void drawRaceTypeSelectOption2Frame(RaceTypeSelectOptionFrameActor *arg0) {
             0x49
         );
         drawMenuSpriteTileClipped(
-            arg0->x + offset,
-            arg0->y + 0x80,
+            (s16)(arg0->x + i * 0x40),
+            (s16)(arg0->y + 0x80),
             getRelocatableHeapBlockBase(gAssetHandles[0x25]),
             gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].bottomEdgeTiles[tileOffset],
             0,
@@ -633,16 +626,11 @@ void drawRaceTypeSelectOption2Frame(RaceTypeSelectOptionFrameActor *arg0) {
             0xA0,
             0x49
         );
-        i = 0x80;
-        offset += 0x40;
-        tileOffset++;
-    } while (offset != i);
-    i++;
-    i--;
+    }
 
     drawMenuSpriteTileClipped(
-        arg0->x + 0x80,
-        arg0->y + 0x80,
+        (s16)(arg0->x + 0x80),
+        (s16)(arg0->y + 0x80),
         getRelocatableHeapBlockBase(gAssetHandles[0x25]),
         gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].cornerTile,
         0,
