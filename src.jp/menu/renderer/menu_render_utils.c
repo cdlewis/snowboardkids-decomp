@@ -851,12 +851,7 @@ void drawScaledAssetTableSpriteWithExplicitPalette(
     gDPPipeSync(gRegionAllocPtr++);
 }
 
-// drawMenuAsciiFontTile best standalone match: 99.885% (drawMenuAsciiFontTile-2/base_5.c)
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/renderer/menu_render_utils/drawMenuAsciiFontTile.s")
-
-#ifdef NON_MATCHING
-// clang-format off
-void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, volatile u16 paletteIndex) {
+void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
     s32 x0;
     s32 y0;
     s32 x1;
@@ -869,7 +864,6 @@ void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, volatile u16 paletteIndex
     s32 clipS;
     s32 clipT;
     s32 halfHeight;
-    s32 palette;
 
     x0 = x + gMenuViewportCenterX;
     y0 = y + gMenuViewportCenterY;
@@ -904,10 +898,10 @@ void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, volatile u16 paletteIndex
                 clipS += s;
                 clipT += t;
 
-                palette = paletteIndex;
-                if (gMenuAsciiFontPaletteIndex != palette) {
-                    gMenuAsciiFontPaletteIndex = palette;
-                    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, (paletteIndex << 5) + (u8 *)gMenuAsciiFontPaletteBase);
+                if (gMenuAsciiFontPaletteIndex != paletteIndex) {
+                    gMenuAsciiFontPaletteIndex = paletteIndex;
+                    /* Taking the address makes IDO reload the homed palette argument. */
+                    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, (*(u16 *)&paletteIndex << 5) + (u8 *)gMenuAsciiFontPaletteBase);
                 }
 
                 gSPTextureRectangle(
@@ -926,9 +920,6 @@ void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, volatile u16 paletteIndex
         }
     }
 }
-
-// clang-format on
-#endif
 
 void initMenuAsciiFontTexture(void) {
     MenuAsciiFontAsset *font = getRelocatableHeapBlockBase(gAssetHandles[6]);
