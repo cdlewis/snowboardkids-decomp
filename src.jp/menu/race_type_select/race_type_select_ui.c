@@ -429,18 +429,11 @@ void initRaceTypeSelectOption0Frame(RaceTypeSelectOption0FrameActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectOption0Frame);
 }
 
-// drawRaceTypeSelectOption1Frame best standalone match: 99.952% (base_4.c)
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/race_type_select/race_type_select_ui/drawRaceTypeSelectOption1Frame.s")
-
-#ifdef NON_MATCHING
 void drawRaceTypeSelectOption1Frame(RaceTypeSelectOptionFrameActor *arg0) {
-    s32 shouldDraw;
     s32 i;
     s32 tileOffset;
-    s32 offset;
 
     tileOffset = 0;
-    shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         drawMenuSpriteTileClipped(
             (s16)(arg0->x + ((i & 3) << 5)),
@@ -455,12 +448,10 @@ void drawRaceTypeSelectOption1Frame(RaceTypeSelectOptionFrameActor *arg0) {
     }
 
     tileOffset = 0;
-    i = 0x80;
-    offset = 0;
-    for (;;) {
+    for (i = 0; i < 2; i++, tileOffset++) {
         drawMenuSpriteTileClipped(
             (s16)(arg0->x + 0x80),
-            (s16)(arg0->y + offset),
+            (s16)(arg0->y + i * 0x40),
             getRelocatableHeapBlockBase(gAssetHandles[0x25]),
             gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].rightEdgeTiles[tileOffset],
             0,
@@ -469,7 +460,7 @@ void drawRaceTypeSelectOption1Frame(RaceTypeSelectOptionFrameActor *arg0) {
             (gMenuViewportHeight / 2) - 0x2F
         );
         drawMenuSpriteTileClipped(
-            (s16)(arg0->x + offset),
+            (s16)(arg0->x + i * 0x40),
             (s16)(arg0->y + 0x80),
             getRelocatableHeapBlockBase(gAssetHandles[0x25]),
             gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].bottomEdgeTiles[tileOffset],
@@ -478,15 +469,7 @@ void drawRaceTypeSelectOption1Frame(RaceTypeSelectOptionFrameActor *arg0) {
             gMenuViewportWidth / 2,
             (gMenuViewportHeight / 2) - 0x2F
         );
-        i = 0x80;
-        offset += 0x40;
-        tileOffset++;
-
-        if (!(offset != i))
-            break;
     }
-    i++;
-    i--;
 
     drawMenuSpriteTileClipped(
         (s16)(arg0->x + 0x80),
@@ -499,7 +482,6 @@ void drawRaceTypeSelectOption1Frame(RaceTypeSelectOptionFrameActor *arg0) {
         (gMenuViewportHeight / 2) - 0x2F
     );
 }
-#endif
 
 void updateRaceTypeSelectOption1Frame(RaceTypeSelectOptionFrameActor *arg0) {
     int state;
