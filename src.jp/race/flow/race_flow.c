@@ -55,6 +55,120 @@ typedef struct {
     s8 unk8;
 } Unk80043040;
 
+extern u32 gRaceReplayCourseGridEntries[];
+
+CourseGridEntry *gRaceReplayCourseGridLists[12] = {
+    (CourseGridEntry *)gRaceReplayCourseGridEntries,
+    &((CourseGridEntry *)gRaceReplayCourseGridEntries)[12],
+    &((CourseGridEntry *)gRaceReplayCourseGridEntries)[24],
+    &((CourseGridEntry *)gRaceReplayCourseGridEntries)[39],
+    &((CourseGridEntry *)gRaceReplayCourseGridEntries)[54],
+    &((CourseGridEntry *)gRaceReplayCourseGridEntries)[67],
+    &((CourseGridEntry *)gRaceReplayCourseGridEntries)[83],
+    &((CourseGridEntry *)gRaceReplayCourseGridEntries)[119],
+    &((CourseGridEntry *)gRaceReplayCourseGridEntries)[107],
+    &((CourseGridEntry *)gRaceReplayCourseGridEntries)[95],
+    NULL,
+    NULL,
+};
+
+u8 gPendingEndingCreditsFlow = 0;
+
+RaceCourseCharacterIdTable gRaceCourseOpponentCharacterIds = {
+    {
+     2, 3, 4, 0, 0, 1, 2, 3, 1, 2, 3, 4, 0, 3, 4, 1, 0, 2, 3, 4,
+     0, 1, 2, 3, 1, 3, 4, 0, 0, 1, 2, 3, 5, 0, 1, 3, 0, 1, 4, 2,
+     },
+};
+
+RaceCpuBoardConfig gBigSnowmanCpuBoardConfigs[8] = {
+    { 1,  0 },
+    { 1,  1 },
+    { 1,  2 },
+    { 1,  3 },
+    { 1,  4 },
+    { 14, 5 },
+    { 1,  6 },
+    { 0,  0 },
+};
+
+RaceCpuBoardConfig gSunsetRockCpuBoardConfigs[8] = {
+    { 1, 0 },
+    { 1, 1 },
+    { 1, 2 },
+    { 1, 3 },
+    { 1, 4 },
+    { 1, 5 },
+    { 1, 6 },
+    { 0, 0 },
+};
+
+RaceCpuBoardConfig gNightHighwayCpuBoardConfigs[8] = {
+    { 4, 0 },
+    { 4, 1 },
+    { 4, 2 },
+    { 4, 3 },
+    { 4, 4 },
+    { 4, 5 },
+    { 4, 6 },
+    { 0, 0 },
+};
+
+RaceCpuBoardConfig gGrassValleyCpuBoardConfigs[8] = {
+    { 4, 0 },
+    { 4, 1 },
+    { 4, 2 },
+    { 4, 3 },
+    { 4, 4 },
+    { 4, 5 },
+    { 4, 6 },
+    { 0, 0 },
+};
+
+RaceCpuBoardConfig gDizzyLandCpuBoardConfigs[8] = { { 4, 0 }, { 4, 1 }, { 4, 2 }, { 4, 3 }, { 4, 4 }, { 4, 5 }, { 4, 6 }, { 0, 0 } };
+
+RaceCpuBoardConfig gQuicksandValleyCpuBoardConfigs[8] = { { 7, 0 }, { 7, 1 }, { 7, 2 }, { 7, 3 }, { 7, 4 }, { 7, 5 }, { 7, 6 }, { 0, 0 } };
+
+RaceCpuBoardConfig gSilverMountainCpuBoardConfigs[8] = { { 7, 0 }, { 7, 1 }, { 7, 2 }, { 7, 3 }, { 7, 4 }, { 7, 5 }, { 7, 6 }, { 0, 0 } };
+
+RaceCpuBoardConfig gAnimalLandCpuBoardConfigs[8] = {
+    { 0, 0 },
+    { 0, 1 },
+    { 0, 2 },
+    { 0, 3 },
+    { 0, 4 },
+    { 0, 5 },
+    { 0, 6 },
+    { 0, 0 },
+};
+
+RaceCpuBoardConfig gNinjaLandCpuBoardConfigs[8] = { { 7, 0 }, { 7, 1 }, { 7, 2 }, { 7, 3 }, { 7, 4 }, { 14, 5 }, { 7, 6 }, { 0, 0 } };
+
+RaceCpuBoardConfig gRookieMountainCpuBoardConfigs[8] = {
+    { 1, 0 },
+    { 1, 1 },
+    { 1, 2 },
+    { 1, 3 },
+    { 1, 4 },
+    { 1, 5 },
+    { 1, 6 },
+    { 0, 0 },
+};
+
+RaceCpuBoardConfig *gRaceCpuBoardConfigsByCourse[10] = {
+    gBigSnowmanCpuBoardConfigs,     gSunsetRockCpuBoardConfigs, gNightHighwayCpuBoardConfigs,
+    gGrassValleyCpuBoardConfigs,    gDizzyLandCpuBoardConfigs,  gQuicksandValleyCpuBoardConfigs,
+    gSilverMountainCpuBoardConfigs, gAnimalLandCpuBoardConfigs, gNinjaLandCpuBoardConfigs,
+    gRookieMountainCpuBoardConfigs,
+};
+
+u8 gRaceCourseCpuPickupUseChances[12] = { 10, 10, 40, 40, 40, 80, 128, 0, 255, 10, 0, 0 };
+
+u16 gRaceGhostReplayGridSwitchFrames[16] = {
+    0x0000, 0x0068, 0x00CD, 0x0135, 0x019C, 0x0203, 0x0268, 0x02CE,
+    0x0335, 0x03A0, 0x040C, 0x0466, 0x7FFF, 0x0000, 0x0000, 0x0000,
+};
+
 void initStartupControllerPakFlow(void) {
     LOAD_ASSET(_2427D0, 6);
     initCallbackTaskScheduler(0);

@@ -30,11 +30,87 @@
 
 #pragma weak gControllerPakRumbleCheckPromptState
 
-ControllerPakRumbleCheckPromptState gControllerPakRumbleCheckPromptState = { 0 };
 
 RaceSetupMenuSubState gRaceSetupMenuSubState;
 
 s16 gRaceSetupSavePanelRects[2][4];
+
+u8 gMainMenuSecretCodeUnlocked = 0;
+
+u8 gMainMenuSecretCodeStep = 0;
+
+RaceSetupMenuPackedData gRaceSetupMenuPackedData = {
+    0,
+    { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1 },
+    { 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 0 },
+};
+
+s16 gRaceSetupSavePanelInitialRects[4][2] = {
+    { -0x114, -0xA4 },
+    { -0x114, 0x48  },
+    { 0x90,   -0xA4 },
+    { 0x90,   0x48  },
+};
+
+RaceSetupSaveDefaultTime gDefaultTimeTrialRecords[11][5] = {
+    { { 0x02, 0x0F, 0 }, { 0x02, 0x14, 0 }, { 0x02, 0x1E, 0 }, { 0x02, 0x28, 0 }, { 0x02, 0x32, 0 } },
+    { { 0x02, 0x0C, 0 }, { 0x02, 0x0F, 0 }, { 0x02, 0x14, 0 }, { 0x02, 0x1E, 0 }, { 0x02, 0x26, 0 } },
+    { { 0x01, 0x2F, 0 }, { 0x01, 0x32, 0 }, { 0x01, 0x38, 0 }, { 0x02, 0x00, 0 }, { 0x02, 0x08, 0 } },
+    { { 0x01, 0x38, 0 }, { 0x02, 0x00, 0 }, { 0x02, 0x0C, 0 }, { 0x02, 0x15, 0 }, { 0x02, 0x19, 0 } },
+    { { 0x01, 0x34, 0 }, { 0x02, 0x00, 0 }, { 0x02, 0x05, 0 }, { 0x02, 0x09, 0 }, { 0x02, 0x0D, 0 } },
+    { { 0x01, 0x35, 0 }, { 0x01, 0x38, 0 }, { 0x02, 0x00, 0 }, { 0x02, 0x04, 0 }, { 0x02, 0x0A, 0 } },
+    { { 0x01, 0x3B, 0 }, { 0x02, 0x02, 0 }, { 0x02, 0x0B, 0 }, { 0x02, 0x11, 0 }, { 0x02, 0x14, 0 } },
+    { { 0, 0, 0 },       { 0, 0, 0 },       { 0, 0, 0 },       { 0, 0, 0 },       { 0, 0, 0 }       },
+    { { 0, 0x1C, 0 },    { 0, 0x21, 0 },    { 0, 0x24, 0 },    { 0, 0x28, 0 },    { 0, 0x2A, 0 }    },
+    { { 0, 0x24, 0 },    { 0, 0x28, 0 },    { 0, 0x2D, 0 },    { 0, 0x32, 0 },    { 0, 0x37, 0 }    },
+    { { 0, 0, 0 },       { 0, 0, 0 },       { 0, 0, 0 },       { 0, 0, 0 },       { 0, 0, 0 }       },
+};
+
+RaceSetupSaveDefaultTime gDefaultBestLapRecords[11] = {
+    { 1, 0x0E, 0 },
+    { 1, 0x03, 0 },
+    { 0, 0x31, 0 },
+    { 1, 0x14, 0 },
+    { 1, 0x06, 0 },
+    { 0, 0x31, 0 },
+    { 0, 0x37, 0 },
+    { 0, 0,    0 },
+    { 0, 0x11, 0 },
+    { 0, 0x13, 0 },
+    { 0, 0,    0 },
+};
+
+RaceSetupSaveDefaultTimeRow gDefaultRookieMountainRaceRecords[1] = {
+    { { 0, 0x24, 0, 0, 0x2A, 0, 0, 0x2C, 0, 0, 0x30, 0, 0, 0x35, 0 } },
+};
+
+RaceSetupSaveDefaultTimeTable gDefaultRaceRecordsByCourseParity = {
+    { 1, 0x3A, 0, 2, 0x03, 0, 2, 0x0B, 0, 2, 0x0D, 0, 2, 0x15, 0,
+     2, 0x01, 0, 2, 0x06, 0, 2, 0x0D, 0, 2, 0x12, 0, 2, 0x16, 0 },
+};
+
+u8 gDefaultScoreAttackScores[10] = { 0x14, 0x0F, 0x0A, 0x05, 0, 0x28, 0x1E, 0x14, 0x0A, 0 };
+
+RaceSetupDefaultSaveData gDefaultSaveRecordData = {
+    { 0x190, 0xC8, 0x64, 0x32, 0 },
+    0,
+    {
+     // textconv requires these _() invocations to retain their original line layout.
+        // clang-format off
+        { _("BEGISNOW") },
+        { _("TRAPED") },
+        { _("NIGHT HIGHWAY") },
+        { _("GRASS VALLEY") },
+        { _("SNOW GARDEN") },
+        { _("QUICKSAND VALLEY") },
+        { _("SILVER MOUNTAIN") },
+        { _("ZIPANGU") },
+     // clang-format on
+    },
+    { 0, 0 },
+};
+
+ControllerPakRumbleCheckPromptState gControllerPakRumbleCheckPromptState = { 0 };
 
 void initRaceSetupMenu(void) {
     s32 i;

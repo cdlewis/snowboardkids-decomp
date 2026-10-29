@@ -1,3 +1,4 @@
+
 #include "game/menu/menu_scratch.h"
 #include "common.h"
 #include "assets.h"
@@ -33,6 +34,13 @@ u8 gCharacterSelectUnrestrictedSelection;
 // During later board-type selection, this address is reused by different code:
 // 0 = Free Style, 1 = All Around, 2 = Alpine, 3 = back, and 4/5 appear to be
 // locked/unowned special board states.
+
+u16 gCharacterSelectIdOrder[] = { 5, 0, 1, 2, 3, 4 };
+
+s16 gCharacterSelectVoiceSoundIds[] = {
+    SFX_SHINOBIN_SELECT, SFX_SLASH_SELECT, SFX_NANCY_SELECT, SFX_JAM_SELECT, SFX_LINDA_SELECT,
+    SFX_TOMMY_SELECT,    SFX_NONE,         SFX_NONE,         SFX_NONE,       SFX_NONE
+};
 
 void initCharacterSelectMenu(void) {
     s32 i;

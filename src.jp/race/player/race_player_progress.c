@@ -1,3 +1,5 @@
+#include "game/engine/game_task_scheduler.h"
+#include "game/race/ui/race_hud.h"
 #include "common.h"
 #include "game/race/race_state.h"
 #include "game/race/player/race_player_progress.h"
@@ -7,12 +9,141 @@
 #define RANK_ARROW_DISTANCE 0x04000000
 #define RANK_ARROW_NEGATIVE_LIMIT ((s32)0xFC000001)
 
-extern u8 gSinglePlayerRankDisplayPatternFirst[];
-extern u8 gSinglePlayerRankDisplayPatternSecond[];
-extern u8 gSinglePlayerRankDisplayPatternThird[];
-extern u8 gSinglePlayerRankDisplayPatternFourth[];
-extern s8 *gRaceCoursePlayerPathOffsetTables[];
-extern RacePlayerCheckpointEvent *gRaceCourseCheckpointEventLists[];
+extern u32 gRaceCoursePlayerPathOffsetData[];
+
+
+char gRacePlayerProgressUnusedData[4] = "\t\t\t";
+
+extern u32 gRaceCoursePlayerPathOffsetData[];
+
+s8 *gRaceCoursePlayerPathOffsetTables[40] = {
+    (s8 *)&gRaceCoursePlayerPathOffsetData[0x002], (s8 *)&gRaceCoursePlayerPathOffsetData[0x002], (s8 *)&gRaceCoursePlayerPathOffsetData[0x030], (s8 *)&gRaceCoursePlayerPathOffsetData[0x05E],
+    (s8 *)&gRaceCoursePlayerPathOffsetData[0x08C], (s8 *)&gRaceCoursePlayerPathOffsetData[0x08C], (s8 *)&gRaceCoursePlayerPathOffsetData[0x0B4], (s8 *)&gRaceCoursePlayerPathOffsetData[0x0DC],
+    (s8 *)&gRaceCoursePlayerPathOffsetData[0x104], (s8 *)&gRaceCoursePlayerPathOffsetData[0x104], (s8 *)&gRaceCoursePlayerPathOffsetData[0x136], (s8 *)&gRaceCoursePlayerPathOffsetData[0x168],
+    (s8 *)&gRaceCoursePlayerPathOffsetData[0x19A], (s8 *)&gRaceCoursePlayerPathOffsetData[0x19A], (s8 *)&gRaceCoursePlayerPathOffsetData[0x1E4], (s8 *)&gRaceCoursePlayerPathOffsetData[0x22E],
+    (s8 *)&gRaceCoursePlayerPathOffsetData[0x278], (s8 *)&gRaceCoursePlayerPathOffsetData[0x278], (s8 *)&gRaceCoursePlayerPathOffsetData[0x2AD], (s8 *)&gRaceCoursePlayerPathOffsetData[0x2E2],
+    (s8 *)&gRaceCoursePlayerPathOffsetData[0x317], (s8 *)&gRaceCoursePlayerPathOffsetData[0x317], (s8 *)&gRaceCoursePlayerPathOffsetData[0x369], (s8 *)&gRaceCoursePlayerPathOffsetData[0x3BB],
+    (s8 *)&gRaceCoursePlayerPathOffsetData[0x40D], (s8 *)&gRaceCoursePlayerPathOffsetData[0x40D], (s8 *)&gRaceCoursePlayerPathOffsetData[0x44D], (s8 *)&gRaceCoursePlayerPathOffsetData[0x48D],
+    (s8 *)&gRaceCoursePlayerPathOffsetData[0x002], (s8 *)&gRaceCoursePlayerPathOffsetData[0x002], (s8 *)&gRaceCoursePlayerPathOffsetData[0x030], (s8 *)&gRaceCoursePlayerPathOffsetData[0x05E],
+    (s8 *)&gRaceCoursePlayerPathOffsetData[0x4CD], (s8 *)&gRaceCoursePlayerPathOffsetData[0x4CD], (s8 *)&gRaceCoursePlayerPathOffsetData[0x4DE], (s8 *)&gRaceCoursePlayerPathOffsetData[0x4EF],
+    (s8 *)&gRaceCoursePlayerPathOffsetData[0x500], (s8 *)&gRaceCoursePlayerPathOffsetData[0x500], (s8 *)&gRaceCoursePlayerPathOffsetData[0x511], (s8 *)&gRaceCoursePlayerPathOffsetData[0x522],
+};
+
+RacePlayerCheckpointEvent gBigSnowmanCheckpointEvents[8] = {
+    { 0x31, 7 },
+    { 0x52, 7 },
+    { 0x66, 3 },
+    { 0x8B, 1 },
+    { 0x8E, 7 },
+    { 0x99, 7 },
+    { 0xA6, 7 },
+    { -1,   0 },
+};
+
+RacePlayerCheckpointEvent gSunsetRockCheckpointEvents[4] = {
+    { 0x27, 7 },
+    { 0x34, 7 },
+    { 0x67, 7 },
+    { -1,   0 },
+};
+
+RacePlayerCheckpointEvent gNightHighwayCheckpointEvents[10] = {
+    { 0x06, 7 },
+    { 0x21, 1 },
+    { 0x2C, 1 },
+    { 0x42, 1 },
+    { 0x4F, 1 },
+    { 0x6A, 1 },
+    { 0x79, 1 },
+    { 0x88, 1 },
+    { 0x8C, 1 },
+    { -1,   0 },
+};
+
+RacePlayerCheckpointEvent gGrassValleyCheckpointEvents[14] = {
+    { 0x10,  7 },
+    { 0x13,  7 },
+    { 0x22,  3 },
+    { 0x48,  1 },
+    { 0x81,  3 },
+    { 0x8C,  1 },
+    { 0x9D,  1 },
+    { 0xB7,  3 },
+    { 0x110, 0 },
+    { 0x101, 0 },
+    { 0xF6,  1 },
+    { 0xEA,  1 },
+    { 0xE2,  0 },
+    { -1,    7 },
+};
+
+RacePlayerCheckpointEvent gDizzyLandCheckpointEvents[9] = {
+    { 0x22, 1 },
+    { 0x46, 1 },
+    { 0x56, 2 },
+    { 0x69, 2 },
+    { 0x89, 3 },
+    { 0x96, 0 },
+    { 0x9C, 3 },
+    { 0xBA, 3 },
+    { -1,   7 },
+};
+
+RacePlayerCheckpointEvent gQuicksandValleyCheckpointEvents[10] = {
+    { 0x1E,  3 },
+    { 0x2E,  3 },
+    { 0x77,  0 },
+    { 0x91,  0 },
+    { 0xB4,  3 },
+    { 0xB7,  3 },
+    { 0x105, 3 },
+    { 0x126, 3 },
+    { 0x12F, 3 },
+    { -1,    7 },
+};
+
+RacePlayerCheckpointEvent gSilverMountainCheckpointEvents[8] = {
+    { 0x1A, 3 },
+    { 0x29, 0 },
+    { 0x4C, 3 },
+    { 0x61, 7 },
+    { 0x84, 3 },
+    { 0xAF, 3 },
+    { 0xE0, 3 },
+    { -1,   7 },
+};
+
+RacePlayerCheckpointEvent gNinjaLandCheckpointEvents[4] = {
+    { 0x15, 7 },
+    { 0x1F, 7 },
+    { 0x32, 0 },
+    { -1,   7 },
+};
+
+RacePlayerCheckpointEvent gRookieMountainCheckpointEvents[3] = {
+    { 0x17, 7 },
+    { 0x38, 7 },
+    { -1,   7 },
+};
+
+RacePlayerCheckpointEvent gAnimalLandCheckpointEvents[1] = {
+    { -1, 7 }
+};
+
+RacePlayerCheckpointEvent *gRaceCourseCheckpointEventLists[10] = {
+    gBigSnowmanCheckpointEvents,     gSunsetRockCheckpointEvents, gNightHighwayCheckpointEvents,
+    gGrassValleyCheckpointEvents,    gDizzyLandCheckpointEvents,  gQuicksandValleyCheckpointEvents,
+    gSilverMountainCheckpointEvents, gAnimalLandCheckpointEvents, gNinjaLandCheckpointEvents,
+    gRookieMountainCheckpointEvents,
+};
+
+u8 gSinglePlayerRankDisplayPatternFirst[4] = { 1, 0, 2, 0 };
+
+u8 gSinglePlayerRankDisplayPatternSecond[4] = { 0, 1, 2, 0 };
+
+u8 gSinglePlayerRankDisplayPatternThird[4] = { 0, 1, 2, 0 };
+
+u8 gSinglePlayerRankDisplayPatternFourth[12] = { 0, 2, 1, 0 };
 
 void updateRacePlayerRankDisplay(void) {
     s32 deltaX;
