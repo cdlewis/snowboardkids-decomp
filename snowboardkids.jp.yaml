@@ -11,6 +11,8 @@ options:
   asset_path: assets.jp
   src_path: src.jp
   build_path: build/jp
+  hasm_in_src_path: True
+  create_asm_dependencies: True
   ld_script_path: snowboardkids.jp.ld
   ld_dependencies: True
   symbol_addrs_path: symbol_addrs.jp.txt
@@ -304,7 +306,7 @@ segments:
       - [0xDFFA0, .data, ultra/io/aisetnextbuf]
       - [0xDFFB0, databin, data_DFFB0]
       - [0xDFFD0, .data, ultra/io/siacs]
-      - [0xDFFE0, databin, data_DFFE0]
+      - [0xDFFE0, .data, ultra/os/exceptasm]
       - [0xE0000, .data, ultra/libc/xprintf]
       - [0xE0050, .data, ultra/io/piacs]
       - [0xE0060, .data, ultra/io/vi]
@@ -371,10 +373,10 @@ segments:
       - [0xE1950, .rodata, engine/system_runtime]
       - [0xE1980, .rodata, libmus/player]
       - [0xE1A10, .rodata, ultra/gu/perspective]
-      - [0xE1A20, rodatabin, data_E1A20]
+      - [0xE1A20, .rodata, ultra/os/setintmask]
       - [0xE1AA0, .rodata, ultra/gu/sinf]
       - [0xE1AF0, .rodata, ultra/audio/synthesizer]
-      - [0xE1B00, rodatabin, main_data_tail]
+      - [0xE1B00, .rodata, ultra/os/exceptasm]
       - [0xE1B50, .rodata, ultra/libc/xprintf]
       - [0xE1C50, .rodata, ultra/gu/cosf]
       - [0xE1CA0, .rodata, ultra/io/devmgr]
@@ -415,7 +417,7 @@ segments:
       - {type: .bss, vram: 0x8015E510, name: ultra/io/leodiskinit}
       - {type: .bss, vram: 0x8015E590, name: ultra/io/piacs}
       - {type: .bss, vram: 0x8015E5B0, name: ultra/os/timerintr}
-      - {type: bss, vram: 0x8015E5F0, name: bss_8015E5F0}
+      - {type: .bss, vram: 0x8015E5F0, name: ultra/os/exceptasm}
       - {type: .bss, vram: 0x8015E7A0, name: ultra/io/leointerrupt}
   - [0xE28E0, bin, assets]
   - [0x800000]

@@ -1,6 +1,9 @@
 /* JP asset addresses and legacy views used by the C sources. */
 /* Asset payloads remain in the raw ROM segment until individually extracted. */
 
+main_BSS_CLEAR_HI = main_BSS_SIZE >> 16;
+main_BSS_CLEAR_LO = main_BSS_SIZE & 0xFFFF;
+
 ANIMAL_LAND_COURSE_TRIGGER_VOLUME_DISPLAY_LIST_command_000000 = 0x02006988;
 BIG_SNOWMAN_COURSE_GRAPHICS_command_000060 = 0x02000060;
 BIG_SNOWMAN_COURSE_GRAPHICS_command_000088 = 0x02000088;
