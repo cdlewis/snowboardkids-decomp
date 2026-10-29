@@ -22,21 +22,6 @@
 #define RACE_HUD_POPUP_FONT_HANDLE (gAssetHandles[0x1F])
 #define ASSET_HANDLE(index) (gAssetHandles[index])
 
-extern const char gRaceHudTimeTrialMinutesFormat[];
-extern const char gRaceHudTimeTrialSecondsFormat[];
-extern const char gRaceHudTimeTrialFractionFormat[];
-
-extern const char gRaceHudChallengeTimeLimitMinutesFormat[];
-extern const char gRaceHudChallengeTimeLimitSecondsFormat[];
-extern const char gRaceHudChallengeTimeLimitFractionFormat[];
-extern const char gRaceHudTrickAttackPointTotalFormat[];
-extern const char gRaceHudTrickAttackSecondaryCounterFormat[];
-extern const char gRaceHudScoreAttackTimeLimitMinutesFormat[];
-extern const char gRaceHudScoreAttackTimeLimitSecondsFormat[];
-extern const char gRaceHudScoreAttackTimeLimitFractionFormat[];
-extern const char gRaceHudScoreAttackPointTotalFormat[];
-
-
 u8 gRaceHudShotTileOffsets[8] = { 5, 5, 8, 11, 14, 17, 0, 0 };
 
 u8 gRaceHudItemTileIds[8] = { 4, 20, 21, 22, 23, 24, 25, 0 };
@@ -226,6 +211,38 @@ u32 gRaceCoursePlayerPathOffsetData[0x532] = {
     0x09090909, 0x09090909, 0x09090909, 0x09090909, 0x09090909, 0x09090909, 0x09090909, 0x09090909, 0x09090909,
     0x09090909, 0x09090909, 0x09090909, 0x09090909, 0x09090909, 0x09090909, 0x09090909
 };
+
+const char gRaceHudChallengeTimeLimitMinutesFormat[8] = "%2.2d";
+const char gRaceHudChallengeTimeLimitSecondsFormat[8] = "%2.2d";
+const char gRaceHudChallengeTimeLimitFractionFormat[8] = "%2.2d";
+const char gRaceHudTrickAttackPointTotalFormat[4] = "%4d";
+const char gRaceHudTrickAttackSecondaryCounterFormat[4] = "%2d";
+const char gRaceHudTrickAttackPointLabel[8] = "POINT";
+const char gRaceHudTrickAttackTimeLimitLabel[12] = "TIME LIMIT";
+const char gRaceHudScoreAttackTimeLimitMinutesFormat[8] = "%2.2d";
+const char gRaceHudScoreAttackTimeLimitSecondsFormat[8] = "%2.2d";
+const char gRaceHudScoreAttackTimeLimitFractionFormat[8] = "%2.2d";
+const char gRaceHudScoreAttackPointTotalFormat[4] = "%2d";
+const char gRaceHudScoreAttackTimeLimitLabel[12] = "TIME LIMIT";
+const char gRaceHudScoreAttackPointTargetFormat[4] = "/%d";
+const char gRaceHudTargetTimeChallengeMinutesFormat[8] = "%2.2d";
+const char gRaceHudTargetTimeChallengeSecondsFormat[8] = "%2.2d";
+const char gRaceHudTargetTimeChallengeFractionFormat[8] = "%2.2d";
+const char gRaceHudTargetTimeChallengeSecondaryCounterFormat[4] = "%d";
+const char gRaceHudTargetTimeChallengeLapTimeLabel[12] = "LAP TIME";
+const char gRaceHudTargetTimeChallengeTargetTimeLabel[12] = "TARGET TIME";
+const char gRaceHudTargetTimeChallengeTargetTimeFormat[20] = "%2.2d'%2.2d\"%2.2d";
+const char gRaceHudTargetTimeChallengeLapProgressFormat[8] = "*%d/%d";
+const char gRaceHudTimeTrialMinutesFormat[8] = "%2.2d";
+const char gRaceHudTimeTrialSecondsFormat[8] = "%2.2d";
+const char gRaceHudTimeTrialFractionFormat[8] = "%2.2d";
+const char gRaceHudTimeTrialLapTimeLabel[12] = "LAP TIME";
+const char gRaceHudTimeTrialBestLapLabel[12] = "BEST LAP";
+const char gRaceHudTimeTrialBestLapFormat[20] = "%2.2d'%2.2d\"%2.2d";
+const char gRaceHudSinglePlayerScoreFormat[8] = "%5ld";
+const char gRaceHudTrainingScoreFormat[8] = "%5ld";
+const char gRaceHudTwoPlayerScoreFormat[8] = "%5ld";
+const char gRaceHudMultiplayerScoreFormat[8] = "%5ld";
 
 void initRaceHud(void) {
     LOAD_ASSET(SHARED_UI_SPRITES, 0x1F);

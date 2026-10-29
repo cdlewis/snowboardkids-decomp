@@ -207,6 +207,16 @@ MenuGlyphScript gCharacterSelectCourseStartGameText[38] = {
     0xFFFF, 0x0000, 0x000B, 0x0018, 0x000A, 0x001B, 0x000D, 0xFFFE, 0x0019, 0x000A, 0x0012, 0x0017
 };
 
+const char gCharacterSelectCourseStatsScoreFormat[4] = "%4d";
+const char gCharacterSelectCourseBestScoreFormat[4] = "%5d";
+const char gCharacterSelectCourseMedalScoreFormat[4] = "%5d";
+const char gCharacterSelectCoursePlayerRankFormat[4] = "%2d";
+const char gCharacterSelectCourseRecordHitsLabel[4] = "HIT";
+const char gCharacterSelectCourseRecordPointsLabel[4] = "P";
+const char gCharacterSelectRecordMinutesFormat[8] = "%2.2d";
+const char gCharacterSelectRecordSecondsFormat[8] = "%2.2d";
+const char gCharacterSelectRecordCentisecondsFormat[8] = "%2.2d";
+
 void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0) {
     register CharacterSelectCourseMenuFrameActor *actor;
     s16 *characterIds;

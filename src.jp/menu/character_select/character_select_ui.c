@@ -17,7 +17,6 @@
 #define CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE (gAssetHandles[0x29])
 #define CHARACTER_SELECT_UI_UNUSED_HANDLE (gAssetHandles[0x1F])
 
-
 CharacterSelectUiConfirmationBannerText gCharacterSelectConfirmationBannerText = {
     0xFFFC, 0x0007, 0x0046, 0x003B, 0x0066, 0x0047, 0x004F, 0x002B, 0x008E, 0x0093, 0x00B6, 0x008F, 0x00C9,
     0x0097, 0x00C6, 0x009A, 0xFFFD, 0x0091, 0x0032, 0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -33,6 +32,9 @@ CharacterSelectUiCharacterStats gCharacterSelectCharacterStats[8] = { 0x0004, 0x
 u16 gCharacterSelectCharacterStatLabels[8] = { 0x000A, 0x000A, 0x000A, 0x000B, 0x000A, 0x000B, 0x0002 };
 u16 gCharacterSelectPlayerMarkerTiles[16] = { 0x0027, 0x0033, 0x002B, 0x002F, 0x0028, 0x002C, 0x0034, 0x0030,
                                               0x0029, 0x0035, 0x002D, 0x0031, 0x002A, 0x002E, 0x0036, 0x0032 };
+
+const char gCharacterSelectPlayerNumberFormat[4] = "%d";
+const char gCharacterSelectCharacterStatFormat[4] = "%d";
 
 void drawCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0) {
     s32 i;

@@ -35,8 +35,6 @@
 #define CONTROLLER_PAK_U16_AT(cursor, field) (*(u16 *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
 #define CONTROLLER_PAK_SAVE_FIELD_OFFSET(field) ((u32) & (((GameSaveData *)0)->field))
 
-extern f32 gMainMenuViewportAspectRatio;
-
 u8 gConnectedControllerBitmask = 0;
 
 u8 gControllerPakSaveGameNameBytes[16] = { 0x5C, 0x68, 0x8F, 0x56, 0x4A, 0x83, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
@@ -54,6 +52,8 @@ u8 gControllerPakSaveExtNameBytesEnd[0x84] = {
 };
 
 u8 gMainMenuReturnFromRace = 0;
+
+const f32 gMainMenuViewportAspectRatio[1] = { 1.333333373f };
 
 void requestControllerRead(void) {
     if ((gControllerReadPending == 0) && (gConnectedControllerBitmask != 0)) {
@@ -758,7 +758,7 @@ void initMainMenu(void) {
     gMainMenuSecretCodeUnlocked = 0;
     gMainMenuSecretCodeStep = 0;
     resetAllViewports();
-    configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, gMainMenuViewportAspectRatio);
+    configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, gMainMenuViewportAspectRatio[0]);
     gFramebufferRenderInterval.value = 0;
     loadCompressedRomAsset(&_5DAF30_ROM_END, &_5DCBE0_ROM_START, 0x21);
     loadCompressedRomAsset(&_5DCBE0_ROM_START, &_5DFDD0_ROM_START, 0x25);

@@ -66,6 +66,8 @@ u32 gMenuPanelBackdropTexture[16] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFF
                                       0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
                                       0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
+const char gRaceSplitscreenSelectEntryFeeFormat[8] = "%6dG";
+
 void drawRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectOptionIconActor *icons) {
     RaceSplitscreenSelectOptionIconActor *savedIcons;
     s32 iconIndex;

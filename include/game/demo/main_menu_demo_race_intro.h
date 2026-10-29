@@ -4,11 +4,11 @@
 #include "common.h"
 
 #if defined(VERSION_JP)
-extern f32 gDemoRaceBottomLeftAspectRatio;
-extern f32 gDemoRaceBottomRightAspectRatio;
-extern f32 gDemoRaceFullscreenAspectRatio;
-extern f32 gDemoRaceTopLeftAspectRatio;
-extern f32 gDemoRaceTopRightAspectRatio;
+extern const f32 gDemoRaceBottomLeftAspectRatio[];
+extern const f32 gDemoRaceBottomRightAspectRatio[];
+extern const f32 gDemoRaceFullscreenAspectRatio[];
+extern const f32 gDemoRaceTopLeftAspectRatio[];
+extern const f32 gDemoRaceTopRightAspectRatio[];
 #endif
 
 void initMainMenuDemoRaceIntro(void);

@@ -137,8 +137,6 @@ typedef struct {
     RaceTimer timeTrialRecordSplitTimes[11];
 } RaceUiTimeTrialSaveData;
 
-extern const char gRaceUiScorePopupValueFormat[];
-
 RaceCourseScrollingTextureInit gRaceCourseScrollingTextureInit[RACE_COURSE_SCROLLING_TEXTURE_COUNT] = {
     { (s32)QUICKSAND_VALLEY_COURSE_SCROLLING_TEXTURE_0_DISPLAY_LIST_command_000000, 0x0044, 0x00, 0x00 },
     { (s32)QUICKSAND_VALLEY_COURSE_SCROLLING_TEXTURE_1_DISPLAY_LIST_command_000000, 0x0003, 0x01, 0x00 },
@@ -670,6 +668,88 @@ RaceCoursePropModelEntry gRaceCoursePropModelEntries[] = {
 };
 
 u32 gRaceCoursePropModelTerminator[] = { 0xFFFF0000, 0x00000000, 0x00000000, 0x00000000 };
+
+const char gRaceUiBoardReversePromptLabelBlinkOn[16] = "BOARD REVERSE";
+const char gRaceUiBoardReversePromptLabelBlinkOff[16] = "BOARD REVERSE";
+const char gRaceUiTrickScorePopupPointsFormat[4] = "%2d";
+const char gRaceUiTrickScorePopupBonusFormat[12] = "%3d";
+const char gRaceUiRankPrizeCounterFormat[4] = "%5d";
+const char gRaceUiCoinCounterFormat[4] = "%5d";
+const char gRaceUiTotalMoneyCounterFormat[4] = "%6d";
+const char gRaceUiRankPrizeLabel[16] = "-RANK PRIZE-";
+const char gRaceUiGetCoinLabel[16] = "  -GET COIN-";
+const char gRaceUiTotalMoneyLabel[16] = "-TOTAL MONEY-";
+const char gRaceResultsSlot0WinCountFormat[4] = "*%d";
+const char gRaceResultsSlot0PlayerLabelFormat[4] = "%dP";
+const char gRaceResultsSlot0CpuLabel[4] = "COM";
+const char gRaceResultsSlot1WinCountFormat[4] = "*%d";
+const char gRaceResultsSlot1PlayerLabelFormat[4] = "%dP";
+const char gRaceResultsSlot1CpuLabel[4] = "COM";
+const char gRaceResultsSlot2WinCountFormat[4] = "*%d";
+const char gRaceResultsSlot2PlayerLabelFormat[4] = "%dP";
+const char gRaceResultsSlot2CpuLabel[4] = "COM";
+const char gRaceResultsSlot3WinCountFormat[4] = "*%d";
+const char gRaceResultsSlot3PlayerLabelFormat[4] = "%dP";
+const char gRaceResultsSlot3CpuLabel[4] = "COM";
+const char gRaceUiPackedTimeMinutesFormat[8] = "%2.2d";
+const char gRaceUiPackedTimeSecondsFormat[8] = "%2.2d";
+const char gRaceUiPackedTimeFractionFormat[8] = "%2.2d";
+const char gRaceUiLapTimeLabel[12] = "-LAP TIME-";
+const char gRaceUiScoreAttackPointTotalFormat[4] = "%2d";
+const char gRaceUiCounterHitPrizeFormat[4] = "%5d";
+const char gRaceUiCounterPerfectHitBonusFormat[4] = "%5d";
+const char gRaceUiCounterCompleteBonusFormat[4] = "%5d";
+const char gRaceUiCounterMoneyFormat[4] = "%6d";
+const char gRaceUiCourseValueFormat[4] = "%2d";
+const char gRaceUiScoreAttackTargetFormat[4] = "/%d";
+const char gRaceUiScoreAttackAsteriskLabel[4] = "*";
+const char gRaceUiScoreAttackTimeOutLabel[12] = "TIME OUT";
+const char gRaceUiHitPrizeX1Label[20] = "-HIT PRIZE(*1G)-";
+const char gRaceUiHitPrizeX50Label[20] = "-HIT PRIZE(*50G)-";
+const char gRaceUiPerfectHitLabel[16] = "  -PERFECT HIT-";
+const char gRaceUiCompleteBonusLabel[20] = "-COMPLETE BONUS-";
+const char gRaceUiHitPrizeTotalMoneyLabel[16] = "-TOTAL MONEY-";
+const char gRaceUiCourseValueHitLabelRow1[4] = "HIT";
+const char gRaceUiCourseValueHitLabelRow2[4] = "HIT";
+const char gRaceUiCourseValueHitLabelRow3[4] = "HIT";
+const char gRaceUiCourseValueHitLabelRow4[4] = "HIT";
+const char gRaceUiCourseValueHitLabelRow5[4] = "HIT";
+const char gRaceUiTargetTimeChallengePrizeCounterFormat[4] = "%5d";
+const char gRaceUiTargetTimeChallengeSpeedFanGetCounterFormat[4] = "%5d";
+const char gRaceUiTargetTimeChallengePerfectGetCounterFormat[4] = "%5d";
+const char gRaceUiTargetTimeChallengeCompleteBonusCounterFormat[4] = "%5d";
+const char gRaceUiTargetTimeChallengeMoneyCounterFormat[4] = "%6d";
+const char gRaceUiTargetTimeChallengeLapTimeLabel[12] = "-LAP TIME-";
+const char gRaceUiTargetTimeChallengeTargetLabel[12] = "-TARGET-";
+const char gRaceUiTargetTimeChallengeTargetTimeFormat[20] = "%2.2d'%2.2d\"%2.2d";
+const char gRaceUiTargetTimeChallengeFastLabel[8] = " -FAST-";
+const char gRaceUiTargetTimeChallengeDeltaTimeFormat[20] = "-%2.2d'%2.2d\"%2.2d";
+const char gRaceUiTargetTimeChallengeTimeOutLabel[12] = "TIME OUT";
+const char gRaceUiTargetTimeChallengePrizeLabel[16] = "  -TIME PRIZE-";
+const char gRaceUiTargetTimeChallengeSpeedFanGetLabel[20] = " -SPEED FAN GET-";
+const char gRaceUiTargetTimeChallengePerfectGetLabel[16] = "  -PERFECT GET-";
+const char gRaceUiTargetTimeChallengeCompleteBonusLabel[20] = "-COMPLETE BONUS-";
+const char gRaceUiTargetTimeChallengeMoneyLabel[16] = "  -TOTAL MONEY-";
+const char gRaceUiTrickAttackPointTotalFormat[4] = "%d";
+const char gRaceUiTrickAttackSecondaryCounterFormat[4] = "%d";
+const char gRaceUiPendingTrickPrizeFormat[4] = "%5d";
+const char gRaceUiPendingMakeBonusFormat[4] = "%5d";
+const char gRaceUiPendingCompleteBonusFormat[4] = "%5d";
+const char gRaceUiPendingMoneyFormat[4] = "%6d";
+const char gRaceUiTrickValueFormat[4] = "%4d";
+const char gRaceUiTrickAttackResultsTrickLabel[8] = "-TRICK-";
+const char gRaceUiTrickAttackResultsMakeLabel[8] = "-MAKE-";
+const char gRaceUiTrickAttackResultsTimeOutLabel[12] = "TIME OUT";
+const char gRaceUiPendingTrickPrizeLabel[16] = "  -TRICK PRIZE-";
+const char gRaceUiPendingMakeBonusLabel[16] = "  -MAKE BONUS-";
+const char gRaceUiPendingCompleteBonusLabel[20] = "-COMPLETE BONUS-";
+const char gRaceUiPendingMoneyLabel[16] = "  -TOTAL MONEY-";
+const char gRaceUiTrickValuePointLabelRow1[4] = "P";
+const char gRaceUiTrickValuePointLabelRow2[4] = "P";
+const char gRaceUiTrickValuePointLabelRow3[4] = "P";
+const char gRaceUiTrickValuePointLabelRow4[4] = "P";
+const char gRaceUiTrickValuePointLabelRow5[8] = "P";
+const char gRaceUiScorePopupValueFormat[16] = "%4d";
 
 void renderRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0) {
     volatile u8 pad[8];

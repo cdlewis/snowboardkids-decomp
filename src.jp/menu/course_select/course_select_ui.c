@@ -28,7 +28,6 @@ typedef enum {
     COURSE_RATING_COUNT
 } CourseSelectCourseRatingType;
 
-
 MenuGlyphScript gCourseSelectUnusedText[2] = { 0x001D, 0xFFFF };
 MenuGlyphScript gCourseSelectModeDescriptionText[7][35] = {
     0xFFFC, 0x0007, 0x004C, 0x0081, 0x002B, 0x007A, 0x00A9, 0x0094, 0x009E, 0x0091, 0x00BC, 0x0114, 0x00FF, 0x00BC,
@@ -88,6 +87,14 @@ s16 gCourseSelectIconListXLayout[3][4] = { 0xFEFC, 0xFF84, 0x0000, 0x0000, 0xFF4
 s16 gCourseSelectStatsPanelLayout[3][4] = { 0xFF88, 0x0034, 0x0000, 0x0000, 0xFFC8, 0xFFC0,
                                             0xFFC8, 0x0024, 0xFF7C, 0xFFE0, 0xFF7C, 0x0044 };
 s16 gCourseSelectStatsPlayerMarkerLayout[2][4] = { 0xFF88, 0xFFEC, 0xFF88, 0x0050, 0xFFC0, 0xFFF0, 0xFFBC, 0x0054 };
+
+const char gCourseSelectUnknownSpeedText[4] = "?";
+const char gCourseSelectUnknownHandlingText[4] = "?";
+const char gCourseSelectUnknownTrickText[4] = "?";
+const char gCourseSelectSpeedFormat[4] = "%d";
+const char gCourseSelectHandlingFormat[4] = "%d";
+const char gCourseSelectTrickFormat[4] = "%d";
+const char gCourseSelectPlayerNumberFormat[4] = "%d";
 
 void drawCourseSelectSnowboardPreviewIn(CourseSelectCoursePreviewActor *arg0) {
     u8 sp2F;

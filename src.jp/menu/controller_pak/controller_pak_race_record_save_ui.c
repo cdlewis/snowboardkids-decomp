@@ -79,6 +79,8 @@ ControllerPakRaceRecordSaveUiData gControllerPakRaceRecordSaveUiData = {
     0x000F, 0x0014, 0x0000, 0x0000, 0x000D, 0x000A, 0x001D, 0x000A, 0xFFFE, 0x001C, 0x000A, 0x001F, 0x000E, 0xFFFF
 };
 
+const char gControllerPakRaceRecordMoneyFormat[4] = "%6d";
+
 void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScorePanelActor *arg0) {
     s16 *new_var;
     s16 *badgeIndex;

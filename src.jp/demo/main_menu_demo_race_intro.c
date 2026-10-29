@@ -63,6 +63,12 @@ MainMenuDemoRaceIntroEntry gMainMenuDemoRaceIntroEntries[] = {
      4, 2 },
 };
 
+const f32 gDemoRaceFullscreenAspectRatio[1] = { 1.333333373f };
+const f32 gDemoRaceTopLeftAspectRatio[1] = { 1.333333373f };
+const f32 gDemoRaceBottomLeftAspectRatio[1] = { 1.333333373f };
+const f32 gDemoRaceTopRightAspectRatio[1] = { 1.333333373f };
+const f32 gDemoRaceBottomRightAspectRatio[4] = { 1.333333373f };
+
 void initMainMenuDemoRaceIntro(void) {
     RacePlayer *players;
     gRaceCourseIndex.signedValue = gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex].courseIndex;
@@ -144,14 +150,14 @@ void initMainMenuDemoRaceIntro(void) {
     }
     initRaceHud();
     if (gPlayerCount == 1) {
-        configureViewport(0, 0xA0, 0x78, 0x120U, 0xD0U, 0x140U, 0xF0U, gDemoRaceFullscreenAspectRatio);
+        configureViewport(0, 0xA0, 0x78, 0x120U, 0xD0U, 0x140U, 0xF0U, gDemoRaceFullscreenAspectRatio[0]);
         gRacePlayerHudStatuses[0].active = 1;
         gFramebufferRenderInterval.value = 0;
     } else {
-        configureViewport(0, 0x57, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, gDemoRaceTopLeftAspectRatio);
-        configureViewport(1, 0x57, 0xAD, 0x90U, 0x68U, 0xA0U, 0x78U, gDemoRaceBottomLeftAspectRatio);
-        configureViewport(2, 0xE9, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, gDemoRaceTopRightAspectRatio);
-        configureViewport(3, 0xE9, 0xAD, 0x90U, 0x68U, 0xA0U, 0x78U, gDemoRaceBottomRightAspectRatio);
+        configureViewport(0, 0x57, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, gDemoRaceTopLeftAspectRatio[0]);
+        configureViewport(1, 0x57, 0xAD, 0x90U, 0x68U, 0xA0U, 0x78U, gDemoRaceBottomLeftAspectRatio[0]);
+        configureViewport(2, 0xE9, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, gDemoRaceTopRightAspectRatio[0]);
+        configureViewport(3, 0xE9, 0xAD, 0x90U, 0x68U, 0xA0U, 0x78U, gDemoRaceBottomRightAspectRatio[0]);
         gRaceCameras[0].initialized.signedValue = 1;
         gRaceCameras[1].initialized.signedValue = 1;
         gRaceCameras[2].initialized.signedValue = 1;

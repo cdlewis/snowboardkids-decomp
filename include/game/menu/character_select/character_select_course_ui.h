@@ -96,8 +96,8 @@ extern CharacterSelectCourseExitPreviewData gCharacterSelectCourseExitPreviewDat
 extern CharacterSelectCourseText gCharacterSelectCourseNameText[];
 extern CharacterSelectCourseFrameCornerTileMap gCharacterSelectCoursePreviewFrameCornerTileMaps[];
 extern CharacterSelectCourseFrameTileMap gCharacterSelectCoursePreviewFrameTileMaps[];
-extern char gCharacterSelectCourseRecordHitsLabel[];
-extern char gCharacterSelectCourseRecordPointsLabel[];
+extern const char gCharacterSelectCourseRecordHitsLabel[];
+extern const char gCharacterSelectCourseRecordPointsLabel[];
 extern MenuGlyphScript gCharacterSelectCourseStartGameText[];
 extern const char gCharacterSelectCourseStatsScoreFormat[];
 extern u16 gCharacterSelectCourseStatsScoreValues[];

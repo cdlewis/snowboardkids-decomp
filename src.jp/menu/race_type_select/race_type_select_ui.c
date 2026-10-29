@@ -50,6 +50,8 @@ RaceTypeSelectDescriptionScriptTable gRaceTypeSelectPortraitScripts = {
     0x000E, 0x000C, 0x001D, 0xFFFF
 };
 
+const char gRaceTypeSelectEntryFeeFormat[8] = "%6dG";
+
 void drawRaceTypeSelectOptionIcons(RaceTypeSelectOptionIconActor *arg0) {
     RaceTypeSelectOptionIconActor *savedArg;
     s32 i;

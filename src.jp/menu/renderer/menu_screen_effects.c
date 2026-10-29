@@ -125,6 +125,8 @@ s16 passAwardLabelFlashTileOffsets[538] = {
     0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
 };
 
+const char gTitleScreenStartPromptText[32] = "PUSH START BUTTON";
+
 void drawFallingConfetti(MenuScreenEffectActor *arg0) {
     void *texture;
 
@@ -355,7 +357,7 @@ void createPassAwardOpponent(s32 arg0, s32 arg1) {
 }
 
 void drawTitleScreenStartPrompt(MenuScreenEffectActor *arg0) {
-    drawMenuAsciiTextDefaultScale(-0x44, 0x38, gTitleScreenStartPromptText, 0);
+    drawMenuAsciiTextDefaultScale(-0x44, 0x38, (u8 *)gTitleScreenStartPromptText, 0);
 }
 
 void updateTitleScreenStartPrompt(void *arg0) {

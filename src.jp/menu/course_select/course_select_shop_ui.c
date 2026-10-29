@@ -37,7 +37,6 @@ enum {
     COURSE_DETAILS_ROW_SPACING = 0x13
 };
 
-
 ShopMenuFrameTileMap gShopMenuPanelFrameTilemaps[2] = {
     0x001A, 0x001B, 0x001C, 0x001D, 0x001F, 0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0028, 0x0029,
     0x002A, 0x002B, 0x001E, 0x0027, 0x002C, 0x002D, 0x002E, 0x00A4, 0x00A5, 0x00A6, 0x00A7, 0x00A9, 0x00AA, 0x00AB,
@@ -92,6 +91,11 @@ MenuGlyphScript gCourseUnlockPurchasePromptText[12] = { 0xFFFC, 0x0007, 0x0099, 
 Vec2s gCoursePreviewCloseSparkleOffsets[6] = { 0x0003, 0xFFFC, 0x000C, 0xFFFE, 0x0013, 0xFFFD,
                                                0x001D, 0xFFFD, 0x0023, 0xFFFF, 0x002A, 0xFFFB };
 Vec2s gCoursePreviewCloseSparkleMirrorStart[2] = { 0x0000 };
+
+const char gShopMenuMoneyFormat[8] = "%6dG";
+const char gCourseUnlockPriceFormat6[8] = "%6dG";
+const char gCourseUnlockPriceFormat5[8] = "%5dG";
+const char gCourseUnlockPriceFormat4[8] = "%4dG";
 
 void drawShopMenuModeChoiceRows(ShopMenuRowActor *actor) {
     ShopMenuRowActor *savedActor;
