@@ -20,12 +20,13 @@ CPP_FLAGS = [
 ]
 
 
-def import_c_file(in_file):
+def import_c_file(in_file, jp=False):
     rel_file = os.path.relpath(in_file, ROOT_DIR)
     source_root = rel_file.split(os.sep)[0]
     source_include = "-I" + (source_root if source_root in ("src.us", "src.jp") else "src.us")
-    macro_cmd = ["gcc", "-E", "-P", "-dM", source_include, *CPP_FLAGS, rel_file]
-    preprocess_cmd = ["gcc", "-E", "-P", source_include, *CPP_FLAGS, rel_file]
+    cpp_flags = CPP_FLAGS + (["-DVERSION_JP"] if jp else [])
+    macro_cmd = ["gcc", "-E", "-P", "-dM", source_include, *cpp_flags, rel_file]
+    preprocess_cmd = ["gcc", "-E", "-P", source_include, *cpp_flags, rel_file]
 
     with tempfile.NamedTemporaryFile(suffix=".c") as tmp:
         stock_macros = subprocess.check_output(
@@ -61,9 +62,10 @@ def main():
         description="Create a context file for m2c / decomp.me"
     )
     parser.add_argument("c_file", help="C file from which to create context")
+    parser.add_argument("--jp", action="store_true", help="Define VERSION_JP for Japanese code")
     args = parser.parse_args()
 
-    output = import_c_file(args.c_file)
+    output = import_c_file(args.c_file, jp=args.jp)
 
     with open(os.path.join(ROOT_DIR, "ctx.c"), "w", encoding="utf-8") as f:
         f.write(output)
