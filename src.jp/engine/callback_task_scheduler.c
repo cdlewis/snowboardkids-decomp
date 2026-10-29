@@ -18,6 +18,19 @@ void *createCallbackTaskS32(CallbackTaskCallback callback, s32 type, s32 priorit
 // immediately after storing it while leaving task0's advance after its store.
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
+CallbackTaskSchedulerBss gCallbackTaskSchedulerBssView;
+CallbackTask gCallbackTaskPool[0xD8];
+CallbackTask *gFreeCallbackTaskPool[0xD8];
+u16 gFreeCallbackTaskCount;
+u16 gFreeCallbackTaskType0Count;
+u16 gFreeCallbackTaskType6Count;
+u16 gFreeCallbackTaskType5Count;
+u16 gFreeCallbackTaskType1Count;
+u16 gFreeCallbackTaskType2Count;
+u16 gFreeCallbackTaskType3Count;
+u16 gFreeCallbackTaskType4Count;
+CallbackTask *gCurrentCallbackTask;
+
 void initCallbackTaskScheduler(s32 arg0) {
     CallbackTask **pool;
     CallbackTaskGroup *task0;

@@ -1,3 +1,5 @@
+#include "game/menu/character_select/character_select_course_menu.h"
+#include "game/engine/system_runtime.h"
 #include "common.h"
 #include "assets.h"
 #include "game/engine/asset_manager.h"
@@ -15,6 +17,11 @@
 #include "game/menu/renderer/menu_render_utils.h"
 
 const f32 gControllerPakFileDeleteViewportAspectRatio[4] = { 1.333333373f };
+
+ControllerPakMenuState gControllerPakMenuState;
+OSPfsState gControllerPakFileStates[16];
+s32 gControllerPakFreeBytes;
+s32 gControllerPakFreeFileCount;
 
 void initControllerPakFileDeleteFlow(void) {
     requestControllerPakProbe(0);

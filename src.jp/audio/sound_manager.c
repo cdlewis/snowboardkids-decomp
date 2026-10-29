@@ -14,6 +14,8 @@
 #include "game/race/player/race_player_input.h"
 #include "game/audio/audio_engine_internal.h"
 
+#define SOUND_MANAGER_FREE_HANDLE_COUNT 13
+
 #define SOUND_MANAGER_QUEUE_MASK (SOUND_MANAGER_QUEUE_CAPACITY - 1)
 #define SOUND_MANAGER_QUEUE_CAPACITY 64
 
@@ -1225,6 +1227,37 @@ u32 gRaceReplayCourseGridEntries[0x1E0] = {
     0x00000037, 0x1C7104F5, 0xF338F76D, 0xEC0B9DC7, 0xFFFE0000, 0x00000000, 0x00000000, 0x00000000, 0xFFFE0000,
     0x00000000, 0x00000000, 0x00000000,
 };
+
+s32 gPendingMusicCommand;
+s32 gPendingMusicCommandArg;
+s32 gCurrentMusicSequenceHandle;
+s32 gMusicSequenceStopped;
+SoundHandleNode gSoundHandleNodes[SOUND_MANAGER_FREE_HANDLE_COUNT];
+SoundHandleNode *gActiveSoundHandleListHead;
+SoundHandleNode *gActiveSoundHandleListTail;
+PositionalSoundRequest *gPendingPositionalSoundRequests;
+s32 gFreeSoundHandleCount;
+SoundHandleNode *gFreeSoundHandleStack[SOUND_MANAGER_FREE_HANDLE_COUNT];
+s32 gCurrentMusicSequenceBank;
+SoundQueueEntry gSoundQueue[SOUND_MANAGER_QUEUE_CAPACITY];
+s32 gSoundQueueWriteIndex;
+s32 gSoundQueueReadIndex;
+u8 gCurrentQueuedSoundType;
+u8 gCurrentQueuedSoundId;
+u8 gCurrentQueuedSoundVolume;
+u8 gCurrentQueuedSoundPan;
+u8 gCurrentQueuedSoundPriority;
+u8 gCurrentQueuedSoundAux;
+s32 gPlayerPositionalSoundHandle0[RACE_PLAYER_COUNT];
+s32 gPlayerLoopingSoundHandle0;
+s32 gPlayerLoopingSoundHandle1;
+s32 gPlayerLoopingSoundHandle2;
+s32 gPlayerLoopingSoundHandle3;
+s16 gPlayerLoopingSoundId0;
+s16 gPlayerLoopingSoundId1;
+s16 gPlayerLoopingSoundId2;
+s16 gPlayerLoopingSoundId3;
+s32 gSharedLoopingPositionalSoundHandle;
 
 void initSoundManager(void) {
     PlayerCommandInit init;

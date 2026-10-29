@@ -70,11 +70,7 @@ typedef enum ControllerSubsystemRequest {
     CONTROLLER_REQUEST_RETRY_RUMBLE_INIT = 0xD0
 } ControllerSubsystemRequest;
 
-#if defined(VERSION_US)
 extern ControllerSubsystemThreadContext gControllerSubsystemThreadArg;
-#else
-extern void *gControllerSubsystemThreadArg;
-#endif
 
 extern s16 gControllerPakStatusCodes[4];
 extern s16 gMenuChoicePromptState[4];

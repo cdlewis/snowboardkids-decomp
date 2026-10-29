@@ -1,3 +1,5 @@
+#include "game/menu/character_select/character_select_course_menu.h"
+#include "game/engine/system_runtime.h"
 #include "common.h"
 #include "assets.h"
 #include "game/engine/asset_manager.h"
@@ -12,6 +14,8 @@
 #include "game/menu/renderer/menu_render_utils.h"
 
 const f32 gControllerPakContinuePromptViewportAspectRatio[4] = { 1.333333373f };
+
+ControllerPakContinuePromptTransition gControllerPakContinuePromptTransition;
 
 void initControllerPakContinuePromptFlow(void) {
     requestMusicSequenceBank(3);

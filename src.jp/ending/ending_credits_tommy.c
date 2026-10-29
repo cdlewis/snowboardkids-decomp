@@ -37,6 +37,8 @@ Vtx gEndingActorShadowQuadVertices[4] = {
     { { { -16, -16, 0 }, 0, { 0, 480 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
 };
 
+MainMenuSceneActorShadow gEndingActorShadow;
+
 void noopEndingCreditsTommy(void) {
 }
 

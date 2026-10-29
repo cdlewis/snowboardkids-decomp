@@ -109,6 +109,8 @@ s16 gRacePlayerVoiceSoundIds7[] = { SFX_SLASH_CHEER,
                                     SFX_NONE,
                                     SFX_NONE };
 
+RacePlayerOrder gRaceOrderPlayerIds;
+
 void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
     RacePlayer *player;
     s32 temp;

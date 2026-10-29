@@ -41,18 +41,17 @@
 #define SCHEDULER_RETRACE_MASK 0xFFF
 #define FRAMEBUFFER_SWAP_RETRACE_DELAY 3
 
+typedef struct MenuRenderCallbackQueueSlot {
+    RenderCallbackNode *head;
+    u32 reserved[3];
+} MenuRenderCallbackQueueSlot;
+
 typedef struct {
     RenderCallbackQueueSlot queue0;
     RenderCallbackQueueSlot queue1;
     RenderCallbackQueueSlot queue2;
     RenderCallbackQueueSlot queue3;
 } RenderCallbackQueueGroup;
-
-extern OSMesg gRomDmaMessages[1];
-extern OSMesg gFramebufferRenderDoneMessages[8];
-extern OSMesg gSchedulerClientMessages[2];
-extern OSMesg gControllerInputUpdateMessages[8];
-extern SchedulerClient gMainSchedulerClient;
 
 extern Vp gFullscreenOverlayViewport[];
 extern Gfx gModelRenderSetupDisplayList[];
@@ -167,6 +166,45 @@ Gfx gTranslucentOverlaySetupDisplayList[] = {
 s16 gFadeTimer = BOOT_FADE_TIMER;
 
 s32 gClearFramebufferOnNextTask = 1;
+
+OSThread gBootThread;
+OSThread gGameThread;
+static u8 sSystemRuntimeUnusedThreadStorage[sizeof(OSThread)];
+OSMesgQueue gPiManagerQueue;
+OSMesg gPiManagerMessages[PI_MANAGER_MSG_COUNT];
+OSMesgQueue gRomDmaQueue;
+OSMesg gRomDmaMessages[1];
+OSMesgQueue gFramebufferRenderDoneQueue;
+OSMesg gFramebufferRenderDoneMessages[8];
+OSMesgQueue gSchedulerClientQueue;
+OSMesg gSchedulerClientMessages[2];
+OSMesgQueue gControllerInputUpdateQueue;
+OSMesg gControllerInputUpdateMessages[8];
+SchedulerState gSchedulerState;
+SchedulerClient gMainSchedulerClient;
+u16 gLastSchedulerRetraceCounter;
+u8 gRaceRecordSettingsEnabled;
+u8 gRaceCourseModelEffectsDisabled;
+u8 gRaceCourseOverlayEffectsDisabled;
+Gfx *gRegionAllocPtr;
+u8 gFramebufferColorBufferIndex;
+MenuRenderCallbackQueueSlot gMenuRenderCallbackQueueStorage[6];
+RenderCallbackQueueSlot gModelRenderCallbackQueueStorage[MODEL_RENDER_CALLBACK_QUEUE_COUNT];
+RenderCallbackQueueSlot gBackdropRenderCallbackQueueStorage;
+FrameRenderData *gCurrentFrameRenderData;
+FrameRenderTask gFrameRenderTasks[FRAME_RENDER_TASK_COUNT];
+FramebufferPrepareTask gFramebufferPrepareTasks[FRAME_RENDER_TASK_COUNT];
+u8 gCurrentViewportIndex;
+u8 gRenderMatricesDirty;
+s16 gMenuViewportWidth;
+s16 gMenuViewportHeight;
+s16 gMenuViewportCenterX;
+s16 gMenuViewportCenterY;
+s16 gUiBlinkTimer;
+Mtx *gViewportMatrix;
+u8 gFadeColorRed;
+u8 gFadeColorGreen;
+u8 gFadeColorBlue;
 
 void main(void *arg) {
     osInitialize();

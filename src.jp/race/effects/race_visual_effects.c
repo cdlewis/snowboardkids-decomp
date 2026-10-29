@@ -136,9 +136,9 @@ Vtx gRacePlayerBlueTrickSparklesQuadVertices[4] = {
     { { { -4, -4, 0 }, 0, { -16, 496 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
 };
 
-RaceItemDrawNode *gRaceItemTextureEffectDrawLists[4];
-
 void getAssetTableImageAndExplicitPalette(u8 *, u16, u16, void **, void **);
+
+RaceItemDrawNode *gRaceItemTextureEffectDrawLists[4];
 
 s32 getRaceItemEffectType(s32 arg0) {
     u8 *p = gRaceCourseItemEffectTypeTables[gRaceCourseIndex.signedValue];

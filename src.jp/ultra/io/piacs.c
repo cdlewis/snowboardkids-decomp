@@ -5,6 +5,7 @@
 
 u32 __osPiAccessQueueEnabled = 0;
 static OSMesg piAccessBuf[PI_Q_BUF_LEN];
+
 OSMesgQueue __osPiAccessQueue ALIGNED(0x8);
 
 void __osPiCreateAccessQueue(void) {

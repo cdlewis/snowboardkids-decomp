@@ -83,6 +83,7 @@ s16 *gMainMenuSceneModelPartInitDataByModel[MAIN_MENU_CHARACTER_COUNT + 1] = {
 };
 
 PackedRaceRecordReplay gPackedRaceRecordReplayBuffer;
+u16 gCompressedRaceRecordReplayBuffer[COMPRESSED_RACE_RECORD_REPLAY_HALFWORD_COUNT];
 
 s32 compressRaceRecordReplayData(u8 *src, s32 srcLen, u16 *dst) {
     s32 count;

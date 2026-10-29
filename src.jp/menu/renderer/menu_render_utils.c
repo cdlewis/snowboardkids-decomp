@@ -1,3 +1,4 @@
+#include "game/engine/system_render.h"
 #include "common.h"
 #include "game/race/race_state.h"
 #include "game/engine/game_task_scheduler.h"
@@ -36,7 +37,13 @@ u16 gMenuDefaultSpritePalette[16] = {
     0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 };
 
-extern void *gMenuAsciiFontPaletteBase;
+AssetHandles gAssetHandles;
+s16 gMenuAsciiFontPaletteIndex;
+s16 gMenuAsciiFontTextureNeedsLoad;
+void *gMenuAsciiFontPaletteBase;
+u8 *gRenderCallbackScratchPtr;
+u8 *gMenuRenderScratchPtr;
+u8 *gMenuRenderScratchStart;
 
 void initMenuAssetHandles(void) {
     s16 *end;

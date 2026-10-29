@@ -32,6 +32,25 @@ u8 mus_default_velocities[] = {
     0x7C, 0x7F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
+ALPlayer plr_player;
+ALHeap gSoundPlayerHeap;
+s32 max_channels;
+ALVoice *mus_voices;
+PlayerCommandState *mus_channels;
+u8 *gSoundPlayerTuningTable;
+f32 *gSoundPlayerPitchOffsets;
+u8 **libmus_fxheader_current;
+s32 *gSoundPriorityTable;
+ALWaveTable **gSoundWaveTable;
+s32 mus_vsyncs_per_second;
+u16 mus_master_volume_effects;
+u16 mus_master_volume_songs;
+s32 mus_current_handle;
+s32 mus_random_seed;
+s32 gSoundBankEntryCount;
+s32 mus_next_frame_time;
+PlayerCommandBank *gCurrentSoundBank;
+
 #include "player_commands.c"
 
 u8 *Fgoto(PlayerCommandState *arg0, u8 *arg1) {

@@ -2,12 +2,13 @@
 #include "PR/os_internal.h"
 #include "PRinternal/osint.h"
 
+OSTimer *__osTimerList = &__osBaseTimer;
+
 OSTime __osCurrentTime;
 u32 __osBaseCounter;
 u32 __osViIntrCount;
 u32 __osTimerCounter;
 OSTimer __osBaseTimer;
-OSTimer *__osTimerList = &__osBaseTimer;
 
 void __osTimerServicesInit(void) {
     __osCurrentTime = 0;

@@ -147,6 +147,9 @@ RaceCameraTransition gRaceCameraPositionTransitions[] = {
     { 0, 0x0F, { 0xE21D1637, 0xED2A73FF, 0xE3E16721 }, { 0xE21D1637, 0xED3BB3FF, 0xE3E16721 } },
 };
 
+RaceCamera gRaceCameras[RACE_CAMERA_COUNT];
+RaceCamera *gCurrentRaceCamera;
+
 void setRaceCameraMode(u16 arg0, u16 arg1) {
     RaceCamera *temp;
 

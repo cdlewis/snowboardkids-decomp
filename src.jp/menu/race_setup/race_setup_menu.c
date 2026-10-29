@@ -30,11 +30,6 @@
 
 #pragma weak gControllerPakRumbleCheckPromptState
 
-
-RaceSetupMenuSubState gRaceSetupMenuSubState;
-
-s16 gRaceSetupSavePanelRects[2][4];
-
 u8 gMainMenuSecretCodeUnlocked = 0;
 
 u8 gMainMenuSecretCodeStep = 0;
@@ -111,6 +106,19 @@ RaceSetupDefaultSaveData gDefaultSaveRecordData = {
 };
 
 ControllerPakRumbleCheckPromptState gControllerPakRumbleCheckPromptState = { 0 };
+
+ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
+void *gActiveMenuTask;
+MenuScratchSlot gMenuScratch0;
+MenuScratchSlot gMenuScratch1;
+MenuScratchSlot gMenuScratch2;
+CallbackTask *gCharacterSelectSelectedTokensTask;
+u16 gMenuInputRepeatTimers[4];
+u8 gMenuExitSelection;
+u8 gHighestUnlockedCourse;
+u8 gRumblePakConnectedMask;
+RaceSetupMenuSubState gRaceSetupMenuSubState;
+s16 gRaceSetupSavePanelRects[2][4];
 
 void initRaceSetupMenu(void) {
     s32 i;

@@ -17,6 +17,8 @@
 #include "game/engine/system_runtime.h"
 #include "game/menu/race_setup/race_setup_menu.h"
 
+RaceTypeSelectCursorState gRaceTypeSelectCursorTarget;
+
 void returnToRaceTypeSelectMenu(void) {
     requestMusicSequenceBank(4);
     gMenuSelectionConfirmTimer = 0;

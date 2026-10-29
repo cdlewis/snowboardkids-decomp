@@ -29,6 +29,28 @@ s32 updateFramebufferRenderScheduler(void);
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
+
+s16 gFrameCounter;
+static u16 sFrameCounterPadding;
+s32 gMenuFlowState;
+GameTask *gCurrentGameTask;
+static u32 sCurrentGameTaskPadding;
+GameTask gGameTaskPool[GAME_TASK_COUNT];
+u8 gGameTaskCount;
+GameTask gActiveGameTaskList;
+GameTask *gFreeGameTaskStack[GAME_TASK_COUNT];
+u8 gPendingFramebufferSwapCount;
+u8 gFramebufferSwapHold;
+u8 gNextFramebufferRenderTaskIndex;
+u32 gMenuRenderScratchUsedSize;
+s32 gPlayerInputHeld[PLAYER_INPUT_COUNT];
+s32 gPlayerInputPrevious[PLAYER_INPUT_COUNT];
+s32 gPlayerInputPressed[PLAYER_INPUT_COUNT];
+s8 gPlayerStickX[PLAYER_INPUT_COUNT];
+s8 gPlayerStickY[PLAYER_INPUT_COUNT];
+s32 gPlayerInputRepeat[PLAYER_INPUT_COUNT];
+u8 gPlayerInputRepeatTimer[PLAYER_INPUT_COUNT];
+
 void initGameTaskScheduler(void) {
     GameTask **freeTask;
     GameTask *task;

@@ -13,7 +13,20 @@ typedef struct ControllerThreadMessageSlots {
     OSMesg request;
 } ControllerThreadMessageSlots;
 
-u8 gControllerSubsystemBssPrefix[8];
+u8 gConnectedControllerCount;
+OSThread gControllerSubsystemThread;
+u8 gControllerSubsystemThreadStack[0x2000];
+OSMesgQueue gControllerSubsystemRequestQueue;
+OSMesg gControllerSubsystemRequestMessages[8];
+OSMesgQueue gControllerSubsystemReplyQueue;
+OSMesg gControllerSubsystemReplyMessages[1];
+static u8 sControllerSubsystemReplyPadding[4];
+OSMesgQueue gControllerEventQueue;
+OSMesg gControllerEventMessages[1];
+s16 gControllerEventMessage;
+u8 gControllerReadPending;
+OSContStatus gControllerStatuses[MAXCONTROLLERS];
+OSContPad gControllerPads[MAXCONTROLLERS];
 ControllerInputState gControllerInputState[MAXCONTROLLERS];
 u8 gControllerSubsystemBssPadding[0x7C68];
 s32 gRumbleMotorStatuses[MAXCONTROLLERS];
@@ -55,7 +68,7 @@ loop:
         &gControllerSubsystemThread,
         4,
         controllerSubsystemThreadMain,
-        gControllerSubsystemThreadArg,
+        gControllerSubsystemThreadArg.argument,
         gControllerSubsystemThreadStack + sizeof(gControllerSubsystemThreadStack),
         0x14
     );

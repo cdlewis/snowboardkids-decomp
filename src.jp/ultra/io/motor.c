@@ -4,11 +4,12 @@
 #include "PRinternal/controller.h"
 #include "PRinternal/siint.h"
 
-extern OSPifRam _MotorStopData[MAXCONTROLLERS];
-extern OSPifRam _MotorStartData[MAXCONTROLLERS];
-extern u8 _motorstopbuf[BLOCKSIZE];
-extern u8 _motorstartbuf[BLOCKSIZE];
 u32 __osMotorinitialized[MAXCONTROLLERS] = { 0, 0, 0, 0 };
+
+OSPifRam _MotorStopData[MAXCONTROLLERS];
+OSPifRam _MotorStartData[MAXCONTROLLERS];
+u8 _motorstopbuf[BLOCKSIZE];
+u8 _motorstartbuf[BLOCKSIZE];
 
 s32 osMotorStop(OSPfs *pfs) {
     int i;

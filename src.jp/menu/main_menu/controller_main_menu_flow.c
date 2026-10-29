@@ -55,6 +55,29 @@ u8 gMainMenuReturnFromRace = 0;
 
 const f32 gMainMenuViewportAspectRatio[1] = { 1.333333373f };
 
+u8 gRaceRumbleEnabled;
+static u8 sRaceRumbleEnabledPadding1;
+static u16 sRaceRumbleEnabledPadding2;
+u8 gRumblePakConnectedByController[PLAYER_INPUT_COUNT];
+ControllerSubsystemThreadContext gControllerSubsystemThreadArg;
+u8 gCourseSelectTransitionTimer;
+u8 gMenuSelectionConfirmTimer;
+u8 gRaceSplitscreenMode;
+RaceCamera *gCurrentMenuCameraObject;
+s16 gControllerPakStatusCodes[4];
+s16 gMenuChoicePromptState[4];
+u8 gControllerPakRetryCounts[4];
+u8 gRaceSplitscreenSelectUnusedState;
+u8 gCourseSelectFromRaceTypeMenu;
+static u16 sCourseSelectFromRaceTypeMenuPadding;
+u8 gControllerPakOperationCounts[4];
+u8 gRaceSetupSavePanelCreateTimer;
+u8 gCharacterSelectFromRaceSetup;
+u8 gCourseSelectModeSelection;
+static u8 sGameSaveDataBufferPadding;
+static u32 sGameSaveDataBufferPaddingWords[2];
+GameSaveDataBuffer gGameSaveDataBuffer;
+
 void requestControllerRead(void) {
     if ((gControllerReadPending == 0) && (gConnectedControllerBitmask != 0)) {
         osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)CONTROLLER_REQUEST_READ_INPUT, OS_MESG_BLOCK);

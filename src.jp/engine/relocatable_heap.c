@@ -10,6 +10,13 @@ typedef enum RelocatableHeapBlockStatus {
     RELOCATABLE_HEAP_BLOCK_LOCKED
 } RelocatableHeapBlockStatus;
 
+RelocatableHeapBlock gRelocatableHeapBlockListHead;
+static u8 sRelocatableHeapBlockListHeadPadding[4];
+RelocatableHeapBlock gRelocatableHeapBlockPool[RELOCATABLE_HEAP_BLOCK_COUNT];
+RelocatableHeapBlock *gRelocatableHeapFreeBlockStack[RELOCATABLE_HEAP_BLOCK_COUNT];
+u16 gRelocatableHeapUsedBlockCount;
+u8 *gRelocatableHeapNextFreeAddress;
+
 void updateRelocatableHeapNextFreeAddress(void) {
     RelocatableHeapBlock *node = gFirstAllocatedRelocatableHeapBlock;
     RelocatableHeapBlock *next;

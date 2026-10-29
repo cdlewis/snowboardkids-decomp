@@ -18,6 +18,9 @@
 
 #define RACE_PLAYER_REPLAY_SNAPSHOT(index) (((RacePlayerReplaySnapshot *)gRacePlayers)[index])
 
+volatile u8 gTitleDemoRaceIntroViewportHeight;
+s8 gTitleDemoRaceIntroFadeStep;
+
 void initTitleDemoRaceIntro(void) {
     RacePlayer *players;
     register s32 one = 1;

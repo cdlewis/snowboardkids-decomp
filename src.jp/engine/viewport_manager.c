@@ -2,13 +2,13 @@
 #include "game/engine/viewport_manager.h"
 #include "PR/gu.h"
 
-ViewportState gViewportStates[4];
-
 const f32 gDefaultViewportOverlayFarClip[1] = { 15000.0f };
 const f32 gCustomViewportOverlayFarClip[1] = { 15000.0f };
 const f32 gRaceViewportOverlayFarClip[1] = { 15000.0f };
 const f32 gMenuViewportFarClip[1] = { 10000.0f };
 const f32 gMenuViewportOverlayFarClip[4] = { 15000.0f, 0.0f, 0.0f, 0.0f };
+
+ViewportState gViewportStates[4];
 
 void resetAllViewports(void) {
     s32 i;

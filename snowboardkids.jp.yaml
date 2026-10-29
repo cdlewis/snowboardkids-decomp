@@ -397,37 +397,60 @@ segments:
       - [0xE1DF0, .rodata, ultra/audio/reverb]
       - [0xE1E20, .rodata, rsp/aspMain]
       - [0xE20E0, .rodata, rsp/f3dlx]
-      - {type: bss, vram: 0x800E1CE0, name: main_bss}
-      - {type: .bss, vram: 0x800E3F30, name: menu/main_menu/controller_subsystem}
-      - {type: bss, vram: 0x800EBBD0, name: bss_800EBBD0}
-      - {type: .bss, vram: 0x8010A120, name: menu/race_setup/race_setup_menu}
-      - {type: .bss, vram: 0x8010A170, name: menu/character_select/character_select_menu}
-      - {type: bss, vram: 0x8010A190, name: bss_8010A190}
-      - {type: .bss, vram: 0x8010A1A0, name: menu/character_select/character_select_course_menu}
-      - {type: bss, vram: 0x8010A1B0, name: bss_8010A1B0}
-      - {type: .bss, vram: 0x8010A4C0, name: ending/ending_credits_flow}
-      - {type: bss, vram: 0x8010A4D0, name: bss_8010A4D0}
-      - {type: .bss, vram: 0x8010A520, name: menu/main_menu/main_menu_scene_model}
-      - {type: bss, vram: 0x8010D4A0, name: bss_8010D4A0}
-      - {type: .bss, vram: 0x801114F0, name: race/effects/race_visual_effects}
-      - {type: bss, vram: 0x80111500, name: bss_80111500}
-      - {type: .bss, vram: 0x801117D0, name: engine/viewport_manager}
-      - {type: bss, vram: 0x80111A90, name: bss_80111A90}
-      - {type: .bss, vram: 0x801210A0, name: race/player/race_player_input}
-      - {type: bss, vram: 0x801228D0, name: bss_801228D0}
-      - {type: .bss, vram: 0x8015BCA0, name: ultra/os/seteventmesg}
-      - {type: bss, vram: 0x8015BD20, name: bss_8015BD20}
-      - {type: .bss, vram: 0x8015BFF0, name: ultra/os/initialize}
-      - {type: .bss, vram: 0x8015C000, name: ultra/io/pimgr}
-      - {type: .bss, vram: 0x8015D1D0, name: ultra/io/vimgr}
-      - {type: bss, vram: 0x8015E3F0, name: bss_8015E3F0}
-      - {type: .bss, vram: 0x8015E430, name: ultra/io/siacs}
-      - {type: .bss, vram: 0x8015E450, name: ultra/io/pfsisplug}
-      - {type: .bss, vram: 0x8015E490, name: ultra/io/cartrominit}
-      - {type: .bss, vram: 0x8015E510, name: ultra/io/leodiskinit}
-      - {type: .bss, vram: 0x8015E590, name: ultra/io/piacs}
-      - {type: .bss, vram: 0x8015E5B0, name: ultra/os/timerintr}
-      - {type: .bss, vram: 0x8015E5F0, name: ultra/os/exceptasm}
-      - {type: .bss, vram: 0x8015E7A0, name: ultra/io/leointerrupt}
+      - { type: .bss, vram: 0x800E1CE0, name: menu/main_menu/controller_subsystem }
+      - { type: .bss, vram: 0x800EBBD0, name: menu/main_menu/controller_main_menu_flow }
+      - { type: .bss, vram: 0x8010A0F0, name: menu/race_setup/race_setup_menu }
+      - { type: .bss, vram: 0x8010A170, name: menu/character_select/character_select_menu }
+      - { type: .bss, vram: 0x8010A190, name: menu/splitscreen_select/race_splitscreen_select_menu }
+      - { type: .bss, vram: 0x8010A1A0, name: menu/character_select/character_select_course_menu }
+      - { type: .bss, vram: 0x8010A1C0, name: menu/course_select/course_select_selection_state }
+      - { type: .bss, vram: 0x8010A1E8, name: menu/course_select/course_select_transition_state }
+      - { type: .bss, vram: 0x8010A1F8, name: menu/course_select/course_select_course_tables }
+      - { type: .bss, vram: 0x8010A238, name: menu/course_select/course_select_status }
+      - { type: .bss, vram: 0x8010A270, name: menu/race_type_select/race_type_select_menu }
+      - { type: .bss, vram: 0x8010A280, name: menu/controller_pak/controller_pak_race_record_save_flow }
+      - { type: .bss, vram: 0x8010A290, name: menu/course_select/course_select_menu }
+      - { type: .bss, vram: 0x8010A2A0, name: menu/controller_pak/controller_pak_continue_prompt_flow }
+      - { type: .bss, vram: 0x8010A2B0, name: menu/controller_pak/controller_pak_file_delete_flow }
+      - { type: .bss, vram: 0x8010A4C0, name: ending/ending_credits_flow }
+      - { type: .bss, vram: 0x8010A4E0, name: ending/ending_credits_tommy }
+      - { type: .bss, vram: 0x8010A4F0, name: ending/ending_credits_effects }
+      - { type: .bss, vram: 0x8010A500, name: demo/title_demo_race_intro }
+      - { type: .bss, vram: 0x8010A510, name: menu/main_menu/main_menu_race_flow }
+      - { type: .bss, vram: 0x8010A520, name: menu/main_menu/main_menu_scene_model }
+      - { type: .bss, vram: 0x8010F4A0, name: engine/relocatable_heap }
+      - { type: .bss, vram: 0x8010FC40, name: engine/asset_manager }
+      - { type: .bss, vram: 0x80111450, name: menu/renderer/menu_render_utils }
+      - { type: .bss, vram: 0x801114F0, name: race/effects/race_visual_effects }
+      - { type: .bss, vram: 0x80111500, name: race/camera/race_camera }
+      - { type: .bss, vram: 0x801117D0, name: engine/viewport_manager }
+      - { type: .bss, vram: 0x80111A90, name: engine/callback_task_scheduler }
+      - { type: .bss, vram: 0x80120B70, name: audio/sound_manager }
+      - { type: .bss, vram: 0x80120E60, name: race/flow/race_flow }
+      - { type: .bss, vram: 0x80120E90, name: race/ui/race_hud }
+      - { type: .bss, vram: 0x80120EB0, name: race/motion/race_motion }
+      - { type: .bss, vram: 0x80121070, name: race/player/race_player_collision }
+      - { type: .bss, vram: 0x80121090, name: race/player/race_player_movement }
+      - { type: .bss, vram: 0x801210A0, name: race/player/race_player_input }
+      - { type: .bss, vram: 0x801228D0, name: engine/game_task_scheduler }
+      - { type: .bss, vram: 0x80122AD0, name: engine/system_runtime }
+      - { type: .bss, vram: 0x80155940, name: audio/scheduler }
+      - { type: .bss, vram: 0x80159950, name: libmus/player }
+      - { type: .bss, vram: 0x801599C0, name: libmus/aud_thread }
+      - { type: .bss, vram: 0x8015BCA0, name: ultra/os/seteventmesg }
+      - { type: .bss, vram: 0x8015BD20, name: ultra/io/controller }
+      - { type: .bss, vram: 0x8015BDB0, name: ultra/io/motor }
+      - { type: .bss, vram: 0x8015BFF0, name: ultra/os/initialize }
+      - { type: .bss, vram: 0x8015C000, name: ultra/io/pimgr }
+      - { type: .bss, vram: 0x8015D1D0, name: ultra/io/vimgr }
+      - { type: .bss, vram: 0x8015E3F0, name: ultra/io/sptask }
+      - { type: .bss, vram: 0x8015E430, name: ultra/io/siacs }
+      - { type: .bss, vram: 0x8015E450, name: ultra/io/pfsisplug }
+      - { type: .bss, vram: 0x8015E490, name: ultra/io/cartrominit }
+      - { type: .bss, vram: 0x8015E510, name: ultra/io/leodiskinit }
+      - { type: .bss, vram: 0x8015E590, name: ultra/io/piacs }
+      - { type: .bss, vram: 0x8015E5B0, name: ultra/os/timerintr }
+      - { type: .bss, vram: 0x8015E5F0, name: ultra/os/exceptasm }
+      - { type: .bss, vram: 0x8015E7A0, name: ultra/io/leointerrupt }
   - [0xE28E0, bin, assets]
   - [0x800000]

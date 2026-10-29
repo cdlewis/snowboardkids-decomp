@@ -19,13 +19,10 @@
 #define CHARACTER_SELECT_MOVE_LEFT 1
 #define CHARACTER_SELECT_MOVE_RIGHT 2
 
-CharacterSelectState gCharacterSelectHudState;
-s8 gCharacterSelectHighlightedRosterIndices[4];
 /* Secret-code state bypasses the duplicate-highlight/locked-slot conflict scan.
  * Shinobin's visible roster slot is separately enabled by GameSaveData.characterFlags
  * bit 0 in initCharacterSelectRosterIcons. Duplicate selection is source-derived;
  * it has not been play-tested. */
-u8 gCharacterSelectUnrestrictedSelection;
 
 // gMenuFlowState is the per-player highlighted index. During character-roster browsing
 // (gCharacterSelectHudState.phase == 3), this indexes gCharacterSelectIdOrder,
@@ -43,6 +40,10 @@ s16 gCharacterSelectVoiceSoundIds[] = {
 };
 
 const f32 gCharacterSelectViewportAspectRatio[4] = { 1.333333373f };
+
+CharacterSelectState gCharacterSelectHudState;
+s8 gCharacterSelectHighlightedRosterIndices[4];
+u8 gCharacterSelectUnrestrictedSelection;
 
 void initCharacterSelectMenu(void) {
     s32 i;

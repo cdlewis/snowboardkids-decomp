@@ -53,6 +53,8 @@ s16 gMainMenuModePreviewRaceDurationBySelection[] = {
     0x384, 0x287, 0x2BB, 0x33B, 0x23F, 0x2B2, 0x2C7, 0x138, 0x1AF, 0x1FD, 0x16A, 0x1E2, 0, 0, 0, 0,
 };
 
+u8 gMainMenuSelectionResult;
+
 void startMainMenuModePreviewRaceFlow(void) {
     gMainMenuModeSelection = 1;
     setCurrentGameTaskCallback(initMainMenuModePreviewRaceSelectionMenu, 0);

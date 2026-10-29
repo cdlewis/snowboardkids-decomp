@@ -39,6 +39,13 @@ u16 gCourseDetailsPreviewExtraTiles[] = {
     6, 7, 8, 9, 10, 11, 12, 13, 0, 0,
 };
 
+u8 gShopMenuDescriptionSeen;
+u8 gShopMenuShowNewCoursesMessage;
+u8 gCourseDetailsMenuSelection;
+u8 gCourseDetailsPreviewPage;
+u8 gCourseDetailsCloseFromBack;
+s16 gCoursePreviewViewportHeight;
+
 void initCourseSelectMenu(void) {
     u32 size;
     s32 i;

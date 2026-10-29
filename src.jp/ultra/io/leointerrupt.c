@@ -14,10 +14,10 @@ extern OSPiHandle *__osDiskHandle;
 #define LEO_SECTOR_C1_ERROR_LIMIT 17
 #define LEO_LAST_DATA_SECTOR_BEFORE_C2 0x52
 
-u8 leoDiskStack[OS_PIM_STACKSIZE] ALIGNED(0x10);
-
 static void __osLeoAbnormalResume(void);
 static void __osLeoResume(void);
+
+u8 leoDiskStack[OS_PIM_STACKSIZE] ALIGNED(0x10);
 
 s32 __osLeoInterrupt(void) {
     u32 leoStatus = 0;

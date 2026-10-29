@@ -10,8 +10,9 @@
     }                                           \
     (void)0
 
-extern OSTask tmp_task;
 extern void _bcopy(const void *, void *, int);
+
+OSTask tmp_task;
 
 static OSTask *_VirtualToPhysicalTask(OSTask *intp) {
     OSTask *tp;

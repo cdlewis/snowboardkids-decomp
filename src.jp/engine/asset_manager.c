@@ -27,6 +27,10 @@ s16 gHuffmanQueueHead = -1;
 s16 gHuffmanQueueTail = -1;
 s16 gHuffmanQueueCount = 0;
 
+CompressedAssetHeader gCompressedAssetHeader;
+HuffmanNode gHuffmanNodes[0x200];
+s32 gHuffmanNodeCount;
+
 s32 randomNextMain(void) {
     gMainRngIndex++;
     if (gFrameCounter == 0) {

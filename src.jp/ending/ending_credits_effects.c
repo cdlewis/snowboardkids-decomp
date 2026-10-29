@@ -38,6 +38,8 @@ void updateEndingCreditsCharacterAura(EndingCreditsAttachedEffectActor *arg0);
 void updateEndingCreditsPhaseAdvanceSparkle(EndingCreditsAnimatedEffectActor *arg0);
 void updateEndingCreditsDelayedSparkle(EndingCreditsDelayedSparkleActor *arg0);
 
+u16 gEndingCreditsTransitionSnowboardIconExpandFrameCounter;
+
 void drawEndingCreditsCharacterVanishPoof(EndingCreditsAttachedEffectActor *arg0) {
     void *texture;
 

@@ -18,6 +18,12 @@
 
 void enqueueRacePlayerVoiceSound(RacePlayer *, s32);
 
+s32 gRacePlayerHitCueId;
+s32 gRacePlayerHitAngle;
+s32 gRacePlayerHitDistance;
+s32 gRacePlayerHitDeltaX;
+s32 gRacePlayerHitDeltaZ;
+
 s32 tryQueueRacePlayerHitCueSpinout(RacePlayer *arg0) {
     s32 temp_v0;
     s32 var_v1;

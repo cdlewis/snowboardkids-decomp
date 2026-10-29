@@ -244,6 +244,14 @@ const char gRaceHudTrainingScoreFormat[8] = "%5ld";
 const char gRaceHudTwoPlayerScoreFormat[8] = "%5ld";
 const char gRaceHudMultiplayerScoreFormat[8] = "%5ld";
 
+s16 gRaceHudMode;
+s16 gRaceHudCoinSpinnerFrame;
+RaceTimer gRaceElapsedTimer;
+RaceTimer gRaceChallengeTimeLimit;
+RaceTimer gRaceTimeTrialFinishTime;
+u8 gRaceTimeTrialFinishRecorded;
+u8 gRaceChallengeFailed;
+
 void initRaceHud(void) {
     LOAD_ASSET(SHARED_UI_SPRITES, 0x1F);
     gRaceHudMode = RACE_HUD_MODE_NONE;

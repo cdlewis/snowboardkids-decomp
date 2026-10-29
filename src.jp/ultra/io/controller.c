@@ -3,13 +3,17 @@
 #include "PRinternal/controller.h"
 #include "PRinternal/siint.h"
 
-extern OSTimer __osEepromTimer;
-extern OSMesgQueue __osEepromTimerQ;
-extern OSMesg __osEepromTimerMsg;
 s32 __osContinitialized = 0;
 
 #undef OS_USEC_TO_CYCLES
 #define OS_USEC_TO_CYCLES(x) (x) * osClockRate / 1000000
+
+OSPifRam __osContPifRam;
+u8 __osContLastCmd;
+u8 __osMaxControllers;
+OSTimer __osEepromTimer;
+OSMesgQueue __osEepromTimerQ;
+OSMesg __osEepromTimerMsg;
 
 s32 osContInit(OSMesgQueue *mq, u8 *bitpattern, OSContStatus *data) {
     OSMesg dummy;

@@ -97,6 +97,25 @@ Vec3s *gRaceMotionModelPartPositions[] = {
     NULL,
 };
 
+Vec3s *gRaceCourseSurfaceCoords;
+RaceCourseSurfaceFace *gRaceCourseSurfaceFaces;
+RaceCourseSurface *gRaceCourseSurfaces;
+s32 gRaceCourseSurfaceAngleSin;
+s32 gRaceCourseSurfaceAngleCos;
+static u32 sRaceCourseSurfaceAnglePadding;
+s32 gRaceCourseCollisionDeltaX;
+static u32 sRaceCourseCollisionDeltaXPadding;
+s32 gRaceCourseCollisionDeltaZ;
+s32 gRaceCourseCollisionEdgeDeltaX;
+static u32 sRaceCourseCollisionEdgeDeltaXPadding;
+s32 gRaceCourseCollisionEdgeDeltaZ;
+s32 gRaceCourseCollisionAdjustedX;
+static u32 sRaceCourseCollisionAdjustedXPadding;
+s32 gRaceCourseCollisionAdjustedZ;
+static u32 sRaceCourseCollisionAdjustedZPadding;
+volatile s32 gRaceMotionRotationFrameBuffer[0xC];
+RaceMotionDecodedJointFrame gRaceMotionJointFrameBuffer[RACE_MOTION_FRAME_SAMPLE_COUNT];
+
 void initRaceCourseSurfaceData(void) {
     RaceMotionCountedTable *coordTable;
     RaceMotionCountedTable *faceTable;

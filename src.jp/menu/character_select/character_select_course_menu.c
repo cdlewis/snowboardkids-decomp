@@ -67,11 +67,12 @@ CharacterSelectCourseMenuData gCharacterSelectCourseMenuData = {
     { RACE_COURSE_ANIMAL_LAND, -1, 0, 0, 0, 0, 0, 0 },
 };
 
-u16 gCharacterSelectCourseExitOptionIndex;
-CharacterSelectCourseCursorState gCharacterSelectCourseCursorState;
-
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
+u16 gCharacterSelectCourseExitOptionIndex;
+CharacterSelectCourseCursorState gCharacterSelectCourseCursorState;
+CharacterSelectOptionList *gCharacterSelectActiveCourseOptions;
+
 void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
     s32 var_v1;
     register s32 unused; /* Preserve IDO's spill layout. */

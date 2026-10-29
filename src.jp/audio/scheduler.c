@@ -7,6 +7,11 @@ s32 gSchedulerYieldResult = 0;
 s32 gSchedulerYieldRequested = 0;
 s32 gSchedulerStartupRetraceCount = 0;
 
+u8 gSchedulerThreadStack[0x2000];
+u8 gSchedulerSwapBufferThreadStack[0x2000];
+s32 gSchedulerRspTaskState;
+u8 gSchedulerRdpTaskActive;
+
 void initScheduler(SchedulerState *arg0, u8 arg1, u8 arg2) {
     arg0->curRSPTask = 0;
     arg0->curRDPTask = 0;
