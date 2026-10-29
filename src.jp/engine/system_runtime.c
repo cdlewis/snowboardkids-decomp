@@ -67,6 +67,107 @@ extern u8 gRspYieldBuffer[];
 
 void writebackMenuRenderScratchBuffer(s32 frameIndex);
 
+u8 gMenuFadeOverlayActive = 0;
+
+s16 gMenuFadeAlpha = 0;
+
+Vp gFullscreenOverlayViewport[] = {
+    { { { 640, 480, 511, 0 }, { 640, 480, 511, 0 } } },
+};
+
+Gfx gModelRenderSetupDisplayList[] = {
+    gsDPPipeSync(),
+    gsDPSetColorDither(G_CD_BAYER),
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsSPClearGeometryMode(G_ZBUFFER | G_SHADE | G_CULL_BOTH | G_FOG | G_LIGHTING | G_SHADING_SMOOTH),
+    gsSPSetGeometryMode(G_ZBUFFER | G_SHADE | G_CULL_BACK | G_SHADING_SMOOTH),
+    gsDPSetTextureDetail(G_TD_CLAMP),
+    gsDPSetTexturePersp(G_TP_PERSP),
+    gsDPSetTextureConvert(G_TC_FILT),
+    gsDPSetTextureFilter(G_TF_BILERP),
+    gsDPSetTextureLOD(G_TL_TILE),
+    gsDPSetTextureLUT(G_TT_RGBA16),
+    gsDPSetDepthSource(G_ZS_PIXEL),
+    gsSPEndDisplayList(),
+};
+
+Gfx gBackdropRenderSetupDisplayList[] = {
+    gsDPPipeSync(),
+    gsDPSetColorDither(G_CD_BAYER),
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsSPClearGeometryMode(G_ZBUFFER | G_SHADE | G_CULL_BOTH | G_FOG | G_LIGHTING | G_SHADING_SMOOTH),
+    gsSPSetGeometryMode(G_SHADE | G_CULL_BACK | G_SHADING_SMOOTH),
+    gsDPSetTextureDetail(G_TD_CLAMP),
+    gsDPSetTexturePersp(G_TP_PERSP),
+    gsDPSetTextureConvert(G_TC_FILT),
+    gsDPSetTextureFilter(G_TF_BILERP),
+    gsDPSetTextureLOD(G_TL_TILE),
+    gsDPSetTextureLUT(G_TT_RGBA16),
+    gsDPSetDepthSource(G_ZS_PIXEL),
+    gsSPEndDisplayList(),
+};
+
+Gfx gMenuRenderModeResetDl[] = {
+    gsDPPipeSync(),
+    gsDPSetColorDither(G_CD_DISABLE),
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsSPTexture(0x8000, 0x8000, 0, G_TX_RENDERTILE, G_ON),
+    gsSPClearGeometryMode(G_ZBUFFER | G_SHADE | G_CULL_BOTH | G_FOG | G_LIGHTING | G_SHADING_SMOOTH),
+    gsDPSetTexturePersp(G_TP_NONE),
+    gsDPSetTextureLOD(G_TL_TILE),
+    gsDPSetTextureDetail(G_TD_CLAMP),
+    gsDPSetTextureConvert(G_TC_FILT),
+    gsDPSetTextureFilter(G_TF_POINT),
+    gsDPSetTextureLUT(G_TT_RGBA16),
+    gsDPSetPrimColor(0, 0, 0xFF, 0xFF, 0xFF, 0xFF),
+    gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
+    gsDPSetRenderMode(G_RM_AA_TEX_EDGE, G_RM_AA_TEX_EDGE2),
+    gsDPSetDepthSource(G_ZS_PIXEL),
+    gsSPEndDisplayList(),
+};
+
+u32 gTranslucentOverlayIntensityTexture[] = {
+    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+};
+
+Gfx gTranslucentOverlaySetupDisplayList[] = {
+    gsDPPipeSync(),
+    gsDPSetColorDither(G_CD_DISABLE),
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsSPTexture(0x8000, 0x8000, 0, G_TX_RENDERTILE, G_ON),
+    gsSPClearGeometryMode(G_ZBUFFER | G_SHADE | G_CULL_BOTH | G_FOG | G_LIGHTING | G_SHADING_SMOOTH),
+    gsDPSetTexturePersp(G_TP_NONE),
+    gsDPSetTextureLOD(G_TL_TILE),
+    gsDPSetTextureDetail(G_TD_CLAMP),
+    gsDPSetTextureConvert(G_TC_FILT),
+    gsDPSetTextureFilter(G_TF_POINT),
+    gsDPSetTextureLUT(G_TT_NONE),
+    gsDPSetCombineMode(G_CC_MODULATEI_PRIM, G_CC_MODULATEI_PRIM),
+    gsDPSetRenderMode(G_RM_AA_XLU_SURF, G_RM_AA_XLU_SURF2),
+    gsDPLoadTextureTile_4b(
+        gTranslucentOverlayIntensityTexture,
+        G_IM_FMT_I,
+        16,
+        0,
+        0,
+        0,
+        16,
+        4,
+        0,
+        G_TX_NOMIRROR | G_TX_WRAP,
+        G_TX_NOMIRROR | G_TX_WRAP,
+        4,
+        2,
+        G_TX_NOLOD,
+        G_TX_NOLOD
+    ),
+    gsSPEndDisplayList(),
+};
+
+s16 gFadeTimer = BOOT_FADE_TIMER;
+
+s32 gClearFramebufferOnNextTask = 1;
+
 void main(void *arg) {
     osInitialize();
     osCreateThread(

@@ -255,9 +255,9 @@ segments:
       - [0xB0460, c, ultra/audio/reverb]
       - [0xB10B0, c, ultra/audio/copy]
       - [0xB1130, c, ultra/libc/ldiv]
-      - [0xB12C0, databin, rspboot]
-      - [0xB1390, databin, aspMain]
-      - [0xB21B0, databin, f3dlx]
+      - { start: 0xB12C0, type: textbin, use_src_path: True, name: rsp/rspboot }
+      - { start: 0xB1390, type: textbin, use_src_path: True, name: rsp/aspMain }
+      - { start: 0xB21B0, type: textbin, use_src_path: True, name: rsp/f3dlx }
       - [0xB35E0, databin, main_data]
       - [0xB3910, .data, menu/character_select/character_select_course_menu]
       - [0xB3980, .data, menu/course_select/multiplayer_course_select_menu]
@@ -273,7 +273,7 @@ segments:
       - [0xD3A60, .data, menu/main_menu/main_menu_scene_model]
       - [0xD3CB0, .data, engine/asset_manager]
       - [0xD3DD0, .data, race/scene/race_scene_setup]
-      - [0xD3E60, databin, data_D3E60]
+      - [0xD3E60, .data, menu/renderer/menu_render_utils]
       - [0xD3E80, .data, math/spatial_math]
       - [0xD4390, .data, race/items/race_projectiles]
       - [0xD4480, .data, race/effects/race_visual_effects]
@@ -289,11 +289,10 @@ segments:
       - [0xDE480, .data, race/player/race_player_rumble]
       - [0xDE4C0, .data, race/course/race_surface_cues]
       - [0xDE6E0, .data, race/player/race_player_movement]
-      - [0xDE800, databin, data_DE800]
-      - [0xDEC00, .data, race/player/race_player_update]
+      - [0xDE800, .data, race/player/race_player_update]
       - [0xDED60, .data, math/fixed_point_math]
       - [0xDEE00, .data, engine/game_task_scheduler]
-      - [0xDEE40, databin, data_DEE40]
+      - [0xDEE40, .data, engine/system_runtime]
       - [0xDF080, .data, audio/scheduler]
       - [0xDF090, .data, libmus/player]
       - [0xDF1C0, .data, libmus/aud_thread]
@@ -302,10 +301,10 @@ segments:
       - [0xDF200, .data, ultra/os/initialize]
       - [0xDF220, .data, ultra/io/pimgr]
       - [0xDF250, .data, ultra/io/vimgr]
-      - [0xDF270, databin, data_DF270]
+      - [0xDF270, .data, ultra/io/vitbl]
       - [0xDFF90, .data, ultra/audio/sl]
       - [0xDFFA0, .data, ultra/io/aisetnextbuf]
-      - [0xDFFB0, databin, data_DFFB0]
+      - [0xDFFB0, .data, ultra/os/thread]
       - [0xDFFD0, .data, ultra/io/siacs]
       - [0xDFFE0, .data, ultra/os/exceptasm]
       - [0xE0000, .data, ultra/libc/xprintf]
@@ -315,7 +314,9 @@ segments:
       - [0xE00E0, .data, ultra/audio/drvrnew]
       - [0xE0270, .data, ultra/audio/env]
       - [0xE03B0, .data, ultra/libc/xlitob]
-      - [0xE03E0, databin, data_E03E0]
+      - [0xE03E0, .data, ultra/io/vimodepallan1]
+      - [0xE0430, .data, ultra/io/vimodempallan1]
+      - [0xE0480, .data, ultra/io/vimodentsclan1]
       - [0xE04D0, .rodata, menu/main_menu/controller_subsystem]
       - [0xE07E0, rodatabin, data_E07E0]
       - [0xE07E4, .rodata, menu/main_menu/controller_main_menu_flow]
@@ -387,7 +388,8 @@ segments:
       - [0xE1D30, .rodata, ultra/audio/env]
       - [0xE1D90, .rodata, ultra/libc/xldtob]
       - [0xE1DF0, .rodata, ultra/audio/reverb]
-      - [0xE1E20, rodatabin, data_E1E20]
+      - { start: 0xE1E20, type: rodatabin, use_src_path: True, name: rsp/aspMain }
+      - { start: 0xE20E0, type: rodatabin, use_src_path: True, name: rsp/f3dlx }
       - {type: bss, vram: 0x800E1CE0, name: main_bss}
       - {type: .bss, vram: 0x800E3F30, name: menu/main_menu/controller_subsystem}
       - {type: bss, vram: 0x800EBBD0, name: bss_800EBBD0}

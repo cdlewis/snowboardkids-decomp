@@ -32,6 +32,10 @@ typedef struct {
     s32 w8, w9, w10, w11, w12, w13, w14, w15;
 } PackedMtxWords;
 
+u16 gMenuDefaultSpritePalette[16] = {
+    0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+};
+
 extern void *gMenuAsciiFontPaletteBase;
 
 void initMenuAssetHandles(void) {
