@@ -452,5 +452,2037 @@ segments:
       - { type: .bss, vram: 0x8015E5B0, name: ultra/os/timerintr }
       - { type: .bss, vram: 0x8015E5F0, name: ultra/os/exceptasm }
       - { type: .bss, vram: 0x8015E7A0, name: ultra/io/leointerrupt }
-  - [0xE28E0, bin, assets]
+  # Asset identifiers are shared with US; ROM offsets are JP-specific.
+  # Numeric identifiers retain their US names to keep C references shared.
+  # course_display_list
+  - name: BIG_SNOWMAN_COURSE_GRAPHICS
+    type: bin
+    start: 0xE28E0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: BIG_SNOWMAN_COURSE_SCENERY_ENTRY_1_DISPLAY_LIST
+    type: bin
+    start: 0xE2A40
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: BIG_SNOWMAN_COURSE_SCENERY_ENTRY_4_DISPLAY_LIST
+    type: bin
+    start: 0xE2CF0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: BIG_SNOWMAN_COURSE_SCENERY_ENTRY_8_DISPLAY_LIST
+    type: bin
+    start: 0xE2E48
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: BIG_SNOWMAN_COURSE_SCENERY_ENTRY_10_DISPLAY_LIST
+    type: bin
+    start: 0xE3410
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: BIG_SNOWMAN_COURSE_SCENERY_ENTRY_17_DISPLAY_LIST
+    type: bin
+    start: 0xE42A0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: BIG_SNOWMAN_COURSE_SCENERY_ENTRY_25_DISPLAY_LIST
+    type: bin
+    start: 0xE57B0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: BIG_SNOWMAN_COURSE_DISPLAY_LIST
+    type: bin
+    start: 0xEB1E0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: BIG_SNOWMAN_COURSE_BACKDROP_DISPLAY_LIST
+    type: bin
+    start: 0xEB2C0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: BIG_SNOWMAN_COURSE_SECONDARY_BACKDROP_DISPLAY_LIST
+    type: bin
+    start: 0xEB630
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: BIG_SNOWMAN_COURSE_FINISH_RANK_MODEL_LAPS_REMAINING_DISPLAY_LIST
+    type: bin
+    start: 0xEB720
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: BIG_SNOWMAN_COURSE_FINISH_RANK_MODEL_FINAL_LAP_DISPLAY_LIST
+    type: bin
+    start: 0xEB900
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: BIG_SNOWMAN_COURSE_SURFACE_1_RANK_MODEL_DISPLAY_LIST
+    type: bin
+    start: 0xEBAE0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SUNSET_ROCK_COURSE_GRAPHICS
+    type: bin
+    start: 0xEBCC0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SUNSET_ROCK_COURSE_SCENERY_ENTRY_8_DISPLAY_LIST
+    type: bin
+    start: 0xEC228
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SUNSET_ROCK_COURSE_SCENERY_ENTRY_10_DISPLAY_LIST
+    type: bin
+    start: 0xEC7F0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SUNSET_ROCK_COURSE_SCENERY_ENTRY_11_DISPLAY_LIST
+    type: bin
+    start: 0xED010
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SUNSET_ROCK_COURSE_THROWN_PICKUP_MODEL_DISPLAY_LIST
+    type: bin
+    start: 0xED208
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SUNSET_ROCK_COURSE_SCENERY_ENTRY_18_DISPLAY_LIST
+    type: bin
+    start: 0xED9C0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SUNSET_ROCK_COURSE_PROP_MODEL_DISPLAY_LIST
+    type: bin
+    start: 0xEDD68
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SUNSET_ROCK_COURSE_DISPLAY_LIST
+    type: bin
+    start: 0xF4AF0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SUNSET_ROCK_COURSE_BACKDROP_DISPLAY_LIST
+    type: bin
+    start: 0xF4C40
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SUNSET_ROCK_COURSE_TRIGGER_VOLUME_DISPLAY_LIST
+    type: bin
+    start: 0xF4E08
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SUNSET_ROCK_COURSE_RANK_MODEL_LAPS_REMAINING_DISPLAY_LIST
+    type: bin
+    start: 0xF4EA0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SUNSET_ROCK_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST
+    type: bin
+    start: 0xF50A8
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SUNSET_ROCK_COURSE_SCROLLING_TEXTURE_0_GEOMETRY_0_DISPLAY_LIST
+    type: bin
+    start: 0xF52B8
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SUNSET_ROCK_COURSE_SCROLLING_TEXTURE_0_GEOMETRY_1_DISPLAY_LIST
+    type: bin
+    start: 0xF5368
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SUNSET_ROCK_COURSE_SCROLLING_TEXTURE_0_DISPLAY_LIST
+    type: bin
+    start: 0xF53C0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SUNSET_ROCK_COURSE_SCROLLING_TEXTURE_1_GEOMETRY_DISPLAY_LIST
+    type: bin
+    start: 0xF53D8
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SUNSET_ROCK_COURSE_SCROLLING_TEXTURE_1_DISPLAY_LIST
+    type: bin
+    start: 0xF5430
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: NIGHT_HIGHWAY_COURSE_GRAPHICS
+    type: bin
+    start: 0xF5480
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: NIGHT_HIGHWAY_COURSE_SCENERY_ENTRY_8_DISPLAY_LIST
+    type: bin
+    start: 0xF59E8
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: NIGHT_HIGHWAY_COURSE_DISPLAY_LIST
+    type: bin
+    start: 0xFDAA8
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: NIGHT_HIGHWAY_COURSE_BACKDROP_DISPLAY_LIST
+    type: bin
+    start: 0xFDC10
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: NIGHT_HIGHWAY_COURSE_SCROLLING_TEXTURE_GEOMETRY_0_DISPLAY_LIST
+    type: bin
+    start: 0xFDFC0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: NIGHT_HIGHWAY_COURSE_SCROLLING_TEXTURE_GEOMETRY_1_DISPLAY_LIST
+    type: bin
+    start: 0xFE008
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: NIGHT_HIGHWAY_COURSE_SCROLLING_TEXTURE_GEOMETRY_2_DISPLAY_LIST
+    type: bin
+    start: 0xFE050
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: NIGHT_HIGHWAY_COURSE_SCROLLING_TEXTURE_DISPLAY_LIST
+    type: bin
+    start: 0xFE098
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: GRASS_VALLEY_COURSE_GRAPHICS
+    type: bin
+    start: 0xFE0C0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: GRASS_VALLEY_COURSE_SCENERY_ENTRY_8_DISPLAY_LIST
+    type: bin
+    start: 0xFE628
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: GRASS_VALLEY_COURSE_DISPLAY_LIST
+    type: bin
+    start: 0x1094C0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: GRASS_VALLEY_COURSE_BACKDROP_DISPLAY_LIST
+    type: bin
+    start: 0x1095A0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: GRASS_VALLEY_COURSE_RANK_MODEL_LAPS_REMAINING_DISPLAY_LIST
+    type: bin
+    start: 0x1097B0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: GRASS_VALLEY_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST
+    type: bin
+    start: 0x109940
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_COURSE_GRAPHICS
+    type: bin
+    start: 0x109DD0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_COURSE_SCENERY_ENTRY_8_DISPLAY_LIST
+    type: bin
+    start: 0x10A338
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_COURSE_SCENERY_ENTRY_11_DISPLAY_LIST
+    type: bin
+    start: 0x10B120
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_COURSE_SCENERY_ENTRY_18_DISPLAY_LIST
+    type: bin
+    start: 0x10BAD0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_COURSE_DISPLAY_LIST
+    type: bin
+    start: 0x115B18
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_COURSE_BACKDROP_DISPLAY_LIST
+    type: bin
+    start: 0x115D10
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_CAROUSEL_CANOPY_DISPLAY_LIST
+    type: bin
+    start: 0x115F98
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_CAROUSEL_HORSES_NEGATIVE_SINE_DISPLAY_LIST
+    type: bin
+    start: 0x116470
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_CAROUSEL_HORSES_POSITIVE_SINE_DISPLAY_LIST
+    type: bin
+    start: 0x1165A8
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_TEACUP_BUMPER_DISPLAY_LIST
+    type: bin
+    start: 0x1166E0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_FERRIS_WHEEL_DISPLAY_LIST
+    type: bin
+    start: 0x1169F0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_FERRIS_WHEEL_SUPPORT_DISPLAY_LIST
+    type: bin
+    start: 0x116C18
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_SPINNING_CABIN_RIDE_CANOPY_DISPLAY_LIST
+    type: bin
+    start: 0x116D80
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_SPINNING_CABIN_RIDE_POLE_DISPLAY_LIST
+    type: bin
+    start: 0x117178
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_COURSE_RANK_MODEL_LAPS_REMAINING_DISPLAY_LIST
+    type: bin
+    start: 0x117218
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST
+    type: bin
+    start: 0x1173B0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_COURSE_SCROLLING_TEXTURE_0_GEOMETRY_DISPLAY_LIST
+    type: bin
+    start: 0x117560
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_COURSE_SCROLLING_TEXTURE_0_DISPLAY_LIST
+    type: bin
+    start: 0x1175D0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_COURSE_SCROLLING_TEXTURE_1_GEOMETRY_0_DISPLAY_LIST
+    type: bin
+    start: 0x1175E0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_COURSE_SCROLLING_TEXTURE_1_GEOMETRY_1_DISPLAY_LIST
+    type: bin
+    start: 0x117648
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_COURSE_SCROLLING_TEXTURE_1_GEOMETRY_2_DISPLAY_LIST
+    type: bin
+    start: 0x1176B0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_COURSE_SCROLLING_TEXTURE_1_GEOMETRY_3_DISPLAY_LIST
+    type: bin
+    start: 0x117708
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_COURSE_SCROLLING_TEXTURE_1_GEOMETRY_4_DISPLAY_LIST
+    type: bin
+    start: 0x1177F0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: DIZZY_LAND_COURSE_SCROLLING_TEXTURE_1_DISPLAY_LIST
+    type: bin
+    start: 0x117928
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: QUICKSAND_VALLEY_COURSE_GRAPHICS
+    type: bin
+    start: 0x117990
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: QUICKSAND_VALLEY_COURSE_SCENERY_ENTRY_8_DISPLAY_LIST
+    type: bin
+    start: 0x117EF8
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: QUICKSAND_VALLEY_COURSE_DISPLAY_LIST
+    type: bin
+    start: 0x1239F0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: QUICKSAND_VALLEY_COURSE_BACKDROP_DISPLAY_LIST
+    type: bin
+    start: 0x123BC8
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: QUICKSAND_VALLEY_COURSE_AUXILIARY_DISPLAY_LISTS_A
+    type: bin
+    start: 0x123DB8
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: QUICKSAND_VALLEY_COURSE_RANK_MODEL_LAPS_REMAINING_DISPLAY_LIST
+    type: bin
+    start: 0x123F30
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: QUICKSAND_VALLEY_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST
+    type: bin
+    start: 0x1240F0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: QUICKSAND_VALLEY_COURSE_SECONDARY_BACKDROP_DISPLAY_LIST
+    type: bin
+    start: 0x124138
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: QUICKSAND_VALLEY_COURSE_SCROLLING_TEXTURE_0_GEOMETRY_0_DISPLAY_LIST
+    type: bin
+    start: 0x124198
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: QUICKSAND_VALLEY_COURSE_SCROLLING_TEXTURE_0_GEOMETRY_1_DISPLAY_LIST
+    type: bin
+    start: 0x1242E0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: QUICKSAND_VALLEY_COURSE_SCROLLING_TEXTURE_0_GEOMETRY_2_DISPLAY_LIST
+    type: bin
+    start: 0x124348
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: QUICKSAND_VALLEY_COURSE_SCROLLING_TEXTURE_0_GEOMETRY_3_DISPLAY_LIST
+    type: bin
+    start: 0x124408
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: QUICKSAND_VALLEY_COURSE_SCROLLING_TEXTURE_0_GEOMETRY_4_DISPLAY_LIST
+    type: bin
+    start: 0x124478
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: QUICKSAND_VALLEY_COURSE_SCROLLING_TEXTURE_0_GEOMETRY_5_DISPLAY_LIST
+    type: bin
+    start: 0x1245F0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: QUICKSAND_VALLEY_COURSE_SCROLLING_TEXTURE_0_GEOMETRY_6_DISPLAY_LIST
+    type: bin
+    start: 0x1248A8
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: QUICKSAND_VALLEY_COURSE_SCROLLING_TEXTURE_0_GEOMETRY_7_DISPLAY_LIST
+    type: bin
+    start: 0x124978
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: QUICKSAND_VALLEY_COURSE_SCROLLING_TEXTURE_0_GEOMETRY_8_DISPLAY_LIST
+    type: bin
+    start: 0x124C18
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: QUICKSAND_VALLEY_COURSE_SCROLLING_TEXTURE_0_DISPLAY_LIST
+    type: bin
+    start: 0x124CE0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: QUICKSAND_VALLEY_COURSE_SCROLLING_TEXTURE_1_GEOMETRY_0_DISPLAY_LIST
+    type: bin
+    start: 0x124D68
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: QUICKSAND_VALLEY_COURSE_SCROLLING_TEXTURE_1_GEOMETRY_1_DISPLAY_LIST
+    type: bin
+    start: 0x124DF0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: QUICKSAND_VALLEY_COURSE_SCROLLING_TEXTURE_1_DISPLAY_LIST
+    type: bin
+    start: 0x124F60
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SILVER_MOUNTAIN_COURSE_GRAPHICS
+    type: bin
+    start: 0x124FB0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SILVER_MOUNTAIN_COURSE_SCENERY_ENTRY_8_DISPLAY_LIST
+    type: bin
+    start: 0x125518
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SILVER_MOUNTAIN_COURSE_DISPLAY_LIST
+    type: bin
+    start: 0x130768
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SILVER_MOUNTAIN_COURSE_BACKDROP_DISPLAY_LIST
+    type: bin
+    start: 0x130878
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SILVER_MOUNTAIN_COURSE_RANK_MODEL_LAPS_REMAINING_DISPLAY_LIST
+    type: bin
+    start: 0x130A88
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SILVER_MOUNTAIN_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST
+    type: bin
+    start: 0x130C18
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: ANIMAL_LAND_COURSE_GRAPHICS
+    type: bin
+    start: 0x130DB0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: ANIMAL_LAND_COURSE_SCENERY_ENTRY_11_DISPLAY_LIST
+    type: bin
+    start: 0x132100
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: ANIMAL_LAND_COURSE_DISPLAY_LIST
+    type: bin
+    start: 0x1371E0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: ANIMAL_LAND_COURSE_BACKDROP_DISPLAY_LIST
+    type: bin
+    start: 0x1372F8
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: ANIMAL_LAND_COURSE_SCROLLING_TEXTURE_GEOMETRY_0_DISPLAY_LIST
+    type: bin
+    start: 0x137608
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: ANIMAL_LAND_COURSE_SCROLLING_TEXTURE_GEOMETRY_1_DISPLAY_LIST
+    type: bin
+    start: 0x1376B0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: ANIMAL_LAND_COURSE_SCROLLING_TEXTURE_DISPLAY_LIST
+    type: bin
+    start: 0x137720
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: ANIMAL_LAND_COURSE_TRIGGER_VOLUME_DISPLAY_LIST
+    type: bin
+    start: 0x137738
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: NINJA_LAND_COURSE_GRAPHICS
+    type: bin
+    start: 0x1377D0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: NINJA_LAND_COURSE_SCENERY_ENTRY_8_DISPLAY_LIST
+    type: bin
+    start: 0x137D38
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: NINJA_LAND_COURSE_DISPLAY_LIST
+    type: bin
+    start: 0x13DF80
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: NINJA_LAND_COURSE_BACKDROP_DISPLAY_LIST
+    type: bin
+    start: 0x13E050
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: NINJA_LAND_COURSE_RANK_MODEL_LAPS_REMAINING_DISPLAY_LIST
+    type: bin
+    start: 0x13E370
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: NINJA_LAND_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST
+    type: bin
+    start: 0x13E520
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: ROOKIE_MOUNTAIN_COURSE_GRAPHICS
+    type: bin
+    start: 0x13E6D0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: ROOKIE_MOUNTAIN_COURSE_SCENERY_ENTRY_8_DISPLAY_LIST
+    type: bin
+    start: 0x13EC38
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: ROOKIE_MOUNTAIN_COURSE_SCENERY_ENTRY_10_DISPLAY_LIST
+    type: bin
+    start: 0x13F200
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: ROOKIE_MOUNTAIN_COURSE_DISPLAY_LIST
+    type: bin
+    start: 0x143EA8
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: ROOKIE_MOUNTAIN_COURSE_BACKDROP_DISPLAY_LIST
+    type: bin
+    start: 0x143F78
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: ROOKIE_MOUNTAIN_COURSE_RANK_MODEL_LAPS_REMAINING_DISPLAY_LIST
+    type: bin
+    start: 0x144278
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: ROOKIE_MOUNTAIN_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST
+    type: bin
+    start: 0x144488
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: _145380
+    type: bin
+    start: 0x1446A0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: _1467B0
+    type: bin
+    start: 0x145AD0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SHARED_RACE_GRAPHICS
+    type: bin
+    start: 0x146C30
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: _148220
+    type: bin
+    start: 0x147540
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: _148440
+    type: bin
+    start: 0x147760
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: _148F88
+    type: bin
+    start: 0x1482A8
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: _149040
+    type: bin
+    start: 0x148360
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: _149120
+    type: bin
+    start: 0x148440
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: _1491F8
+    type: bin
+    start: 0x148518
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: _ADDR_20019C0
+    type: bin
+    start: 0x1485F0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: _149610
+    type: bin
+    start: 0x148930
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: _1499B8
+    type: bin
+    start: 0x148CD8
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: _ADDR_2002490
+    type: bin
+    start: 0x1490C0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: PAN_DISPLAY_LIST
+    type: bin
+    start: 0x149290
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: _14A200
+    type: bin
+    start: 0x149520
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: _14AB28
+    type: bin
+    start: 0x149E48
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: _ADDR_2003538
+    type: bin
+    start: 0x14A168
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: _ADDR_20035F8
+    type: bin
+    start: 0x14A228
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: _ADDR_2003870
+    type: bin
+    start: 0x14A4A0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SHARED_RACE_GRAPHICS_SUFFIX
+    type: bin
+    start: 0x14A668
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # embedded_model
+  - name: SNOWBOARD_MODELS
+    type: bin
+    start: 0x14A770
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: SLASH_GRAPHICS
+    type: bin
+    start: 0x14F5C0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: WENDY_GRAPHICS
+    type: bin
+    start: 0x151C50
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: JAM_GRAPHICS
+    type: bin
+    start: 0x154D40
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: LINDA_GRAPHICS
+    type: bin
+    start: 0x1580B0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: TOMMY_GRAPHICS
+    type: bin
+    start: 0x15BA70
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_display_list
+  - name: NINJA_GRAPHICS
+    type: bin
+    start: 0x15F680
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_model_resources
+  - name: BIG_SNOWMAN_COURSE_MODEL_RESOURCES
+    type: bin
+    start: 0x162730
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_model_resources
+  - name: SUNSET_ROCK_COURSE_MODEL_RESOURCES
+    type: bin
+    start: 0x1707A0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_model_resources
+  - name: NIGHT_HIGHWAY_COURSE_MODEL_RESOURCES
+    type: bin
+    start: 0x17C540
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_model_resources
+  - name: GRASS_VALLEY_COURSE_MODEL_RESOURCES
+    type: bin
+    start: 0x185C30
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_model_resources
+  - name: DIZZY_LAND_COURSE_MODEL_RESOURCES
+    type: bin
+    start: 0x1967B0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_model_resources
+  - name: QUICKSAND_VALLEY_COURSE_MODEL_RESOURCES
+    type: bin
+    start: 0x1A4940
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_model_resources
+  - name: SILVER_MOUNTAIN_COURSE_MODEL_RESOURCES
+    type: bin
+    start: 0x1B2480
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_model_resources
+  - name: ANIMAL_LAND_COURSE_MODEL_RESOURCES
+    type: bin
+    start: 0x1C17D0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_model_resources
+  - name: NINJA_LAND_COURSE_MODEL_RESOURCES
+    type: bin
+    start: 0x1C8950
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_model_resources
+  - name: ROOKIE_MOUNTAIN_COURSE_MODEL_RESOURCES
+    type: bin
+    start: 0x1D2390
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # model_resources
+  - name: SHARED_RACE_MODEL_RESOURCES
+    type: bin
+    start: 0x1D75D0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # model_resources
+  - name: _1DCED0
+    type: bin
+    start: 0x1DC1F0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # model_resources
+  - name: _1DE360
+    type: bin
+    start: 0x1DD680
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # sprite_table
+  - name: _1E0F70
+    type: bin
+    start: 0x1E0290
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # model_resources
+  - name: SLASH_MODEL_RESOURCES
+    type: bin
+    start: 0x1E0CE0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # model_resources
+  - name: WENDY_MODEL_RESOURCES
+    type: bin
+    start: 0x1E16A0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # model_resources
+  - name: JAM_MODEL_RESOURCES
+    type: bin
+    start: 0x1E2100
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # model_resources
+  - name: LINDA_MODEL_RESOURCES
+    type: bin
+    start: 0x1E3300
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # model_resources
+  - name: TOMMY_MODEL_RESOURCES
+    type: bin
+    start: 0x1E3DD0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # model_resources
+  - name: NINJA_MODEL_RESOURCES
+    type: bin
+    start: 0x1E5BC0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # sprite_table
+  - name: RACE_EFFECT_SPRITES
+    type: bin
+    start: 0x1E6800
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_sprite_table
+  - name: BIG_SNOWMAN_COURSE_SPRITES
+    type: bin
+    start: 0x1EB440
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_sprite_table
+  - name: SUNSET_ROCK_COURSE_SPRITES
+    type: bin
+    start: 0x1EB960
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_sprite_table
+  - name: NIGHT_HIGHWAY_COURSE_SPRITES
+    type: bin
+    start: 0x1EBD90
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_sprite_table
+  - name: GRASS_VALLEY_COURSE_SPRITES
+    type: bin
+    start: 0x1EC370
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_sprite_table
+  - name: DIZZY_LAND_COURSE_SPRITES
+    type: bin
+    start: 0x1ECFE0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_sprite_table
+  - name: QUICKSAND_VALLEY_COURSE_SPRITES
+    type: bin
+    start: 0x1ED4A0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_sprite_table
+  - name: SILVER_MOUNTAIN_COURSE_SPRITES
+    type: bin
+    start: 0x1ED860
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_sprite_table
+  - name: NINJA_LAND_COURSE_SPRITES
+    type: bin
+    start: 0x1EE710
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_sprite_table
+  - name: ROOKIE_MOUNTAIN_COURSE_SPRITES
+    type: bin
+    start: 0x1EEBA0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # sprite_table
+  - name: SNOWBOARD_TEXTURES
+    type: bin
+    start: 0x1EEF40
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # sprite_table
+  - name: _1F1A90
+    type: bin
+    start: 0x1F14A0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # race_animation
+  - name: SLASH_RACE_ANIMATIONS
+    type: bin
+    start: 0x1F1F80
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # race_animation
+  - name: WENDY_RACE_ANIMATIONS
+    type: bin
+    start: 0x1F7A80
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # race_animation
+  - name: JAM_RACE_ANIMATIONS
+    type: bin
+    start: 0x1FE5C0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # race_animation
+  - name: LINDA_RACE_ANIMATIONS
+    type: bin
+    start: 0x204210
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # race_animation
+  - name: TOMMY_RACE_ANIMATIONS
+    type: bin
+    start: 0x20A6A0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # race_animation
+  - name: NINJA_RACE_ANIMATIONS
+    type: bin
+    start: 0x2111D0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # scene_animation
+  - name: _215BE0
+    type: bin
+    start: 0x215940
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_surface_data
+  - name: BIG_SNOWMAN_COURSE_SURFACE_DATA
+    type: bin
+    start: 0x21D730
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_surface_data
+  - name: SUNSET_ROCK_COURSE_SURFACE_DATA
+    type: bin
+    start: 0x222260
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_surface_data
+  - name: NIGHT_HIGHWAY_COURSE_SURFACE_DATA
+    type: bin
+    start: 0x227200
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_surface_data
+  - name: GRASS_VALLEY_COURSE_SURFACE_DATA
+    type: bin
+    start: 0x22ABB0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_surface_data
+  - name: DIZZY_LAND_COURSE_SURFACE_DATA
+    type: bin
+    start: 0x230640
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_surface_data
+  - name: QUICKSAND_VALLEY_COURSE_SURFACE_DATA
+    type: bin
+    start: 0x234740
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_surface_data
+  - name: SILVER_MOUNTAIN_COURSE_SURFACE_DATA
+    type: bin
+    start: 0x23A530
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_surface_data
+  - name: ANIMAL_LAND_COURSE_SURFACE_DATA
+    type: bin
+    start: 0x23E730
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_surface_data
+  - name: NINJA_LAND_COURSE_SURFACE_DATA
+    type: bin
+    start: 0x23FA20
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # course_surface_data
+  - name: ROOKIE_MOUNTAIN_COURSE_SURFACE_DATA
+    type: bin
+    start: 0x240EC0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # sprite_table
+  - name: _2427D0
+    type: bin
+    start: 0x242530
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # sprite_table
+  - name: RACE_ITEM_SPRITES
+    type: bin
+    start: 0x243040
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # sprite_table
+  - name: SHARED_UI_SPRITES
+    type: bin
+    start: 0x245850
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # replay
+  - name: _24C8E0
+    type: bin
+    start: 0x24C790
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # replay
+  - name: MAIN_MENU_DEMO_ROOKIE_MOUNTAIN_REPLAY
+    type: bin
+    start: 0x24DA90
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # replay
+  - name: MAIN_MENU_DEMO_BIG_SNOWMAN_REPLAY
+    type: bin
+    start: 0x250110
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # replay
+  - name: MAIN_MENU_DEMO_SUNSET_ROCK_REPLAY
+    type: bin
+    start: 0x2520A0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # replay
+  - name: MAIN_MENU_DEMO_ANIMAL_LAND_REPLAY
+    type: bin
+    start: 0x254230
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # replay
+  - name: MAIN_MENU_DEMO_GRASS_VALLEY_REPLAY
+    type: bin
+    start: 0x2562D0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # replay
+  - name: _258C80
+    type: bin
+    start: 0x258B30
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # replay
+  - name: _25B410
+    type: bin
+    start: 0x25B2C0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # replay
+  - name: _25DF80
+    type: bin
+    start: 0x25DE30
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # replay
+  - name: _260A30
+    type: bin
+    start: 0x2608E0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # replay
+  - name: _263520
+    type: bin
+    start: 0x2633D0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # replay
+  - name: _265D30
+    type: bin
+    start: 0x265BE0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # replay
+  - name: _2688C0
+    type: bin
+    start: 0x268770
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # replay
+  - name: _26B1D0
+    type: bin
+    start: 0x26B080
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # replay
+  - name: _26DE60
+    type: bin
+    start: 0x26DD10
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # replay
+  - name: _270730
+    type: bin
+    start: 0x2705E0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # replay
+  - name: _2732E0
+    type: bin
+    start: 0x273190
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # pointer_bank
+  - name: SOUND_POINTER_BANK
+    type: bin
+    start: 0x275940
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # sample_bank
+  - name: _27E290
+    type: bin
+    start: 0x27E320
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # music_sequence
+  - name: _541D50
+    type: bin
+    start: 0x536380
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # music_sequence
+  - name: _5457B0
+    type: bin
+    start: 0x539DE0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # music_sequence
+  - name: _546940
+    type: bin
+    start: 0x53AF70
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # music_sequence
+  - name: _546EE0
+    type: bin
+    start: 0x53B510
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # music_sequence
+  - name: _5487A0
+    type: bin
+    start: 0x53CDD0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # music_sequence
+  - name: _549650
+    type: bin
+    start: 0x53DC80
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # music_sequence
+  - name: _549AA0
+    type: bin
+    start: 0x53E0D0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # music_sequence
+  - name: _549EF0
+    type: bin
+    start: 0x53E520
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # music_sequence
+  - name: _54AFE0
+    type: bin
+    start: 0x53F610
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # music_sequence
+  - name: _552640
+    type: bin
+    start: 0x546C70
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # music_sequence
+  - name: _55C020
+    type: bin
+    start: 0x550650
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # music_sequence
+  - name: _563F20
+    type: bin
+    start: 0x558550
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # music_sequence
+  - name: _56CFF0
+    type: bin
+    start: 0x561620
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # music_sequence
+  - name: _5757B0
+    type: bin
+    start: 0x569DE0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # music_sequence
+  - name: _57E350
+    type: bin
+    start: 0x572980
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # music_sequence
+  - name: _585570
+    type: bin
+    start: 0x579BA0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # music_sequence
+  - name: _58F6B0
+    type: bin
+    start: 0x583CE0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # sprite_table
+  - name: _593D10
+    type: bin
+    start: 0x588340
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # sprite_table
+  - name: _598A70
+    type: bin
+    start: 0x58D060
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # sprite_table
+  - name: _59AAA0
+    type: bin
+    start: 0x58F090
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # tilemap
+  - name: _59DFE0
+    type: bin
+    start: 0x592890
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # sprite_table
+  - name: 59E7F0
+    type: bin
+    start: 0x593240
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # sprite_table
+  - name: _5A1ED0
+    type: bin
+    start: 0x596920
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # sprite_table
+  - name: _5C5320
+    type: bin
+    start: 0x5BA090
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # sprite_table
+  - name: _5CBA80
+    type: bin
+    start: 0x5C07F0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # sprite_table
+  - name: _5CCD40
+    type: bin
+    start: 0x5C1E00
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # sprite_table
+  - name: _5D4280
+    type: bin
+    start: 0x5C9340
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # sprite_table
+  - name: _5DAF30
+    type: bin
+    start: 0x5D02D0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # sprite_table
+  - name: _5DB9D0
+    type: bin
+    start: 0x5D0D70
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # tilemap
+  - name: _5DCBE0
+    type: bin
+    start: 0x5D1DE0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # sprite_table
+  - name: _5DFDD0
+    type: bin
+    start: 0x5D4620
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # tilemap
+  - name: _5E0350
+    type: bin
+    start: 0x5D4C40
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # tilemap
+  - name: _5E0E40
+    type: bin
+    start: 0x5D5860
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # tilemap
+  - name: _5E26E0
+    type: bin
+    start: 0x5D7310
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # scene_animation
+  - name: _5E34A0
+    type: bin
+    start: 0x5D80D0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # sprite_table
+  - name: _608560
+    type: bin
+    start: 0x5FD190
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # tilemap
+  - name: _609AA0
+    type: bin
+    start: 0x5FE6D0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # tilemap
+  - name: _60ECB0
+    type: bin
+    start: 0x6038E0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  # sprite_table
+  - name: _60F1A0
+    type: bin
+    start: 0x603DD0
+    vram: 0
+    align: 1
+    subalign: 1
+
+  - name: _60F990
+    type: bin
+    start: 0x604650
+    vram: 0
+    align: 1
+    subalign: 1
+
   - [0x800000]

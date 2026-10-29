@@ -1143,28 +1143,28 @@ s32 gSoundEffectDefaultPriorities[SOUND_EFFECT_COUNT] = {
 };
 
 SoundRomRange gMusicSequenceRomRanges[10] = {
-    { 0x00536380, 0x00539DE0 },
-    { 0x00539DE0, 0x0053AF70 },
-    { 0x0053AF70, 0x0053B510 },
-    { 0x0053B510, 0x0053CDD0 },
-    { 0x0053CDD0, 0x0053DC80 },
-    { 0x0053DC80, 0x0053E0D0 },
-    { 0x0053E0D0, 0x0053E520 },
-    { 0x0053E520, 0x0053F610 },
-    { 0x0053AF70, 0x0053B510 },
-    { 0x0053AF70, 0x0053B510 },
+    { (u32)&_541D50_ROM_START, (u32)&_541D50_ROM_END },
+    { (u32)&_5457B0_ROM_START, (u32)&_5457B0_ROM_END },
+    { (u32)&_546940_ROM_START, (u32)&_546940_ROM_END },
+    { (u32)&_546EE0_ROM_START, (u32)&_546EE0_ROM_END },
+    { (u32)&_5487A0_ROM_START, (u32)&_5487A0_ROM_END },
+    { (u32)&_549650_ROM_START, (u32)&_549650_ROM_END },
+    { (u32)&_549AA0_ROM_START, (u32)&_549AA0_ROM_END },
+    { (u32)&_549EF0_ROM_START, (u32)&_549EF0_ROM_END },
+    { (u32)&_546940_ROM_START, (u32)&_546940_ROM_END },
+    { (u32)&_546940_ROM_START, (u32)&_546940_ROM_END },
 };
 
 SoundRomRange gRaceMusicSequenceRomRanges[9] = {
-    { 0x0053F610, 0x00546C70 },
-    { 0x00546C70, 0x00550650 },
-    { 0x00550650, 0x00558550 },
-    { 0x00558550, 0x00561620 },
-    { 0x00561620, 0x00569DE0 },
-    { 0x00569DE0, 0x00572980 },
-    { 0x00572980, 0x00579BA0 },
-    { 0x00579BA0, 0x00583CE0 },
-    { 0x00583CE0, 0x00588340 },
+    { (u32)&_54AFE0_ROM_START, (u32)&_54AFE0_ROM_END },
+    { (u32)&_552640_ROM_START, (u32)&_552640_ROM_END },
+    { (u32)&_55C020_ROM_START, (u32)&_55C020_ROM_END },
+    { (u32)&_563F20_ROM_START, (u32)&_563F20_ROM_END },
+    { (u32)&_56CFF0_ROM_START, (u32)&_56CFF0_ROM_END },
+    { (u32)&_5757B0_ROM_START, (u32)&_5757B0_ROM_END },
+    { (u32)&_57E350_ROM_START, (u32)&_57E350_ROM_END },
+    { (u32)&_585570_ROM_START, (u32)&_585570_ROM_END },
+    { (u32)&_58F6B0_ROM_START, (u32)&_58F6B0_ROM_END },
 };
 
 u16 gCourseMusicSequenceBanks[14] = {
