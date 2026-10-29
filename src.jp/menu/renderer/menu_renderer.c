@@ -1849,9 +1849,9 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 palette, u16 pal
     }
 }
 
-void drawMenuAsciiText(s16 arg0, s16 arg1, u8 *arg2, u16 arg3, u16 arg4) {
+void drawMenuAsciiText(s16 arg0, s16 arg1, const u8 *arg2, u16 arg3, u16 arg4) {
     s32 var_s0;
-    u8 *var_s1;
+    const u8 *var_s1;
     char mask;
     s32 var_s2;
     s32 temp_s3;

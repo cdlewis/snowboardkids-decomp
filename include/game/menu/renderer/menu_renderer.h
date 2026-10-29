@@ -218,7 +218,7 @@ void drawMenuColoredGlyphScript(
 void drawMenuGlyphScript(s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale, volatile u16 colorMode);
 void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 colorMode, s32 fontBank);
 void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 scale);
-void drawMenuAsciiText(s16 x, s16 y, u8 *text, u16 palette, u16 scale);
+void drawMenuAsciiText(s16 x, s16 y, const u8 *text, u16 palette, u16 scale);
 void drawMenuSolidRect(s16 x0, s16 y0, s16 x1, s16 y1, s16 r, s16 g, s16 b);
 s32 stepMenuFadeAlpha(s32 value, s16 step, u8 increase);
 void drawMenuSpriteCrossfade(s16 x, s16 y, AssetTable *table, u16 imageIndex0, u16 imageIndex1, u8 alpha);
