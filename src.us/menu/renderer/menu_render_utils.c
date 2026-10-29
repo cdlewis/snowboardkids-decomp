@@ -1073,42 +1073,41 @@ void drawMenuAsciiCharLegacy(s16 x, s16 y, volatile s32 ch, u16 arg3) {
 #pragma weak drawMenuAsciiCharLegacy = drawMenuAsciiCharImpl
 #endif
 
-CLANG_DIAGNOSTIC_PUSH
-CLANG_DIAGNOSTIC_IGNORE_SELF_ASSIGN
-void drawMenuAsciiTextDefaultScale(s16 arg0, s16 arg1, const char *arg2, u16 arg3) {
-    s32 var_s0;
-    const char *var_s1;
+void drawMenuAsciiTextDefaultScale(s16 x, s16 y, const char *text, u16 palette) {
+    s32 cursorX;
+    const char *cursor;
     char mask;
-    s32 var_s2;
-    s32 temp_s4;
-    s32 temp_t9;
-    s32 var_a2;
+    s32 cursorY;
+    s32 initialX;
+    s32 first;
+    s32 character;
     s32 newline;
+    s32 more;
 
-    mask = 0xFFFFFFFFFFFFFFFFu;
-    temp_t9 = *arg2 & mask;
-    var_s0 = arg0;
-    var_s1 = arg2;
-    var_s2 = arg1;
-    temp_s4 = var_s0;
-    if ((0, temp_t9) != 0) {
-        var_a2 = temp_t9 & 0xFF;
-        arg0 = arg0;
+    mask = 0xFF;
+    first = *text & mask;
+    cursorX = x;
+    cursor = text;
+    cursorY = y;
+    initialX = cursorX;
+    if (first != 0) {
+        character = first & 0xFF;
         newline = 0xA;
-        do {
-            if (newline == var_a2) {
-                var_s0 = temp_s4;
-                var_s2 += 8;
+        more = 1;
+        while (more) {
+            if (newline == character) {
+                cursorX = initialX;
+                cursorY += 8;
             } else {
-                drawMenuAsciiCharLegacy(var_s0, var_s2, var_a2, arg3);
-                var_s0 += 8;
+                drawMenuAsciiCharLegacy(cursorX, cursorY, character, palette);
+                cursorX += 8;
             }
-            var_a2 = var_s1[1];
-            var_s1++;
-        } while (var_a2 != 0);
+            character = cursor[1];
+            cursor++;
+            more = character != 0;
+        }
     }
 }
-CLANG_DIAGNOSTIC_POP
 
 void allocRenderCallbackScratchBuffer(void) {
     gAssetHandles[0] = allocRelocatableHeapBlock(0x4000);
