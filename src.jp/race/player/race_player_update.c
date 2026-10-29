@@ -49,6 +49,74 @@ typedef struct {
     s32 sourceZ;
 } PlayerTransformScratch80095A88;
 
+void (*gRacePlayerAirborneUpdateHandlers[])(RacePlayer *) = {
+    updateRacePlayerAirborneLaunch,
+    updateRacePlayerAirborneCruise,
+};
+
+void (*gRacePlayerTrickSubstateHandlers[])(RacePlayer *) = {
+    updateRacePlayerTrickSubstateStart,
+    updateRacePlayerTrickSubstateHold,
+    updateRacePlayerTrickSubstateFinish,
+    updateRacePlayerTrickSubstateNoop,
+};
+
+void (*gRacePlayerMode07StateHandlers[])(RacePlayer *) = {
+    updateRacePlayerMode07AlignToLaunchRamp, updateRacePlayerMode07StartLaunchRamp,
+    updateRacePlayerMode07LaunchRampTakeoff, updateRacePlayerMode07LaunchRampSpin,
+    updateRacePlayerMode07LaunchRampPose,    updateRacePlayerMode07LaunchRampDrift,
+    updateRacePlayerMode07LaunchRampClimb,   updateRacePlayerMode07SpiralExit,
+};
+
+void (*gRacePlayerMode30StateHandlers[])(RacePlayer *) = {
+    updateRacePlayerMode30AttackApproach,
+    updateRacePlayerMode30AttackResolve,
+    dispatchRacePlayerMode32Character,
+    dispatchRacePlayerMode35Character,
+};
+
+void (*gRacePlayerMode32CharacterHandlers[])(RacePlayer *) = {
+    updateRacePlayerMode32Character0, updateRacePlayerMode32Character1, updateRacePlayerMode32Character2,
+    updateRacePlayerMode32Character3, updateRacePlayerMode32Character4, updateRacePlayerMode32Character5,
+};
+
+void (*gRacePlayerMode35CharacterHandlers[])(RacePlayer *) = {
+    updateRacePlayerMode35Character0, updateRacePlayerMode35Character1, updateRacePlayerMode35Character2,
+    updateRacePlayerMode35Character3, updateRacePlayerMode35Character4, updateRacePlayerMode35Character5,
+};
+
+void (*gRacePlayerModePostUpdateHandlers[])(RacePlayer *) = {
+    updateRacePlayerPostUpdateMode00,         updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneLaunch, updateRacePlayerPostUpdateNudge,
+    updateRacePlayerPostUpdateNoop,           updateRacePlayerPostUpdateNoop,
+    updateRacePlayerPostUpdateNoop,           updateRacePlayerPostUpdateCourseObject,
+    updateRacePlayerPostUpdateNoop,           updateRacePlayerPostUpdateNoop,
+    updateRacePlayerPostUpdateNoop,           updateRacePlayerPostUpdateNoop,
+    updateRacePlayerPostUpdateNoop,           updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateNoop,           updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,  updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,  updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,  updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateMode22,         updateRacePlayerPostUpdateNoop,
+    updateRacePlayerPostUpdateNoop,           updateRacePlayerPostUpdateNoop,
+    updateRacePlayerPostUpdateNoop,           updateRacePlayerPostUpdateNoop,
+    updateRacePlayerPostUpdateNoop,           updateRacePlayerPostUpdateMode29,
+    updateRacePlayerPostUpdateAttack,         updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,  updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,  updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,  updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,  updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateNoop,           updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,  updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,  updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,  updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,  updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,  updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,  updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,  updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,  updateRacePlayerPostUpdateAirborneTrick,
+};
+
 extern RacePlayerPreviewStart gRacePlayerPreviewStartPositions[];
 extern s32 gRaceRankSpeedBonuses[];
 extern void (*gRacePlayerModeUpdateHandlers[])(RacePlayer *);
@@ -1161,10 +1229,6 @@ void updateRacePlayerAirborneLaunch(RacePlayer *player) {
     }
 }
 
-// updateRacePlayerAirborneCruise best match: 99.696%
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/race/player/race_player_update/updateRacePlayerAirborneCruise.s")
-
-#ifdef NON_MATCHING
 void updateRacePlayerAirborneCruise(RacePlayer *player) {
     s32 sp2C;
     s32 var_a2;
@@ -1214,7 +1278,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
     }
 
     if (player->state.stanceTransitionFrame != 0) {
-        setRaceMotionAnimation(player, player->state.stanceTransitionFrame-- + 7);
+        player->state.stanceTransitionFrame--;
+        setRaceMotionAnimation(player, player->state.stanceTransitionFrame + 8);
     } else if (player->state.animationId != 5) {
         setRaceMotionAnimation(player, 5);
     }
@@ -1656,7 +1721,6 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
         enqueueRacePlayerVoiceSound(player, RACE_VOICE_ATTACK_SUCCESS);
     }
 }
-#endif
 
 void resetRacePlayerTrickSubstate(RacePlayer *player) {
     player->state.subState = 0;

@@ -986,8 +986,8 @@ above can possibly work, so read them before spending a variant.
   one 60,000-variant sweep the two proxy winners scored 85.494% and 90.159%
   against the parent's 90.694%.
 
-- **A function's codegen does not depend on the rest of its translation unit.**
-  Compiling a candidate standalone against the project headers, with the
+- **Standalone builds usually reproduce full-unit codegen, but verify context
+  when scheduling differs.** Compiling a candidate standalone against the project headers, with the
   per-function workspace's flags, reproduces the in-project object's function
   bytes and `dist.py` score exactly — verified by recompiling five already
   matched siblings from one file through both paths, all
@@ -996,6 +996,18 @@ above can possibly work, so read them before spending a variant.
   build for the final verification. Do not assume "this function is sensitive
   to its surrounding file" without measuring it; that claim has been recorded
   before and did not hold up.
+  **Confirmed exception: JP `updateRacePlayerAirborneCruise`.** Its natural
+  separate stance-frame decrement and animation call compiled with an extra
+  `nop` standalone and in the JP unit, while the same body matched in US.
+  Real header expansion did not help; a fresh full US SHA1 build ruled out a
+  stale object. IDO `-S` showed identical instructions before assembly, while
+  `-Wa,-R` exposed additional cross-block scheduling in the matching unit.
+  Defining the authentic `gRacePlayerAirborneUpdateHandlers` table in the
+  same unit made the standalone instructions match. Integrating the existing
+  JP handler-table data with the function passed the full JP ROM checksum.
+  Thus function-address data can affect IDO assembler scheduling: inspect
+  authentic callback tables before adding allocator tricks or dummy code.
+  The exact internal assembler cause remains unproven.
 
 
 - **Rebuild a per-function workspace baseline from the project's own headers,
