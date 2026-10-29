@@ -31,7 +31,10 @@
 #define MENU_GLYPH_DEFAULT_FONT_BANK 0x22
 #define MENU_GLYPH_SCRIPT_COLOR 0xFFFC
 
-extern u16 gMenuTransparentPalette[];
+
+u16 gMenuTransparentPalette[16] = { 0x0000, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+                                    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF };
+s16 gMenuSpriteFlipScales[8] = { 1, 1, -1, 1, 1, -1, -1, -1 };
 
 void drawMenuAssetRegion(
     s16 x,

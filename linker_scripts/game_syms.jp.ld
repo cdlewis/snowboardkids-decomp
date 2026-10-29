@@ -412,3 +412,12 @@ gRaceIntroAlternateCourseCommands = passAwardLabelFlashTileOffsets + 0x3E4;
 gRaceIntroAlternateCourseVertices = passAwardLabelFlashTileOffsets + 0x1A4;
 gRaceIntroCourseCommands = passAwardLabelFlashTileOffsets + 0x264;
 gRaceIntroCourseVertices = passAwardLabelFlashTileOffsets + 0x24;
+
+gCharacterSelectCoursePreviewFrameTileMaps = gCharacterSelectCoursePreviewData;
+gCharacterSelectCoursePreviewFrameCornerTileMaps = gCharacterSelectCoursePreviewData + 0x28;
+gCharacterSelectCourseExitPreviewData = gCharacterSelectCoursePreviewData + 0x1CC;
+
+gRaceSetupOnePlayerOptionText = gRaceSetupPlayerOptionTexts + 0x0;
+gRaceSetupTwoPlayerOptionText = gRaceSetupPlayerOptionTexts + 0xA;
+gRaceSetupThreePlayerOptionText = gRaceSetupPlayerOptionTexts + 0x14;
+gRaceSetupFourPlayerOptionText = gRaceSetupPlayerOptionTexts + 0x1E;
