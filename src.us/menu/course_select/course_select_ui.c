@@ -586,124 +586,94 @@ void initCourseSelectPreviewModelOut(void *arg0) {
 }
 
 void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
-    enum { CURRENT_ITEM_COUNT_ACTOR, PLAYER_ITEM_COUNT_ACTOR = 5, BASE_ICON_LIST_ACTOR = 11 };
-    CourseSelectIconListActor *itemCountActors[12];
+    CourseSelectIconListActor *actor;
     s32 playerIndex;
     s32 iconIndex;
-    s32 highlightAlpha;
-    s32 iconTileIndex;
-    s32 leftClipOffset;
-    s32 selectedCourseId;
-    s32 selectionState;
-    s32 splitScreenClipOffset;
-    CourseSelectIconListActor *playerItemCountActor;
-    RacePlayer *player;
+    u8 highlightPalette;
+    u16 iconTileIndex;
 
-    itemCountActors[BASE_ICON_LIST_ACTOR] = iconList;
-    playerIndex = 0;
-    if ((s32)gPlayerCount > 0) {
-        itemCountActors[CURRENT_ITEM_COUNT_ACTOR] = iconList;
-        do {
-            playerItemCountActor =
-                (CourseSelectIconListActor *)&((u8 *)&itemCountActors[BASE_ICON_LIST_ACTOR]->task)[playerIndex];
-            iconIndex = 0;
-            leftClipOffset = (playerIndex >= 2) * 0x88;
-            if (itemCountActors[CURRENT_ITEM_COUNT_ACTOR]->itemCounts[0] > 0) {
-                itemCountActors[PLAYER_ITEM_COUNT_ACTOR] = playerItemCountActor;
-                do {
-                    if (iconIndex < (itemCountActors[CURRENT_ITEM_COUNT_ACTOR]->itemCounts[0] - 1)) {
-                        do {
-                            player = &gRacePlayers[playerIndex];
-                        } while (0);
-                        highlightAlpha = 0;
-                        if (gPlayerCount == 1) {
-                            if (player->selectedCharacterId != 5) {
-                                iconTileIndex = (iconIndex + 1) & 0xFFFF;
-                            } else {
-                                iconTileIndex = (iconIndex + 6) & 0xFFFF;
-                            }
-                        } else if (player->selectedCharacterId != 5) {
-                            iconTileIndex = (iconIndex + 0x14) & 0xFFFF;
-                        } else {
-                            iconTileIndex = (iconIndex + 0x18) & 0xFFFF;
-                        }
+    actor = iconList;
 
-                        selectionState = gCourseSelectSelectionTimers[playerIndex];
-                        splitScreenClipOffset = (playerIndex >= 2) * 0x8C;
-                        if ((selectionState > 0) && (selectionState < 8)) {
-                            selectedCourseId = player->menuSelection;
-                            if (selectedCourseId >= 9) {
-                                if ((iconIndex == 3) && (selectionState & 1)) {
-                                    highlightAlpha = 0xFF;
-                                }
-                            } else if ((iconIndex == (selectedCourseId % 3)) && (selectionState & 1)) {
-                                highlightAlpha = 0xFF;
-                            }
-                        }
-
-                        drawMenuSpriteClipped(
-                            iconList->y[playerIndex][iconIndex],
-                            iconList->x[playerIndex][iconIndex],
-                            getRelocatableHeapBlockBase(gAssetHandles[0x21]),
-                            (u16)iconTileIndex,
-                            0x20,
-                            0x20,
-                            0,
-                            highlightAlpha,
-                            iconList->clipLeft - splitScreenClipOffset,
-                            iconList->clipTop,
-                            iconList->clipRight,
-                            iconList->clipBottom
-                        );
-                    } else if (gPlayerCount == 1) {
-                        highlightAlpha = 0;
-                        leftClipOffset = (playerIndex >= 2) * 0x88;
-                        if ((gCourseSelectSelectionTimers[playerIndex] > 0) &&
-                            (gCourseSelectSelectionTimers[playerIndex] < 8) &&
-                            (gCourseSelectExtraCourseColumnState == 1) &&
-                            (gCourseSelectSelectionTimers[playerIndex] & 1)) {
-                            highlightAlpha = 0xFF;
-                        }
-
-                        if (gRaceSplitscreenMode == 3) {
-                            drawMenuSpriteClipped(
-                                iconList->y[playerIndex][iconIndex],
-                                iconList->x[playerIndex][iconIndex],
-                                getRelocatableHeapBlockBase(gAssetHandles[0x27]),
-                                5,
-                                0x20,
-                                0x20,
-                                0,
-                                highlightAlpha,
-                                iconList->clipLeft - leftClipOffset,
-                                iconList->clipTop,
-                                iconList->clipRight,
-                                iconList->clipBottom
-                            );
-                        } else {
-                            drawMenuSpriteClipped(
-                                iconList->y[playerIndex][iconIndex],
-                                iconList->x[playerIndex][iconIndex],
-                                getRelocatableHeapBlockBase(gAssetHandles[0x21]),
-                                5,
-                                0x20,
-                                0x20,
-                                0,
-                                highlightAlpha,
-                                iconList->clipLeft - leftClipOffset,
-                                iconList->clipTop,
-                                iconList->clipRight,
-                                iconList->clipBottom
-                            );
-                        }
+    for (playerIndex = 0; playerIndex < (s32)gPlayerCount; playerIndex++) {
+        for (iconIndex = 0; iconIndex < actor->itemCounts[playerIndex]; iconIndex++) {
+            if (iconIndex < (actor->itemCounts[playerIndex] - 1)) {
+                if (gPlayerCount == 1) {
+                    if (gRacePlayers[playerIndex].selectedCharacterId != 5) {
+                        iconTileIndex = iconIndex + 1;
+                    } else {
+                        iconTileIndex = iconIndex + 6;
                     }
-                    iconIndex++;
-                } while (iconIndex < itemCountActors[PLAYER_ITEM_COUNT_ACTOR]->itemCounts[0]);
+                } else if (gRacePlayers[playerIndex].selectedCharacterId != 5) {
+                    iconTileIndex = iconIndex + 0x14;
+                } else {
+                    iconTileIndex = iconIndex + 0x18;
+                }
+                highlightPalette = 0;
+                if ((gCourseSelectSelectionTimers[playerIndex] > 0) && (gCourseSelectSelectionTimers[playerIndex] < 8)) {
+                    if (gRacePlayers[playerIndex].menuSelection >= 9) {
+                        if ((iconIndex == 3) && (gCourseSelectSelectionTimers[playerIndex] & 1)) {
+                            highlightPalette = 0xFF;
+                        }
+                    } else if ((iconIndex == (gRacePlayers[playerIndex].menuSelection % 3)) &&
+                               (gCourseSelectSelectionTimers[playerIndex] & 1)) {
+                        highlightPalette = 0xFF;
+                    }
+                }
+                drawMenuSpriteClipped(
+                    actor->y[playerIndex][iconIndex],
+                    actor->x[playerIndex][iconIndex],
+                    getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                    (u16)iconTileIndex,
+                    0x20,
+                    0x20,
+                    0,
+                    highlightPalette,
+                    actor->clipLeft - (playerIndex >= 2) * 0x8C,
+                    actor->clipTop,
+                    actor->clipRight,
+                    actor->clipBottom
+                );
+            } else if (gPlayerCount == 1) {
+                highlightPalette = 0;
+                if ((gCourseSelectSelectionTimers[playerIndex] > 0) &&
+                    (gCourseSelectSelectionTimers[playerIndex] < 8) &&
+                    (gCourseSelectExtraCourseColumnState == 1) &&
+                    (gCourseSelectSelectionTimers[playerIndex] & 1)) {
+                    highlightPalette = 0xFF;
+                }
+                if (gRaceSplitscreenMode == 3) {
+                    drawMenuSpriteClipped(
+                        actor->y[playerIndex][iconIndex],
+                        actor->x[playerIndex][iconIndex],
+                        getRelocatableHeapBlockBase(gAssetHandles[0x27]),
+                        5,
+                        0x20,
+                        0x20,
+                        0,
+                        highlightPalette,
+                        actor->clipLeft - (playerIndex >= 2) * 0x88,
+                        actor->clipTop,
+                        actor->clipRight,
+                        actor->clipBottom
+                    );
+                } else {
+                    drawMenuSpriteClipped(
+                        actor->y[playerIndex][iconIndex],
+                        actor->x[playerIndex][iconIndex],
+                        getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                        5,
+                        0x20,
+                        0x20,
+                        0,
+                        highlightPalette,
+                        actor->clipLeft - (playerIndex >= 2) * 0x88,
+                        actor->clipTop,
+                        actor->clipRight,
+                        actor->clipBottom
+                    );
+                }
             }
-            playerIndex++;
-            itemCountActors[CURRENT_ITEM_COUNT_ACTOR] =
-                (CourseSelectIconListActor *)&((u8 *)&itemCountActors[CURRENT_ITEM_COUNT_ACTOR]->task)[1];
-        } while (playerIndex < (s32)gPlayerCount);
+        }
     }
 }
 
