@@ -14,10 +14,6 @@ extern u8 gSinglePlayerRankDisplayPatternFourth[];
 extern s8 *gRaceCoursePlayerPathOffsetTables[];
 extern RacePlayerCheckpointEvent *gRaceCourseCheckpointEventLists[];
 
-// updateRacePlayerRankDisplay best match: 90.276%
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/race/player/race_player_progress/updateRacePlayerRankDisplay.s")
-
-#ifdef NON_MATCHING
 void updateRacePlayerRankDisplay(void) {
     s32 deltaX;
     s32 deltaZ;
@@ -50,7 +46,7 @@ void updateRacePlayerRankDisplay(void) {
             i = 0;
             if (gRacePlayers[0].state.rankIndex == 0) {
                 for (j = 0; j < RACE_PLAYER_COUNT; j++) {
-                    if (gRacePlayers[j].isCpu != 0) {
+                    if (gRacePlayers[j].isCpu) {
                         gRacePlayers[j].state.displayRank = gSinglePlayerRankDisplayPatternFirst[i];
                         gRacePlayers[j].state.rankTargetPlayer = 0;
                         i++;
@@ -61,7 +57,7 @@ void updateRacePlayerRankDisplay(void) {
             i = 0;
             if (gRacePlayers[0].state.rankIndex == 1) {
                 for (j = 0; j < RACE_PLAYER_COUNT; j++) {
-                    if (gRacePlayers[j].isCpu != 0) {
+                    if (gRacePlayers[j].isCpu) {
                         gRacePlayers[j].state.displayRank = gSinglePlayerRankDisplayPatternSecond[i];
                         gRacePlayers[j].state.rankTargetPlayer = 0;
                         i++;
@@ -72,7 +68,7 @@ void updateRacePlayerRankDisplay(void) {
             i = 0;
             if (gRacePlayers[0].state.rankIndex == 2) {
                 for (j = 0; j < RACE_PLAYER_COUNT; j++) {
-                    if (gRacePlayers[j].isCpu != 0) {
+                    if (gRacePlayers[j].isCpu) {
                         gRacePlayers[j].state.displayRank = gSinglePlayerRankDisplayPatternThird[i];
                         gRacePlayers[j].state.rankTargetPlayer = 0;
                         i++;
@@ -83,7 +79,7 @@ void updateRacePlayerRankDisplay(void) {
             i = 0;
             if (gRacePlayers[0].state.rankIndex == 3) {
                 for (j = 0; j < RACE_PLAYER_COUNT; j++) {
-                    if (gRacePlayers[j].isCpu != 0) {
+                    if (gRacePlayers[j].isCpu) {
                         gRacePlayers[j].state.displayRank = gSinglePlayerRankDisplayPatternFourth[i];
                         gRacePlayers[j].state.rankTargetPlayer = 0;
                         i++;
@@ -145,7 +141,7 @@ void updateRacePlayerRankDisplay(void) {
     }
 
     for (i = 0; i < RACE_PLAYER_COUNT; i++) {
-        if (gRacePlayers[i].isCpu != 0) {
+        if (gRacePlayers[i].isCpu) {
             switch (gRacePlayers[i].state.displayRank) {
                 case 0:
                     gRacePlayers[i].state.cpuPaceMode = RACE_CPU_PACE_RANK_BONUS;
@@ -175,7 +171,6 @@ void updateRacePlayerRankDisplay(void) {
         }
     }
 }
-#endif
 
 void updateRacePlayerCheckpointEvents(RacePlayer *player) {
     RacePlayerCheckpointEvent *eventList;
