@@ -945,52 +945,31 @@ void drawMenuAsciiChar(s16 x, s16 y, u8 character, u16 palette) {
     }
 }
 
-// drawMenuAsciiTextDefaultScale best standalone match: 96.143% (base_5.c)
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/renderer/menu_render_utils/drawMenuAsciiTextDefaultScale.s")
-
-#ifdef NON_MATCHING
-// clang-format off
 void drawMenuAsciiTextDefaultScale(s16 x, s16 y, const char *text, u16 palette) {
     s32 cursorX;
-    const char *cursor;
-    char mask;
     s32 cursorY;
-    s32 initialX;
-    s32 first;
+    const char *cursor;
     s32 character;
+    s32 glyph;
     s32 newline;
-    s32 more;
 
-    mask = 0xFF;
-    first = *text & mask;
     cursorX = x;
-    cursor = text;
     cursorY = y;
-    initialX = cursorX;
-    if ((0, first) != 0) {
-        character = first & 0xFF;
-        x = x;
-        newline = 0xA;
-        more = 1;
-        while (more) {
-            if (newline == character) {
-                cursorX = initialX;
-                cursorY += 8;
-            } else {
-                character = character - 0x20;
-                if ((u32)character < 0x40) {
-                    drawMenuAsciiFontTile(cursorX, cursorY, ((character & 7) * 8) & 0xFFFF, character & 0x38, palette);
-                }
-                cursorX += 8;
+    newline = '\n';
+    for (cursor = text; *cursor != 0; cursor++) {
+        character = (u8)*cursor;
+        if (newline == character) {
+            cursorX = x;
+            cursorY += 8;
+        } else {
+            glyph = character - 0x20;
+            if ((u32)glyph < 0x40) {
+                drawMenuAsciiFontTile(cursorX, cursorY, ((glyph & 7) * 8) & 0xFFFF & 0xFFFF, glyph & 0xFF & 0x38, palette);
             }
-            character = cursor[1];
-            cursor++;
-            more = character != 0;
+            cursorX += 8;
         }
     }
 }
-// clang-format on
-#endif
 
 void allocRenderCallbackScratchBuffer(void) {
     gAssetHandles[0] = allocRelocatableHeapBlock(0x4000);
