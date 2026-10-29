@@ -37,6 +37,11 @@ the Jam, Linda, Nancy, and Slash credits. Their source contents are identical
 across regions, so they need no regional conditionals. The race-start transition
 also shares its sine-table include.
 
+The identical libultra sources, assembly, and local headers also live in `src/`,
+along with libmus's standalone sample and DMA sources. Libultra compiler and
+assembler settings apply to both shared and regional objects. Differing library
+sources and libmus fragments included by regional players remain regional.
+
 Identical source text can still depend on regional content: the title-demo data
 file remains regional because it includes different player snapshot tables.
 Spatial math shares its source while retaining a JP-only object padding trim.
@@ -52,6 +57,11 @@ is relative to each config's regional `src_path`. For example:
 Keep each region's existing ROM start. Associated `.data`, `.rodata`, and `.bss`
 subsegments resolve through the C sibling to the shared object automatically.
 Objects remain separate: `build/src/` for US and `build/jp/src/` for JP.
+
+For standalone data files without a `c` sibling, set `dir: ../src` on their
+`.data` or `.rodata` subsegment instead. Handwritten assembly uses the same
+override on its `hasm` subsegment; keep any IDO assembler rules pointed at the
+shared source path.
 
 Preserve any per-file compiler flags or section postprocessing when changing
 object paths. Use `#if defined(VERSION_JP)` or `VERSION_US` for actual regional

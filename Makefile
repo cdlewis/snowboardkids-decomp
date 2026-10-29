@@ -156,48 +156,49 @@ OBJCOPYFLAGS = -O binary
 RM_MDEBUG    = $(OBJCOPY) --remove-section .mdebug $@
 C_OBJ_POSTPROCESS = :
 
-$(BUILD_DIR)/$(SRC_DIR)/ultra/io/%.o: C_OPT = -O1
-$(BUILD_DIR)/$(SRC_DIR)/ultra/io/%.o: C_MIPS = -mips2
-$(BUILD_DIR)/$(SRC_DIR)/ultra/audio/%.o: C_OPT = -O2
-$(BUILD_DIR)/$(SRC_DIR)/ultra/audio/%.o: C_MIPS = -mips2
-$(BUILD_DIR)/$(SRC_DIR)/ultra/audio/env.o: C_OPT = -O3
-$(BUILD_DIR)/$(SRC_DIR)/ultra/audio/env.o: IDO_CC = $(IDO_DIRECT)
-$(BUILD_DIR)/$(SRC_DIR)/ultra/audio/drvrnew.o: C_OPT = -O3
-$(BUILD_DIR)/$(SRC_DIR)/ultra/audio/drvrnew.o: IDO_CC = $(IDO_DIRECT)
-$(BUILD_DIR)/$(SRC_DIR)/ultra/audio/reverb.o: C_OPT = -O3
-$(BUILD_DIR)/$(SRC_DIR)/ultra/audio/reverb.o: IDO_CC = $(IDO_DIRECT)
-$(BUILD_DIR)/$(SRC_DIR)/ultra/audio/resample.o: C_OPT = -O3
-$(BUILD_DIR)/$(SRC_DIR)/ultra/audio/resample.o: IDO_CC = $(IDO_DIRECT)
-$(BUILD_DIR)/$(SRC_DIR)/ultra/audio/auxbus.o: C_OPT = -O3
-$(BUILD_DIR)/$(SRC_DIR)/ultra/audio/auxbus.o: IDO_CC = $(IDO_DIRECT)
-$(BUILD_DIR)/$(SRC_DIR)/ultra/audio/load.o: C_OPT = -O3
-$(BUILD_DIR)/$(SRC_DIR)/ultra/audio/load.o: IDO_CC = $(IDO_DIRECT)
-$(BUILD_DIR)/$(SRC_DIR)/ultra/audio/mainbus.o: C_OPT = -O3
-$(BUILD_DIR)/$(SRC_DIR)/ultra/audio/mainbus.o: IDO_CC = $(IDO_DIRECT)
-$(BUILD_DIR)/$(SRC_DIR)/ultra/audio/synallocfx.o: C_OPT = -O3
-$(BUILD_DIR)/$(SRC_DIR)/ultra/audio/synallocfx.o: IDO_CC = $(IDO_DIRECT)
-$(BUILD_DIR)/$(SRC_DIR)/ultra/audio/synallocvoice.o: C_OPT = -O3
-$(BUILD_DIR)/$(SRC_DIR)/ultra/audio/synallocvoice.o: IDO_CC = $(IDO_DIRECT)
-$(BUILD_DIR)/$(SRC_DIR)/ultra/audio/synthesizer.o: C_OPT = -O3
-$(BUILD_DIR)/$(SRC_DIR)/ultra/audio/synthesizer.o: IDO_CC = $(IDO_DIRECT)
-$(BUILD_DIR)/$(SRC_DIR)/ultra/os/%.o: C_OPT = -O1
-$(BUILD_DIR)/$(SRC_DIR)/ultra/os/%.o: C_MIPS = -mips2
-$(BUILD_DIR)/$(SRC_DIR)/ultra/os/timerintr.o: CFLAGS += -D_FINALROM
-$(BUILD_DIR)/$(SRC_DIR)/ultra/gu/%.o: C_OPT = -O2
-$(BUILD_DIR)/$(SRC_DIR)/ultra/gu/%.o: C_MIPS = -mips2
-$(BUILD_DIR)/$(SRC_DIR)/ultra/gu/perspective.o: C_OPT = -O2
-$(BUILD_DIR)/$(SRC_DIR)/ultra/io/sptask.o: C_OPT = -O2
-$(BUILD_DIR)/$(SRC_DIR)/ultra/io/sptask.o: CFLAGS += -DF3DEX_GBI
-$(BUILD_DIR)/$(SRC_DIR)/ultra/libc/%.o: C_MIPS = -mips2
-$(BUILD_DIR)/$(SRC_DIR)/ultra/libc/%.o: ULTRA_AS_OPT = -O3
-$(BUILD_DIR)/$(SRC_DIR)/ultra/libc/ll.o: C_OPT = -O1
-$(BUILD_DIR)/$(SRC_DIR)/ultra/libc/ll.o: C_MIPS = -mips3 -32
-$(BUILD_DIR)/$(SRC_DIR)/ultra/libc/xprintf.o: C_OPT = -O3
-$(BUILD_DIR)/$(SRC_DIR)/ultra/libc/xprintf.o: IDO_CC = $(IDO_DIRECT)
-$(BUILD_DIR)/$(SRC_DIR)/ultra/libc/xldtob.o: C_OPT = -O3
-$(BUILD_DIR)/$(SRC_DIR)/ultra/libc/xldtob.o: IDO_CC = $(IDO_DIRECT)
-$(BUILD_DIR)/$(SRC_DIR)/ultra/os/exceptasm.o: ULTRA_AS_ISA = mips3
-$(BUILD_DIR)/$(SRC_DIR)/ultra/os/exceptasm.o: ULTRA_AS_POST = $(PYTHON) $(TOOLS_DIR)/set_o32abi_bit.py $@
+ULTRA_OBJ_DIRS = $(BUILD_DIR)/$(SRC_DIR)/ultra $(BUILD_DIR)/src/ultra
+$(addsuffix /io/%.o,$(ULTRA_OBJ_DIRS)): C_OPT = -O1
+$(addsuffix /io/%.o,$(ULTRA_OBJ_DIRS)): C_MIPS = -mips2
+$(addsuffix /audio/%.o,$(ULTRA_OBJ_DIRS)): C_OPT = -O2
+$(addsuffix /audio/%.o,$(ULTRA_OBJ_DIRS)): C_MIPS = -mips2
+$(addsuffix /audio/env.o,$(ULTRA_OBJ_DIRS)): C_OPT = -O3
+$(addsuffix /audio/env.o,$(ULTRA_OBJ_DIRS)): IDO_CC = $(IDO_DIRECT)
+$(addsuffix /audio/drvrnew.o,$(ULTRA_OBJ_DIRS)): C_OPT = -O3
+$(addsuffix /audio/drvrnew.o,$(ULTRA_OBJ_DIRS)): IDO_CC = $(IDO_DIRECT)
+$(addsuffix /audio/reverb.o,$(ULTRA_OBJ_DIRS)): C_OPT = -O3
+$(addsuffix /audio/reverb.o,$(ULTRA_OBJ_DIRS)): IDO_CC = $(IDO_DIRECT)
+$(addsuffix /audio/resample.o,$(ULTRA_OBJ_DIRS)): C_OPT = -O3
+$(addsuffix /audio/resample.o,$(ULTRA_OBJ_DIRS)): IDO_CC = $(IDO_DIRECT)
+$(addsuffix /audio/auxbus.o,$(ULTRA_OBJ_DIRS)): C_OPT = -O3
+$(addsuffix /audio/auxbus.o,$(ULTRA_OBJ_DIRS)): IDO_CC = $(IDO_DIRECT)
+$(addsuffix /audio/load.o,$(ULTRA_OBJ_DIRS)): C_OPT = -O3
+$(addsuffix /audio/load.o,$(ULTRA_OBJ_DIRS)): IDO_CC = $(IDO_DIRECT)
+$(addsuffix /audio/mainbus.o,$(ULTRA_OBJ_DIRS)): C_OPT = -O3
+$(addsuffix /audio/mainbus.o,$(ULTRA_OBJ_DIRS)): IDO_CC = $(IDO_DIRECT)
+$(addsuffix /audio/synallocfx.o,$(ULTRA_OBJ_DIRS)): C_OPT = -O3
+$(addsuffix /audio/synallocfx.o,$(ULTRA_OBJ_DIRS)): IDO_CC = $(IDO_DIRECT)
+$(addsuffix /audio/synallocvoice.o,$(ULTRA_OBJ_DIRS)): C_OPT = -O3
+$(addsuffix /audio/synallocvoice.o,$(ULTRA_OBJ_DIRS)): IDO_CC = $(IDO_DIRECT)
+$(addsuffix /audio/synthesizer.o,$(ULTRA_OBJ_DIRS)): C_OPT = -O3
+$(addsuffix /audio/synthesizer.o,$(ULTRA_OBJ_DIRS)): IDO_CC = $(IDO_DIRECT)
+$(addsuffix /os/%.o,$(ULTRA_OBJ_DIRS)): C_OPT = -O1
+$(addsuffix /os/%.o,$(ULTRA_OBJ_DIRS)): C_MIPS = -mips2
+$(addsuffix /os/timerintr.o,$(ULTRA_OBJ_DIRS)): CFLAGS += -D_FINALROM
+$(addsuffix /gu/%.o,$(ULTRA_OBJ_DIRS)): C_OPT = -O2
+$(addsuffix /gu/%.o,$(ULTRA_OBJ_DIRS)): C_MIPS = -mips2
+$(addsuffix /gu/perspective.o,$(ULTRA_OBJ_DIRS)): C_OPT = -O2
+$(addsuffix /io/sptask.o,$(ULTRA_OBJ_DIRS)): C_OPT = -O2
+$(addsuffix /io/sptask.o,$(ULTRA_OBJ_DIRS)): CFLAGS += -DF3DEX_GBI
+$(addsuffix /libc/%.o,$(ULTRA_OBJ_DIRS)): C_MIPS = -mips2
+$(addsuffix /libc/%.o,$(ULTRA_OBJ_DIRS)): ULTRA_AS_OPT = -O3
+$(addsuffix /libc/ll.o,$(ULTRA_OBJ_DIRS)): C_OPT = -O1
+$(addsuffix /libc/ll.o,$(ULTRA_OBJ_DIRS)): C_MIPS = -mips3 -32
+$(addsuffix /libc/xprintf.o,$(ULTRA_OBJ_DIRS)): C_OPT = -O3
+$(addsuffix /libc/xprintf.o,$(ULTRA_OBJ_DIRS)): IDO_CC = $(IDO_DIRECT)
+$(addsuffix /libc/xldtob.o,$(ULTRA_OBJ_DIRS)): C_OPT = -O3
+$(addsuffix /libc/xldtob.o,$(ULTRA_OBJ_DIRS)): IDO_CC = $(IDO_DIRECT)
+$(addsuffix /os/exceptasm.o,$(ULTRA_OBJ_DIRS)): ULTRA_AS_ISA = mips3
+$(addsuffix /os/exceptasm.o,$(ULTRA_OBJ_DIRS)): ULTRA_AS_POST = $(PYTHON) $(TOOLS_DIR)/set_o32abi_bit.py $@
 # These course-select BSS objects end at intentional non-16-byte boundaries.
 # Preserve their logical section sizes instead of adding assembler tail padding.
 COURSE_SELECT_BSS_C_O_FILES := \
@@ -260,22 +261,22 @@ BIN_FILES   := $(foreach dir,$(BIN_DIRS),$(wildcard $(dir)/*.bin))
 BIN_O_FILES := $(patsubst %.bin,$(BUILD_DIR)/%.o,$(BIN_FILES))
 
 ULTRA_IDO_AS_FILES := \
-	$(SRC_DIR)/ultra/libc/bcopy.s \
-	$(SRC_DIR)/ultra/libc/bzero.s \
-	$(SRC_DIR)/ultra/os/exceptasm.s \
-	$(SRC_DIR)/ultra/os/getcount.s \
-	$(SRC_DIR)/ultra/os/getsr.s \
-	$(SRC_DIR)/ultra/os/interrupt.s \
-	$(SRC_DIR)/ultra/os/invaldcache.s \
-	$(SRC_DIR)/ultra/os/invalicache.s \
-	$(SRC_DIR)/ultra/os/maptlbrdb.s \
-	$(SRC_DIR)/ultra/os/probetlb.s \
-	$(SRC_DIR)/ultra/os/setcompare.s \
-	$(SRC_DIR)/ultra/os/setfpccsr.s \
-	$(SRC_DIR)/ultra/os/setintmask.s \
-	$(SRC_DIR)/ultra/os/setsr.s \
-	$(SRC_DIR)/ultra/os/writebackdcache.s \
-	$(SRC_DIR)/ultra/os/writebackdcacheall.s
+	src/ultra/libc/bcopy.s \
+	src/ultra/libc/bzero.s \
+	src/ultra/os/exceptasm.s \
+	src/ultra/os/getcount.s \
+	src/ultra/os/getsr.s \
+	src/ultra/os/interrupt.s \
+	src/ultra/os/invaldcache.s \
+	src/ultra/os/invalicache.s \
+	src/ultra/os/maptlbrdb.s \
+	src/ultra/os/probetlb.s \
+	src/ultra/os/setcompare.s \
+	src/ultra/os/setfpccsr.s \
+	src/ultra/os/setintmask.s \
+	src/ultra/os/setsr.s \
+	src/ultra/os/writebackdcache.s \
+	src/ultra/os/writebackdcacheall.s
 ULTRA_IDO_AS_O_FILES := $(patsubst %.s,$(BUILD_DIR)/%.o,$(ULTRA_IDO_AS_FILES))
 
 O_FILES := $(patsubst $(MATCHING_BUILD_DIR)/%,$(BUILD_DIR)/%,$(shell grep -E '$(MATCHING_BUILD_DIR)/[^ ()]+\.o' $(BASE_LD_SCRIPT) -o 2>/dev/null | sort | uniq))
@@ -434,7 +435,7 @@ $(BUILD_DIR)/src.jp/menu/race_setup/race_setup_menu.o: C_OBJ_POSTPROCESS = \
 endif
 
 # Patch ll.o for modern binutils, matching the upstream libultra build.
-$(BUILD_DIR)/$(SRC_DIR)/ultra/libc/ll.o: $(SRC_DIR)/ultra/libc/ll.c
+$(BUILD_DIR)/src/ultra/libc/ll.o: src/ultra/libc/ll.c
 	@mkdir -p $(dir $@)
 	$(PRINTF) "[$(GREEN)   c    $(NO_COL)]  $<\n"
 	$(V)$(CC_CHECK) $(CC_CHECK_FLAGS) $(CC_CHECK_WARNINGS) \

@@ -122,139 +122,139 @@ segments:
       - [0x9C760, c, audio/scheduler]
       - [0x9D190, c, libmus/player]
       - [0x9FD00, c, libmus/aud_thread]
-      - [0xA0430, c, libmus/aud_samples]
-      - [0xA0470, c, libmus/aud_dma]
-      - [0xA0780, c, ultra/os/createmesgqueue]
-      - [0xA07B0, c, ultra/os/seteventmesg]
+      - { start: 0xA0430, type: c, name: libmus/aud_samples, dir: ../src }
+      - { start: 0xA0470, type: c, name: libmus/aud_dma, dir: ../src }
+      - { start: 0xA0780, type: c, name: ultra/os/createmesgqueue, dir: ../src }
+      - { start: 0xA07B0, type: c, name: ultra/os/seteventmesg, dir: ../src }
       - [0xA0820, c, ultra/io/controller]
-      - [0xA0BE0, c, ultra/os/createthread]
-      - [0xA0D30, c, ultra/os/startthread]
-      - [0xA0E80, c, ultra/os/recvmesg]
-      - [0xA0FC0, c, ultra/io/contreaddata]
-      - [0xA1220, c, ultra/os/sendmesg]
+      - { start: 0xA0BE0, type: c, name: ultra/os/createthread, dir: ../src }
+      - { start: 0xA0D30, type: c, name: ultra/os/startthread, dir: ../src }
+      - { start: 0xA0E80, type: c, name: ultra/os/recvmesg, dir: ../src }
+      - { start: 0xA0FC0, type: c, name: ultra/io/contreaddata, dir: ../src }
+      - { start: 0xA1220, type: c, name: ultra/os/sendmesg, dir: ../src }
       - [0xA1370, c, ultra/io/motor]
-      - [0xA1B10, c, ultra/io/pfsinitpak]
-      - [0xA1D80, c, ultra/io/pfssearchfile]
-      - [0xA1F40, c, ultra/io/pfsnumfiles]
-      - [0xA2090, c, ultra/io/pfsfreeblocks]
-      - [0xA21E0, c, ultra/io/pfsreadwritefile]
-      - [0xA26E0, c, ultra/io/pfsallocatefile]
-      - [0xA2E90, c, ultra/io/pfsrepairid]
-      - [0xA30F0, c, ultra/io/pfsfilestate]
-      - [0xA39F0, c, ultra/libc/sprintf]
-      - [0xA3A70, c, ultra/libc/syncprintf]
-      - [0xA3AB0, c, ultra/libc/ll]
-      - [0xA3D70, hasm, ultra/os/writebackdcache]
-      - [0xA3DF0, c, ultra/gu/perspective]
-      - [0xA4080, c, ultra/os/stopthread]
+      - { start: 0xA1B10, type: c, name: ultra/io/pfsinitpak, dir: ../src }
+      - { start: 0xA1D80, type: c, name: ultra/io/pfssearchfile, dir: ../src }
+      - { start: 0xA1F40, type: c, name: ultra/io/pfsnumfiles, dir: ../src }
+      - { start: 0xA2090, type: c, name: ultra/io/pfsfreeblocks, dir: ../src }
+      - { start: 0xA21E0, type: c, name: ultra/io/pfsreadwritefile, dir: ../src }
+      - { start: 0xA26E0, type: c, name: ultra/io/pfsallocatefile, dir: ../src }
+      - { start: 0xA2E90, type: c, name: ultra/io/pfsrepairid, dir: ../src }
+      - { start: 0xA30F0, type: c, name: ultra/io/pfsfilestate, dir: ../src }
+      - { start: 0xA39F0, type: c, name: ultra/libc/sprintf, dir: ../src }
+      - { start: 0xA3A70, type: c, name: ultra/libc/syncprintf, dir: ../src }
+      - { start: 0xA3AB0, type: c, name: ultra/libc/ll, dir: ../src }
+      - { start: 0xA3D70, type: hasm, name: ultra/os/writebackdcache, dir: ../src }
+      - { start: 0xA3DF0, type: c, name: ultra/gu/perspective, dir: ../src }
+      - { start: 0xA4080, type: c, name: ultra/os/stopthread, dir: ../src }
       - [0xA4140, c, ultra/os/initialize]
-      - [0xA43D0, c, ultra/io/pimgr]
-      - [0xA4560, c, ultra/os/setthreadpri]
-      - [0xA4640, c, ultra/io/viblack]
-      - [0xA46B0, hasm, ultra/os/invaldcache]
-      - [0xA4760, c, ultra/io/pidma]
-      - [0xA4870, c, ultra/io/visetspecial]
-      - [0xA4A30, c, ultra/io/vimgr]
-      - [0xA4D90, c, ultra/io/visetmode]
-      - [0xA4E00, c, ultra/io/visetevent]
-      - [0xA4E70, hasm, ultra/os/writebackdcacheall]
+      - { start: 0xA43D0, type: c, name: ultra/io/pimgr, dir: ../src }
+      - { start: 0xA4560, type: c, name: ultra/os/setthreadpri, dir: ../src }
+      - { start: 0xA4640, type: c, name: ultra/io/viblack, dir: ../src }
+      - { start: 0xA46B0, type: hasm, name: ultra/os/invaldcache, dir: ../src }
+      - { start: 0xA4760, type: c, name: ultra/io/pidma, dir: ../src }
+      - { start: 0xA4870, type: c, name: ultra/io/visetspecial, dir: ../src }
+      - { start: 0xA4A30, type: c, name: ultra/io/vimgr, dir: ../src }
+      - { start: 0xA4D90, type: c, name: ultra/io/visetmode, dir: ../src }
+      - { start: 0xA4E00, type: c, name: ultra/io/visetevent, dir: ../src }
+      - { start: 0xA4E70, type: hasm, name: ultra/os/writebackdcacheall, dir: ../src }
       - [0xA4EA0, c, ultra/io/sptask]
-      - [0xA5160, c, ultra/io/sptaskyield]
-      - [0xA5200, c, ultra/io/viswapbuf]
-      - [0xA5250, hasm, ultra/os/setintmask]
-      - [0xA52F0, c, ultra/io/vigetcurrframebuf]
-      - [0xA5330, c, ultra/io/vigetnextframebuf]
+      - { start: 0xA5160, type: c, name: ultra/io/sptaskyield, dir: ../src }
+      - { start: 0xA5200, type: c, name: ultra/io/viswapbuf, dir: ../src }
+      - { start: 0xA5250, type: hasm, name: ultra/os/setintmask, dir: ../src }
+      - { start: 0xA52F0, type: c, name: ultra/io/vigetcurrframebuf, dir: ../src }
+      - { start: 0xA5330, type: c, name: ultra/io/vigetnextframebuf, dir: ../src }
       - [0xA5370, pad]
-      - [0xA53D0, c, ultra/audio/heapinit]
-      - [0xA5410, c, ultra/audio/heapalloc]
-      - [0xA5470, c, ultra/audio/synaddplayer]
-      - [0xA54C0, c, ultra/audio/synallocvoice]
-      - [0xA56F0, c, ultra/audio/synstopvoice]
-      - [0xA5770, c, ultra/audio/synstartvoice]
-      - [0xA5800, c, ultra/audio/synsetfxmix]
-      - [0xA58A0, c, ultra/audio/synsetvol]
-      - [0xA5940, c, ultra/audio/synsetpan]
-      - [0xA59D0, c, ultra/audio/synsetpitch]
-      - [0xA5A60, c, ultra/gu/sinf]
-      - [0xA5C20, c, ultra/io/aisetfreq]
-      - [0xA5D80, c, ultra/audio/sl]
-      - [0xA5E40, c, ultra/os/virtualtophysical]
-      - [0xA5EC0, c, ultra/io/aisetnextbuf]
-      - [0xA5F70, c, ultra/io/aigetlen]
+      - { start: 0xA53D0, type: c, name: ultra/audio/heapinit, dir: ../src }
+      - { start: 0xA5410, type: c, name: ultra/audio/heapalloc, dir: ../src }
+      - { start: 0xA5470, type: c, name: ultra/audio/synaddplayer, dir: ../src }
+      - { start: 0xA54C0, type: c, name: ultra/audio/synallocvoice, dir: ../src }
+      - { start: 0xA56F0, type: c, name: ultra/audio/synstopvoice, dir: ../src }
+      - { start: 0xA5770, type: c, name: ultra/audio/synstartvoice, dir: ../src }
+      - { start: 0xA5800, type: c, name: ultra/audio/synsetfxmix, dir: ../src }
+      - { start: 0xA58A0, type: c, name: ultra/audio/synsetvol, dir: ../src }
+      - { start: 0xA5940, type: c, name: ultra/audio/synsetpan, dir: ../src }
+      - { start: 0xA59D0, type: c, name: ultra/audio/synsetpitch, dir: ../src }
+      - { start: 0xA5A60, type: c, name: ultra/gu/sinf, dir: ../src }
+      - { start: 0xA5C20, type: c, name: ultra/io/aisetfreq, dir: ../src }
+      - { start: 0xA5D80, type: c, name: ultra/audio/sl, dir: ../src }
+      - { start: 0xA5E40, type: c, name: ultra/os/virtualtophysical, dir: ../src }
+      - { start: 0xA5EC0, type: c, name: ultra/io/aisetnextbuf, dir: ../src }
+      - { start: 0xA5F70, type: c, name: ultra/io/aigetlen, dir: ../src }
       - [0xA5F80, c, ultra/audio/synthesizer]
-      - [0xA6660, c, ultra/os/thread]
-      - [0xA66A0, hasm, ultra/os/interrupt]
-      - [0xA66E0, c, ultra/os/gettime]
-      - [0xA6770, c, ultra/os/settimer]
-      - [0xA6850, c, ultra/io/sirawdma]
+      - { start: 0xA6660, type: c, name: ultra/os/thread, dir: ../src }
+      - { start: 0xA66A0, type: hasm, name: ultra/os/interrupt, dir: ../src }
+      - { start: 0xA66E0, type: c, name: ultra/os/gettime, dir: ../src }
+      - { start: 0xA6770, type: c, name: ultra/os/settimer, dir: ../src }
+      - { start: 0xA6850, type: c, name: ultra/io/sirawdma, dir: ../src }
       - [0xA6900, c, ultra/io/siacs]
-      - [0xA69C0, hasm, ultra/os/exceptasm]
-      - [0xA72D0, c, ultra/io/pfsisplug]
-      - [0xA7640, c, ultra/io/crc]
-      - [0xA77C0, c, ultra/io/contramwrite]
-      - [0xA7B40, c, ultra/io/contramread]
-      - [0xA7ED0, c, ultra/io/pfsgetstatus]
-      - [0xA7FE0, c, ultra/io/contpfs]
-      - [0xA8D40, c, ultra/io/pfschecker]
-      - [0xA97A0, c, ultra/libc/xprintf]
-      - [0xAA460, c, ultra/libc/string]
-      - [0xAA500, c, ultra/gu/mtxutil]
-      - [0xAA770, c, ultra/gu/cosf]
-      - [0xAA8E0, hasm, ultra/os/setsr]
-      - [0xAA8F0, hasm, ultra/os/getsr]
-      - [0xAA900, hasm, ultra/os/setfpccsr]
-      - [0xAA910, c, ultra/io/sirawread]
-      - [0xAA960, c, ultra/io/sirawwrite]
-      - [0xAA9B0, hasm, ultra/os/invalicache]
-      - [0xAAA30, hasm, ultra/os/maptlbrdb]
-      - [0xAAA90, c, ultra/io/pirawread]
-      - [0xAAAF0, hasm, ultra/libc/bzero]
+      - { start: 0xA69C0, type: hasm, name: ultra/os/exceptasm, dir: ../src }
+      - { start: 0xA72D0, type: c, name: ultra/io/pfsisplug, dir: ../src }
+      - { start: 0xA7640, type: c, name: ultra/io/crc, dir: ../src }
+      - { start: 0xA77C0, type: c, name: ultra/io/contramwrite, dir: ../src }
+      - { start: 0xA7B40, type: c, name: ultra/io/contramread, dir: ../src }
+      - { start: 0xA7ED0, type: c, name: ultra/io/pfsgetstatus, dir: ../src }
+      - { start: 0xA7FE0, type: c, name: ultra/io/contpfs, dir: ../src }
+      - { start: 0xA8D40, type: c, name: ultra/io/pfschecker, dir: ../src }
+      - { start: 0xA97A0, type: c, name: ultra/libc/xprintf, dir: ../src }
+      - { start: 0xAA460, type: c, name: ultra/libc/string, dir: ../src }
+      - { start: 0xAA500, type: c, name: ultra/gu/mtxutil, dir: ../src }
+      - { start: 0xAA770, type: c, name: ultra/gu/cosf, dir: ../src }
+      - { start: 0xAA8E0, type: hasm, name: ultra/os/setsr, dir: ../src }
+      - { start: 0xAA8F0, type: hasm, name: ultra/os/getsr, dir: ../src }
+      - { start: 0xAA900, type: hasm, name: ultra/os/setfpccsr, dir: ../src }
+      - { start: 0xAA910, type: c, name: ultra/io/sirawread, dir: ../src }
+      - { start: 0xAA960, type: c, name: ultra/io/sirawwrite, dir: ../src }
+      - { start: 0xAA9B0, type: hasm, name: ultra/os/invalicache, dir: ../src }
+      - { start: 0xAAA30, type: hasm, name: ultra/os/maptlbrdb, dir: ../src }
+      - { start: 0xAAA90, type: c, name: ultra/io/pirawread, dir: ../src }
+      - { start: 0xAAAF0, type: hasm, name: ultra/libc/bzero, dir: ../src }
       - [0xAAB90, c, ultra/io/cartrominit]
-      - [0xAAC80, c, ultra/io/leodiskinit]
+      - { start: 0xAAC80, type: c, name: ultra/io/leodiskinit, dir: ../src }
       - [0xAAD80, c, ultra/io/piacs]
-      - [0xAAE40, c, ultra/os/getthreadpri]
-      - [0xAAE60, c, ultra/io/pirawdma]
-      - [0xAAF40, c, ultra/io/epirawdma]
-      - [0xAB170, c, ultra/io/devmgr]
-      - [0xAB600, c, ultra/io/vi]
-      - [0xAB740, c, ultra/os/jammesg]
-      - [0xAB890, c, ultra/io/pigetcmdq]
+      - { start: 0xAAE40, type: c, name: ultra/os/getthreadpri, dir: ../src }
+      - { start: 0xAAE60, type: c, name: ultra/io/pirawdma, dir: ../src }
+      - { start: 0xAAF40, type: c, name: ultra/io/epirawdma, dir: ../src }
+      - { start: 0xAB170, type: c, name: ultra/io/devmgr, dir: ../src }
+      - { start: 0xAB600, type: c, name: ultra/io/vi, dir: ../src }
+      - { start: 0xAB740, type: c, name: ultra/os/jammesg, dir: ../src }
+      - { start: 0xAB890, type: c, name: ultra/io/pigetcmdq, dir: ../src }
       - [0xAB8C0, c, ultra/os/timerintr]
-      - [0xABCC0, c, ultra/io/vigetcurrcontext]
-      - [0xABCD0, c, ultra/io/viswapcontext]
-      - [0xAC030, hasm, ultra/os/getcount]
-      - [0xAC040, hasm, ultra/libc/bcopy]
-      - [0xAC350, c, ultra/io/spsetstat]
-      - [0xAC360, c, ultra/io/spsetpc]
-      - [0xAC3A0, c, ultra/io/sprawdma]
-      - [0xAC430, c, ultra/io/sp]
-      - [0xAC460, c, ultra/io/spgetstat]
-      - [0xAC470, c, ultra/audio/syndelete]
-      - [0xAC480, hasm, ultra/os/probetlb]
-      - [0xAC540, c, ultra/io/ai]
-      - [0xAC570, c, ultra/audio/drvrnew]
-      - [0xACD10, c, ultra/audio/synallocfx]
-      - [0xACDB0, c, ultra/audio/mainbus]
-      - [0xACF00, c, ultra/audio/load]
-      - [0xADA50, c, ultra/audio/resample]
-      - [0xADD50, c, ultra/audio/env]
-      - [0xAE9B0, c, ultra/audio/auxbus]
-      - [0xAEAC0, c, ultra/audio/save]
-      - [0xAEB80, c, ultra/io/si]
+      - { start: 0xABCC0, type: c, name: ultra/io/vigetcurrcontext, dir: ../src }
+      - { start: 0xABCD0, type: c, name: ultra/io/viswapcontext, dir: ../src }
+      - { start: 0xAC030, type: hasm, name: ultra/os/getcount, dir: ../src }
+      - { start: 0xAC040, type: hasm, name: ultra/libc/bcopy, dir: ../src }
+      - { start: 0xAC350, type: c, name: ultra/io/spsetstat, dir: ../src }
+      - { start: 0xAC360, type: c, name: ultra/io/spsetpc, dir: ../src }
+      - { start: 0xAC3A0, type: c, name: ultra/io/sprawdma, dir: ../src }
+      - { start: 0xAC430, type: c, name: ultra/io/sp, dir: ../src }
+      - { start: 0xAC460, type: c, name: ultra/io/spgetstat, dir: ../src }
+      - { start: 0xAC470, type: c, name: ultra/audio/syndelete, dir: ../src }
+      - { start: 0xAC480, type: hasm, name: ultra/os/probetlb, dir: ../src }
+      - { start: 0xAC540, type: c, name: ultra/io/ai, dir: ../src }
+      - { start: 0xAC570, type: c, name: ultra/audio/drvrnew, dir: ../src }
+      - { start: 0xACD10, type: c, name: ultra/audio/synallocfx, dir: ../src }
+      - { start: 0xACDB0, type: c, name: ultra/audio/mainbus, dir: ../src }
+      - { start: 0xACF00, type: c, name: ultra/audio/load, dir: ../src }
+      - { start: 0xADA50, type: c, name: ultra/audio/resample, dir: ../src }
+      - { start: 0xADD50, type: c, name: ultra/audio/env, dir: ../src }
+      - { start: 0xAE9B0, type: c, name: ultra/audio/auxbus, dir: ../src }
+      - { start: 0xAEAC0, type: c, name: ultra/audio/save, dir: ../src }
+      - { start: 0xAEB80, type: c, name: ultra/io/si, dir: ../src }
       - [0xAEBB0, c, ultra/io/leointerrupt]
-      - [0xAF430, c, ultra/os/destroythread]
-      - [0xAF530, c, ultra/libc/xlitob]
-      - [0xAF7D0, c, ultra/libc/xldtob]
-      - [0xB0290, c, ultra/os/resetglobalintmask]
-      - [0xB02F0, c, ultra/io/epirawwrite]
-      - [0xB0340, c, ultra/io/epirawread]
-      - [0xB0390, c, ultra/os/setglobalintmask]
-      - [0xB03E0, c, ultra/os/yieldthread]
-      - [0xB0430, hasm, ultra/os/setcompare]
-      - [0xB0440, c, ultra/audio/filter]
-      - [0xB0460, c, ultra/audio/reverb]
-      - [0xB10B0, c, ultra/audio/copy]
-      - [0xB1130, c, ultra/libc/ldiv]
+      - { start: 0xAF430, type: c, name: ultra/os/destroythread, dir: ../src }
+      - { start: 0xAF530, type: c, name: ultra/libc/xlitob, dir: ../src }
+      - { start: 0xAF7D0, type: c, name: ultra/libc/xldtob, dir: ../src }
+      - { start: 0xB0290, type: c, name: ultra/os/resetglobalintmask, dir: ../src }
+      - { start: 0xB02F0, type: c, name: ultra/io/epirawwrite, dir: ../src }
+      - { start: 0xB0340, type: c, name: ultra/io/epirawread, dir: ../src }
+      - { start: 0xB0390, type: c, name: ultra/os/setglobalintmask, dir: ../src }
+      - { start: 0xB03E0, type: c, name: ultra/os/yieldthread, dir: ../src }
+      - { start: 0xB0430, type: hasm, name: ultra/os/setcompare, dir: ../src }
+      - { start: 0xB0440, type: c, name: ultra/audio/filter, dir: ../src }
+      - { start: 0xB0460, type: c, name: ultra/audio/reverb, dir: ../src }
+      - { start: 0xB10B0, type: c, name: ultra/audio/copy, dir: ../src }
+      - { start: 0xB1130, type: c, name: ultra/libc/ldiv, dir: ../src }
       - { start: 0xB12C0, type: textbin, use_src_path: True, name: rsp/rspboot }
       - { start: 0xB1390, type: textbin, use_src_path: True, name: rsp/aspMain }
       - { start: 0xB21B0, type: textbin, use_src_path: True, name: rsp/f3dlx }
@@ -318,7 +318,7 @@ segments:
       - [0xDF200, .data, ultra/os/initialize]
       - [0xDF220, .data, ultra/io/pimgr]
       - [0xDF250, .data, ultra/io/vimgr]
-      - [0xDF270, .data, ultra/io/vitbl]
+      - { start: 0xDF270, type: .data, name: ultra/io/vitbl, dir: ../src }
       - [0xDFF90, .data, ultra/audio/sl]
       - [0xDFFA0, .data, ultra/io/aisetnextbuf]
       - [0xDFFB0, .data, ultra/os/thread]
@@ -331,9 +331,9 @@ segments:
       - [0xE00E0, .data, ultra/audio/drvrnew]
       - [0xE0270, .data, ultra/audio/env]
       - [0xE03B0, .data, ultra/libc/xlitob]
-      - [0xE03E0, .data, ultra/io/vimodepallan1]
-      - [0xE0430, .data, ultra/io/vimodempallan1]
-      - [0xE0480, .data, ultra/io/vimodentsclan1]
+      - { start: 0xE03E0, type: .data, name: ultra/io/vimodepallan1, dir: ../src }
+      - { start: 0xE0430, type: .data, name: ultra/io/vimodempallan1, dir: ../src }
+      - { start: 0xE0480, type: .data, name: ultra/io/vimodentsclan1, dir: ../src }
       - [0xE04D0, .rodata, menu/main_menu/controller_subsystem]
       - [0xE07E0, .rodata, menu/main_menu/controller_main_menu_flow]
       - [0xE0830, .rodata, menu/race_setup/race_setup_menu]
@@ -389,7 +389,7 @@ segments:
       - [0xE1B50, .rodata, ultra/libc/xprintf]
       - [0xE1C50, .rodata, ultra/gu/cosf]
       - [0xE1CA0, .rodata, ultra/io/devmgr]
-      - [0xE1CC0, .rodata, ultra/gu/libm_vals]
+      - { start: 0xE1CC0, type: .rodata, name: ultra/gu/libm_vals, dir: ../src }
       - [0xE1CD0, .rodata, ultra/audio/drvrnew]
       - [0xE1CF0, .rodata, ultra/audio/resample]
       - [0xE1D30, .rodata, ultra/audio/env]
