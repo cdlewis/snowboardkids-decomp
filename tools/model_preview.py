@@ -255,7 +255,7 @@ def quaternion(rotation):
 
 
 def character_rig(root, index):
-    text = (root/'src.us/race/motion/race_motion.c').read_text()
+    text = (root/'src/race/motion/race_motion.c').read_text()
     def body(name):
         match = re.search(r'\b'+name+r'\[\]\s*=\s*\{(.*?)\};',text,re.S)
         if not match:

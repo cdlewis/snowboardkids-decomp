@@ -69,16 +69,16 @@ segments:
     subalign: 4
     bss_size: 0x7DAC0
     subsegments:
-      - [0x1050, c, menu/main_menu/controller_subsystem]
+      - { start: 0x1050, type: c, name: menu/main_menu/controller_subsystem, dir: ../src }
       - [0x1560, c, menu/main_menu/controller_main_menu_flow]
       - [0x3D40, c, menu/race_setup/race_setup_menu]
       - [0x5560, c, menu/character_select/character_select_menu]
-      - [0x6140, c, menu/splitscreen_select/race_splitscreen_select_menu]
+      - { start: 0x6140, type: c, name: menu/splitscreen_select/race_splitscreen_select_menu, dir: ../src }
       - [0x6870, c, menu/character_select/character_select_course_menu]
       - [0x7B30, c, menu/course_select/multiplayer_course_select_menu]
       - [0x9220, c, menu/race_type_select/race_type_select_menu]
       - [0x9960, c, menu/controller_pak/controller_pak_race_record_save_flow]
-      - [0xA3E0, c, menu/course_select/course_select_menu]
+      - { start: 0xA3E0, type: c, name: menu/course_select/course_select_menu, dir: ../src }
       - [0xCE80, c, menu/controller_pak/controller_pak_continue_prompt_flow]
       - [0xD200, c, menu/controller_pak/controller_pak_file_delete_flow]
       - [0xDB70, c, menu/controller_pak/controller_pak_replay_save_message_flow]
@@ -95,29 +95,29 @@ segments:
       - [0x2D0E0, c, menu/course_select/course_select_shop_ui]
       - [0x30BD0, c, menu/controller_pak/controller_pak_ui]
       - [0x33220, c, menu/main_menu/main_menu_title_ui]
-      - [0x33680, c, ending/ending_credits_slash]
-      - [0x35E20, c, ending/ending_credits_nancy]
+      - { start: 0x33680, type: c, name: ending/ending_credits_slash, dir: ../src }
+      - { start: 0x35E20, type: c, name: ending/ending_credits_nancy, dir: ../src }
       - [0x36F80, c, ending/ending_credits_tommy]
-      - [0x37FE0, c, ending/ending_credits_jam]
-      - [0x3A0E0, c, ending/ending_credits_linda]
+      - { start: 0x37FE0, type: c, name: ending/ending_credits_jam, dir: ../src }
+      - { start: 0x3A0E0, type: c, name: ending/ending_credits_linda, dir: ../src }
       - [0x3C3C0, c, ending/ending_credits_ui]
       - [0x3CAF0, c, ending/ending_credits_effects]
-      - [0x3E9D0, c, race/effects/race_start_transition]
+      - { start: 0x3E9D0, type: c, name: race/effects/race_start_transition, dir: ../src }
       - [0x3F200, c, demo/main_menu_demo_race_intro]
       - [0x3F900, c, demo/title_demo_race_intro]
       - [0x40120, c, menu/main_menu/main_menu_race_flow]
-      - [0x40BD0, c, menu/main_menu/training_course_race_flow]
+      - { start: 0x40BD0, type: c, name: menu/main_menu/training_course_race_flow, dir: ../src }
       - [0x41880, c, menu/main_menu/main_menu_scene_model]
       - [0x437C0, c, engine/relocatable_heap]
       - [0x43CD0, c, engine/asset_manager]
-      - [0x44550, c, race/scene/race_scene_setup]
+      - { start: 0x44550, type: c, name: race/scene/race_scene_setup, dir: ../src }
       - [0x464E0, c, menu/renderer/menu_render_utils]
-      - [0x49C00, c, math/spatial_math]
-      - [0x4A040, c, race/items/race_projectiles]
+      - { start: 0x49C00, type: c, name: math/spatial_math, dir: ../src }
+      - { start: 0x4A040, type: c, name: race/items/race_projectiles, dir: ../src }
       - [0x4E760, c, race/effects/race_visual_effects]
       - [0x51BF0, c, menu/main_menu/main_menu_panel_ui]
       - [0x54260, c, menu/renderer/menu_screen_effects]
-      - [0x562B0, c, race/effects/race_intro_effects]
+      - { start: 0x562B0, type: c, name: race/effects/race_intro_effects, dir: ../src }
       - [0x57EA0, c, race/ui/race_ui_effects]
       - [0x67360, c, race/course/race_course_props_and_pickups]
       - [0x6A490, c, race/course/race_course_effects]
@@ -130,16 +130,16 @@ segments:
       - [0x79030, c, race/ui/race_hud]
       - [0x7BE50, c, race/player/race_player_progress]
       - [0x7CA80, c, race/player/race_player_model_renderer]
-      - [0x7DD90, c, race/motion/race_motion]
-      - [0x83CC0, c, race/player/race_player_rumble]
-      - [0x83DC0, c, race/course/race_surface_cues]
-      - [0x843D0, c, race/effects/snowboard_trail_effects]
-      - [0x84980, c, race/player/race_player_input]
+      - { start: 0x7DD90, type: c, name: race/motion/race_motion, dir: ../src }
+      - { start: 0x83CC0, type: c, name: race/player/race_player_rumble, dir: ../src }
+      - { start: 0x83DC0, type: c, name: race/course/race_surface_cues, dir: ../src }
+      - { start: 0x843D0, type: c, name: race/effects/snowboard_trail_effects, dir: ../src }
+      - { start: 0x84980, type: c, name: race/player/race_player_input, dir: ../src }
       - [0x855E0, c, race/player/race_player_equipment_use]
       - [0x85B50, c, race/player/race_player_collision]
-      - [0x88200, c, race/player/race_player_movement]
+      - { start: 0x88200, type: c, name: race/player/race_player_movement, dir: ../src }
       - [0x8CAB0, c, race/player/race_player_update]
-      - [0x98680, c, math/fixed_point_math]
+      - { start: 0x98680, type: c, name: math/fixed_point_math, dir: ../src }
       - [0x99980, c, engine/game_task_scheduler]
       - [0x9A2A0, c, engine/system_runtime]
       - [0x9CE70, c, audio/scheduler]

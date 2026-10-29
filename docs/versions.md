@@ -1,7 +1,7 @@
 # Multi-version development
 
-Select the region with `VERSION=us|jp`; US is the default. Sources live in
-`src.us` and `src.jp`, with shared headers in `include`. Builds define
+Select the region with `VERSION=us|jp`; US is the default. Shared sources live in
+`src`, regional sources in `src.us` and `src.jp`, and shared headers in `include`. Builds define
 `VERSION_US` or `VERSION_JP` respectively.
 
 ## Build and verify
@@ -28,6 +28,34 @@ its original SHA1 checksum. The regions have separate build outputs.
 | Build directory | `build/` | `build/jp/` |
 | Generated linker script | `snowboardkids.ld` | `snowboardkids.jp.ld` |
 | Generated unresolved symbols | `undefined_*_auto.txt` | `undefined_*_auto.jp.txt` |
+
+## Sharing sources
+
+Shared sources include fixed-point and spatial math, player input, movement and
+rumble, race motion and projectiles, several race effects and menu flows, and
+the Jam, Linda, Nancy, and Slash credits. Their source contents are identical
+across regions, so they need no regional conditionals. The race-start transition
+also shares its sine-table include.
+
+Identical source text can still depend on regional content: the title-demo data
+file remains regional because it includes different player snapshot tables.
+Spatial math shares its source while retaining a JP-only object padding trim.
+
+To migrate another file, move one copy into `src/`, remove both regional copies,
+and give its `c` subsegment `dir: ../src` in both YAML configurations. This path
+is relative to each config's regional `src_path`. For example:
+
+```yaml
+- { start: 0x98680, type: c, name: math/fixed_point_math, dir: ../src }
+```
+
+Keep each region's existing ROM start. Associated `.data`, `.rodata`, and `.bss`
+subsegments resolve through the C sibling to the shared object automatically.
+Objects remain separate: `build/src/` for US and `build/jp/src/` for JP.
+
+Preserve any per-file compiler flags or section postprocessing when changing
+object paths. Use `#if defined(VERSION_JP)` or `VERSION_US` for actual regional
+differences, and verify both original ROM checksums after each migration batch.
 
 ## Matching functions and data
 

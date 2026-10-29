@@ -14,7 +14,7 @@ from tools.textconv import parse_charmap, process_source, decode_text, encode_te
 
 def source_files(root):
     """Repository sources, including unstaged additions but excluding ignored files."""
-    result = subprocess.run(["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard", "--", "src.us"], cwd=root,
+    result = subprocess.run(["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard", "--", "src.us", "src"], cwd=root,
                             check=True, capture_output=True)
     return sorted(root / p for p in result.stdout.decode().split("\0") if p.endswith(".c") and (root / p).is_file())
 

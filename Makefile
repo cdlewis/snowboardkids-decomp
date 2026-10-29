@@ -57,7 +57,8 @@ BUILD_DIR = $(if $(filter shiftable,$(BUILD_MODE)),build/shiftable,$(MATCHING_BU
 ASM_DIRS  = asm$(VERSION_SUFFIX) asm$(VERSION_SUFFIX)/data
 BIN_DIRS  = assets$(VERSION_SUFFIX)
 SRC_DIR = src.$(VERSION)
-SRC_DIRS = $(SRC_DIR)
+# Shared C sources are selected explicitly by both regional Splat configs.
+SRC_DIRS = $(SRC_DIR) src
 TOOLS_DIR = tools
 
 # Tools
@@ -239,9 +240,9 @@ C_O_FILES   := $(patsubst %.c,$(BUILD_DIR)/%.o,$(C_FILES))
 
 # Formatting and tidy cover all tracked C code, including libultra and libmus.
 # Local match-sensitive functions and textconv tables use clang-format guards.
-PROJECT_C_FILES := $(shell git ls-files 'src.us/**/*.c' 'src.us/*.c' 'src.jp/**/*.c' 'src.jp/*.c')
+PROJECT_C_FILES := $(shell git ls-files 'src/**/*.c' 'src/*.c' 'src.us/**/*.c' 'src.us/*.c' 'src.jp/**/*.c' 'src.jp/*.c')
 FORMAT_C_FILES := $(PROJECT_C_FILES)
-PROJECT_H_FILES := $(shell git ls-files 'include/**/*.h' 'include/*.h' 'src.us/**/*.h' 'src.jp/**/*.h')
+PROJECT_H_FILES := $(shell git ls-files 'include/**/*.h' 'include/*.h' 'src/**/*.h' 'src/*.h' 'src.us/**/*.h' 'src.jp/**/*.h')
 FORMAT_H_FILES := $(filter-out include/hasm.h include/include_asm.h include/sys/%,$(PROJECT_H_FILES))
 FORMAT_FILES := $(FORMAT_C_FILES) $(FORMAT_H_FILES)
 TIDY_C_FRAGMENT_FILES := \
@@ -421,7 +422,7 @@ $(BUILD_DIR)/runtime-indices/race_player_model_renderer.o: $(TEXTCONV_DIR)/$(SRC
 # Match original JP text extents at partial-file boundaries. IDO pads C
 # objects to 16 bytes; preserve only the padding present in the original ROM.
 ifeq ($(VERSION),jp)
-$(BUILD_DIR)/src.jp/math/spatial_math.o: C_OBJ_POSTPROCESS = \
+$(BUILD_DIR)/src/math/spatial_math.o: C_OBJ_POSTPROCESS = \
 	$(PYTHON) $(TOOLS_DIR)/trim_elf_section_tail.py $@ .text 8
 $(BUILD_DIR)/src.jp/menu/renderer/menu_render_utils.o: C_OBJ_POSTPROCESS = \
 	$(PYTHON) $(TOOLS_DIR)/trim_elf_section_tail.py $@ .text 8
