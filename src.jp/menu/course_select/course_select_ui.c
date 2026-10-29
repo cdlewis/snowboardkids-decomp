@@ -471,117 +471,97 @@ void initCourseSelectPreviewModelOut(void *arg0) {
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateCourseSelectPreviewModelOut);
 }
 
-// drawCourseSelectCourseIconList best standalone match: 99.961% (drawCourseSelectCourseIconList-10/base_23.c; frame 0xA8 vs target 0x90)
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectCourseIconList.s")
-
-#ifdef NON_MATCHING
 void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
-    CourseSelectIconListActor *playerItemCountActor;
-    CourseSelectIconListActor *playerIconActor;
+    CourseSelectIconListActor *actor;
     s32 playerIndex;
     s32 iconIndex;
-    s32 highlightAlpha;
+    u8 highlightPalette;
     u16 iconTileIndex;
-    CourseSelectIconListActor *itemCountActor;
-    s32 leftClipOffset;
-    s32 selectedCourseId;
-    s32 selectionState;
 
-    playerItemCountActor = iconList;
-    itemCountActor = playerItemCountActor;
+    actor = iconList;
 
     for (playerIndex = 0; playerIndex < (s32)gPlayerCount; playerIndex++) {
-        leftClipOffset = (playerIndex >= 2) * 0x88;
-
-        playerIconActor = iconList;
-
-        for (iconIndex = 0; iconIndex < itemCountActor->itemCounts[playerIndex]; iconIndex++) {
-            if (iconIndex < (playerIconActor->itemCounts[playerIndex] - 1)) {
+        for (iconIndex = 0; iconIndex < actor->itemCounts[playerIndex]; iconIndex++) {
+            if (iconIndex < (actor->itemCounts[playerIndex] - 1)) {
                 if (gPlayerCount == 1) {
                     if (gRacePlayers[playerIndex].selectedCharacterId != 5) {
-                        iconTileIndex = (iconIndex + 1);
+                        iconTileIndex = iconIndex + 1;
                     } else {
-                        iconTileIndex = (iconIndex + 6);
+                        iconTileIndex = iconIndex + 6;
                     }
                 } else if (gRacePlayers[playerIndex].selectedCharacterId != 5) {
-                    iconTileIndex = (iconIndex + 0x14);
+                    iconTileIndex = iconIndex + 0x14;
                 } else {
-                    iconTileIndex = (iconIndex + 0x18);
+                    iconTileIndex = iconIndex + 0x18;
                 }
-
-                highlightAlpha = 0;
-                selectionState = gCourseSelectSelectionTimers[playerIndex];
-                leftClipOffset = (playerIndex >= 2) * 0x8C;
-                if ((selectionState > 0) && (selectionState < 8)) {
-                    selectedCourseId = gRacePlayers[playerIndex].menuSelection;
-                    if (selectedCourseId >= 9) {
-                        if ((iconIndex == 3) && (selectionState & 1)) {
-                            highlightAlpha = 0xFF;
+                highlightPalette = 0;
+                if ((gCourseSelectSelectionTimers[playerIndex] > 0) && (gCourseSelectSelectionTimers[playerIndex] < 8)) {
+                    if (gRacePlayers[playerIndex].menuSelection >= 9) {
+                        if ((iconIndex == 3) && (gCourseSelectSelectionTimers[playerIndex] & 1)) {
+                            highlightPalette = 0xFF;
                         }
-                    } else if ((iconIndex == (selectedCourseId % 3)) && (selectionState & 1)) {
-                        highlightAlpha = 0xFF;
+                    } else if ((iconIndex == (gRacePlayers[playerIndex].menuSelection % 3)) &&
+                               (gCourseSelectSelectionTimers[playerIndex] & 1)) {
+                        highlightPalette = 0xFF;
                     }
                 }
-
                 drawMenuSpriteClipped(
-                    iconList->y[playerIndex][iconIndex],
-                    iconList->x[playerIndex][iconIndex],
+                    actor->y[playerIndex][iconIndex],
+                    actor->x[playerIndex][iconIndex],
                     getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                     (u16)iconTileIndex,
                     0x20,
                     0x20,
                     0,
-                    highlightAlpha,
-                    iconList->clipLeft - leftClipOffset,
-                    iconList->clipTop,
-                    iconList->clipRight,
-                    iconList->clipBottom
+                    highlightPalette,
+                    actor->clipLeft - (playerIndex >= 2) * 0x8C,
+                    actor->clipTop,
+                    actor->clipRight,
+                    actor->clipBottom
                 );
             } else if (gPlayerCount == 1) {
-                highlightAlpha = 0;
-                leftClipOffset = (playerIndex >= 2) * 0x88;
+                highlightPalette = 0;
                 if ((gCourseSelectSelectionTimers[playerIndex] > 0) &&
-                    (gCourseSelectSelectionTimers[playerIndex] < 8) && (gCourseSelectExtraCourseColumnState == 1) &&
+                    (gCourseSelectSelectionTimers[playerIndex] < 8) &&
+                    (gCourseSelectExtraCourseColumnState == 1) &&
                     (gCourseSelectSelectionTimers[playerIndex] & 1)) {
-                    highlightAlpha = 0xFF;
+                    highlightPalette = 0xFF;
                 }
-
                 if (gRaceSplitscreenMode == 3) {
                     drawMenuSpriteClipped(
-                        iconList->y[playerIndex][iconIndex],
-                        iconList->x[playerIndex][iconIndex],
+                        actor->y[playerIndex][iconIndex],
+                        actor->x[playerIndex][iconIndex],
                         getRelocatableHeapBlockBase(gAssetHandles[0x27]),
                         5,
                         0x20,
                         0x20,
                         0,
-                        highlightAlpha,
-                        iconList->clipLeft - leftClipOffset,
-                        iconList->clipTop,
-                        iconList->clipRight,
-                        iconList->clipBottom
+                        highlightPalette,
+                        actor->clipLeft - (playerIndex >= 2) * 0x88,
+                        actor->clipTop,
+                        actor->clipRight,
+                        actor->clipBottom
                     );
                 } else {
                     drawMenuSpriteClipped(
-                        iconList->y[playerIndex][iconIndex],
-                        iconList->x[playerIndex][iconIndex],
+                        actor->y[playerIndex][iconIndex],
+                        actor->x[playerIndex][iconIndex],
                         getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                         5,
                         0x20,
                         0x20,
                         0,
-                        highlightAlpha,
-                        iconList->clipLeft - leftClipOffset,
-                        iconList->clipTop,
-                        iconList->clipRight,
-                        iconList->clipBottom
+                        highlightPalette,
+                        actor->clipLeft - (playerIndex >= 2) * 0x88,
+                        actor->clipTop,
+                        actor->clipRight,
+                        actor->clipBottom
                     );
                 }
             }
         }
     }
 }
-#endif
 
 void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
     CourseSelectIconListActor *actor;
