@@ -389,11 +389,12 @@ $(BUILD_DIR)/%.o: $(TEXTCONV_DIR)/%.c
 # GNU as preserves the original 16-byte section padding; attributes align each table.
 DESIGNATED_DATA_C_O_FILES := \
 	$(BUILD_DIR)/src/race/player/race_player_properties.o \
-	$(BUILD_DIR)/src/us/demo/main_menu_demo_race_intro_data.o \
-	$(BUILD_DIR)/$(SRC_DIR)/demo/title_demo_race_intro_data.o
+	$(BUILD_DIR)/src/demo/main_menu_demo_race_intro_data.o \
+	$(BUILD_DIR)/src/demo/title_demo_race_intro_data.o
 $(BUILD_DIR)/src/race/player/race_player_properties.o: ASFLAGS := $(filter-out -no-pad-sections,$(ASFLAGS))
+$(BUILD_DIR)/src/demo/main_menu_demo_race_intro_data.o: ASFLAGS := $(filter-out -no-pad-sections,$(ASFLAGS))
 # The title-demo tables end on a 16-byte boundary in both ROM versions.
-$(BUILD_DIR)/$(SRC_DIR)/demo/title_demo_race_intro_data.o: ASFLAGS := $(filter-out -no-pad-sections,$(ASFLAGS))
+$(BUILD_DIR)/src/demo/title_demo_race_intro_data.o: ASFLAGS := $(filter-out -no-pad-sections,$(ASFLAGS))
 $(DESIGNATED_DATA_C_O_FILES): $(BUILD_DIR)/%.o: $(TEXTCONV_DIR)/%.c
 	@mkdir -p $(dir $@)
 	$(PRINTF) "[$(GREEN)   c    $(NO_COL)]  $*.c\n"

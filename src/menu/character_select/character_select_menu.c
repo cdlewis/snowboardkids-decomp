@@ -18,6 +18,12 @@
 #define CHARACTER_SELECT_MOVE_LEFT 1
 #define CHARACTER_SELECT_MOVE_RIGHT 2
 
+#if defined(VERSION_JP)
+#define CHARACTER_SELECT_ASPECT_RATIO gCharacterSelectViewportAspectRatio[0]
+#else
+#define CHARACTER_SELECT_ASPECT_RATIO 1.333333373f
+#endif
+
 CharacterSelectState gCharacterSelectHudState;
 s8 gCharacterSelectHighlightedRosterIndices[4];
 /* Secret-code state bypasses the duplicate-highlight/locked-slot conflict scan.
@@ -39,6 +45,10 @@ s16 gCharacterSelectVoiceSoundIds[] = {
 // 0 = Free Style, 1 = All Around, 2 = Alpine, 3 = back, and 4/5 appear to be
 // locked/unowned special board states.
 
+#if defined(VERSION_JP)
+const f32 gCharacterSelectViewportAspectRatio[4] = { 1.333333373f };
+#endif
+
 void initCharacterSelectMenu(void) {
     s32 i;
     s32 j;
@@ -46,7 +56,7 @@ void initCharacterSelectMenu(void) {
     if ((gCharacterSelectFromRaceSetup == 0) || (gMenuExitSelection == 1)) {
         requestMusicSequenceBank(1);
         resetAllViewports();
-        configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
+        configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, CHARACTER_SELECT_ASPECT_RATIO);
         gFramebufferRenderInterval.value = 0;
         gMenuSelectionConfirmTimer = 0;
         gMenuExitSelection = 0;

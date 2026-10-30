@@ -4,12 +4,18 @@
 #include "game/engine/runtime_memory.h"
 #include "game/race/player/race_player_input.h"
 
+#if defined(VERSION_JP)
+#define DEMO_CAPTURED_HEAP_OFFSET 3296
+#else
+#define DEMO_CAPTURED_HEAP_OFFSET 0
+#endif
+
 /* These render-cache pointers were captured with the complete RacePlayer state.
  * Their offsets preserve the recording's bytes; the heap symbol supplies the
  * current RAM placement. Rendering replaces the caches on the first viewport.
  * Offsets describe recorded locations, not permanent allocations in the heap. */
-#define DEMO_HEAP_MATRIX(byteOffset) ((Mtx *)&gRelocatableHeapStart[(byteOffset)])
-#define DEMO_HEAP_VERTICES(byteOffset) ((Vtx *)&gRelocatableHeapStart[(byteOffset)])
+#define DEMO_HEAP_MATRIX(byteOffset) ((Mtx *)&gRelocatableHeapStart[(byteOffset) + DEMO_CAPTURED_HEAP_OFFSET])
+#define DEMO_HEAP_VERTICES(byteOffset) ((Vtx *)&gRelocatableHeapStart[(byteOffset) + DEMO_CAPTURED_HEAP_OFFSET])
 
 /* drawRacePlayerModel allocates each part consecutively, with no other scratch
  * allocations between parts. Every captured run contains all fourteen parts. */

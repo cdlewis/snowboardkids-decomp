@@ -1,20 +1,22 @@
-#include "game/engine/game_task_scheduler.h"
-#include "game/race/ui/race_hud.h"
-#include "common.h"
 #include "game/race/race_state.h"
-#include "game/race/player/race_player_progress.h"
+#include "game/engine/game_task_scheduler.h"
+#include "common.h"
 #include "game/math/fixed_point_math.h"
 #include "game/race/motion/race_motion.h"
+#include "game/race/player/race_player_progress.h"
+#include "game/race/ui/race_hud.h"
 
+#if defined(VERSION_JP)
 #define RANK_ARROW_DISTANCE 0x04000000
 #define RANK_ARROW_NEGATIVE_LIMIT ((s32)0xFC000001)
-
-extern u32 gRaceCoursePlayerPathOffsetData[];
-
+#define SINGLE_PLAYER_RANK_INDEX(order, index) (index)
+#else
+#define RANK_ARROW_DISTANCE 0x03800000
+#define RANK_ARROW_NEGATIVE_LIMIT ((s32)0xFC800001)
+#define SINGLE_PLAYER_RANK_INDEX(order, index) ((order)[index])
+#endif
 
 char gRacePlayerProgressUnusedData[4] = "\t\t\t";
-
-extern u32 gRaceCoursePlayerPathOffsetData[];
 
 s8 *gRaceCoursePlayerPathOffsetTables[40] = {
     (s8 *)&gRaceCoursePlayerPathOffsetData[0x002], (s8 *)&gRaceCoursePlayerPathOffsetData[0x002], (s8 *)&gRaceCoursePlayerPathOffsetData[0x030], (s8 *)&gRaceCoursePlayerPathOffsetData[0x05E],
@@ -138,13 +140,12 @@ RacePlayerCheckpointEvent *gRaceCourseCheckpointEventLists[10] = {
 };
 
 u8 gSinglePlayerRankDisplayPatternFirst[4] = { 1, 0, 2, 0 };
-
 u8 gSinglePlayerRankDisplayPatternSecond[4] = { 0, 1, 2, 0 };
-
 u8 gSinglePlayerRankDisplayPatternThird[4] = { 0, 1, 2, 0 };
-
 u8 gSinglePlayerRankDisplayPatternFourth[12] = { 0, 2, 1, 0 };
 
+/* Selects CPU pace policy from opponent roles, rank and X/Z separation
+ * from rankTargetPlayer. Clearing cpuPaceMode does not disable rank bonuses. */
 void updateRacePlayerRankDisplay(void) {
     s32 deltaX;
     s32 deltaZ;
@@ -177,9 +178,9 @@ void updateRacePlayerRankDisplay(void) {
             i = 0;
             if (gRacePlayers[0].state.rankIndex == 0) {
                 for (j = 0; j < RACE_PLAYER_COUNT; j++) {
-                    if (gRacePlayers[j].isCpu) {
-                        gRacePlayers[j].state.displayRank = gSinglePlayerRankDisplayPatternFirst[i];
-                        gRacePlayers[j].state.rankTargetPlayer = 0;
+                    if (gRacePlayers[SINGLE_PLAYER_RANK_INDEX(order, j)].isCpu) {
+                        gRacePlayers[SINGLE_PLAYER_RANK_INDEX(order, j)].state.displayRank = gSinglePlayerRankDisplayPatternFirst[i];
+                        gRacePlayers[SINGLE_PLAYER_RANK_INDEX(order, j)].state.rankTargetPlayer = 0;
                         i++;
                     }
                 }
@@ -188,9 +189,9 @@ void updateRacePlayerRankDisplay(void) {
             i = 0;
             if (gRacePlayers[0].state.rankIndex == 1) {
                 for (j = 0; j < RACE_PLAYER_COUNT; j++) {
-                    if (gRacePlayers[j].isCpu) {
-                        gRacePlayers[j].state.displayRank = gSinglePlayerRankDisplayPatternSecond[i];
-                        gRacePlayers[j].state.rankTargetPlayer = 0;
+                    if (gRacePlayers[SINGLE_PLAYER_RANK_INDEX(order, j)].isCpu) {
+                        gRacePlayers[SINGLE_PLAYER_RANK_INDEX(order, j)].state.displayRank = gSinglePlayerRankDisplayPatternSecond[i];
+                        gRacePlayers[SINGLE_PLAYER_RANK_INDEX(order, j)].state.rankTargetPlayer = 0;
                         i++;
                     }
                 }
@@ -199,9 +200,9 @@ void updateRacePlayerRankDisplay(void) {
             i = 0;
             if (gRacePlayers[0].state.rankIndex == 2) {
                 for (j = 0; j < RACE_PLAYER_COUNT; j++) {
-                    if (gRacePlayers[j].isCpu) {
-                        gRacePlayers[j].state.displayRank = gSinglePlayerRankDisplayPatternThird[i];
-                        gRacePlayers[j].state.rankTargetPlayer = 0;
+                    if (gRacePlayers[SINGLE_PLAYER_RANK_INDEX(order, j)].isCpu) {
+                        gRacePlayers[SINGLE_PLAYER_RANK_INDEX(order, j)].state.displayRank = gSinglePlayerRankDisplayPatternThird[i];
+                        gRacePlayers[SINGLE_PLAYER_RANK_INDEX(order, j)].state.rankTargetPlayer = 0;
                         i++;
                     }
                 }
@@ -210,9 +211,9 @@ void updateRacePlayerRankDisplay(void) {
             i = 0;
             if (gRacePlayers[0].state.rankIndex == 3) {
                 for (j = 0; j < RACE_PLAYER_COUNT; j++) {
-                    if (gRacePlayers[j].isCpu) {
-                        gRacePlayers[j].state.displayRank = gSinglePlayerRankDisplayPatternFourth[i];
-                        gRacePlayers[j].state.rankTargetPlayer = 0;
+                    if (gRacePlayers[SINGLE_PLAYER_RANK_INDEX(order, j)].isCpu) {
+                        gRacePlayers[SINGLE_PLAYER_RANK_INDEX(order, j)].state.displayRank = gSinglePlayerRankDisplayPatternFourth[i];
+                        gRacePlayers[SINGLE_PLAYER_RANK_INDEX(order, j)].state.rankTargetPlayer = 0;
                         i++;
                     }
                 }
@@ -293,7 +294,19 @@ void updateRacePlayerRankDisplay(void) {
                     break;
 
                 case 2:
+#if defined(VERSION_US)
+                    if (gPlayerCount == 1) {
+                        if (gRacePlayers[0].state.rankIndex < gRacePlayers[i].state.rankIndex) {
+                            gRacePlayers[i].state.cpuPaceMode = RACE_CPU_PACE_RANK_BONUS;
+                        } else {
+                            gRacePlayers[i].state.cpuPaceMode = RACE_CPU_PACE_YIELD;
+                        }
+                    } else {
+                        gRacePlayers[i].state.cpuPaceMode = RACE_CPU_PACE_YIELD;
+                    }
+#else
                     gRacePlayers[i].state.cpuPaceMode = RACE_CPU_PACE_YIELD;
+#endif
                     break;
             }
             if (gRacePlayers[i].characterId == 5) {
