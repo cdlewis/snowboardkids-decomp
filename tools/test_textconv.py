@@ -36,7 +36,7 @@ class TextConverterTests(unittest.TestCase):
         )
 
     def test_all_opted_in_source_text_is_encodable(self):
-        source_root = Path(__file__).resolve().parents[1] / "src/us"
+        source_root = Path(__file__).resolve().parents[1] / "src"
         for path in source_root.rglob("*.c"):
             source = path.read_text()
             if '"font_encoding.h"' not in source:

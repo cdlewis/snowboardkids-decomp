@@ -96,9 +96,9 @@ make VERSION=jp extract
 make VERSION=jp -j8
 ```
 
-JP currently builds from extracted assembly; C decompilation is in progress
-for US. Readable asset tools, progress reporting, and `--mode shiftable` support
-US only.
+Both regions build from shared C and assembly in `src/`, with `VERSION_US` and
+`VERSION_JP` selecting regional differences. Readable asset tools, progress
+reporting, and `--mode shiftable` support US only.
 
 ## Reverse-engineering notes
 

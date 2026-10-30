@@ -54,7 +54,7 @@ def main() -> int:
     parser.add_argument(
         "files",
         nargs="+",
-        help="Assigned source files to scan, e.g. src/us/1050.c src/us/562B0.c",
+        help="Assigned source files to scan, e.g. src/1050.c src/562B0.c",
     )
     parser.add_argument(
         "--include-near-misses",

@@ -9,6 +9,11 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Iterable
 
+if __package__:
+    from .source_versions import read_source
+else:
+    from source_versions import read_source
+
 
 SYMBOL_LINE = re.compile(r"^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=")
 IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
@@ -186,7 +191,7 @@ def canonical_type(declaration: str, symbol: str) -> str | None:
 def declarations_in_file(path: Path, symbols: set[str]) -> dict[str, set[str]]:
     """Collect observed canonical types of known symbols in one file."""
     declarations: dict[str, set[str]] = defaultdict(set)
-    for statement in global_statements(path.read_text(errors="replace")):
+    for statement in global_statements(read_source(path)):
         declaration = before_initializer(statement)
         for symbol in set(IDENTIFIER.findall(declaration)) & symbols:
             symbol_type = canonical_type(declaration, symbol)
@@ -200,7 +205,7 @@ def inconsistent_symbols(root: Path) -> list[str]:
     symbols = data_symbols(root / "symbol_addrs.txt")
     observed: dict[str, set[str]] = defaultdict(set)
     paths = [
-        *(p for p in root.joinpath("src").rglob("*.c") if root / "src/jp" not in p.parents),
+        *root.joinpath("src").rglob("*.c"),
         *root.joinpath("include").rglob("*.h"),
     ]
     for path in paths:

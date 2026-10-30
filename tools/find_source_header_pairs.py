@@ -5,11 +5,16 @@ import argparse
 import json
 import re
 from pathlib import Path
+if __package__:
+    from .source_versions import read_source
+else:
+    from source_versions import read_source
+
 
 
 SOURCE_ROOT = Path("src")
 INCLUDE_ROOT = Path("include")
-EXCLUDED_SOURCE_ROOTS = (Path("src/ultra"), Path("src/us/ultra"), Path("src/jp"))
+EXCLUDED_SOURCE_ROOTS = (Path("src/ultra"),)
 GENERATED_CONTEXT_NAME = "c" + "tx.c"
 INCLUDE_RE = re.compile(r'^\s*#\s*include\s+"([^"]+\.h)"', re.MULTILINE)
 
@@ -25,7 +30,7 @@ def find_pairs() -> list[str]:
         if is_excluded(source_path) or source_path.name == GENERATED_CONTEXT_NAME:
             continue
 
-        source = source_path.read_text()
+        source = read_source(source_path)
         matching_headers = {
             INCLUDE_ROOT / include_path
             for include_path in INCLUDE_RE.findall(source)

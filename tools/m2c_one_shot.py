@@ -8,7 +8,7 @@ asm/nonmatchings function, it:
 1. Generates C with m2c, using m2ctx context from the destination C file.
 2. Compiles the generated function in a temporary per-function workspace.
 3. If the compiled object has 0 differences from the target, replaces the
-   matching #pragma GLOBAL_ASM line in src/us/ with the generated C.
+   matching #pragma GLOBAL_ASM line in src/ with the generated C.
 """
 
 from __future__ import annotations
@@ -28,7 +28,7 @@ import m2ctx
 
 ROOT = Path(__file__).resolve().parents[1]
 ASM_ROOT = ROOT / "asm" / "nonmatchings"
-SRC_ROOT = ROOT / "src/us"
+SRC_ROOT = ROOT / "src"
 HELPER_DIR = ROOT / "tools" / "claude-decomp-env"
 MACRO_INC = ROOT / "include" / "macro.inc"
 PRELUDE_INC = HELPER_DIR / "prelude.inc"

@@ -56,7 +56,7 @@ endif
 BUILD_DIR = $(if $(filter shiftable,$(BUILD_MODE)),build/shiftable,$(MATCHING_BUILD_DIR))
 ASM_DIRS  = asm$(VERSION_SUFFIX) asm$(VERSION_SUFFIX)/data
 BIN_DIRS  = assets$(VERSION_SUFFIX)
-SRC_DIR = src/$(VERSION)
+SRC_DIR = src
 # Both regional Splat configs use src/ as their common source root.
 SRC_DIRS = src
 TOOLS_DIR = tools
@@ -156,7 +156,7 @@ OBJCOPYFLAGS = -O binary
 RM_MDEBUG    = $(OBJCOPY) --remove-section .mdebug $@
 C_OBJ_POSTPROCESS = :
 
-ULTRA_OBJ_DIRS = $(BUILD_DIR)/$(SRC_DIR)/ultra $(BUILD_DIR)/src/ultra
+ULTRA_OBJ_DIRS = $(BUILD_DIR)/src/ultra
 $(addsuffix /io/%.o,$(ULTRA_OBJ_DIRS)): C_OPT = -O1
 $(addsuffix /io/%.o,$(ULTRA_OBJ_DIRS)): C_MIPS = -mips2
 $(addsuffix /audio/%.o,$(ULTRA_OBJ_DIRS)): C_OPT = -O2
@@ -425,10 +425,10 @@ $(BUILD_DIR)/runtime-indices/race_player_model_renderer.o: $(TEXTCONV_DIR)/src/r
 ifeq ($(VERSION),jp)
 $(BUILD_DIR)/src/math/spatial_math.o: C_OBJ_POSTPROCESS = \
 	$(PYTHON) $(TOOLS_DIR)/trim_elf_section_tail.py $@ .text 8
-$(BUILD_DIR)/src/jp/menu/renderer/menu_render_utils.o: C_OBJ_POSTPROCESS = \
+$(BUILD_DIR)/src/menu/renderer/menu_render_utils.o: C_OBJ_POSTPROCESS = \
 	$(PYTHON) $(TOOLS_DIR)/trim_elf_section_tail.py $@ .text 8
 
-$(BUILD_DIR)/src/jp/menu/race_setup/race_setup_menu.o: C_OBJ_POSTPROCESS = \
+$(BUILD_DIR)/src/menu/race_setup/race_setup_menu.o: C_OBJ_POSTPROCESS = \
 	$(PYTHON) $(TOOLS_DIR)/trim_elf_section_tail.py $@ .data 16 \
 		--undefine-symbol gControllerPakRumbleCheckPromptState
 

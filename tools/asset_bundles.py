@@ -14,6 +14,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import yaml
 from tools.course_surface_data_common import load_yaml, pack_course_surface_data
+from tools.source_versions import read_source
 from tools.course_graphics_common import pack_course_model_resources, compression_metadata_from_manifest
 from tools.course_sprite_table_common import pack_course_sprite_table
 from tools.readable_assets import pack_asset, pack_payload
@@ -308,7 +309,7 @@ def index_models(root, layout):
             result.append(fields)
         return result
 
-    scroll_source = (root/'src/us/race/ui/race_ui_effects.c').read_text()
+    scroll_source = read_source(root/'src/race/ui/race_ui_effects.c')
     scroll_body = re.search(r'gRaceCourseScrollingTextureInit\[[^]]+\]\s*=\s*\{(.*?)\};',scroll_source,re.S)[1]
     scroll_rows = table_rows(scroll_body)
     scroll_courses = ['quicksand_valley','quicksand_valley','night_highway','animal_land',

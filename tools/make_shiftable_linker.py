@@ -31,7 +31,7 @@ def graphics_layout(source):
 
 
 def runtime_index_inputs(source, build_dir, *, palettes=True, snowboards=False):
-    inputs = [('src/us', 'menu/renderer', name) for name in ('menu_renderer', 'menu_render_utils')] if palettes else []
+    inputs = [('src', 'menu/renderer', name) for name in ('menu_renderer', 'menu_render_utils')] if palettes else []
     if snowboards:
         inputs.append(('src', 'race/player', 'race_player_model_renderer'))
     for source_root, directory, name in inputs:

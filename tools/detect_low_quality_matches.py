@@ -249,9 +249,9 @@ Use --exhaustive to see all functions ranked by badness.
 Badness score = violations per line of code (higher is worse).
 
 Examples:
-  %(prog)s src/us/                       # Find worst function
-  %(prog)s src/us/ --exhaustive          # Rank all functions
-  %(prog)s src/us/413E0.c --exhaustive   # Rank functions in one file
+  %(prog)s src/                       # Find worst function
+  %(prog)s src/ --exhaustive          # Rank all functions
+  %(prog)s src/413E0.c --exhaustive   # Rank functions in one file
         """
     )
 

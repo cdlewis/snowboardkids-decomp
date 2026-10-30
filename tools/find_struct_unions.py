@@ -10,10 +10,8 @@ from pathlib import Path
 
 DEFAULT_PATHS = (Path("src"), Path("include/game"))
 DEFAULT_EXCLUDES = (
-    Path("src/jp"),
     Path("src/ultra"),
-    Path("src/us/ultra"),
-    Path("src/us") / ("c" + "tx.c"),  # Generated decompilation context.
+    Path("src") / ("c" + "tx.c"),  # Generated decompilation context.
 )
 TOKEN_RE = re.compile(r"[A-Za-z_]\w*|[{};]")
 

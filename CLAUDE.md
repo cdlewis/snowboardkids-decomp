@@ -6,9 +6,8 @@ This is a matching decompilation project for Snowboard Kids (N64). The goal is t
 
 ## Project Structure
 
-- `src` shared C code and assembly.
-- `src/us` unmigrated US C code and assembly.
-- `src/jp` JP sources; assembly-only segments are extracted under `asm.jp`.
+- `src` C code and assembly shared by US and JP, with `VERSION_US` / `VERSION_JP` conditionals for regional differences.
+- `asm.jp` extracted JP assembly-only segments.
 - `include` shared headers and assembly macros.
 - `asm/nonmatchings` unmatched assembly functions extracted from the ROM.
 - `asm/data` extracted data assembly.
@@ -81,7 +80,7 @@ After adding your decompiled function, check for any redundant extern declaratio
 
 1. **Search for existing declarations**: For each extern function you used, search the codebase to see if it's already declared in a header file:
    - Use `rg "void functionName" include/` to search headers
-   - Use `rg "void functionName" src/us/` to search source files and source-local headers
+   - Use `rg "void functionName" src/` to search source files and source-local headers
 
 2. **Remove redundant externs**: If a function is already declared in an included header file, remove your extern declaration to avoid duplication
 

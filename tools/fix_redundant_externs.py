@@ -24,6 +24,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Sequence
 
+if __package__:
+    from .source_versions import read_source
+else:
+    from source_versions import read_source
+
 
 IDENTIFIER = re.compile(r"\b([A-Za-z_][A-Za-z0-9_]*)\s*\(")
 INCLUDE = re.compile(r'^[ \t]*#[ \t]*include[ \t]+[<"]([^">]+)[">]', re.MULTILINE)
@@ -145,7 +150,7 @@ def function_name(statement: str) -> str | None:
 
 
 def find_declarations(path: Path, source_externs: bool) -> list[Declaration]:
-    text = path.read_text()
+    text = read_source(path)
     masked = mask_comments_and_literals(text)
     declarations = []
     lines = masked.splitlines(keepends=True)
@@ -522,7 +527,7 @@ def find_violations(
 ) -> list[Violation]:
     violations = []
     for source in sources:
-        text = source.read_text()
+        text = read_source(source)
         included = set(INCLUDE.findall(text))
         expected_header = expected_header_for_source(source, repo_root)
         source_declarations = find_declarations(source, source_externs=True)
@@ -671,8 +676,8 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         "paths",
         nargs="*",
         type=Path,
-        default=[Path("src/us")],
-        help="C files or directories to check (default: src/us)",
+        default=[Path("src")],
+        help="C files or directories to check (default: src)",
     )
     parser.add_argument(
         "--include-dir",

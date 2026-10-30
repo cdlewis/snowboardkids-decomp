@@ -66,6 +66,30 @@ class RedundantExternFixerTests(unittest.TestCase):
 
         self.assertEqual(source.read_text(), '#include "game/task.h"\n\n')
 
+    def test_fix_preserves_inactive_region_and_source_offsets(self):
+        self.write("include/game/task.h", "void runTask(void);\n")
+        source = self.write(
+            "src/task_user.c",
+            '#include "common.h"\n'
+            '#if defined(VERSION_JP)\n'
+            'extern void japaneseTask(void);\n'
+            '#else\n'
+            'extern void runTask(void);\n'
+            '#endif\n',
+        )
+        violations = self.violations(source)
+        self.assertEqual([v.declaration.name for v in violations], ["runTask"])
+        fixer.fix_file(source, violations)
+        self.assertEqual(
+            source.read_text(),
+            '#include "common.h"\n'
+            '#include "game/task.h"\n'
+            '#if defined(VERSION_JP)\n'
+            'extern void japaneseTask(void);\n'
+            '#else\n'
+            '#endif\n',
+        )
+
     def test_ignores_comments_variables_and_function_pointer_variables(self):
         self.write(
             "include/game/task.h",

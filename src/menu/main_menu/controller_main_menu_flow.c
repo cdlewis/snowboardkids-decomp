@@ -1,0 +1,1352 @@
+#include "common.h"
+#include "game/save_data.h"
+#include "assets.h"
+#include "game/audio/sound_manager.h"
+#include "game/engine/callback_task_scheduler.h"
+#include "game/engine/asset_manager.h"
+#include "game/engine/system_runtime.h"
+#include "game/engine/game_task_scheduler.h"
+#include "game/menu/main_menu/controller_main_menu_flow.h"
+#include "game/menu/controller_pak/controller_pak_menu.h"
+#include "game/menu/renderer/menu_screen_effects.h"
+#include "game/menu/main_menu/main_menu_panel_ui.h"
+#include "game/menu/main_menu/main_menu_scene_model.h"
+#include "game/menu/main_menu/main_menu_scene_model_renderer.h"
+#include "game/menu/main_menu/main_menu_race_flow.h"
+#include "game/menu/main_menu/training_course_race_flow.h"
+#include "game/menu/main_menu/main_menu_title_ui.h"
+#include "game/menu/renderer/menu_render_utils.h"
+#include "game/race/camera/race_camera.h"
+#include "game/race/flow/race_flow.h"
+#include "game/race/race_state.h"
+#include "game/demo/main_menu_demo_race_intro.h"
+#include "game/demo/title_demo_race_intro.h"
+#include "game/engine/viewport_manager.h"
+#include "game/menu/renderer/menu_renderer.h"
+#include <PR/os_motor.h>
+#include "game/menu/main_menu/controller_subsystem.h"
+#include "game/menu/race_setup/race_setup_menu.h"
+
+#if defined(VERSION_JP)
+#define CONTROLLER_PAK_GAME_CODE 'NSKJ'
+#define MAIN_MENU_ASPECT_RATIO gMainMenuViewportAspectRatio[0]
+#else
+#define CONTROLLER_PAK_GAME_CODE 'NSKE'
+#define MAIN_MENU_ASPECT_RATIO 1.3333334f
+#endif
+
+#define CONTROLLER_PAK_SAVE_FIELD_OFFSET(field) ((u32) & (((GameSaveData *)0)->field))
+#define CONTROLLER_PAK_RECORD_AT(cursor, field) \
+    (*(GameSaveRecordTime *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
+#define CONTROLLER_PAK_U8_AT(cursor, field) (*(u8 *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
+#define CONTROLLER_PAK_U16_AT(cursor, field) (*(u16 *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
+
+u8 gConnectedControllerBitmask = 0;
+#if defined(VERSION_JP)
+u8 gControllerPakSaveGameNameBytes[16] = { 0x5C, 0x68, 0x8F, 0x56, 0x4A, 0x83, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+#else
+u8 gControllerPakSaveGameNameBytes[16] = {
+    0x2C, 0x27, 0x28, 0x30, 0x1B, 0x28, 0x1A, 0x2B, 0x1D, 0x0F, 0x24, 0x22, 0x1D, 0x2C, 0, 0,
+};
+#endif
+u8 gControllerPakSaveExtNameBytes[4] = { 0, 0, 0, 0 };
+u8 gControllerPakSaveExtNameBytesEnd[0x84] = {
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x49, 0x00, 0x3F, 0x00, 0x53, 0x00, 0x6A, 0x00, 0x2B, 0x00,
+    0x66, 0x00, 0x2B, 0x00, 0x80, 0x00, 0x3A, 0x00, 0x47, 0x00, 0x61, 0x00, 0x55, 0x00, 0x3C, 0x00, 0x2B, 0xFF, 0xFF,
+    0x00, 0x00, 0x00, 0xA8, 0x00, 0x99, 0x00, 0xB7, 0x00, 0x83, 0x00, 0x2B, 0x00, 0x72, 0xFF, 0xFF, 0x00, 0x00, 0x00,
+    0x5E, 0x00, 0x72, 0x00, 0xC9, 0x00, 0x98, 0x00, 0x9C, 0xFF, 0xFF, 0x00, 0xB3, 0x00, 0xB1, 0x00, 0xB8, 0xFF, 0xFF,
+    0x00, 0x94, 0x00, 0xBB, 0x00, 0xB8, 0xFF, 0xFF, 0x00, 0x58, 0x00, 0x2B, 0x00, 0x53, 0x00, 0x8E, 0x00, 0x93, 0x00,
+    0xB6, 0x00, 0xCD, 0xFF, 0xFF, 0x00, 0x31, 0xFF, 0xFF, 0x00, 0x58, 0x00, 0x2B, 0x00, 0x53, 0x00, 0xBC, 0x00, 0x98,
+    0x00, 0x9D, 0x00, 0xAE, 0x00, 0x9D, 0x00, 0x8F, 0x00, 0xC9, 0x00, 0x9B, 0x00, 0x9F, 0x00, 0x32, 0xFF, 0xFF,
+};
+u8 gMainMenuReturnFromRace = 0;
+
+#if defined(VERSION_JP)
+const f32 gMainMenuViewportAspectRatio[1] = { 1.333333373f };
+#endif
+
+/* Shared controller and menu state, in original BSS address order. */
+u8 gRaceRumbleEnabled;
+static u8 sRaceRumbleEnabledPadding1;
+static u16 sRaceRumbleEnabledPadding2;
+u8 gRumblePakConnectedByController[PLAYER_INPUT_COUNT];
+ControllerSubsystemThreadContext gControllerSubsystemThreadArg;
+u8 gCourseSelectTransitionTimer;
+u8 gMenuSelectionConfirmTimer;
+u8 gRaceSplitscreenMode;
+RaceCamera *gCurrentMenuCameraObject;
+s16 gControllerPakStatusCodes[4];
+s16 gMenuChoicePromptState[4];
+u8 gControllerPakRetryCounts[4];
+u8 gRaceSplitscreenSelectUnusedState;
+u8 gCourseSelectFromRaceTypeMenu;
+static u16 sCourseSelectFromRaceTypeMenuPadding;
+u8 gControllerPakOperationCounts[4];
+u8 gRaceSetupSavePanelCreateTimer;
+u8 gCharacterSelectFromRaceSetup;
+u8 gCourseSelectModeSelection;
+static u8 sGameSaveDataBufferPadding;
+static u32 sGameSaveDataBufferPaddingWords[2];
+GameSaveDataBuffer gGameSaveDataBuffer;
+
+/* Queue request 0x10 once, then wait for updateControllerInputState to clear
+ * the pending flag on completion before requesting another read. */
+void requestControllerRead(void) {
+    if ((gControllerReadPending == 0) && (gConnectedControllerBitmask != 0)) {
+        osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)CONTROLLER_REQUEST_READ_INPUT, OS_MESG_BLOCK);
+        gControllerReadPending = 1;
+    }
+}
+
+/* Copy the complete six-byte OSContPad view only for connected, error-free
+ * ports. A pad error retains the previous state, including stick values already
+ * clamped by the game task scheduler. Completion still clears the pending flag. */
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
+void updateControllerInputState(void) {
+    u16 i;
+    do { \
+        i = 0; \
+        do { \
+            if ((((s32)gConnectedControllerBitmask) >> i) & 1) { \
+                if (gControllerPads[i].errno == 0) { \
+                    gControllerInputState[i] = *((ControllerInputState *)(&gControllerPads[i])); \
+                } \
+            } \
+            i++; \
+        } while (i < 4); \
+        gControllerReadPending = 0; \
+    } while (0);
+}
+// clang-format on
+
+void requestRumbleMotorInit(u16 controllerIndex) {
+    OSMesg msg;
+
+    msg = NULL;
+
+    osSendMesg(
+        &gControllerSubsystemRequestQueue,
+        (OSMesg)(controllerIndex + CONTROLLER_REQUEST_INIT_RUMBLE),
+        OS_MESG_BLOCK
+    );
+    osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
+}
+
+#if defined(VERSION_US)
+#pragma weak requestRumbleMotorInitWithContext = requestRumbleMotorInit
+#endif
+
+void serviceRumbleMotorRequest(u16 controllerIndex) {
+    if (gRumbleMotorStatuses[controllerIndex] == RUMBLE_MOTOR_NO_PAK) {
+        gRumbleMotorRequestStates[controllerIndex] = 0;
+        if (gRumblePakConnectedMask & (1 << controllerIndex)) {
+            osSendMesg(
+                &gControllerSubsystemRequestQueue,
+                (OSMesg)(controllerIndex + CONTROLLER_REQUEST_RETRY_RUMBLE_INIT),
+                OS_MESG_BLOCK
+            );
+        }
+    } else if (gRumbleMotorStatuses[controllerIndex] == RUMBLE_MOTOR_WRONG_DEVICE) {
+        gRumbleMotorRequestStates[controllerIndex] = 0;
+        if (gRumblePakConnectedMask & (1 << controllerIndex)) {
+            osSendMesg(
+                &gControllerSubsystemRequestQueue,
+                (OSMesg)(controllerIndex + CONTROLLER_REQUEST_RETRY_RUMBLE_INIT),
+                OS_MESG_BLOCK
+            );
+        }
+    } else if (gRumbleMotorStatuses[controllerIndex] == RUMBLE_MOTOR_CONTROLLER_FAILURE) {
+        gRumbleMotorRequestStates[controllerIndex] = 0;
+        if (gRumblePakConnectedMask & (1 << controllerIndex)) {
+            osSendMesg(
+                &gControllerSubsystemRequestQueue,
+                (OSMesg)(controllerIndex + CONTROLLER_REQUEST_RETRY_RUMBLE_INIT),
+                OS_MESG_BLOCK
+            );
+        }
+    } else {
+        if (gRumbleMotorRequestStates[controllerIndex] == 0) {
+            osSendMesg(
+                &gControllerSubsystemRequestQueue,
+                (OSMesg)(controllerIndex + CONTROLLER_REQUEST_STOP_RUMBLE),
+                OS_MESG_BLOCK
+            );
+        } else {
+            osSendMesg(
+                &gControllerSubsystemRequestQueue,
+                (OSMesg)(controllerIndex + CONTROLLER_REQUEST_START_RUMBLE),
+                OS_MESG_BLOCK
+            );
+        }
+        gRumbleMotorRequestStates[controllerIndex] = 0;
+    }
+}
+
+void requestRumbleMotorStart(u16 controllerIndex) {
+    if (gRaceRumbleEnabled != 0) {
+        if (gRumblePakConnectedMask & (1 << controllerIndex)) {
+            gRumbleMotorRequestStates[controllerIndex] = 1;
+        }
+    }
+}
+
+void requestControllerPakProbe(u16 controllerIndex) {
+    OSMesg msg;
+
+    msg = NULL;
+
+    osSendMesg(
+        &gControllerSubsystemRequestQueue,
+        (OSMesg)(controllerIndex + CONTROLLER_REQUEST_PROBE_PAK),
+        OS_MESG_BLOCK
+    );
+    osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
+}
+
+void probeControllerPak(u16 controllerIndex) {
+    u32 ret;
+
+    ret = osPfsInitPak(&gControllerEventQueue, &gControllerPakHandles[controllerIndex], controllerIndex);
+    if (ret == 2) {
+        ret = osPfsInitPak(&gControllerEventQueue, &gControllerPakHandles[controllerIndex], controllerIndex);
+    }
+
+    if (ret == 0) {
+        gControllerPakStatusCodes[controllerIndex] = 1;
+    }
+
+    if ((ret == 1) || (ret == 11)) {
+        gControllerPakStatusCodes[controllerIndex] = CONTROLLER_PAK_STATUS_ABSENT_OR_WRONG_DEVICE;
+    }
+
+    if (ret == 10) {
+        if (gRumblePakConnectedByController[controllerIndex] == 1) {
+            gControllerPakStatusCodes[controllerIndex] = CONTROLLER_PAK_STATUS_RUMBLE_DEVICE;
+        } else {
+            gControllerPakStatusCodes[controllerIndex] = 7;
+        }
+    }
+
+    if (ret != 0) {
+        gControllerPakOperationCounts[controllerIndex]++;
+    }
+}
+
+void requestControllerPakSaveStatus(u16 controllerIndex) {
+    OSMesg msg;
+
+    msg = NULL;
+
+    osSendMesg(
+        &gControllerSubsystemRequestQueue,
+        (OSMesg)(controllerIndex + CONTROLLER_REQUEST_CHECK_SAVE),
+        OS_MESG_BLOCK
+    );
+    osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
+}
+
+#if defined(VERSION_US)
+#pragma weak requestControllerPakSaveStatusWithContext = requestControllerPakSaveStatus
+#endif
+
+void checkControllerPakSaveStatus(u16 controllerIndex) {
+    s32 ret;
+    s32 maxFiles;
+    s32 filesUsed;
+    s32 freeBytes;
+    s32 i;
+
+    gControllerPakSaveFileIdentity.size = CONTROLLER_PAK_SAVE_NOTE_SIZE;
+    gControllerPakSaveFileIdentity.gameCode = CONTROLLER_PAK_GAME_CODE;
+    gControllerPakSaveFileIdentity.companyCode = 'EB';
+
+    i = 0;
+    do {
+        gControllerPakSaveFileIdentity.extName[i] = gControllerPakSaveExtNameBytes[i];
+        i++;
+    } while (i < 4);
+
+    i = 0;
+    do {
+        gControllerPakSaveFileIdentity.gameName[i] = gControllerPakSaveGameNameBytes[i];
+        i++;
+    } while (i < 16);
+
+    osPfsInitPak(&gControllerEventQueue, &gControllerPakHandles[controllerIndex], controllerIndex);
+
+    ret = osPfsFindFile(
+        &gControllerPakHandles[controllerIndex],
+        gControllerPakSaveFileIdentity.companyCode,
+        gControllerPakSaveFileIdentity.gameCode,
+        gControllerPakSaveFileIdentity.gameName,
+        gControllerPakSaveFileIdentity.extName,
+        &gControllerPakFileNos[controllerIndex]
+    );
+    if (ret == 0) {
+        gControllerPakStatusCodes[controllerIndex] = 2;
+    } else {
+        osPfsNumFiles(&gControllerPakHandles[controllerIndex], &maxFiles, &filesUsed);
+        if (filesUsed == 0x10) {
+            gControllerPakStatusCodes[controllerIndex] = CONTROLLER_PAK_STATUS_DIRECTORY_FULL;
+        } else {
+            osPfsFreeBlocks(&gControllerPakHandles[controllerIndex], &freeBytes);
+            maxFiles = freeBytes / 256;
+            if (maxFiles < 0x79) {
+                gControllerPakStatusCodes[controllerIndex] = CONTROLLER_PAK_STATUS_INSUFFICIENT_SPACE;
+            } else if (ret == 5) {
+                gControllerPakStatusCodes[controllerIndex] = CONTROLLER_PAK_STATUS_SAVE_NOT_FOUND;
+            }
+        }
+    }
+
+    if (ret != 0) {
+        gControllerPakOperationCounts[controllerIndex]++;
+    }
+}
+
+void requestControllerPakSaveRead(u16 controllerIndex) {
+    OSMesg msg;
+
+    msg = NULL;
+
+    osSendMesg(
+        &gControllerSubsystemRequestQueue,
+        (OSMesg)(controllerIndex + CONTROLLER_REQUEST_READ_SAVE),
+        OS_MESG_BLOCK
+    );
+    osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
+}
+
+#if defined(VERSION_US)
+#pragma weak requestControllerPakSaveReadWithContext = requestControllerPakSaveRead
+#endif
+
+void readControllerPakSave(u16 controllerIndex) {
+    u8 *cursor;
+    s32 offset;
+    s32 readStatus;
+    u16 checksumFailed;
+    GameSaveData *save;
+    s32 checksum;
+
+    checksumFailed = 0;
+    osPfsInitPak(&gControllerEventQueue, &gControllerPakHandles[controllerIndex], controllerIndex);
+
+    gControllerPakSaveFileIdentity.gameCode = CONTROLLER_PAK_GAME_CODE;
+    gControllerPakSaveFileIdentity.companyCode = 'EB';
+
+    offset = 0;
+    do {
+        gControllerPakSaveFileIdentity.extName[offset] = gControllerPakSaveExtNameBytes[offset];
+        offset++;
+    } while (&gControllerPakSaveExtNameBytes[offset] < gControllerPakSaveExtNameBytesEnd);
+
+    offset = 0;
+    do {
+        gControllerPakSaveFileIdentity.gameName[offset] = gControllerPakSaveGameNameBytes[offset];
+        offset++;
+    } while (&gControllerPakSaveGameNameBytes[offset] < gControllerPakSaveExtNameBytes);
+
+    osPfsFindFile(
+        &gControllerPakHandles[controllerIndex],
+        gControllerPakSaveFileIdentity.companyCode,
+        gControllerPakSaveFileIdentity.gameCode,
+        gControllerPakSaveFileIdentity.gameName,
+        gControllerPakSaveFileIdentity.extName,
+        &gControllerPakFileNos[controllerIndex]
+    );
+
+    save = &gGameSaveDataBuffer[controllerIndex];
+    readStatus = osPfsReadWriteFile(
+        &gControllerPakHandles[controllerIndex],
+        gControllerPakFileNos[controllerIndex],
+        0,
+        0,
+        CONTROLLER_PAK_SAVE_READ_SIZE,
+        (u8 *)save
+    );
+
+    if (readStatus == 0) {
+        checksum = 0;
+        cursor = (u8 *)save->highScores;
+        offset = CONTROLLER_PAK_CHECKSUM_START_OFFSET;
+        do {
+            checksum += *cursor++;
+            offset++;
+        } while (offset != CONTROLLER_PAK_SAVE_READ_SIZE);
+
+        if (checksum != save->checksum) {
+            checksumFailed = 1;
+        }
+
+        cursor = &gControllerPakRetryCounts[controllerIndex];
+        if (checksumFailed == 0) {
+            if (validateControllerPakSave(controllerIndex) == 0) {
+                gControllerPakRetryCounts[controllerIndex] = 0;
+            }
+            cursor = &gControllerPakRetryCounts[controllerIndex];
+        } else {
+            (*cursor)++;
+        }
+    } else {
+        goto read_failed;
+    read_failed:
+        cursor = &gControllerPakRetryCounts[controllerIndex];
+        (*cursor)++;
+    }
+
+    if ((readStatus != 0) || (*cursor != 0)) {
+        if (*cursor != CONTROLLER_PAK_MAX_READ_RETRIES) {
+            return;
+        }
+    }
+    gControllerPakOperationCounts[controllerIndex]++;
+}
+
+void requestControllerPakSaveWrite(u16 controllerIndex) {
+    OSMesg msg;
+
+    msg = NULL;
+
+    osSendMesg(
+        &gControllerSubsystemRequestQueue,
+        (OSMesg)(controllerIndex + CONTROLLER_REQUEST_WRITE_SAVE),
+        OS_MESG_BLOCK
+    );
+    osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
+}
+
+void writeControllerPakSave(u16 controllerIndex) {
+    s32 *fileNo;
+    GameSaveData *save;
+    u8 *src;
+    s32 i;
+    s32 checksum;
+    OSPfs *handle;
+    OSPfs *volatile pfs;
+
+    handle = &gControllerPakHandles[controllerIndex];
+    gControllerPakSaveFileIdentity.size = CONTROLLER_PAK_SAVE_NOTE_SIZE;
+    gControllerPakSaveFileIdentity.gameCode = CONTROLLER_PAK_GAME_CODE;
+    gControllerPakSaveFileIdentity.companyCode = 'EB';
+
+    i = 0;
+    do {
+        gControllerPakSaveFileIdentity.extName[i] = gControllerPakSaveExtNameBytes[i];
+        i++;
+    } while (&gControllerPakSaveExtNameBytes[i] < gControllerPakSaveExtNameBytesEnd);
+
+    i = 0;
+    do {
+        gControllerPakSaveFileIdentity.gameName[i] = gControllerPakSaveGameNameBytes[i];
+        i++;
+    } while (&gControllerPakSaveGameNameBytes[i] < gControllerPakSaveExtNameBytes);
+
+    fileNo = &gControllerPakFileNos[controllerIndex];
+    osPfsInitPak(&gControllerEventQueue, (pfs = handle), controllerIndex);
+
+    if (osPfsFindFile(
+            pfs,
+            gControllerPakSaveFileIdentity.companyCode,
+            gControllerPakSaveFileIdentity.gameCode,
+            gControllerPakSaveFileIdentity.gameName,
+            gControllerPakSaveFileIdentity.extName,
+            fileNo
+        ) == 5) {
+        osPfsAllocateFile(
+            pfs,
+            gControllerPakSaveFileIdentity.companyCode,
+            gControllerPakSaveFileIdentity.gameCode,
+            gControllerPakSaveFileIdentity.gameName,
+            gControllerPakSaveFileIdentity.extName,
+            0x7900,
+            fileNo
+        );
+    }
+
+    save = &gGameSaveDataBuffer[controllerIndex];
+    checksum = 0;
+    src = (u8 *)save->highScores;
+    i = 4;
+    do {
+        checksum += *src++;
+        i++;
+    } while (i != 0x78E0);
+    gGameSaveDataBuffer[controllerIndex].checksum = checksum;
+
+    if (osPfsReadWriteFile(pfs, *fileNo, 1, 0, 0x78E0, (u8 *)save) == 0) {
+        gControllerPakRetryCounts[controllerIndex] = 0;
+    } else {
+        gControllerPakRetryCounts[controllerIndex]++;
+    }
+}
+
+void requestControllerPakRepair(u16 controllerIndex) {
+    OSMesg msg;
+
+    msg = NULL;
+
+    osSendMesg(
+        &gControllerSubsystemRequestQueue,
+        (OSMesg)(controllerIndex + CONTROLLER_REQUEST_REPAIR_PAK),
+        OS_MESG_BLOCK
+    );
+    osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
+}
+
+#if defined(VERSION_US)
+#pragma weak requestControllerPakRepairWithContext = requestControllerPakRepair
+#endif
+
+void repairControllerPakId(u16 controllerIndex) {
+    OSPfs **sp18;
+    OSPfs *pfs;
+    s32 ret;
+
+    pfs = &gControllerPakHandles[controllerIndex];
+    sp18 = &pfs;
+    osPfsInitPak(&gControllerEventQueue, *sp18, controllerIndex);
+    ret = osPfsRepairId(pfs);
+    if ((ret == 4) || (ret == 0xA)) {
+        gControllerPakRetryCounts[controllerIndex] += 1;
+    }
+}
+
+void requestControllerPakFileList(void) {
+    OSMesg msg;
+
+    msg = NULL;
+
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)CONTROLLER_REQUEST_LIST_FILES, OS_MESG_BLOCK);
+    osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
+}
+
+void readControllerPakFileStates(void) {
+    s32 i;
+
+    osPfsInitPak(&gControllerEventQueue, &gControllerPakHandles[0], 0);
+    for (i = 0; i != 0x10; i++) {
+        osPfsFileState(&gControllerPakHandles[0], i, &gControllerPakFileStates[i]);
+    }
+}
+
+void requestControllerPakDeleteFile(u16 arg0) {
+    OSMesg msg;
+
+    msg = NULL;
+
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_DELETE_FILE), OS_MESG_BLOCK);
+    osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
+}
+
+void deleteControllerPakFile(u16 arg0) {
+    OSPfs *pfs;
+    OSPfsState *state;
+    u16 companyCode;
+    u32 gameCode;
+    u8 gameName[16];
+    u8 extName[4];
+    s32 i;
+
+    pfs = gControllerPakHandles;
+    osPfsInitPak(&gControllerEventQueue, pfs, 0);
+
+    state = &gControllerPakFileStates[arg0];
+    companyCode = state->company_code;
+    gameCode = state->game_code;
+
+    for (i = 0; i < 16; i++) {
+        gameName[i] = gControllerPakFileStates[arg0].game_name[i];
+    }
+
+    for (i = 0; i < 4; i++) {
+        extName[i] = gControllerPakFileStates[arg0].ext_name[i];
+    }
+
+    for (i = 0; i != 3; i++) {
+        if (osPfsDeleteFile(pfs, companyCode, gameCode, gameName, extName) == 0) {
+            gControllerPakRetryCounts[0] = 0;
+            return;
+        }
+        gControllerPakRetryCounts[0]++;
+    }
+}
+
+void requestControllerPakFreeSpaceUpdate(void) {
+    OSMesg msg;
+
+    msg = NULL;
+
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)CONTROLLER_REQUEST_UPDATE_FREE_SPACE, OS_MESG_BLOCK);
+    osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
+}
+
+void updateControllerPakFreeSpaceInfo(void) {
+    s32 pad;
+    s32 maxFiles;
+    s32 filesUsed;
+
+    osPfsInitPak(&gControllerEventQueue, &gControllerPakHandles[0], 0);
+    osPfsFreeBlocks(&gControllerPakHandles[0], &gControllerPakFreeBytes);
+    osPfsNumFiles(&gControllerPakHandles[0], &maxFiles, &filesUsed);
+    gControllerPakFreeFileCount = maxFiles - filesUsed;
+}
+
+u16 validateControllerPakSave(volatile s32 channel) {
+    u8 *nextByte;
+    s32 wordCursorValid;
+    u8 *save;
+    u32 *wordCursor;
+    s32 new_var;
+    u8 *byteCursor;
+    s32 offset;
+    s32 i;
+    s32 firstByteStep;
+    s32 secondByteStep;
+    s32 count;
+
+    save = (u8 *)&gGameSaveDataBuffer[channel << 1 << 1 >> 2];
+    wordCursor = (u32 *)save;
+    byteCursor = save;
+    offset = 0;
+    for (;;) {
+        offset += 4;
+        firstByteStep = (byteCursor + 1) - byteCursor;
+        wordCursor++;
+        byteCursor++;
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        secondByteStep = firstByteStep && firstByteStep;
+        if (secondByteStep) {}
+        if (!(offset < 0x2C)) {
+            break;
+        }
+    }
+
+    i = 0;
+    wordCursorValid = wordCursor && wordCursor;
+    byteCursor = save;
+    offset += firstByteStep - 1;
+    count = 0xC;
+    for (;;) {
+        i++;
+        new_var = i;
+        wordCursorValid = new_var && new_var;
+        nextByte = byteCursor + 1;
+        secondByteStep = nextByte - byteCursor;
+        firstByteStep = wordCursorValid;
+        if (secondByteStep) {}
+        if ((firstByteStep ^ 0) && wordCursor) {}
+        if (save && save) {}
+        byteCursor++;
+        if (!(new_var != count)) {
+            break;
+        }
+    }
+    i += secondByteStep - 1;
+
+    return validateControllerPakSaveData(channel);
+}
+
+s32 validateControllerPakSaveData(s32 channel) {
+    s32 pad;
+    volatile s32 unusedInvalidCourse;
+    u8 *scoreAndCharacterCursor;
+    u8 *trickScoreCursor;
+    u8 *saveStart;
+    u8 *timeTrialCourseCursor;
+    u8 *scoreCourseCursor;
+    u8 *raceCourseCursor;
+    u8 *recordCursor;
+    s16 fraction;
+    s16 raceFraction;
+    s16 targetFraction;
+    s32 playerCounter;
+    s32 courseOffset;
+    s32 invalidSave;
+    s8 minutes;
+    s8 seconds;
+    s8 raceMinutes;
+    s8 raceSeconds;
+    s8 targetMinutes;
+    s8 targetSeconds;
+    s32 trickScore;
+    s32 trickCharacter;
+    s32 timeTrialCharacter;
+    s32 raceCharacter;
+    s32 scoreCharacter;
+
+    saveStart = (u8 *)&gGameSaveDataBuffer[channel];
+    invalidSave = 0;
+    timeTrialCourseCursor = saveStart;
+    scoreCourseCursor = saveStart;
+    raceCourseCursor = saveStart;
+    courseOffset = 0;
+    saveStart += 0;
+
+    do {
+        unusedInvalidCourse = 0;
+        recordCursor = timeTrialCourseCursor;
+        scoreAndCharacterCursor = scoreCourseCursor;
+        playerCounter = 0;
+        trickScoreCursor = raceCourseCursor;
+    loop_player:
+        minutes = CONTROLLER_PAK_RECORD_AT(recordCursor, timeTrialRecords).minutes;
+        playerCounter += 2;
+        if ((minutes < 0) || (minutes >= 100)) {
+            invalidSave = 1;
+        }
+        seconds = CONTROLLER_PAK_RECORD_AT(recordCursor, timeTrialRecords).seconds;
+        if ((seconds < 0) || (seconds >= 60)) {
+            invalidSave = 1;
+        }
+        fraction = CONTROLLER_PAK_RECORD_AT(recordCursor, timeTrialRecords).fraction;
+        if ((fraction < 0) || (fraction >= 0x6301)) {
+            invalidSave = 1;
+        }
+        timeTrialCharacter = CONTROLLER_PAK_U8_AT(scoreAndCharacterCursor, timeTrialCharacterIds);
+        if ((timeTrialCharacter & 7) >= 6) {
+            invalidSave = 1;
+        }
+        if ((((s32)timeTrialCharacter >> 3) & 0xF) >= 0xF) {
+            invalidSave = 1;
+        }
+        raceMinutes = CONTROLLER_PAK_RECORD_AT(recordCursor, raceRecords).minutes;
+        if ((raceMinutes < 0) || (raceMinutes >= 100)) {
+            invalidSave = 1;
+        }
+        raceSeconds = CONTROLLER_PAK_RECORD_AT(recordCursor, raceRecords).seconds;
+        if ((raceSeconds < 0) || (raceSeconds >= 60)) {
+            invalidSave = 1;
+        }
+        raceFraction = CONTROLLER_PAK_RECORD_AT(recordCursor, raceRecords).fraction;
+        recordCursor += sizeof(GameSaveRecordTime);
+        if ((raceFraction < 0) || (raceFraction >= 0x6301)) {
+            invalidSave = 1;
+        }
+        raceCharacter = CONTROLLER_PAK_U8_AT(scoreAndCharacterCursor, raceRecordCharacterIds);
+        if ((raceCharacter & 7) >= 6) {
+            invalidSave = 1;
+        }
+        if ((((s32)raceCharacter >> 3) & 0xF) >= 0xF) {
+            invalidSave = 1;
+        }
+        if (courseOffset == 0x24) {
+            if (CONTROLLER_PAK_U8_AT(scoreAndCharacterCursor, scoreAttackScores) >= 0x1F) {
+                goto block_32;
+            }
+        } else if (CONTROLLER_PAK_U8_AT(scoreAndCharacterCursor, scoreAttackScores) >= 0x3D) {
+        block_32:
+            invalidSave = 1;
+        }
+        scoreCharacter = CONTROLLER_PAK_U8_AT(scoreAndCharacterCursor, scoreAttackCharacterIds);
+        if ((scoreCharacter & 7) >= 6) {
+            invalidSave = 1;
+        }
+        if ((((s32)scoreCharacter >> 3) & 0xF) >= 0xF) {
+            invalidSave = 1;
+        }
+        trickScore = (CONTROLLER_PAK_U16_AT(trickScoreCursor, trickAttackScores)) & 0xFFFFu;
+        trickScoreCursor += sizeof(u16);
+        if ((s32)trickScore >= 0x2710) {
+            invalidSave = 1;
+        }
+        trickCharacter = CONTROLLER_PAK_U8_AT(scoreAndCharacterCursor, trickAttackCharacterIds);
+        if ((trickCharacter & 7) >= 6) {
+            invalidSave = 1;
+        }
+        if ((((s32)trickCharacter >> 3) & 0xF) >= 0xF) {
+            invalidSave = 1;
+        }
+        scoreAndCharacterCursor += 1;
+        if (playerCounter != 0xA) {
+            goto loop_player;
+        }
+        targetMinutes = CONTROLLER_PAK_RECORD_AT(saveStart, bestLapRecords).minutes;
+        timeTrialCourseCursor += sizeof(GameSaveRecordTime) * 5;
+        scoreCourseCursor += 5;
+        if ((targetMinutes < 0) || (targetMinutes >= 100)) {
+            invalidSave = 1;
+        }
+        targetSeconds = CONTROLLER_PAK_RECORD_AT(saveStart, bestLapRecords).seconds;
+        raceCourseCursor += sizeof(u16) * 5;
+        courseOffset += 4;
+        if ((targetSeconds < 0) || (targetSeconds >= 60)) {
+            invalidSave = 1;
+        }
+        targetFraction = CONTROLLER_PAK_RECORD_AT(saveStart, bestLapRecords).fraction;
+        if ((targetFraction < 0) || (targetFraction >= 0x6301)) {
+            invalidSave = 1;
+        }
+        saveStart += sizeof(GameSaveRecordTime);
+    } while (courseOffset != 0x2C);
+
+    return invalidSave;
+}
+
+void enterMainMenuFromRace(void) {
+    gMainMenuReturnFromRace = 1;
+    setCurrentGameTaskCallback(initMainMenu, 0);
+    createGameTask(4, initTitleDemoRaceIntro, 0x64);
+    suspendGameTask(3);
+}
+
+void initMainMenu(void) {
+    gMainMenuSecretCodeUnlocked = 0;
+    gMainMenuSecretCodeStep = 0;
+    resetAllViewports();
+    configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, MAIN_MENU_ASPECT_RATIO);
+    gFramebufferRenderInterval.value = 0;
+#if defined(VERSION_JP)
+    loadCompressedRomAsset(&_5DAF30_ROM_END, &_5DCBE0_ROM_START, 0x21);
+    loadCompressedRomAsset(&_5DCBE0_ROM_START, &_5DFDD0_ROM_START, 0x25);
+#else
+    LOAD_ASSET(_5DB9D0, 0x21);
+    LOAD_ASSET(_5DCBE0, 0x25);
+#endif
+    LOAD_ASSET(_593D10, 0x22);
+    LOAD_RAW_ASSET(_1467B0, 8);
+    LOAD_ASSET(_1DE360, 9);
+    gCurrentGameTask->callbackData0 = 0xFF;
+    gCurrentGameTask->callbackData1 = 0;
+    gCurrentGameTask->callbackData2 = 0x32;
+    gCurrentGameTask->callbackData3 = 0x4B0;
+    initCallbackTaskScheduler(0);
+#if defined(VERSION_JP)
+    createCallbackTask((CallbackTaskCallback)&initMainMenuTitleOptions, 0, 0x64);
+    createCallbackTask((CallbackTaskCallback)&initMainMenuTitleCursor, 0, 0x64);
+#else
+    if (gConnectedControllerCount != 0) {
+        createCallbackTask((CallbackTaskCallback)&initMainMenuTitleCursor, 0, 0x64);
+    } else {
+        createCallbackTask((CallbackTaskCallback)&updateTitleScreenStartPrompt, 0, 0x64);
+    }
+    createCallbackTask((CallbackTaskCallback)&initMainMenuTitleOptions, 0, 0x64);
+#endif
+    createCallbackTask((CallbackTaskCallback)&initMainMenuTitleLogo, 0, 0x64);
+    createCallbackTaskWithUserId((CallbackTaskCallback)&initTitleMenuSparkle, 0, 0x64, 0);
+    createCallbackTaskWithUserId((CallbackTaskCallback)initMainMenuBoardModels, 0, 0x64, 0);
+    setBootFadeColor(0x20, 0x40, 0x50);
+    loadMainMenuSceneModelAnimationBank();
+    initMainMenuSceneModel(0, 0);
+    setMainMenuSceneModelAnimation(0, 0);
+    setMainMenuSceneModelPosition(0, 0x83000, 0, -0x2BF000);
+    setMainMenuSceneModelRotation(0, 0, 0x30, 0);
+    initMainMenuSceneModel(1, 1);
+    setMainMenuSceneModelAnimation(1, 4);
+    setMainMenuSceneModelPosition(1, 0x564000, 0, 0x8C000);
+    setMainMenuSceneModelRotation(1, 0, 0xDD0, 0);
+    initMainMenuSceneModel(2, 2);
+    setMainMenuSceneModelAnimation(2, 3);
+    setMainMenuSceneModelPosition(2, -0x5ED000, 0, 0x3C8000);
+    setMainMenuSceneModelRotation(2, 0, 0x2D0, 0);
+    initMainMenuSceneModel(3, 3);
+    setMainMenuSceneModelAnimation(3, 1);
+    setMainMenuSceneModelPosition(3, -0x4C0000, 0, -0x47000);
+    setMainMenuSceneModelRotation(3, 0, 0x1B0, 0);
+    initMainMenuSceneModel(4, 4);
+    setMainMenuSceneModelAnimation(4, 5);
+    setMainMenuSceneModelPosition(4, 0x6DB000, 0, 0x4E9000);
+    setMainMenuSceneModelRotation(4, 0, 0xDD0, 0);
+    resetRaceCameras();
+    setRaceCameraMode(0, 0x1F);
+    gMenuFadeAlpha = (s16)gCurrentGameTask->callbackData0;
+    gMenuFadeOverlayActive = 1;
+    enqueueSoundEffect(SFX_MAIN_MENU_ENTER, SFX_PRIORITY_NORMAL);
+    setCurrentGameTaskCallback(&updateMainMenu, 0);
+    requestRumbleMotorInit(0U);
+    requestRumbleMotorInit(1U);
+    requestRumbleMotorInit(2U);
+    requestRumbleMotorInit(3U);
+}
+
+void updateMainMenu(void) {
+    s32 unused[2];
+    s32 flag;
+    s32 temp_v1;
+    s32 pressedInput;
+
+    flag = 0;
+    temp_v1 = gCurrentGameTask->callbackData0;
+    if (temp_v1 != 0) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s16)temp_v1, 0x10, 0);
+        if (gCurrentGameTask->callbackData0 == 0) {
+            gMenuFadeOverlayActive = 0;
+        }
+    } else {
+        if (gCurrentGameTask->callbackData2 != 0) {
+            gCurrentGameTask->callbackData2 -= 1;
+            if (gCurrentGameTask->callbackData2 == 0) {
+                requestMusicSequenceBank(0);
+            }
+        }
+        pressedInput = gPlayerInputPressed[0];
+        if (pressedInput & (STICK_UP | U_JPAD)) {
+            if (gCurrentGameTask->callbackData1 != 0) {
+                gCurrentGameTask->callbackData1 -= 1;
+                enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
+                pressedInput = gPlayerInputPressed[0];
+            }
+        }
+        if (pressedInput & (STICK_DOWN | D_JPAD)) {
+            if (gCurrentGameTask->callbackData1 != 2) {
+                gCurrentGameTask->callbackData1 += 1;
+                enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
+                pressedInput = gPlayerInputPressed[0];
+            }
+        }
+        if ((pressedInput & START_BUTTON) || (pressedInput & A_BUTTON)) {
+            flag = 1;
+            enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
+        }
+        if (flag == 0) {
+            gCurrentGameTask->callbackData3 -= 1;
+            if (gCurrentGameTask->callbackData3 == 0) {
+                flag = 1;
+            }
+        }
+        if (flag != 0) {
+            setCurrentGameTaskCallback(fadeOutMainMenu, 0);
+            requestMusicSequenceStop(0xC);
+        }
+    }
+    updateRaceCamera(0);
+    if (checkMainMenuSecretCode() != 0) {
+        gMainMenuSecretCodeUnlocked = 1;
+        enqueueSoundEffect(SFX_SLASH_CHEER, SFX_PRIORITY_NORMAL);
+    }
+    loopMainMenuSceneModelAnimation(0);
+    loopMainMenuSceneModelAnimation(1);
+    loopMainMenuSceneModelAnimation(2);
+    loopMainMenuSceneModelAnimation(3);
+    loopMainMenuSceneModelAnimation(4);
+    if (gCurrentGameTask->callbackData0 == 0xEF) {
+        addMainMenuSceneModelDrawCallback(0);
+        addMainMenuSceneModelDrawCallback(1);
+        addMainMenuSceneModelDrawCallback(2);
+        addMainMenuSceneModelDrawCallback(3);
+        addMainMenuSceneModelDrawCallback(4);
+    } else {
+        addMainMenuSceneModelDrawCallbackForViewport0(0);
+        addMainMenuSceneModelDrawCallback(1);
+        addMainMenuSceneModelDrawCallback(2);
+        addMainMenuSceneModelDrawCallbackForViewport0(3);
+        addMainMenuSceneModelDrawCallback(4);
+    }
+    updateCallbackTasks();
+}
+
+void fadeOutMainMenu(void) {
+    s32 temp_v0;
+    s32 temp_v1;
+
+    temp_v0 = gCurrentGameTask->callbackData0;
+    if (temp_v0 != 0xFF) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s16)temp_v0, 0x28, 1);
+        if (gCurrentGameTask->callbackData0 == 0xFF) {
+            gFramebufferSwapHold = 1;
+        } else {
+            updateRaceCamera(0);
+            loopMainMenuSceneModelAnimation(0);
+            loopMainMenuSceneModelAnimation(1);
+            loopMainMenuSceneModelAnimation(2);
+            loopMainMenuSceneModelAnimation(3);
+            loopMainMenuSceneModelAnimation(4);
+            addMainMenuSceneModelDrawCallback(0);
+            addMainMenuSceneModelDrawCallback(1);
+            addMainMenuSceneModelDrawCallback(2);
+            addMainMenuSceneModelDrawCallback(3);
+            addMainMenuSceneModelDrawCallback(4);
+            updateCallbackTasks();
+        }
+    } else if (gPendingFramebufferSwapCount == 2) {
+        releaseMenuAssetHandles();
+        gFramebufferSwapHold = 0;
+        gFramebufferRenderInterval.value = 0;
+        if (gCurrentGameTask->callbackData3 != 0) {
+            temp_v1 = gCurrentGameTask->callbackData1;
+            if (temp_v1 == 0) {
+                createGameTask(2, initNewGameSaveData, 0x64);
+                removeGameTask(3);
+            } else if (temp_v1 == 1) {
+                setCurrentGameTaskCallback(initMainMenuModeSelect, 0);
+            } else {
+                setCurrentGameTaskCallback(initMainMenuSettings, 0);
+            }
+        } else if (gMainMenuReturnFromRace == 0) {
+            setCurrentGameTaskCallback(enterMainMenuFromRace, 0);
+        } else {
+            gMainMenuReturnFromRace = 0;
+            setCurrentGameTaskCallback(initMainMenu, 0);
+            createGameTask(4, initMainMenuDemoRaceIntro, 0x64);
+            suspendGameTask(3);
+        }
+    }
+}
+
+void initMainMenuModeSelect(void) {
+    resetAllViewports();
+    gViewportStates[0].overlayAlpha = 0x80;
+    gFramebufferRenderInterval.value = 0;
+    configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+    LOAD_RAW_ASSET(_1467B0, 8);
+    LOAD_ASSET(_1DE360, 9);
+    LOAD_ASSET(_1F1A90, 0x28);
+    resetRaceCameras();
+    setRaceCameraMode(0, 0x1F);
+    initCallbackTaskScheduler(0);
+    createCallbackTaskWithUserId((CallbackTaskCallback)initMainMenuBoardModels, 0, 0x64, 0);
+    gMenuFlowState = 0;
+    gMainMenuSelectionResult = 0;
+    createCallbackTaskWithUserId((CallbackTaskCallback)&initMainMenuModeSelectMenuOptions, 0, 0x64, 0);
+    setBootFadeColor(0x20, 0x40, 0x50);
+    loadMainMenuSceneModelAnimationBank();
+    initMainMenuSceneModel(4, 4);
+    setMainMenuSceneModelAnimation(4, 5);
+    setMainMenuSceneModelPosition(4, 0xFFE00000, 0, 0x509000);
+    setMainMenuSceneModelRotation(4, 0, 0x100, 0);
+    setCurrentGameTaskCallback(updateMainMenuModeSelect, 0);
+    requestMusicSequenceBank(7);
+}
+
+void updateMainMenuModeSelect(void) {
+    s32 pressedInput;
+
+    gMenuFadeAlpha -= 0x10;
+    if (gMenuFadeAlpha < 0) {
+        gMenuFadeAlpha = 0;
+        pressedInput = gPlayerInputPressed[0];
+        if (pressedInput & (STICK_UP | U_JPAD)) {
+            if (gMenuFlowState != 0) {
+                enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
+                gMenuFlowState -= 1;
+                pressedInput = gPlayerInputPressed[0];
+            }
+        }
+        if ((pressedInput & (STICK_DOWN | D_JPAD)) && (gMenuFlowState != 2)) {
+            enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
+            gMenuFlowState += 1;
+            pressedInput = gPlayerInputPressed[0];
+        }
+        if (pressedInput & (A_BUTTON | B_BUTTON | START_BUTTON)) {
+            enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
+            if (gPlayerInputPressed[0] & B_BUTTON) {
+                gMenuFlowState = 2;
+            }
+            gMainMenuSelectionResult = 1;
+            if (gMenuFlowState == 2) {
+                requestMusicSequenceStop(0x3C);
+            }
+            setCurrentGameTaskCallback(fadeOutMainMenuModeSelect, 0);
+        }
+    }
+    updateRaceCamera(0);
+    loopMainMenuSceneModelAnimation(4);
+    addMainMenuSceneModelDrawCallback(4);
+    updateCallbackTasks();
+}
+
+void fadeOutMainMenuModeSelect(void) {
+    gMenuFadeAlpha += 0x10;
+    if (gMenuFadeAlpha >= 0x100) {
+        gMenuFadeAlpha = 0xFF;
+        gFramebufferSwapHold = 1;
+        setCurrentGameTaskCallback(exitMainMenuModeSelect, 0);
+    }
+    updateRaceCamera(0);
+    loopMainMenuSceneModelAnimation(4);
+    addMainMenuSceneModelDrawCallback(4);
+    updateCallbackTasks();
+}
+
+void exitMainMenuModeSelect(void) {
+    if (gPendingFramebufferSwapCount == 2) {
+        releaseMenuAssetHandles();
+        gFramebufferSwapHold = 0;
+        gFramebufferRenderInterval.value = 0;
+        setCurrentGameTaskCallback(initMainMenu, 0);
+        if (gMenuFlowState == 0) {
+            createGameTask(4, startTrainingCourseFlow, 0x64);
+            suspendGameTask(3);
+            return;
+        }
+        if (gMenuFlowState == 1) {
+            createGameTask(4, startMainMenuModePreviewRaceFlow, 0x64);
+            suspendGameTask(3);
+        }
+    }
+}
+
+void initMainMenuSettings(void) {
+    resetAllViewports();
+    configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+    gViewportStates[0].overlayAlpha = 0x80;
+    gFramebufferRenderInterval.value = 0;
+    LOAD_ASSET(_593D10, 0x29);
+    LOAD_ASSET(_1F1A90, 0x28);
+    LOAD_ASSET(_60F1A0, 0x2A);
+    LOAD_RAW_ASSET(_1467B0, 8);
+    LOAD_ASSET(_1DE360, 9);
+    resetRaceCameras();
+    setRaceCameraMode(0, 0x1F);
+    initCallbackTaskScheduler(0);
+    gMenuFlowState = 0;
+    gMainMenuSelectionResult = 0;
+    createCallbackTaskWithUserId((CallbackTaskCallback)&initMainMenuSettingsPanel, 0, 0x64, 0);
+    createCallbackTaskWithUserId((CallbackTaskCallback)&initMainMenuBoardModels, 0, 0x64, 0);
+    setBootFadeColor(0x20, 0x40, 0x50);
+    setCurrentGameTaskCallback(&updateMainMenuSettings, 0);
+    requestMusicSequenceBank(7);
+}
+
+void updateMainMenuSettings(void) {
+    s32 pressedInput;
+
+    gMenuFadeAlpha -= 0x10;
+    if (gMenuFadeAlpha < 0) {
+        gMenuFadeAlpha = 0;
+        pressedInput = gPlayerInputPressed[0];
+        if ((pressedInput & (STICK_UP | U_JPAD)) && (gMenuFlowState != 0)) {
+            gMenuFlowState -= 1;
+            enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
+            pressedInput = gPlayerInputPressed[0];
+        }
+        if ((pressedInput & (STICK_DOWN | D_JPAD)) && (gMenuFlowState != 3)) {
+            gMenuFlowState += 1;
+            enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
+            pressedInput = gPlayerInputPressed[0];
+        }
+        if (pressedInput & B_BUTTON) {
+            gMenuFlowState = 3;
+        }
+        if (pressedInput & (STICK_RIGHT | R_JPAD)) {
+            switch (gMenuFlowState) {
+                case 0:
+                    if (gRaceRecordSettingsEnabled != 0) {
+                        gRaceRecordSettingsEnabled -= 1;
+                        enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
+                        pressedInput = gPlayerInputPressed[0];
+                    }
+                    break;
+                case 1:
+                    if (gRaceCourseModelEffectsDisabled != 1) {
+                        gRaceCourseModelEffectsDisabled += 1;
+                        enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
+                        pressedInput = gPlayerInputPressed[0];
+                    }
+                    break;
+                case 2:
+                    if (gRaceCourseOverlayEffectsDisabled != 1) {
+                        gRaceCourseOverlayEffectsDisabled += 1;
+                        enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
+                        pressedInput = gPlayerInputPressed[0];
+                    }
+                    break;
+            }
+        }
+        if (pressedInput & (STICK_LEFT | L_JPAD)) {
+            switch (gMenuFlowState) {
+                case 0:
+                    if (gRaceRecordSettingsEnabled != 1) {
+                        gRaceRecordSettingsEnabled += 1;
+                        enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
+                        pressedInput = gPlayerInputPressed[0];
+                    }
+                    break;
+                case 1:
+                    if (gRaceCourseModelEffectsDisabled != 0) {
+                        gRaceCourseModelEffectsDisabled -= 1;
+                        enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
+                        pressedInput = gPlayerInputPressed[0];
+                    }
+                    break;
+                case 2:
+                    if (gRaceCourseOverlayEffectsDisabled != 0) {
+                        gRaceCourseOverlayEffectsDisabled -= 1;
+                        enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
+                        pressedInput = gPlayerInputPressed[0];
+                    }
+                    break;
+            }
+        }
+        if ((pressedInput & (A_BUTTON | B_BUTTON | START_BUTTON)) && (gMenuFlowState == 3)) {
+            requestMusicSequenceStop(0x3C);
+            enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
+            setCurrentGameTaskCallback(fadeOutMainMenuSettings, 0);
+        }
+    }
+    updateRaceCamera(0);
+    updateCallbackTasks();
+}
+
+void fadeOutMainMenuSettings(void) {
+    gMenuFadeAlpha += 0x10;
+    if (gMenuFadeAlpha >= 0x100) {
+        gMenuFadeAlpha = 0xFF;
+        gFramebufferSwapHold = 1;
+        setCurrentGameTaskCallback(exitMainMenuSettings, 0);
+    }
+    updateRaceCamera(0);
+    updateCallbackTasks();
+}
+
+void exitMainMenuSettings(void) {
+    if (gPendingFramebufferSwapCount == 2) {
+        releaseMenuAssetHandles();
+        gFramebufferSwapHold = 0;
+        gFramebufferRenderInterval.value = 0;
+        setCurrentGameTaskCallback(initMainMenu, 0);
+    }
+}
+
+s32 checkMainMenuSecretCode(void) {
+    switch (gMainMenuSecretCodeStep) {
+        case 0:
+            if (gPlayerInputHeld[0] == STICK_DOWN) {
+                gMainMenuSecretCodeStep++;
+            }
+            goto end0;
+        case 1:
+            if ((gPlayerInputHeld[0] != STICK_DOWN) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == STICK_UP) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 2:
+            if ((gPlayerInputHeld[0] != STICK_UP) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == D_JPAD) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 3:
+            if ((gPlayerInputHeld[0] != D_JPAD) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == U_JPAD) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 4:
+            if ((gPlayerInputHeld[0] != U_JPAD) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == D_CBUTTONS) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 5:
+            if ((gPlayerInputHeld[0] != D_CBUTTONS) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == U_CBUTTONS) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 6:
+            if ((gPlayerInputHeld[0] != U_CBUTTONS) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == L_TRIG) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 7:
+            if ((gPlayerInputHeld[0] != L_TRIG) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == R_TRIG) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 8:
+            if ((gPlayerInputHeld[0] != R_TRIG) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == Z_TRIG) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 9:
+            if ((gPlayerInputHeld[0] != Z_TRIG) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == L_JPAD) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 10:
+            if ((gPlayerInputHeld[0] != L_JPAD) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == R_CBUTTONS) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 11:
+            if ((gPlayerInputHeld[0] != R_CBUTTONS) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == STICK_UP) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 12:
+            if ((gPlayerInputHeld[0] != STICK_UP) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == B_BUTTON) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 13:
+            if ((gPlayerInputHeld[0] != B_BUTTON) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == R_JPAD) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 14:
+            if ((gPlayerInputHeld[0] != R_JPAD) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == L_CBUTTONS) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 15:
+            if (gPlayerInputHeld[0] != L_CBUTTONS) {
+                if (gPlayerInputHeld[0] != 0) {
+                    if (gPlayerInputHeld[0] == START_BUTTON) {
+                        return 1;
+                    }
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        default:
+        end0:
+            return 0;
+    }
+}

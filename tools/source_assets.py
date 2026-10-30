@@ -6,6 +6,7 @@ import ast
 import operator
 import re
 import subprocess
+from tools.source_versions import read_source
 
 from tools.course_surface_data_common import write_yaml, load_yaml
 from tools.music_assets import parse_events, encode_music_part
@@ -16,7 +17,7 @@ def source_files(root):
     """Repository sources, including unstaged additions but excluding ignored files."""
     result = subprocess.run(["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard", "--", "src"], cwd=root,
                             check=True, capture_output=True)
-    return sorted(root / p for p in result.stdout.decode().split("\0") if p.endswith(".c") and not p.startswith("src/jp/") and (root / p).is_file())
+    return sorted(root / p for p in result.stdout.decode().split("\0") if p.endswith(".c") and (root / p).is_file())
 
 
 def literal_values(body):
@@ -77,7 +78,7 @@ def extract_source_assets(root, rom):
     entries = []
     types = "Gfx|Vtx|MenuGlyphScript|CharacterModelPart|MenuPalette|RaceCourseSceneryEntry|RaceCourseSurface"
     for path in source_files(root):
-        source = path.read_text()
+        source = read_source(path)
         converted = process_source(source, chars, names)
         for match in re.finditer(r"\b(" + types + r")\s+(\w+)\s*(\[[^;=]*?\])\s*=\s*\{(.*?)\};", converted, re.S):
             kind, name, dimensions, body = match.groups()
@@ -96,8 +97,8 @@ def extract_source_assets(root, rom):
 
     # The engine passes individual command arrays through gSoundEffectCommandPointers to MusStartEffect.
     # Verify the existing C initializer against the original ROM before decoding it.
-    path = root / "src/us/audio/sound_manager.c"
-    source = path.read_text()
+    path = root / "src/audio/sound_manager.c"
+    source = read_source(path)
     if re.search(r"u8 gSoundEffect\w+Commands\[", source):
         data, command_offsets = sound_effect_bank(root, source)
         main = next(s for s in load_yaml(root / "snowboardkids.yaml")["segments"] if isinstance(s,dict) and s.get("name") == "main")
@@ -117,9 +118,9 @@ def extract_source_assets(root, rom):
                 raise ValueError("sound-effect listing does not round-trip")
             effects.append(dict(offset=start, events=events, unused_tail=data[stop:end].hex()))
         relative = "assets/source_views/sound_effects.yaml"
-        write_yaml(root / relative, dict(schema_version=1, authority="src/us/audio/sound_manager.c",
+        write_yaml(root / relative, dict(schema_version=1, authority="src/audio/sound_manager.c",
                                         rom_start=rom_offset, effect_offsets=offsets, effects=effects))
-        entries.append(dict(name="sound_effect_commands", type="sound_effects", source="src/us/audio/sound_manager.c",
+        entries.append(dict(name="sound_effect_commands", type="sound_effects", source="src/audio/sound_manager.c",
                             authority="source", status="source_backed", preview=relative))
     write_yaml(root / "assets/source_views/index.yaml", dict(schema_version=1, assets=entries))
     return entries

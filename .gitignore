@@ -26,6 +26,10 @@ src.*/temp.c
 nonmatchings
 .decomp-workbench/
 
+# Obsolete regional source folders may contain local scratch work.
+/src/us/
+/src/jp/
+
 report.json
 /reports/region-functions.json
 .idea

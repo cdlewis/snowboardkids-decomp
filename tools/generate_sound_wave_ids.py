@@ -19,6 +19,7 @@ from tools.course_surface_data_common import load_yaml
 from tools.huffman_asset import decompress_huffman_asset
 from tools.music_assets import parse_events, parse_music
 from tools.source_assets import sound_effect_ids
+from tools.source_versions import read_source
 
 ROOT = Path(__file__).resolve().parents[1]
 HEADER = Path("include/game/audio/sound_wave_ids.h")
@@ -71,7 +72,7 @@ def collect_waves(root, rom):
     table_rom = int(table_symbol[1], 0)
     main = next(s for s, _ in ranges if s.get("name") == "main")
     pointers = struct.unpack_from(f">{len(effect_ids)}I", rom, table_rom)
-    source = (root / "src/us/audio/sound_manager.c").read_text()
+    source = read_source(root / "src/audio/sound_manager.c")
     source_table = re.search(r"u8 \*gSoundEffectCommandPointers\[[^]]*\]\s*=\s*\{(.*?)\};", source, re.S)
     commands = re.findall(r"\bgSoundEffect\w+Commands\b", source_table[1]) if source_table else []
     if len(commands) != len(effect_ids):

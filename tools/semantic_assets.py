@@ -16,6 +16,7 @@ import tempfile
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from tools.asset_bundles import ROOT, LAYOUT, CHARACTER_NAMES, ASSET_TYPES, dump, materialize, pack_segment, write_makefile
 from tools.course_surface_data_common import load_yaml
+from tools.source_versions import read_source
 
 LEGACY_DIRS = ('course_display_lists','course_model_resources','course_sprite_tables','course_surface_data','readable')
 
@@ -44,7 +45,7 @@ def validate_registry(root, registry):
         ids = [v['runtime_id'] for v in items.values() if v['family']==family]
         if sorted(ids)!=list(range(1,count+1)):
             raise ValueError(f'incomplete/duplicate {family} item IDs: {ids}')
-    hud = (root/'src/us/race/ui/race_hud.c').read_text()
+    hud = read_source(root/'src/race/ui/race_hud.c')
     shot = numbers(initializer(hud,'gRaceHudShotTileOffsets'))
     action = numbers(initializer(hud,'gRaceHudItemTileIds'))
     for name,item in items.items():

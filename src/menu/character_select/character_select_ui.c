@@ -1,0 +1,1343 @@
+#include "game/menu/menu_scratch.h"
+#include "common.h"
+#include <PR/os_libc.h>
+#include "font_encoding.h"
+#include "game/save_data.h"
+#include "game/engine/asset_manager.h"
+#include "game/engine/render_callback.h"
+#include "game/engine/relocatable_heap.h"
+#include "game/engine/callback_task_scheduler.h"
+#include "game/menu/renderer/menu_renderer.h"
+#include "game/menu/character_select/character_select_menu.h"
+#include "game/menu/character_select/character_select_ui.h"
+#include "game/race/player/race_player_input.h"
+#include "game/engine/game_task_scheduler.h"
+
+#define CHARACTER_SELECT_UI_UNUSED_HANDLE (gAssetHandles[0x1F])
+
+#define CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE (gAssetHandles[0x21])
+
+#define CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE (gAssetHandles[0x29])
+
+#if defined(VERSION_US)
+#define CHARACTER_SELECT_UI_AVAILABLE_CHARACTER_ICON_HANDLE (gAssetHandles[0x1F])
+#endif
+
+CharacterSelectUiConfirmationBannerText gCharacterSelectConfirmationBannerText = {
+#if defined(VERSION_JP)
+    0xFFFC, 0x0007, 0x0046, 0x003B, 0x0066, 0x0047, 0x004F, 0x002B, 0x008E, 0x0093, 0x00B6, 0x008F, 0x00C9,
+    0x0097, 0x00C6, 0x009A, 0xFFFD, 0x0091, 0x0032, 0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+    0x0000, 0x0000, 0xFFFC, 0x0007, 0xFFFE, 0xFFFE, 0xFFFE, 0x0099, 0x00B9, 0x00C9, 0x0091, 0x0091, 0x00C9,
+    0x009C, 0x0095, 0x0030, 0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+    0x0000, 0x0000, 0x0000, 0x0000, 0x0028, 0x0028, 0x004D, 0x0069, 0x0047, 0x0053, 0xFFFE, 0x000A, 0x00C9,
+    0x0026, 0x0026, 0xFFFE, 0x000B, 0x00C9, 0x0046, 0x003B, 0x003F, 0x004D, 0x0068, 0xFFFF
+};
+CharacterSelectUiCharacterStats gCharacterSelectCharacterStats[8] = { 0x0004, 0x0004, 0x0004, 0x0002, 0x0006, 0x0006,
+                                                                      0x0003, 0x0005, 0x0005, 0x0005, 0x0003, 0x0003,
+                                                                      0x0006, 0x0002, 0x0002, 0x0005, 0x0005, 0x0005,
+                                                                      0x0004, 0x0004, 0x0004 };
+u16 gCharacterSelectCharacterStatLabels[8] = { 0x000A, 0x000A, 0x000A, 0x000B, 0x000A, 0x000B, 0x0002 };
+u16 gCharacterSelectPlayerMarkerTiles[16] = { 0x0027, 0x0033, 0x002B, 0x002F, 0x0028, 0x002C, 0x0034, 0x0030,
+                                              0x0029, 0x0035, 0x002D, 0x0031, 0x002A, 0x002E, 0x0036, 0x0032 };
+#else
+    {
+     {
+#endif
+            // textconv requires these _() invocations to retain their original line layout.
+#if defined(VERSION_JP)
+const char gCharacterSelectPlayerNumberFormat[4] = "%d";
+const char gCharacterSelectCharacterStatFormat[4] = "%d";
+#else
+            // clang-format off
+            _("{COLOR:7}SELECT YOUR\nCHARACTER."),
+        },
+        {
+            _("{COLOR:7}IS THIS OK?"),
+            // clang-format on
+        }, },
+    {
+     0x0028, 0x0028, 0x004D, 0x0069, 0x0047, 0x0053, 0xFFFE, 0x000A, 0x00C9, 0x0026,
+     0x0026, 0xFFFE, 0x000B, 0x00C9, 0x0046, 0x003B, 0x003F, 0x004D, 0x0068, 0xFFFF,
+     },
+};
+
+CharacterSelectUiCharacterStats gCharacterSelectCharacterStats[] = {
+    { 4, 4, 4 },
+    { 2, 6, 6 },
+    { 3, 5, 5 },
+    { 5, 3, 3 },
+    { 6, 2, 2 },
+    { 5, 5, 5 },
+    { 4, 4, 4 },
+    { 0, 0, 0 },
+};
+
+u16 gCharacterSelectCharacterStatLabels[] = {
+    0x000A, 0x000A, 0x000A, 0x000B, 0x000A, 0x000B, 0x0002, 0x0000,
+};
+
+u16 gCharacterSelectPlayerMarkerTiles[] = {
+    0x0027, 0x0033, 0x002B, 0x002F, 0x0028, 0x002C, 0x0034, 0x0030,
+    0x0029, 0x0035, 0x002D, 0x0031, 0x002A, 0x002E, 0x0036, 0x0032,
+};
+
+const char gCharacterSelectPlayerNumberFormat[] = "%d";
+#endif
+
+void drawCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0) {
+    s32 i;
+    s32 j;
+    unsigned int alpha;
+    s32 selected;
+    s32 limit;
+    CharacterSelectUiBannerActor *actor;
+
+    actor = arg0;
+    if (actor->state != 3) {
+        drawMenuSpriteWithAlpha(
+            (s16)(actor->x - 4),
+            (s16)(actor->y - 4),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
+            2,
+            0x20,
+            0x20,
+            0,
+            actor->alpha,
+            0
+        );
+        drawMenuSpriteWithAlpha(
+            (s16)(actor->x + 0xD4),
+            (s16)(actor->y - 4),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
+            4,
+            0x20,
+            0x20,
+            0,
+            actor->alpha,
+            0
+        );
+        i = 0;
+        do {
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x + i),
+                (s16)(actor->y - 4),
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
+                3,
+                0x20,
+                0x20,
+                0,
+                actor->alpha,
+                0
+            );
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x + i),
+                (s16)(actor->y + 0x24),
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
+                8,
+                0x20,
+                0x20,
+                0,
+                actor->alpha,
+                0
+            );
+            i += 0x10;
+        } while (i < 0xE0);
+        drawMenuSpriteWithAlpha(
+            (s16)(actor->x - 4),
+            (s16)(actor->y + 0x24),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
+            7,
+            0x20,
+            0x20,
+            0,
+            actor->alpha,
+            0
+        );
+        drawMenuSpriteWithAlpha(
+            (s16)(actor->x + 0xD4),
+            (s16)(actor->y + 0x24),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
+            9,
+            0x20,
+            0x20,
+            0,
+            actor->alpha,
+            0
+        );
+        i = (actor->state == 4) * 0;
+        limit = 0xE0;
+        do {
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x - 4),
+                (s16)(actor->y + i),
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
+                5,
+                0x20,
+                0x20,
+                0,
+                actor->alpha,
+                0
+            );
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x + 0xD4),
+                (s16)(actor->y + i),
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
+                6,
+                0x20,
+                0x20,
+                0,
+                actor->alpha,
+                0
+            );
+            j = 0;
+            do {
+                drawMenuSpriteWithAlpha(
+                    (s16)(actor->x + j),
+                    (s16)(actor->y + i),
+                    getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
+                    0xB,
+                    0x20,
+                    0x20,
+                    0,
+                    actor->alpha,
+                    0
+                );
+                j += 0x10;
+            } while (j != limit);
+            i += 0x10;
+        } while (i <= 0x2F);
+        if (actor->state < 3) {
+            selected = 0;
+        } else {
+            selected = 1;
+        }
+        drawMenuGlyphScript(
+            actor->x,
+            actor->y,
+            gCharacterSelectConfirmationBannerText.confirmationText[selected],
+            0,
+            actor->alpha,
+            0
+        );
+        if (actor->state == 4) {
+            if (actor->alpha != 0x100) {
+                alpha = actor->alpha & 0xFFFF;
+            } else {
+                if (actor->mode != 0) {
+                    alpha = 0x60;
+                } else {
+                    alpha = 0x100;
+                }
+            }
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x + 0x4C),
+                (s16)(actor->y + 0x10),
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE),
+                0x17,
+                0x20,
+                0x20,
+                0,
+                alpha,
+                0
+            );
+            if (actor->alpha < 0x60) {
+                alpha = actor->alpha & 0xFFFF;
+            } else {
+                if (actor->mode != 0) {
+                    alpha = 0x100;
+                } else {
+                    alpha = 0x60;
+                }
+            }
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x + 0x4C),
+                (s16)(actor->y + 0x20),
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE),
+                0x18,
+                0x20,
+                0x20,
+                0,
+                alpha,
+                0
+            );
+            if (actor->alpha != 0x100) {
+                alpha = actor->alpha & 0xFFFF;
+                ;
+            } else {
+                alpha = (u16)actor->confirmationCursorAlpha;
+            }
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x + 0x4C),
+                (s16)((actor->y + (actor->mode * 0x10)) + 0x10),
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE),
+                0x12,
+                0x20,
+                0x20,
+                0,
+                alpha,
+                0
+            );
+        }
+        if (actor->state == 1) {
+            drawMenuSprite(
+                (s16)(actor->x + 0xD0),
+                (s16)(actor->y + 0x20),
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE),
+                (actor->frame >= 8) + 5,
+                0x20,
+                0x20,
+                0,
+                0
+            );
+        }
+    }
+}
+
+void updateCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0) {
+    s16 alpha;
+    s32 state;
+    CharacterSelectUiBannerActor *actor;
+
+    actor = arg0;
+    if (gCharacterSelectHudState.phase != arg0->state) {
+        arg0->state = gCharacterSelectHudState.phase;
+        arg0->alpha = gCharacterSelectHudState.bannerAlpha;
+        arg0->bounceTimer = gCharacterSelectHudState.bannerBounceTimer;
+        arg0->confirmationCursorAlpha = gCharacterSelectHudState.bannerBounceOffset;
+    }
+
+    if (gCharacterSelectHudState.confirmationChoice != actor->mode) {
+        actor->mode = gCharacterSelectHudState.confirmationChoice;
+    }
+
+    alpha = actor->alpha;
+    state = actor->state;
+    if ((0x100 != (alpha ^ 0)) && (state != 0)) {
+        if ((state == 4) || (state == 1)) {
+            actor->alpha = alpha + 0x30;
+            if (actor->alpha >= 0x100) {
+                actor->alpha = 0x100;
+            }
+        } else {
+            actor->alpha = alpha - 0x30;
+            if (actor->alpha <= 0) {
+                actor->alpha = 0;
+            }
+        }
+    } else {
+        switch (state) {
+            case 0:
+            case 3:
+                break;
+            case 1:
+                actor->frame = (actor->frame + 1) & 0xF;
+                break;
+            case 2:
+                actor->alpha = alpha - 0x25;
+                if (actor->alpha <= 0) {
+                    actor->alpha = 0;
+                }
+                actor->state = 3;
+                gCharacterSelectHudState.exitMode = 1;
+                gMenuFlowState = 0x63;
+                break;
+            case 4:
+                if (actor->bounceTimer < 0x10) {
+                    actor->confirmationCursorAlpha -= 9;
+                } else {
+                    actor->confirmationCursorAlpha += 9;
+                }
+                actor->bounceTimer = (actor->bounceTimer + 1) & 0x1F;
+                break;
+        }
+    }
+
+    gCharacterSelectHudState.phase = actor->state;
+    gCharacterSelectHudState.bannerAlpha = actor->alpha;
+    if (actor->state != 8) {
+        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectConfirmationBanner, actor);
+    }
+}
+
+void initCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0) {
+    arg0->x = -0x70;
+    arg0->y = -0x1C;
+    arg0->alpha = 0;
+    arg0->state = 0;
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectConfirmationBanner);
+}
+
+void drawCharacterSelectPlayerPanelFrames(CharacterSelectUiPlayerPanelFrameActor *actor) {
+    s32 i;
+    u16 alpha;
+#if defined(VERSION_JP)
+    register CharacterSelectUiPlayerPanelFrameActor *panel;
+#else
+    CharacterSelectUiPlayerPanelFrameActor *panel;
+#endif
+    s32 playerNumber;
+#if defined(VERSION_JP)
+    volatile s32 unusedStackPadding;
+    char text[8];
+#else
+    char text[0xC];
+#endif
+
+    for (i = 0; i < 4; i++) {
+        if ((gPlayerCount - 1) < i) {
+            alpha = 0x50;
+        } else {
+            alpha = 0x100;
+        }
+
+        panel = actor;
+        playerNumber = i + 1;
+        drawMenuSpriteWithAlpha(
+            actor->x[i],
+            actor->y[i],
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE),
+            0x23,
+            0x20,
+            0x20,
+            0,
+            alpha,
+            playerNumber
+        );
+        drawMenuSpriteWithAlpha(
+            (s16)(actor->x[i] + 0x40),
+            actor->y[i],
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE),
+            0x24,
+            0x20,
+            0x20,
+            0,
+            alpha,
+            playerNumber
+        );
+        drawMenuSpriteWithAlpha(
+            (s16)(panel->x[i] + 0x80),
+            panel->y[i],
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE),
+            0xC,
+            0x20,
+            0x20,
+            0,
+            alpha,
+            playerNumber
+        );
+
+        sprintf(text, gCharacterSelectPlayerNumberFormat, playerNumber);
+        drawMenuAsciiText((s16)(actor->x[i] + 0x32), (s16)(panel->y[i] + 2), (u8 *)text, 0, alpha);
+
+        if (alpha != 0x100) {
+            if ((!actor) && (!actor)) {}
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x[i] + 2),
+                (s16)(actor->y[i] + 0x14),
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_UNUSED_HANDLE),
+                0x90,
+                0x20,
+                0x20,
+                0,
+                0xF0,
+                0
+            );
+        }
+    }
+}
+
+void updateCharacterSelectPlayerPanelFrames(CharacterSelectUiPlayerPanelFrameActor *arg0) {
+    u8 var_v0;
+    u8 desired;
+    u8 var_v1;
+    CharacterSelectUiPlayerPanelFrameActor *actor;
+    CharacterSelectUiRosterIconActor *owner;
+
+    owner = gMenuScratch0.rosterIcons;
+    actor = arg0;
+    var_v0 = actor->transitionState;
+    desired = gCharacterSelectHudState.exitMode;
+    var_v1 = var_v0;
+    if (desired != var_v0) {
+        actor->transitionState = desired;
+        var_v0 = desired & 0xFF;
+        actor->frameLimit = gCharacterSelectHudState.cursorX;
+        var_v0 = actor->transitionState;
+        var_v1 = var_v0;
+        actor->frameStep = gCharacterSelectHudState.cursorY;
+    }
+
+    switch (var_v1) {
+        case 1:
+            actor->y[1] += 8;
+            actor->y[3] += 8;
+            if (actor->y[3] == 0x24) {
+                actor->transitionState = 2;
+                owner->state = 1;
+            }
+            var_v0 = actor->transitionState;
+            break;
+        case 0:
+        case 2:
+        case 3:
+        case 4:
+            break;
+    }
+
+    (var_v0 ? &gCharacterSelectHudState : &gCharacterSelectHudState)->exitMode = var_v0;
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectPlayerPanelFrames, actor);
+}
+
+void initCharacterSelectPlayerPanelFrames(CharacterSelectUiPlayerPanelFrameActor *arg0) {
+    arg0->x[0] = -0x88;
+    arg0->y[0] = -0x60;
+    arg0->x[1] = -0x88;
+    arg0->y[1] = 4;
+    arg0->x[2] = 4;
+    arg0->y[2] = -0x60;
+    arg0->x[3] = 4;
+    arg0->y[3] = 4;
+    arg0->frameLimit = 0x8C;
+    arg0->frameStep = 0x44;
+    arg0->transitionState = 0;
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectPlayerPanelFrames);
+}
+
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
+void drawCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
+    s16 *assetHandles;
+    s32 i;
+    s32 j;
+    s32 xOffset;
+    u16 alpha;
+    u16 tile;
+    u8 textureIndex;
+    s32 selectedAlpha;
+    s32 tileTemp;
+
+    i = 0; \
+    if (arg0->state != 0) { \
+        assetHandles = gAssetHandles; \
+        xOffset = 0; \
+        selectedAlpha = 0x60; \
+        do { \
+            alpha = 0x100; \
+            j = 0; \
+            if (gPlayerCount > 0) { \
+                do { \
+                    if ((i == gRacePlayers[j].selectedCharacterId) && (gRacePlayers[j].menuState != 0)) {
+                        tileTemp = i + 0x41;
+                        alpha = 0x60;
+                        tile = tileTemp;
+                        textureIndex = 0x1F;
+                        break;
+                    }
+                    j++;
+                } while (j < gPlayerCount);
+            }
+            if (selectedAlpha != alpha) {
+                textureIndex = 0x21;
+                if (arg0->timer < 0xA) {
+                    tileTemp = i + 0x37;
+                    tile = tileTemp;
+                } else {
+                    tileTemp = i + 0x3D;
+                    tile = tileTemp;
+                }
+            }
+            drawMenuSpriteTile((s16)(arg0->x + xOffset), arg0->y,
+                          getRelocatableHeapBlockBase(assetHandles[textureIndex]), tile, 0, alpha);
+            i++;
+            xOffset += 0x20;
+        } while (i < 5);
+
+        if (arg0->leftSecretSlotUnlocked != 0) {
+            alpha = 0x100;
+            j = 0;
+            if (gPlayerCount > 0) {
+                do {
+                    if ((gRacePlayers[j].selectedCharacterId == 5) && (gRacePlayers[j].menuState != 0)) {
+                        alpha = 0x60;
+                        tile = 0x46;
+                        textureIndex = 0x1F;
+                        break;
+                    }
+                    j++;
+                } while (j < gPlayerCount);
+            }
+            if (selectedAlpha != alpha) {
+                textureIndex = 0x21;
+                if (arg0->timer < 0xA) {
+                    tile = 0x3C;
+                } else {
+                    tile = 0x42;
+                }
+            }
+            drawMenuSpriteTile((s16)(arg0->x - 0x20), arg0->y,
+                          getRelocatableHeapBlockBase(assetHandles[textureIndex]), tile, 0, alpha);
+        }
+    }
+}
+// clang-format on
+
+void updateCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
+    s16 temp_v0;
+    int new_var;
+    u8 var_v1;
+
+    var_v1 = arg0->state;
+    new_var = 1;
+    switch (var_v1) {
+        case 0:
+        case 3:
+            break;
+        case 1:
+            temp_v0 = arg0->targetX;
+            arg0->x = arg0->x - 0x10;
+            if (temp_v0 >= arg0->x) {
+                arg0->state = 2;
+                arg0->x = temp_v0;
+            }
+            var_v1 = arg0->state;
+            break;
+        case 2:
+            gCharacterSelectHudState.rosterReady = new_var;
+            var_v1 = arg0->state;
+            break;
+    }
+    if (var_v1) {
+        arg0->timer = (arg0->timer + new_var) % 20;
+    }
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectRosterIcons, arg0);
+}
+
+void initCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
+    s32 i;
+    GameSaveData *player;
+    CharacterSelectUiRosterIconActor *actor;
+    s32 targetX;
+
+    targetX = -0x50;
+    arg0->targetX = targetX;
+    arg0->x = 0xB8;
+    arg0->y = -0x10;
+    arg0->targetY = -0x48;
+    arg0->speedX = 0x12;
+    arg0->unused26 = 0;
+    arg0->state = 0;
+    arg0->timer = 0;
+    arg0->leftSecretSlotUnlocked = 0;
+    actor = arg0;
+    arg0->rightSecretSlotUnlocked = 0;
+
+    i = 0;
+    if (gPlayerCount > 0) {
+        player = &gGameSaveDataBuffer[0];
+#if defined(VERSION_JP)
+        for (;;) {
+#else
+        do {
+#endif
+            actor->leftSecretSlotUnlocked = actor->leftSecretSlotUnlocked | (player->characterFlags & 1);
+            gCharacterSelectHudState.leftSecretSlotUnlocked = actor->leftSecretSlotUnlocked;
+            gCharacterSelectHudState.rightSecretSlotUnlocked = actor->rightSecretSlotUnlocked;
+            i++;
+            player++;
+#if defined(VERSION_JP)
+
+            if (!(i < gPlayerCount)) {
+                break;
+            }
+        }
+#else
+        } while (i < gPlayerCount);
+#endif
+    }
+
+    if (actor->leftSecretSlotUnlocked == 1) {
+        actor->targetX = -0x40;
+    } else {
+        actor->targetX = targetX;
+    }
+    setCallbackTaskCallback(actor, (CallbackTaskCallback)updateCharacterSelectRosterIcons);
+}
+
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
+void drawCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0) {
+    s32 i;
+    s32 j;
+    s32 evenMatch;
+    s32 oddMatch;
+    u16 alpha;
+    u16 *tiles;
+    RacePlayer *player;
+#if defined(VERSION_US)
+    CharacterSelectUiPlayerCursorActor *actorX;
+#endif
+
+#if defined(VERSION_JP)
+    if (arg0->mode != 0) {
+        for (i = 0; i < (s32)gPlayerCount; i++) {
+            player = &gRacePlayers[i];
+            tiles = &gCharacterSelectPlayerMarkerTiles[i * 4];
+            evenMatch = 0;
+            oddMatch = 0;
+            j = 0;
+            if (player->menuState != 0) {
+                alpha = 0x100;
+            } else {
+                alpha = arg0->scale;
+#else
+    do { \
+        if (arg0->mode != 0) { \
+            i = 0; \
+            if (((s32)gPlayerCount) > 0) { \
+                player = gRacePlayers; \
+                tiles = gCharacterSelectPlayerMarkerTiles; \
+                actorX = arg0; \
+                do { \
+                    evenMatch = 0; \
+                    oddMatch = 0; \
+                    j = 0; \
+                    if (player->menuState != 0) { \
+                        alpha = 0x100; \
+                    } else { \
+                        alpha = arg0->scale; \
+                    } \
+                    if (((s32)gPlayerCount) > 0) { \
+                        do { \
+                            if ((j != i) && (gCharacterSelectHighlightedRosterIndices[i] == \
+                                             gCharacterSelectHighlightedRosterIndices[j])) { \
+                                if (!(j & 1)) { \
+                                    evenMatch = 1; \
+                                } else { \
+                                    oddMatch = 2; \
+                                } \
+                            } \
+                            j++; \
+                        } while (j < ((s32)gPlayerCount)); \
+                    } \
+                    drawMenuSpriteWithAlpha( \
+                        actorX->x[0], \
+                        arg0->y, \
+                        getRelocatableHeapBlockBase(gAssetHandles[0x21]), \
+                        tiles[evenMatch + oddMatch], \
+                        0x20, \
+                        0x20, \
+                        0, \
+                        alpha, \
+                        0 \
+                    ); \
+                    i++; \
+                    player++; \
+                    tiles += 4; \
+                    actorX = (CharacterSelectUiPlayerCursorActor *)(((u8 *)actorX) + 2); \
+                } while (i < ((s32)gPlayerCount)); \
+            } \
+        } \
+    } while (0);
+#endif
+}
+#if defined(VERSION_JP)
+            if (((s32)gPlayerCount) > 0) {
+                for (;;) {
+                    if ((j != i) &&
+                        (gCharacterSelectHighlightedRosterIndices[i] == gCharacterSelectHighlightedRosterIndices[j])) {
+#endif
+// clang-format on
+
+// IDO code generation for this function is sensitive to source line layout.
+#if defined(VERSION_JP)
+                        for (;;) {
+                            if (!(j & 1)) {
+                                evenMatch = 1;
+                            } else {
+                                oddMatch = 2;
+                            }
+                            break;
+                        }
+                    }
+                    j++;
+                    if (!(j < (s32)gPlayerCount)) {
+                        break;
+                    }
+                }
+            }
+            drawMenuSpriteWithAlpha(
+                arg0->x[i],
+                arg0->y,
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE),
+                (tiles + evenMatch)[oddMatch],
+                0x20,
+                0x20,
+                0,
+                alpha,
+                0
+            );
+        }
+    }
+}
+#endif
+// clang-format off
+void updateCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0) {
+    s32 i;
+    u8 mode;
+    u8 globalMode;
+    RacePlayer *player;
+    s8 *layout;
+
+    globalMode = gCharacterSelectHudState.rosterReady;
+    mode = arg0->mode;
+
+    if (globalMode != mode) {
+        mode = (arg0->mode = globalMode);
+    }
+
+    if (mode != 0) {
+#if defined(VERSION_JP)
+        // clang-format off
+ i = 0; if ((s32)gPlayerCount > 0) { layout = gCharacterSelectHighlightedRosterIndices; player = gRacePlayers; for (;;) {
+                // clang-format on
+#else
+ i = 0; if ((s32)gPlayerCount > 0) { layout = gCharacterSelectHighlightedRosterIndices; player = gRacePlayers; do {
+#endif
+                if (player->selectedCharacterId < 5) {
+                    arg0->x[i] = (layout[i] * 0x20) + arg0->baseX;
+                } else if (player->selectedCharacterId == 5) {
+                    arg0->x[i] = arg0->baseX;
+                }
+                i++;
+                player++;
+#if defined(VERSION_JP)
+
+                if (!(i < (s32)gPlayerCount)) {
+                    break;
+                }
+            }
+#else
+            } while (i < (s32)gPlayerCount);
+#endif
+        }
+
+        if ((s32)arg0->timer < 0x10) {
+            arg0->scale -= 9;
+        } else {
+            arg0->scale += 9;
+        }
+        arg0->timer = (arg0->timer + 1) & 0x1F;
+        mode = (((((((((arg0->mode & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF;
+    }
+
+    (mode ? &gCharacterSelectHudState : &gCharacterSelectHudState)->rosterReady = mode;
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectPlayerCursorMarkers, arg0);
+}
+// clang-format on
+
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
+void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0) {
+    /* Paired views preserve IDO's register reuse without pointer casts or byte offsets. */
+    union {
+        GameSaveData *playersEnd;
+        s32 playerIndex;
+    } loop;
+    union {
+        CharacterSelectUiPlayerCursorActor *actor;
+        s16 *next;
+    } marker;
+    GameSaveData *player;
+    s8 *highlightedRosterIndices;
+    s32 combinedPlayerFlags;
+
+    combinedPlayerFlags = 0;
+    loop.playerIndex = 0;
+    /* Splitting this loop header across lines changes IDO's instruction scheduling. */
+#if defined(VERSION_JP)
+    // clang-format off
+    if ((s32)gPlayerCount > 0) { player = &gGameSaveDataBuffer[0]; for (;;) {
+            // clang-format on
+#else
+    if ((s32)gPlayerCount > 0) { player = &gGameSaveDataBuffer[0]; do {
+#endif
+            combinedPlayerFlags |= player->characterFlags;
+            loop.playersEnd = &gGameSaveDataBuffer[0] + gPlayerCount;
+            player++;
+#if defined(VERSION_JP)
+
+            if (!(player < loop.playersEnd)) {
+                break;
+            }
+        }
+#else
+        } while (player < loop.playersEnd);
+#endif
+        loop.playerIndex = 0;
+    }
+
+    if (combinedPlayerFlags == 1) {
+        arg0->baseX = -0x60;
+    } else {
+        arg0->baseX = -0x70;
+    }
+
+    if ((s32)gPlayerCount > 0) {
+        highlightedRosterIndices = gCharacterSelectHighlightedRosterIndices;
+        marker.actor = arg0;
+#if defined(VERSION_JP)
+        for (;;) {
+#else
+        do {
+#endif
+            marker.actor->x[0] = (*highlightedRosterIndices * 0x20) + arg0->baseX;
+            loop.playerIndex++;
+            highlightedRosterIndices++;
+            marker.next++;
+#if defined(VERSION_JP)
+
+            if (!(loop.playerIndex < (s32)gPlayerCount)) {
+                break;
+            }
+        }
+#else
+        } while (loop.playerIndex < (s32)gPlayerCount);
+#endif
+    }
+
+    arg0->y = -0x18;
+    arg0->mode = 0;
+    arg0->scale = 0x100;
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectPlayerCursorMarkers);
+}
+// clang-format on
+#if defined(VERSION_US)
+
+const char gCharacterSelectCharacterStatFormat[] = "%d";
+#endif
+
+void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPlayerStatsPanelActor *arg0) {
+    CharacterSelectUiPlayerCursorActor *controller = gMenuScratch2.playerCursors;
+    CharacterSelectUiPlayerStatsPanelActor *actor = arg0;
+    s32 i;
+    s32 j;
+    s32 k;
+    u8 text[4];
+    u16 tile;
+    u8 textureIndex;
+
+    if (controller->mode != 0) {
+        for (i = 0; i < gPlayerCount; i++) {
+            if (gRacePlayers[i].menuState == 0) {
+                textureIndex = 0x21;
+                if (actor->blinkTimer[i] > 10) {
+                    actor->blinkVisible[i] = 1;
+                } else {
+                    actor->blinkVisible[i] = 0;
+                }
+
+                if (actor->blinkVisible[i] != 0) {
+                    tile = gRacePlayers[i].selectedCharacterId + 0x3D;
+                } else {
+                    tile = gRacePlayers[i].selectedCharacterId + 0x37;
+                }
+            } else {
+                textureIndex = 0x1F;
+                tile = gRacePlayers[i].selectedCharacterId + 0x41;
+            }
+
+            drawMenuSpriteTile(
+                (s16)(actor->x[i] + 6),
+                (s16)(actor->y[i] + 0xD),
+                getRelocatableHeapBlockBase(gAssetHandles[textureIndex]),
+                tile,
+                0,
+                0x100
+            );
+            drawMenuSprite(
+                (s16)(actor->x[i] + 2),
+                (s16)(actor->y[i] + 0x28),
+                getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
+                gRacePlayers[i].selectedCharacterId + 0x91,
+                0x20,
+                0x20,
+                0,
+                0
+            );
+
+            if (gRacePlayers[i].selectedCharacterId == 5) {
+                text[0] = '?';
+                text[1] = '?';
+                text[2] = '\0';
+            } else {
+                sprintf(
+                    text,
+                    gCharacterSelectCharacterStatFormat,
+                    gCharacterSelectCharacterStatLabels[gRacePlayers[i].selectedCharacterId]
+                );
+            }
+            drawMenuAsciiText((s16)(actor->x[i] + 0x70), (s16)(actor->y[i] + 0xD), text, 0, 0x100);
+
+            for (k = 0, j = 0; j < (gCharacterSelectCharacterStats[gRacePlayers[i].selectedCharacterId].speed / 2);
+                 j++, k += 0xC) {
+                drawMenuSprite(
+                    (s16)(actor->x[i] + k + 0x5D),
+                    (s16)(actor->y[i] + 0x16),
+                    getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                    0x25,
+                    0x20,
+                    0x20,
+                    0,
+                    0
+                );
+            }
+            if (gCharacterSelectCharacterStats[gRacePlayers[i].selectedCharacterId].speed & 1) {
+                drawMenuSprite(
+                    (s16)(actor->x[i] + k + 0x5D),
+                    (s16)(actor->y[i] + 0x16),
+                    getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                    0x26,
+                    0x20,
+                    0x20,
+                    0,
+                    0
+                );
+            }
+
+            for (k = 0, j = 0; j < (gCharacterSelectCharacterStats[gRacePlayers[i].selectedCharacterId].turn / 2);
+                 j++, k += 0xC) {
+                drawMenuSprite(
+                    (s16)(actor->x[i] + k + 0x5D),
+                    (s16)(actor->y[i] + 0x22),
+                    getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                    0x25,
+                    0x20,
+                    0x20,
+                    0,
+                    0
+                );
+            }
+            if (gCharacterSelectCharacterStats[gRacePlayers[i].selectedCharacterId].turn & 1) {
+                drawMenuSprite(
+                    (s16)(actor->x[i] + k + 0x5D),
+                    (s16)(actor->y[i] + 0x22),
+                    getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                    0x26,
+                    0x20,
+                    0x20,
+                    0,
+                    0
+                );
+            }
+
+            for (k = 0, j = 0; j < (gCharacterSelectCharacterStats[gRacePlayers[i].selectedCharacterId].trick / 2);
+                 j++, k += 0xC) {
+                drawMenuSprite(
+                    (s16)(actor->x[i] + k + 0x5D),
+                    (s16)(actor->y[i] + 0x2E),
+                    getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                    0x25,
+                    0x20,
+                    0x20,
+                    0,
+                    0
+                );
+            }
+            if (gCharacterSelectCharacterStats[gRacePlayers[i].selectedCharacterId].trick & 1) {
+                drawMenuSprite(
+                    (s16)(actor->x[i] + k + 0x5D),
+                    (s16)(actor->y[i] + 0x2E),
+                    getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                    0x26,
+                    0x20,
+                    0x20,
+                    0,
+                    0
+                );
+            }
+        }
+    }
+}
+
+void updateCharacterSelectPlayerStatsPanels(CharacterSelectUiPlayerStatsPanelActor *arg0) {
+    s32 i;
+    CharacterSelectUiPlayerStatsPanelActor *statsPanels;
+    CharacterSelectUiPlayerPanelFrameActor *panelFrames;
+
+    panelFrames = gMenuScratch1.playerFrames;
+    statsPanels = arg0;
+    for (i = 0; i != RACE_PLAYER_COUNT; i++) {
+        statsPanels->x[i] = panelFrames->x[i];
+        statsPanels->y[i] = panelFrames->y[i];
+        if (gRacePlayers[i].menuState == 0) {
+            statsPanels->blinkTimer[i] = (statsPanels->blinkTimer[i] + 1) % 20;
+        }
+    }
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectPlayerStatsPanels, arg0);
+}
+
+void initCharacterSelectPlayerStatsPanels(CharacterSelectUiPlayerStatsPanelActor *arg0) {
+    arg0->x[0] = -0x88;
+    arg0->y[0] = -0x60;
+    arg0->x[1] = -0x88;
+    arg0->y[1] = 0x24;
+    arg0->x[2] = 4;
+    arg0->y[2] = -0x60;
+    arg0->x[3] = 4;
+    arg0->y[3] = 0x24;
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectPlayerStatsPanels);
+}
+
+void drawCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedCharacterTokenActor *arg0) {
+    CharacterSelectUiSelectedCharacterTokenActor *tokens;
+    s32 i;
+    void *texture;
+    u16 tileSize;
+
+    tokens = arg0;
+    i = 0;
+    if (gPlayerCount > 0) {
+        do {
+            if (gRacePlayers[i].menuState != 0) {
+                texture = getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE);
+                tileSize = tokens->tileSize[i];
+                drawMenuSprite(tokens->x[i], tokens->y[i], texture, 0xD, tileSize, tileSize, 0, 0);
+            }
+            i++;
+        } while (i < gPlayerCount);
+    }
+}
+
+void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedCharacterTokenActor *arg0) {
+    CharacterSelectUiPlayerPanelFrameActor *panelFrames;
+    CharacterSelectUiSelectedCharacterTokenActor *tokens;
+    CharacterSelectUiSelectedCharacterTokenActor *actor;
+#if defined(VERSION_US)
+    volatile CharacterSelectUiSelectedCharacterTokenActor *volatileActor;
+#endif
+    s32 playerIndex;
+#if defined(VERSION_JP)
+    u8 menuState;
+#else
+    u32 menuState;
+#endif
+    s32 characterId;
+#if defined(VERSION_US)
+    u8 state;
+#endif
+    s16 rosterX;
+    s16 yDirection;
+    s32 step;
+    s32 exitXStep;
+    s32 exitYStep;
+    s32 panelIndex;
+    s16 panelX;
+#if defined(VERSION_JP)
+    s16 panelY;
+#else
+    s32 panelY;
+#endif
+
+    panelFrames = gMenuScratch1.playerFrames;
+    tokens = arg0;
+    actor = arg0;
+#if defined(VERSION_US)
+    volatileActor = arg0;
+#endif
+    for (playerIndex = 0; playerIndex < (s32)gPlayerCount; playerIndex++) {
+        menuState = gCharacterSelectHudState.selectedTokenState[playerIndex];
+#if defined(VERSION_JP)
+        if (tokens->state[playerIndex] != menuState) {
+#else
+        state = tokens->state[playerIndex];
+        if (state != (menuState & 0xFFFFFFFF)) {
+            state = menuState;
+#endif
+            actor->state[playerIndex] = menuState;
+        }
+
+#if defined(VERSION_JP)
+        switch (actor->state[playerIndex]) {
+#else
+        switch (state ^ 0) {
+#endif
+            case CHARACTER_SELECT_TOKEN_IDLE:
+                break;
+            case CHARACTER_SELECT_TOKEN_START:
+                characterId = gRacePlayers[playerIndex].selectedCharacterId;
+                if (characterId < 5) {
+                    rosterX = (characterId * 0x20) - 0x40;
+                } else if (characterId == 5) {
+                    rosterX = -0x70;
+                } else {
+                    rosterX = 0x50;
+                }
+
+                panelX = panelFrames->x[playerIndex] + 0x38;
+#if defined(VERSION_JP)
+                panelY = panelFrames->y[playerIndex] + 0x18;
+#else
+                panelY = (panelFrames->y[playerIndex] & 0xFFFFU) & 0xFFFFU;
+#endif
+                actor->xDistance[playerIndex] = panelX - rosterX;
+#if defined(VERSION_JP)
+                actor->yDistance[playerIndex] = panelY + 8;
+#else
+                actor->yDistance[playerIndex] = panelY + 0x20;
+#endif
+                actor->xDirection[playerIndex] = 1;
+                if (actor->xDistance[playerIndex] < 0) {
+                    tokens->xDirection[playerIndex] = -1;
+                    tokens->xDistance[playerIndex] = tokens->xDistance[playerIndex] * -1;
+                }
+                if (tokens->yDistance[playerIndex] < 0) {
+                    tokens->yDistance[playerIndex] = tokens->yDistance[playerIndex] * -1;
+                }
+
+                tokens->divisor[playerIndex] = tokens->xDistance[playerIndex] / 0x20;
+                tokens->axis[playerIndex] = 0;
+                tokens->stepCount[playerIndex] = tokens->xDistance[playerIndex] / 4;
+                if (tokens->xDistance[playerIndex] < tokens->yDistance[playerIndex]) {
+                    tokens->axis[playerIndex] = 1;
+                    tokens->divisor[playerIndex] = tokens->yDistance[playerIndex] / 0x20;
+                    tokens->stepCount[playerIndex] = tokens->yDistance[playerIndex] / 4;
+                }
+                tokens->x[playerIndex] = rosterX;
+                tokens->y[playerIndex] = -8;
+                tokens->tileSize[playerIndex] = 1;
+                tokens->timer[playerIndex] = 0;
+                tokens->state[playerIndex] = CHARACTER_SELECT_TOKEN_FLYING;
+#if defined(VERSION_US)
+                state = tokens->state[playerIndex];
+#endif
+                break;
+            case CHARACTER_SELECT_TOKEN_FLYING:
+#if defined(VERSION_US)
+                exitXStep = playerIndex;
+#endif
+                if (playerIndex & 1) {
+                    yDirection = 1;
+                } else {
+                    yDirection = -1;
+                }
+#if defined(VERSION_JP)
+                {
+                    for (step = 0; step < tokens->stepCount[playerIndex]; step++) {
+#else
+                step = 0;
+                if (tokens->stepCount[playerIndex] > 0) {
+                    do {
+#endif
+                        if (tokens->axis[playerIndex] != 0) {
+                            actor->y[playerIndex] += yDirection;
+                            actor->accumulator[playerIndex] += actor->xDistance[playerIndex];
+                            if (actor->accumulator[playerIndex] >= actor->yDistance[playerIndex]) {
+#if defined(VERSION_JP)
+                                actor->x[playerIndex] += actor->xDirection[playerIndex];
+                                actor->accumulator[playerIndex] -= actor->yDistance[playerIndex];
+#else
+                                actor->accumulator[playerIndex] =
+                                    (actor->x[playerIndex] += actor->xDirection[playerIndex],
+                                     actor->accumulator[playerIndex] - actor->yDistance[playerIndex]);
+#endif
+                            }
+                        } else {
+                            actor->x[playerIndex] += actor->xDirection[playerIndex];
+                            actor->accumulator[playerIndex] += actor->yDistance[playerIndex];
+                            if (actor->accumulator[playerIndex] >= actor->xDistance[playerIndex]) {
+                                actor->y[playerIndex] += yDirection;
+                                actor->accumulator[playerIndex] -= actor->xDistance[playerIndex];
+                            }
+                        }
+                        actor->timer[playerIndex]++;
+                        if ((actor->timer[playerIndex] % actor->divisor[playerIndex]) == 0) {
+                            actor->tileSize[playerIndex]++;
+                        }
+                        if (actor->tileSize[playerIndex] >= 0x21) {
+                            actor->tileSize[playerIndex] = 0x20;
+                        }
+                        if ((actor->x[playerIndex] == panelFrames->x[playerIndex] + 0x38) &&
+                            (actor->y[playerIndex] == panelFrames->y[playerIndex] + 0x18)) {
+                            actor->state[playerIndex] = CHARACTER_SELECT_TOKEN_LANDED;
+                            actor->tileSize[playerIndex] = 0x20;
+#if defined(VERSION_JP)
+                            break;
+#else
+                            state = volatileActor->state[playerIndex];
+                            goto flight_done;
+#endif
+                        }
+#if defined(VERSION_JP)
+                    }
+#else
+                        step++;
+                    } while (step < tokens->stepCount[playerIndex]);
+                    state = actor->state[playerIndex];
+                flight_done:;
+#endif
+                }
+                break;
+            case CHARACTER_SELECT_TOKEN_LANDED:
+                break;
+            default:
+                break;
+        }
+
+#if defined(VERSION_JP)
+        gCharacterSelectHudState.selectedTokenState[playerIndex] = actor->state[playerIndex];
+#else
+        gCharacterSelectHudState.selectedTokenState[playerIndex] = state;
+#endif
+    }
+
+    if (panelFrames->transitionState == 3) {
+#if defined(VERSION_JP)
+        for (step = 0; step < 0x10; step++) {
+#else
+        step = 0;
+        do {
+#endif
+            for (panelIndex = 0; panelIndex != RACE_PLAYER_COUNT; panelIndex++) {
+                if (panelIndex < 2) {
+                    exitXStep = -1;
+                } else {
+                    exitXStep = 1;
+                }
+                if (panelIndex & 1) {
+                    exitYStep = 1;
+                } else {
+                    exitYStep = -1;
+                }
+                panelFrames->x[panelIndex] += exitXStep;
+                if (panelIndex == 0) {
+                    panelFrames->frameCounter += panelFrames->frameStep;
+                }
+                if (panelFrames->frameCounter >= panelFrames->frameLimit) {
+                    panelFrames->y[panelIndex] += exitYStep;
+                    if (panelIndex == 3) {
+                        panelFrames->frameCounter -= panelFrames->frameLimit;
+                    }
+                }
+                actor->x[panelIndex] = panelFrames->x[panelIndex] + 0x38;
+                actor->y[panelIndex] = panelFrames->y[panelIndex] + 0x18;
+            }
+#if defined(VERSION_US)
+            step++;
+#endif
+            if (panelFrames->x[0] == -0x114) {
+                panelFrames->transitionState = 4;
+                break;
+            }
+#if defined(VERSION_JP)
+        }
+#else
+        } while (step != 0x10);
+#endif
+    }
+
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectSelectedCharacterTokens, actor);
+}
+
+void initCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedCharacterTokenActor *arg0) {
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectSelectedCharacterTokens);
+}

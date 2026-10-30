@@ -25,7 +25,7 @@ If you are able to match the function, update the C code to use it. The C code w
 
 - Update the rest of the project to fix any build issues.
 - If the function is defined in a header file (located in include/), this will also need to be updated. These other usages may teach you about the correct type of your function arguments or return types. DO NOT JUST MAKE EVERYTHING void\*!.
-- Make sure to search for any existing function / struct declarations in the project (under src/us/ and include/). We do not want duplicate or redundant declarations.
+- Make sure to search for any existing function / struct declarations in the project (under src/ and include/). We do not want duplicate or redundant declarations.
 
 Verify that the project still builds successfully by running `./tools/build-and-verify.sh`. If this check fails, the decompilation is NOT complete, even if individual functions appear to match.
 

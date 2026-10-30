@@ -6,11 +6,16 @@ import json
 import re
 from collections import defaultdict
 from pathlib import Path
+if __package__:
+    from .source_versions import read_source
+else:
+    from source_versions import read_source
+
 
 
 HEADER_ROOT = Path("include/game")
 SOURCE_ROOT = Path("src")
-EXCLUDED_SOURCE_ROOTS = (Path("src/ultra"), Path("src/us/ultra"), Path("src/jp"))
+EXCLUDED_SOURCE_ROOTS = (Path("src/ultra"),)
 GENERATED_CONTEXT_NAME = "c" + "tx.c"
 
 FORWARD_TYPE_RE = re.compile(
@@ -39,7 +44,7 @@ def is_excluded_source(path: Path) -> bool:
 
 def matching_headers(source_path: Path, source: str) -> list[Path]:
     headers = []
-    likely_header = HEADER_ROOT / source_path.relative_to(SOURCE_ROOT / "us" if SOURCE_ROOT / "us" in source_path.parents else SOURCE_ROOT).with_suffix(".h")
+    likely_header = HEADER_ROOT / source_path.relative_to(SOURCE_ROOT).with_suffix(".h")
     if likely_header.is_file():
         headers.append(likely_header)
     for include_path in INCLUDE_RE.findall(source):
@@ -64,7 +69,7 @@ def find_candidates(stable: bool = False) -> list:
     for source_path in sorted(SOURCE_ROOT.rglob("*.c"), key=str):
         if is_excluded_source(source_path):
             continue
-        text = source_path.read_text()
+        text = read_source(source_path)
         function_names = EXTERN_FUNCTION_RE.findall(text)
         if not function_names:
             continue
@@ -92,8 +97,6 @@ def find_candidates(stable: bool = False) -> list:
         header_path = Path(header)
         relative = header_path.relative_to(HEADER_ROOT)
         likely_source = SOURCE_ROOT / relative.with_suffix(".c")
-        if not likely_source.is_file():
-            likely_source = SOURCE_ROOT / "us" / relative.with_suffix(".c")
         key = (header, str(likely_source) if likely_source.is_file() else "")
         merged[key].update(problem_set)
 

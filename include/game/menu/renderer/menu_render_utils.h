@@ -81,4 +81,6 @@ void allocMenuRenderScratchBuffers(void);
 void selectMenuRenderScratchBuffer(s32 bufferIndex);
 void *allocMenuRenderScratch(s32 size);
 
+void writebackMenuRenderScratchBuffer(s32 frameIndex);
+
 #endif

@@ -40,7 +40,7 @@ Asset_56910 gCourseDataAssets[] = {
 
 ### Identify the array to convert
 
-Look for arrays of type `Asset_56910` or similar asset structures in `src/us/data/course_data.c` or other data files.
+Look for arrays of type `Asset_56910` or similar asset structures in `src/data/course_data.c` or other data files.
 
 ### Extract the pattern
 
@@ -222,7 +222,7 @@ When you see `[0x226BA0, bin]` in the YAML:
 grep "_224420:" snowboardkids.yaml
 
 # Find all uses of an address
-grep -r "0x00224420" src/us/
+grep -r "0x00224420" src/
 
 # Validate segment order
 python3 -m splat split snowboardkids.yaml
@@ -344,7 +344,7 @@ Before adding a named segment to the YAML, verify the address is actually used w
 
 ```bash
 # Check if address is used with ROM symbols
-grep -r "_228400_ROM" src/us/ include/
+grep -r "_228400_ROM" src/ include/
 ```
 
 If the address is only used as a hardcoded pointer (e.g., `{ (void *)0x00228400, ... }`), you typically don't need a named segment. An end marker is sufficient:
