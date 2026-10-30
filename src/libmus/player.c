@@ -1,8 +1,6 @@
 #include <PR/gu.h>
 #include "game/audio/audio_engine_internal.h"
 
-#define MUS_REGISTER
-
 #define FIRST_DRUM_NOTE 12
 #define U8_TO_FLOAT(c) ((c) & 128) ? -(256 - (c)) : (c)
 #define COMMAND_HANDLER(func) (PlayerCommandHandler)(void *)(func)
@@ -445,7 +443,7 @@ void __MusIntProcessWobble(PlayerCommandState *arg0) {
 
 void __MusIntProcessVibrato(PlayerCommandState *arg0) {
     s32 temp_v1;
-    MUS_REGISTER f32 temp_fv1;
+    f32 temp_fv1;
     u8 temp_v0;
 
     temp_v0 = arg0->unkE9;
@@ -463,13 +461,13 @@ void __MusIntProcessContinuousVolume(PlayerCommandState *arg0) {
     u16 temp_c8;
     s32 one = 1;
     s32 new_var;
-    MUS_REGISTER u8 temp_v0;
-    MUS_REGISTER u8 temp_t2;
-    MUS_REGISTER u8 temp_t4;
+    u8 temp_v0;
+    u8 temp_t2;
+    u8 temp_t4;
     s16 temp_s16;
-    MUS_REGISTER u16 temp_t6;
-    MUS_REGISTER s32 temp_t9;
-    MUS_REGISTER u16 temp_t0;
+    u16 temp_t6;
+    s32 temp_t9;
+    u16 temp_t0;
 
     if ((u32)arg0->unk4 < (u32)arg0->channel_frame) {
         do {
@@ -506,13 +504,13 @@ void __MusIntProcessContinuousPitchBend(PlayerCommandState *arg0) {
     u16 temp_ca;
     s32 one = 1;
     s32 new_var;
-    MUS_REGISTER u8 temp_v0;
-    MUS_REGISTER u8 temp_t2;
-    MUS_REGISTER u8 temp_t4;
+    u8 temp_v0;
+    u8 temp_t2;
+    u8 temp_t4;
     s16 temp_s16;
-    MUS_REGISTER u16 temp_t6;
-    MUS_REGISTER s32 temp_t9;
-    MUS_REGISTER u16 temp_t0;
+    u16 temp_t6;
+    s32 temp_t9;
+    u16 temp_t0;
 
     if ((u32)arg0->unk8 < (u32)arg0->channel_frame) {
         do {

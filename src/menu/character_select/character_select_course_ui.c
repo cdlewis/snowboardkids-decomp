@@ -83,218 +83,144 @@ CharacterSelectCoursePreviewData
             0x0185, 0x0186, 0x0187, 0x017A, 0x0183, 0x0188, 0x0189, 0x018A, 0x00A4, 0x00A5, 0x00A6, 0x00A7, 0x00A9,
             0x00AA, 0x00AB, 0x00AC, 0x00AD, 0x00AE, 0x00AF, 0x00B0, 0x00B2, 0x00B3, 0x00B4, 0x00B5, 0x00A8, 0x00B1,
             0x00B6, 0x00B7 },
-         { 0x00B8, 0x0000,
-            // textconv requires this invocation to retain its line layout.
-            // clang-format off
-            { _("COURSE SELECT") },
-            // clang-format on
-         } }
-
+         {
+              0x00B8,
+              0x0000,
+              { _("COURSE SELECT") },
+          } }
 };
-#if defined(VERSION_JP)
-u16 gCharacterSelectCourseStatsScoreValues[10] = { 0x021D, 0x06D6, 0x06AA, 0x0558, 0x05D2,
-                                                   0x05D2, 0x0666, 0x0680, 0x017E, 0x01F4 };
-u8 gCharacterSelectCourseDifficultyRatings[12] = { 0x0002, 0x0003, 0x0004, 0x0005, 0x0006,
-                                                   0x0006, 0x0008, 0x0007, 0x0004, 0x0005 };
-u16 gCharacterSelectCourseMedalScoreThresholds[34] = { 0x0BB8, 0x0320, 0x0190, 0x0E10, 0x0384, 0x01F4, 0x0FA0,
-                                                       0x03E8, 0x01F4, 0x1130, 0x044C, 0x0258, 0x1450, 0x0514,
-                                                       0x02BC, 0x1770, 0x05DC, 0x0320, 0x1B58, 0x0708, 0x0384,
-                                                       0x1F40, 0x07D0, 0x03E8, 0x2710, 0x09C4, 0x0514, 0x012C,
-                                                       0x00C8, 0x0064, 0x012C, 0x00C8, 0x0064 };
-CharacterSelectCourseText gCharacterSelectCourseNameText[10] = {
-    0xFFFC, 0x0007, 0x007C, 0x006D, 0x0054, 0x002B, 0x00B0, 0x0098, 0x00A8, 0x004B, 0x003D, 0x002B, 0x0053, 0x0049,
-    0x002B, 0x004C, 0xFFFD, 0x00C9, 0x009C, 0x0032, 0xFFFD, 0xFFFE, 0xFFFE, 0xFFFC, 0x0006, 0x002B, 0x00E6, 0x0118,
-    0x0058, 0x0068, 0x005E, 0x0005, 0x00E6, 0x002B, 0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000, 0xFFFC, 0x0007, 0x00ED, 0x00EB, 0x00A8, 0x00EC, 0x0095, 0x00B6, 0x0114, 0x0091,
-    0x008A, 0x0096, 0x00A5, 0x009C, 0x00CE, 0x00B7, 0xFFFD, 0x0094, 0x00B7, 0x00B8, 0x0049, 0x002B, 0x004C, 0x00C9,
-    0x009C, 0x0032, 0xFFFD, 0x00EE, 0x00EF, 0x00A4, 0x00ED, 0x0076, 0x0068, 0x005E, 0x008E, 0x0114, 0x00C6, 0x00B9,
-    0x00BC, 0x00CA, 0x0092, 0xFFFD, 0x00B3, 0x008A, 0x00A2, 0x00A1, 0x0097, 0x008A, 0x009F, 0x00A8, 0x0095, 0x00A9,
-    0x0054, 0x0075, 0x0032, 0xFFFD, 0xFFFE, 0xFFFE, 0xFFFC, 0x0006, 0x002B, 0x00E6, 0x0118, 0x0058, 0x0068, 0x005E,
-    0x0002, 0x00E6, 0x002B, 0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000, 0xFFFC, 0x0007, 0x00EB, 0x0083, 0x003F, 0x006D,
-    0x003F, 0x009F, 0x00A0, 0x00BC, 0x0097, 0x00B6, 0x009C, 0x00ED, 0x00EB, 0x008E, 0xFFFD, 0x009C, 0x00CE, 0x00B8,
-    0x0049, 0x002B, 0x004C, 0x00C9, 0x009C, 0x0032, 0xFFFD, 0x007F, 0x004C, 0x00ED, 0x0076, 0x0068, 0x005E, 0x00A8,
-    0x0099, 0x0092, 0x00BF, 0x0096, 0x00A3, 0x00F0, 0x00F1, 0xFFFD, 0x00A5, 0x0096, 0x008E, 0x00A1, 0x0098, 0x00B5,
-    0x0092, 0x0024, 0xFFFD, 0xFFFE, 0xFFFE, 0xFFFC, 0x0006, 0x002B, 0x00E6, 0x0118, 0x0058, 0x0068, 0x005E, 0x0003,
-    0x00E6, 0x002B, 0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0xFFFC, 0x0007,
-    0x0091, 0x00AE, 0x00A9, 0x00A1, 0x0095, 0x00BB, 0x00B9, 0x00A2, 0x0091, 0x00A4, 0x0091, 0x0114, 0x00F3, 0x00A8,
-    0xFFFD, 0x0059, 0x0041, 0x0042, 0x0038, 0x0041, 0x008E, 0x009C, 0x00CE, 0x00B7, 0x00AE, 0x009C, 0x0032, 0xFFFD,
-    0x0049, 0x002B, 0x004C, 0x00A8, 0x00A3, 0x00A0, 0x008C, 0x0092, 0x00A5, 0x0090, 0x00B8, 0x0114, 0x0091, 0x0097,
-    0xFFFD, 0x00A1, 0x0095, 0x00A8, 0x00BB, 0x0095, 0x00B9, 0x00F6, 0x00BC, 0x0084, 0x0041, 0x003F, 0x0053, 0x0024,
-    0xFFFD, 0xFFFE, 0xFFFE, 0xFFFC, 0x0006, 0x002B, 0x00E6, 0x0118, 0x0058, 0x0068, 0x005E, 0x0003, 0x00E6, 0x002B,
-    0xFFFF, 0x0000, 0xFFFC, 0x0007, 0x00AF, 0x00CA, 0x00B7, 0x00A8, 0x00F4, 0x00BC, 0x0094, 0x0091, 0x009B, 0x00BF,
-    0x00B8, 0x00EB, 0x0095, 0x00B6, 0xFFFD, 0x009C, 0x00CE, 0x00B7, 0x0094, 0x00B7, 0x00B8, 0x0049, 0x002B, 0x004C,
-    0x00C9, 0x009C, 0x0032, 0xFFFD, 0x0116, 0x008E, 0x0091, 0x0097, 0x0095, 0x0117, 0x008E, 0x0091, 0x0097, 0x0095,
-    0x0114, 0x00A9, 0x00C2, 0x00B1, 0xFFFD, 0x00A8, 0x00BB, 0x0095, 0x00B9, 0x00F6, 0x00BC, 0x0084, 0x0041, 0x003F,
-    0x0053, 0x0024, 0xFFFD, 0xFFFE, 0xFFFE, 0xFFFC, 0x0006, 0x002B, 0x00E6, 0x0118, 0x0058, 0x0068, 0x005E, 0x0003,
-    0x00E6, 0x002B, 0xFFFF, 0x0000, 0x0000, 0x0000, 0xFFFC, 0x0007, 0x0093, 0x0091, 0x00BD, 0x008D, 0x0092, 0x00C2,
-    0x0095, 0x008F, 0x00BC, 0x00D7, 0x00BB, 0x008A, 0x009F, 0x0114, 0xFFFD, 0x00F3, 0x00A8, 0x0040, 0x005F, 0x003C,
-    0x002B, 0x0073, 0x0061, 0x003F, 0x0053, 0x0080, 0x002B, 0x0047, 0x008E, 0xFFFD, 0x009C, 0x00CE, 0x00B8, 0x0049,
-    0x002B, 0x004C, 0x00C9, 0x009C, 0x0032, 0xFFFD, 0xFFFE, 0xFFFE, 0xFFFC, 0x0006, 0x002B, 0x00E6, 0x0118, 0x0058,
-    0x0068, 0x005E, 0x0003, 0x00E6, 0x002B, 0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0xFFFC, 0x0007, 0x0099, 0x00C6,
-    0x0091, 0x00FA, 0x00FB, 0x00BC, 0x00DA, 0x009A, 0x00B9, 0x009F, 0x0114, 0x009A, 0x00CB, 0x0097, 0xFFFD, 0x008E,
-    0x009C, 0x00CE, 0x00B8, 0x0049, 0x002B, 0x004C, 0x00C9, 0x009C, 0x0032, 0xFFFD, 0x00FC, 0x00F9, 0x00A8, 0x00A3,
-    0x0099, 0x00BA, 0x00C9, 0x00A9, 0x00FC, 0x009A, 0x00B9, 0x00A2, 0x009B, 0x00AE, 0xFFFD, 0x0092, 0x00A8, 0x00C9,
-    0x00F7, 0x00F8, 0x009B, 0x00B5, 0x0092, 0x0024, 0xFFFD, 0xFFFE, 0xFFFE, 0xFFFC, 0x0006, 0x002B, 0x00E6, 0x0118,
-    0x0058, 0x0068, 0x005E, 0x0003, 0x00E6, 0x002B, 0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0xFFFC, 0x0007, 0x00A9, 0x00BF, 0x009B, 0x0091, 0x00FD, 0x00ED, 0x00C9, 0x0114, 0x0049, 0x002B, 0x004C, 0x00BC,
-    0x00FE, 0x0093, 0xFFFD, 0x00A5, 0x0097, 0x0097, 0x00A4, 0x008A, 0x00A2, 0x0091, 0x00AE, 0x009C, 0x0032, 0xFFFD,
-    0x006C, 0x0048, 0x0095, 0x00B6, 0x0099, 0x00BA, 0x00BF, 0x0094, 0x00A0, 0x00A4, 0x0091, 0x00B5, 0x0092, 0x00A5,
-    0xFFFD, 0x00F2, 0x008E, 0x00A1, 0x0098, 0x00B5, 0x0092, 0x0024, 0xFFFD, 0xFFFE, 0xFFFE, 0xFFFC, 0x0006, 0x002B,
-    0x00E6, 0x0118, 0x0058, 0x0068, 0x005E, 0x0003, 0x00E6, 0x002B, 0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000, 0xFFFC, 0x0007, 0x0055, 0x003F, 0x0072, 0x003B, 0x009F, 0x00A0, 0x00BC, 0x0097,
-    0x00B6, 0x009C, 0x0072, 0x0080, 0x003F, 0x006E, 0xFFFD, 0x00A8, 0x0097, 0x00A5, 0x00A8, 0x0049, 0x002B, 0x004C,
-    0x00C9, 0x009C, 0x0032, 0xFFFD, 0xFFFE, 0xFFFE, 0xFFFC, 0x0006, 0x002B, 0x00E6, 0x0118, 0x0058, 0x0068, 0x005E,
-    0x0009, 0x00E6, 0x002B, 0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x006F, 0x002B, 0x0060, 0x0061, 0x0055, 0x003C,
-    0x002B, 0x00A5, 0x00B2, 0x00CA, 0x00B7, 0x00AE, 0x009C, 0x0032, 0xFFFF
-};
-MenuGlyphScript gCharacterSelectBeginnerCourseDescriptionText[3][CHARACTER_SELECT_BEGINNER_DESCRIPTION_LENGTH] = {
-    0xFFFC, 0x0007, 0x00A3, 0x00A2, 0x00B2, 0x00A9, 0x00B3, 0x0097, 0x009C, 0x00CE, 0x00B7, 0x00AE, 0x009B,
-    0x008D, 0x0092, 0x0032, 0xFFFD, 0xFFFD, 0xFFFC, 0x0006, 0xFFFE, 0x004C, 0x0081, 0x002B, 0x007A, 0x005B,
-    0x0035, 0x003F, 0xFFFE, 0x0001, 0x0000, 0x0049, 0xFFFD, 0xFFFE, 0x001D, 0x0012, 0x0016, 0x000E, 0xFFFE,
-    0x0001, 0x0027, 0x0000, 0x0000, 0x0025, 0x0000, 0x0000, 0xFFFF, 0x0000, 0xFFFC, 0x0007, 0x00B2, 0x008A,
-    0x00A3, 0x00A9, 0x00B3, 0x0097, 0x009C, 0x00CE, 0x00B7, 0x00AE, 0x009B, 0x008D, 0x0092, 0x0032, 0xFFFD,
-    0xFFFD, 0xFFFC, 0x0006, 0xFFFE, 0x004C, 0x0081, 0x002B, 0x007A, 0x005B, 0x0035, 0x003F, 0xFFFE, 0x0002,
-    0x0000, 0x0049, 0xFFFD, 0xFFFE, 0x001D, 0x0012, 0x0016, 0x000E, 0xFFFE, 0x0003, 0x0027, 0x0000, 0x0000,
-    0x0025, 0x0000, 0x0000, 0xFFFF, 0x0000, 0xFFFC, 0x0007, 0x009A, 0x00B6, 0x00A5, 0x00A9, 0x00B3, 0x0097,
-    0x009C, 0x00CE, 0x00B7, 0x00AE, 0x009B, 0x008D, 0x0092, 0x0032, 0xFFFD, 0xFFFD, 0xFFFC, 0x0006, 0xFFFE,
-    0x004C, 0x0081, 0x002B, 0x007A, 0x005B, 0x0035, 0x003F, 0xFFFE, 0x0002, 0x0000, 0x0049, 0xFFFD, 0xFFFE,
-    0x001D, 0x0012, 0x0016, 0x000E, 0xFFFE, 0x0003, 0x0027, 0x0000, 0x0000, 0x0025, 0x0000, 0x0000, 0xFFFF
-};
-MenuGlyphScript gCharacterSelectAdvancedCourseDescriptionText[3][0x30] = {
-    0xFFFC, 0x0007, 0x00CA, 0x008F, 0x00CA, 0x008F, 0x0099, 0x00BB, 0x009B, 0x00AE, 0x009B, 0x008D, 0x0092, 0x0032,
-    0xFFFD, 0xFFFD, 0xFFFC, 0x0006, 0xFFFE, 0x00ED, 0x0076, 0x0068, 0x005E, 0xFFFE, 0x0003, 0x0000, 0x0049, 0xFFFD,
-    0xFFFE, 0x001D, 0x0012, 0x0016, 0x000E, 0xFFFE, 0x0001, 0x0027, 0x0003, 0x0000, 0x0025, 0x0000, 0x0000, 0xFFFF,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0xFFFC, 0x0007, 0x006C, 0x003F, 0x006C, 0x003F, 0x0099, 0x00BB,
-    0x009B, 0x00AE, 0x009B, 0x008D, 0x0092, 0x0032, 0xFFFD, 0xFFFD, 0xFFFC, 0x0006, 0xFFFE, 0x00ED, 0x0076, 0x0068,
-    0x005E, 0xFFFE, 0x0006, 0x0000, 0x0049, 0xFFFD, 0xFFFE, 0x001D, 0x0012, 0x0016, 0x000E, 0xFFFE, 0x0003, 0x0027,
-    0x0000, 0x0000, 0x0025, 0x0000, 0x0000, 0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0xFFFC, 0x0007,
-    0x007F, 0x0049, 0x007F, 0x0049, 0x0099, 0x00BB, 0x009B, 0x00AE, 0x009B, 0x008D, 0x0092, 0x0032, 0xFFFD, 0xFFFD,
-    0xFFFC, 0x0006, 0xFFFE, 0x00ED, 0x0076, 0x0068, 0x005E, 0xFFFE, 0x0006, 0x0000, 0x0049, 0xFFFD, 0xFFFE, 0x001D,
-    0x0012, 0x0016, 0x000E, 0xFFFE, 0x0003, 0x0027, 0x0000, 0x0000, 0x0025, 0x0000, 0x0000, 0xFFFF
-};
-MenuGlyphScript gCharacterSelectExpertCourseDescriptionText[2][0x38] = {
-    0xFFFC, 0x0006, 0x0059, 0x002B, 0x005B, 0x0080, 0x0041, 0x0082, 0x0043, 0x0067, 0x0040, 0xFFFC,
-    0x0007, 0x008E, 0x0092, 0x00AE, 0x0097, 0xFFFD, 0x00A1, 0x0095, 0x008A, 0x00A2, 0x0114, 0x00B9,
-    0x008F, 0x00C5, 0x0097, 0x00C9, 0x0053, 0x0067, 0x003A, 0x0047, 0xFFFD, 0x008E, 0x0096, 0x00B1,
-    0x00B5, 0x0092, 0x0024, 0xFFFD, 0xFFFC, 0x0006, 0xFFFE, 0x001D, 0x0012, 0x0016, 0x000E, 0xFFFE,
-    0x0003, 0x0027, 0x0000, 0x0000, 0x0025, 0x0000, 0x0000, 0xFFFF, 0xFFFF
-};
-MenuGlyphScript gCharacterSelectCourseReturnDescriptionText[22] = { 0xFFFC, 0x0007, 0x004C, 0x0046, 0x0068, 0x006F,
-                                                                    0x002B, 0x0060, 0x004D, 0x0069, 0x0047, 0x0053,
-                                                                    0x00AC, 0x00B2, 0x00CA, 0x00B7, 0xFFFD, 0x00AE,
-                                                                    0x009C, 0x0032, 0xFFFF };
-MenuGlyphScript gCharacterSelectCourseStartGameText[38] = {
-    0xFFFC, 0x0007, 0x006F, 0x002B, 0x0060, 0x008E, 0x00A9, 0x00C2, 0x00B1, 0x00AE, 0x009C, 0x0095, 0x0030,
-    0xFFFF, 0x000B, 0x0018, 0x000A, 0x001B, 0x000D, 0xFFFE, 0x001C, 0x000E, 0x0015, 0x000E, 0x000C, 0x001D,
-    0xFFFF, 0x0000, 0x000B, 0x0018, 0x000A, 0x001B, 0x000D, 0xFFFE, 0x0019, 0x000A, 0x0012, 0x0017
-};
-#endif
-
-#if defined(VERSION_US)
-
 u16 gCharacterSelectCourseStatsScoreValues[10] = {
-    0x021D, 0x06D6, 0x06AA, 0x0558, 0x05D2, 0x05D2, 0x0666, 0x0680,
-    0x017E, 0x01F4,
+    0x021D, 0x06D6, 0x06AA, 0x0558, 0x05D2, 0x05D2, 0x0666, 0x0680, 0x017E, 0x01F4,
 };
 
 u8 gCharacterSelectCourseDifficultyRatings[12] = {
-    0x02, 0x03, 0x04, 0x05, 0x06, 0x06, 0x08, 0x07,
-    0x04, 0x05, 0x00, 0x00,
+    0x02, 0x03, 0x04, 0x05, 0x06, 0x06, 0x08, 0x07, 0x04, 0x05, 0x00, 0x00,
 };
 
 u16 gCharacterSelectCourseMedalScoreThresholds[34] = {
-    3000, 800, 400, 3600, 900, 500,
-    4000, 1000, 500, 4400, 1100, 600,
-    5200, 1300, 700, 6000, 1500, 800,
-    7000, 1800, 900, 8000, 2000, 1000,
-    10000, 2500, 1300, 300, 200, 100,
-    300, 200, 100, 0,
+    3000, 800,  400,  3600, 900,  500,  4000, 1000,  500,  4400, 1100, 600, 5200, 1300, 700, 6000, 1500,
+    800,  7000, 1800, 900,  8000, 2000, 1000, 10000, 2500, 1300, 300,  200, 100,  300,  200, 100,  0,
 };
 
+#if defined(VERSION_JP)
+CharacterSelectCourseText gCharacterSelectCourseNameText[10] = {
+    { _SMALL("{COLOR:7}ビギナーむけのショートコース\nです。\n  {COLOR:6}ー間回ノルマ5間ー") },
+    { _SMALL(
+        "{COLOR:7}雪山の上から、いっきにすべり\nおりるコースです。\n巨大な雪ダルマを、だれがどう\nやってつくったのかはナゾ。\n  {COLOR:6}ー間回ノルマ2間ー"
+    ) },
+    { _SMALL(
+        "{COLOR:7}山ペンギンたちがくらす雪山を\nすべるコースです。\nボス雪ダルマのこうげきと落石\nにきをつけよう!\n  {COLOR:6}ー間回ノルマ3間ー"
+    ) },
+    { _SMALL(
+        "{COLOR:7}いまはつかわれていない、夜の\nハイウェイをすべります。\nコースのとちゅうにある、いく\nつかのわかれ道がポイント!\n  {COLOR:6}ー間回ノルマ3間ー"
+    ) },
+    { _SMALL(
+        "{COLOR:7}みどりの草がおいしげる山から\nすべりおりるコースです。\n左をいくか右をいくか、はじめ\nのわかれ道がポイント!\n  {COLOR:6}ー間回ノルマ3間ー"
+    ) },
+    { _SMALL(
+        "{COLOR:7}えいぎょうじかんが終わった、\n夜のアミューズメントパークを\nすべるコースです。\n  {COLOR:6}ー間回ノルマ3間ー"
+    ) },
+    { _SMALL(
+        "{COLOR:7}こだい遠町が残された、さばく\nをすべるコースです。\n村切のところでは村されてしま\nうので注意しよう!\n  {COLOR:6}ー間回ノルマ3間ー"
+    ) },
+    { _SMALL(
+        "{COLOR:7}はげしい吹雪で、コースが見え\nにくくなっています。\nガケからころげおちないように\n気をつけよう!\n  {COLOR:6}ー間回ノルマ3間ー"
+    ) },
+    { _SMALL("{COLOR:7}ニンジャたちがくらすジパング\nのくにのコースです。\n  {COLOR:6}ー間回ノルマ9間ー") },
+    { _SMALL("ゲームメニューにもどります。") },
+};
+MenuGlyphScript gCharacterSelectBeginnerCourseDescriptionText[3][CHARACTER_SELECT_BEGINNER_DESCRIPTION_LENGTH] = {
+    { _SMALL("{COLOR:7}とてもはやくすべりましょう。\n\n{COLOR:6} スピードファン 10コ\n TIME 1'00\"00") },
+    { _SMALL("{COLOR:7}もっとはやくすべりましょう。\n\n{COLOR:6} スピードファン 20コ\n TIME 3'00\"00") },
+    { _SMALL("{COLOR:7}さらにはやくすべりましょう。\n\n{COLOR:6} スピードファン 20コ\n TIME 3'00\"00") },
+};
+MenuGlyphScript gCharacterSelectAdvancedCourseDescriptionText[3][0x30] = {
+    { _SMALL("{COLOR:7}どんどんこわしましょう。\n\n{COLOR:6} 雪ダルマ 30コ\n TIME 1'30\"00") },
+    { _SMALL("{COLOR:7}ガンガンこわしましょう。\n\n{COLOR:6} 雪ダルマ 60コ\n TIME 3'00\"00") },
+    { _SMALL("{COLOR:7}ボコボコこわしましょう。\n\n{COLOR:6} 雪ダルマ 60コ\n TIME 3'00\"00") },
+};
+MenuGlyphScript gCharacterSelectExpertCourseDescriptionText[2][0x38] = {
+    { _SMALL(
+        "{COLOR:6}ハーフパイプエリア{COLOR:7}をうまく\nつかって、れんぞくでトリック\nをきめよう!\n{COLOR:6} TIME 3'00\"00"
+    ) },
+    { _SMALL("") },
+};
+MenuGlyphScript gCharacterSelectCourseReturnDescriptionText[22] = {
+    _SMALL("{COLOR:7}スキルゲームセレクトへもどり\nます。")
+};
+MenuGlyphScript gCharacterSelectCourseStartGameText[38] = { _("{COLOR:7}ゲームをはじめますか?"),
+                                                            _("BOARD SELECT"),
+                                                            0,
+                                                            _FRAGMENT("BOARD PAIN") };
+#else
 CharacterSelectCourseText gCharacterSelectCourseNameText[10] = {
     {
-        _("{COLOR:7}A SHORT\nBEGINNERS\nCOURSE.\n   {COLOR:6}-5 LAPS-"),
-    },
+     _("{COLOR:7}A SHORT\nBEGINNERS\nCOURSE.\n   {COLOR:6}-5 LAPS-"),
+     },
     {
-        _("{COLOR:7}A MOUNTAIN\nCOVERED WITH\nSNOWMEN.\n   {COLOR:6}-2 LAPS-"),
-    },
+     _("{COLOR:7}A MOUNTAIN\nCOVERED WITH\nSNOWMEN.\n   {COLOR:6}-2 LAPS-"),
+     },
     {
-        _("{COLOR:7}A MOUNTAIN\nWHERE\nPENGUINS\nOFTEN PLAY.\n   {COLOR:6}-3 LAPS-"),
-    },
+     _("{COLOR:7}A MOUNTAIN\nWHERE\nPENGUINS\nOFTEN PLAY.\n   {COLOR:6}-3 LAPS-"),
+     },
     {
-        _("{COLOR:7}AN ABANDONED\nHIGHWAY AT\nNIGHT.\n   {COLOR:6}-3 LAPS-"),
-    },
+     _("{COLOR:7}AN ABANDONED\nHIGHWAY AT\nNIGHT.\n   {COLOR:6}-3 LAPS-"),
+     },
     {
-        _("{COLOR:7}A GRASS\nCOVERED\nMOUNTAIN.\n   {COLOR:6}-3 LAPS-"),
-    },
+     _("{COLOR:7}A GRASS\nCOVERED\nMOUNTAIN.\n   {COLOR:6}-3 LAPS-"),
+     },
     {
-        _("{COLOR:7}AFTER-HOURS\nAMUSEMENT\nPARK.\n   {COLOR:6}-3 LAPS-"),
-    },
+     _("{COLOR:7}AFTER-HOURS\nAMUSEMENT\nPARK.\n   {COLOR:6}-3 LAPS-"),
+     },
     {
-        _("{COLOR:7}A HOT AND\nSANDY\nCOURSE.\n   {COLOR:6}-3 LAPS-"),
-    },
+     _("{COLOR:7}A HOT AND\nSANDY\nCOURSE.\n   {COLOR:6}-3 LAPS-"),
+     },
     {
-        _("{COLOR:7}A COURSE\nIN THE MIST.\n\n   {COLOR:6}-3 LAPS-"),
-    },
+     _("{COLOR:7}A COURSE\nIN THE MIST.\n\n   {COLOR:6}-3 LAPS-"),
+     },
     {
-        _("{COLOR:7}A COURSE\nWHERE\nNINJA'S\nROAM.\n   {COLOR:6}-9 LAPS-"),
-    },
+     _("{COLOR:7}A COURSE\nWHERE\nNINJA'S\nROAM.\n   {COLOR:6}-9 LAPS-"),
+     },
     {
-        _("{COLOR:7}RETURN TO\nMAIN MENU."),
-    },
+     _("{COLOR:7}RETURN TO\nMAIN MENU."),
+     },
 };
-
 MenuGlyphScript gCharacterSelectBeginnerCourseDescriptionText[3][CHARACTER_SELECT_BEGINNER_DESCRIPTION_LENGTH] = {
     {
-        _("{COLOR:7}SLIDE DOWN\nFAST.\n\n{COLOR:6}SPEED FAN:10\nTIME:1'00\"00"),
-    },
+     _("{COLOR:7}SLIDE DOWN\nFAST.\n\n{COLOR:6}SPEED FAN:10\nTIME:1'00\"00"),
+     },
     {
-        _("{COLOR:7}SLIDE DOWN\nFASTER.\n\n{COLOR:6}SPEED FAN:20\nTIME:2'30\"00"),
-    },
+     _("{COLOR:7}SLIDE DOWN\nFASTER.\n\n{COLOR:6}SPEED FAN:20\nTIME:2'30\"00"),
+     },
     {
-        _("{COLOR:7}SLIDE DOWN\nEVEN FASTER.\n\n{COLOR:6}SPEED FAN:20\nTIME:2'30\"00"),
-    },
+     _("{COLOR:7}SLIDE DOWN\nEVEN FASTER.\n\n{COLOR:6}SPEED FAN:20\nTIME:2'30\"00"),
+     },
 };
-
 MenuGlyphScript gCharacterSelectAdvancedCourseDescriptionText[3][0x30] = {
     {
-        _("{COLOR:6}\nSNOWMEN:30\nTIME:1'30\"00"),
-    },
+     _("{COLOR:6}\nSNOWMEN:30\nTIME:1'30\"00"),
+     },
     {
-        _("{COLOR:6}\nSNOWMEN:60\nTIME:3'00\"00"),
-    },
+     _("{COLOR:6}\nSNOWMEN:60\nTIME:3'00\"00"),
+     },
     {
-        _("{COLOR:6}\nSNOWMEN:60\nTIME:3'00\"00"),
-    },
+     _("{COLOR:6}\nSNOWMEN:60\nTIME:3'00\"00"),
+     },
 };
-
 MenuGlyphScript gCharacterSelectExpertCourseDescriptionText[2][0x38] = {
     {
-        _("{COLOR:6}HALFPIPE\n{COLOR:7}TO DO\nTRICKS.\n{COLOR:6}TIME:3'00\"00"),
-    },
+     _("{COLOR:6}HALFPIPE\n{COLOR:7}TO DO\nTRICKS.\n{COLOR:6}TIME:3'00\"00"),
+     },
     {
-        _(""),
-    },
+     _(""),
+     },
 };
-
 MenuGlyphScript gCharacterSelectCourseReturnDescriptionText[42] = {
     _("{COLOR:7}RETURN TO\nTHE SKILL\nGAME SELECT\nSCREEN."),
 };
-
 MenuGlyphScript gCharacterSelectCourseStartGameText[44] = {
-    _("{COLOR:7}START GAME"),
-    0, 0, 0, 0, 0, 0, 0,
-    _("BOARD SELECT"),
-    // clang-format on
-    0,
-    _FRAGMENT("BOARD PAIN"),
+    _("{COLOR:7}START GAME"), 0, 0, 0, 0, 0, 0, 0, _("BOARD SELECT"), 0, _FRAGMENT("BOARD PAIN"),
 };
-
 #endif
 
 const char gCharacterSelectCourseStatsScoreFormat[] = "%4d";
@@ -308,11 +234,7 @@ const char gCharacterSelectRecordSecondsFormat[] = "%2.2d";
 const char gCharacterSelectRecordCentisecondsFormat[] = "%2.2d";
 
 void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0) {
-#if defined(VERSION_JP)
     register CharacterSelectCourseMenuFrameActor *actor;
-#else
-    CharacterSelectCourseMenuFrameActor *actor;
-#endif
     s16 *characterIds;
     s32 i;
     s32 alpha;
@@ -327,104 +249,96 @@ void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *a
     }
 
     i = 0;
-#if defined(VERSION_JP)
 
     while (i < actor->itemCount) {
-#else
-    if (actor->itemCount > 0) {
-        do {
-#endif
-            alpha = 0;
-            if (i == 0) {
-                if ((i == gRaceCourseIndex.signedValue) && (gMenuSelectionConfirmTimer > 0) &&
-                    (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
-                    alpha = 0xFF;
-                }
+        alpha = 0;
+        if (i == 0) {
+            if ((i == gRaceCourseIndex.signedValue) && (gMenuSelectionConfirmTimer > 0) &&
+                (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
+                alpha = 0xFF;
+            }
+            drawMenuSprite(
+                actor->x[i],
+                actor->y[i],
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+                0x1C,
+                0x20,
+                0x20,
+                0,
+                alpha
+            );
+        } else if (i == gCharacterSelectCourseExitOptionIndex) {
+            if ((gRaceCourseIndex.signedValue == gCharacterSelectCourseExitOptionIndex) &&
+                (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) &&
+                (gMenuSelectionConfirmTimer & 1)) {
+                alpha = 0xFF;
+            }
+            if ((gPlayerCount - 1) == 0) {
                 drawMenuSprite(
                     actor->x[i],
                     actor->y[i],
                     getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                    0x1C,
+                    0x1B,
                     0x20,
                     0x20,
                     0,
                     alpha
                 );
-            } else if (i == gCharacterSelectCourseExitOptionIndex) {
-                if ((gRaceCourseIndex.signedValue == gCharacterSelectCourseExitOptionIndex) &&
-                    (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) &&
-                    (gMenuSelectionConfirmTimer & 1)) {
-                    alpha = 0xFF;
-                }
-                if ((gPlayerCount - 1) == 0) {
-                    drawMenuSprite(
-                        actor->x[i],
-                        actor->y[i],
-                        getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                        0x1B,
-                        0x20,
-                        0x20,
-                        0,
-                        alpha
-                    );
-                } else {
-                    drawMenuSprite(
-                        actor->x[i],
-                        actor->y[i],
-                        getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                        0x1E,
-                        0x20,
-                        0x20,
-                        0,
-                        alpha
-                    );
-                }
             } else {
-                if ((i == gRaceCourseIndex.signedValue) && (gMenuSelectionConfirmTimer > 0) &&
-                    (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
-                    alpha = 0xFF;
-                }
                 drawMenuSprite(
                     actor->x[i],
                     actor->y[i],
                     getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                    i + 0x12,
+                    0x1E,
                     0x20,
                     0x20,
                     0,
                     alpha
                 );
             }
-
-            if (i != gCharacterSelectCourseExitOptionIndex) {
-                if (((gPlayerCount - 1) == 0) && (gGameSaveDataBuffer[0].cupPlacements[characterIds[i]] != 0)) {
-                    drawMenuSprite(
-                        (s16)(actor->x[i] - 0x10),
-                        actor->y[i],
-                        getRelocatableHeapBlockBase(CHARACTER_SELECT_ICON_TEXTURE_HANDLE),
-                        i + 0x1A,
-                        0x20,
-                        0x20,
-                        0,
-                        gGameSaveDataBuffer[0].cupPlacements[characterIds[i]] + 6
-                    );
-                } else {
-                    drawMenuSprite(
-                        (s16)(actor->x[i] - 0x10),
-                        actor->y[i],
-                        getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                        i + 0x29,
-                        0x20,
-                        0x20,
-                        0,
-                        0
-                    );
-                }
+        } else {
+            if ((i == gRaceCourseIndex.signedValue) && (gMenuSelectionConfirmTimer > 0) &&
+                (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
+                alpha = 0xFF;
             }
-            i++;
-#if defined(VERSION_US)
-        } while (i < actor->itemCount);
-#endif
+            drawMenuSprite(
+                actor->x[i],
+                actor->y[i],
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+                i + 0x12,
+                0x20,
+                0x20,
+                0,
+                alpha
+            );
+        }
+
+        if (i != gCharacterSelectCourseExitOptionIndex) {
+            if (((gPlayerCount - 1) == 0) && (gGameSaveDataBuffer[0].cupPlacements[characterIds[i]] != 0)) {
+                drawMenuSprite(
+                    (s16)(actor->x[i] - 0x10),
+                    actor->y[i],
+                    getRelocatableHeapBlockBase(CHARACTER_SELECT_ICON_TEXTURE_HANDLE),
+                    i + 0x1A,
+                    0x20,
+                    0x20,
+                    0,
+                    gGameSaveDataBuffer[0].cupPlacements[characterIds[i]] + 6
+                );
+            } else {
+                drawMenuSprite(
+                    (s16)(actor->x[i] - 0x10),
+                    actor->y[i],
+                    getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+                    i + 0x29,
+                    0x20,
+                    0x20,
+                    0,
+                    0
+                );
+            }
+        }
+        i++;
     }
 }
 
@@ -537,19 +451,12 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
         break;
 
     case COURSE_LIST_SLIDE_OTHERS_IN:
-#if defined(VERSION_JP)
         visibleCourseCount = gCharacterSelectCourseExitOptionIndex + 1; index = 0;  while (index < (gCharacterSelectCourseExitOptionIndex + 1)) {
-#else
-        visibleCourseCount = gCharacterSelectCourseExitOptionIndex + 1; index = 0; if (visibleCourseCount > 0) { do {
-#endif
             if (index != gRaceCourseIndex.signedValue) {
                 arg0->x[index] += 0x20;
                 visibleCourseCount = gCharacterSelectCourseExitOptionIndex + 1;
             }
             index++;
-#if defined(VERSION_US)
-        } while (index < (gCharacterSelectCourseExitOptionIndex + 1));
-#endif
         }
         if (gRaceCourseIndex.signedValue != RACE_COURSE_BIG_SNOWMAN) {
             if (arg0->x[0] >= -0x7C) {
@@ -642,11 +549,7 @@ void initCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *
 // clang-format on
 
 void drawCharacterSelectLimitedCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0) {
-#if defined(VERSION_JP)
     register CharacterSelectCourseMenuFrameActor *actor;
-#else
-    CharacterSelectCourseMenuFrameActor *actor;
-#endif
     void *arrowTexture;
     volatile u8 pad;
     u16 tile;
@@ -826,20 +729,12 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
         case COURSE_LIST_SLIDE_OTHERS_IN:
             visibleOptionCount = extraCourseOptionCount + 2;
             optionIndex = 0;
-#if defined(VERSION_JP)
 
             while (optionIndex < (extraCourseOptionCount + 2)) {
-#else
-            if (visibleOptionCount > 0) {
-                do {
-#endif
-                    if (optionIndex != gRaceCourseIndex.signedValue) {
-                        arg0->x[optionIndex] += 0x20;
-                    }
-                    optionIndex++;
-#if defined(VERSION_US)
-                } while (optionIndex < (extraCourseOptionCount + 2));
-#endif
+                if (optionIndex != gRaceCourseIndex.signedValue) {
+                    arg0->x[optionIndex] += 0x20;
+                }
+                optionIndex++;
             }
             if (gRaceCourseIndex.signedValue != RACE_COURSE_BIG_SNOWMAN) {
                 if (arg0->x[0] >= -0x7C) {
@@ -1032,13 +927,8 @@ void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *a
     int switchState;
     u32 selectedSpriteIndex;
     int menuState;
-#if defined(VERSION_JP)
     register s32 selectedIndex;
     register u16 spriteIndex;
-#else
-    s32 selectedIndex;
-    u16 spriteIndex;
-#endif
 
     selectedIndex = gRaceCourseIndex.signedValue;
     spriteIndex = (u16)arg0->sprite.index;

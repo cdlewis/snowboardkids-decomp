@@ -80,18 +80,15 @@ RaceSetupDefaultSaveData gDefaultSaveRecordData = {
     { 0x190, 0xC8, 0x64, 0x32, 0 },
     0,
     {
-     // textconv requires these _() invocations to retain their original line layout.
-        // clang-format off
-        { _("BEGISNOW") },
-        { _("TRAPED") },
-        { _("NIGHT HIGHWAY") },
-        { _("GRASS VALLEY") },
-        { _("SNOW GARDEN") },
-        { _("QUICKSAND VALLEY") },
-        { _("SILVER MOUNTAIN") },
-        { _("ZIPANGU") },
-     // clang-format on
-    },
+     { _("BEGISNOW") },
+     { _("TRAPED") },
+     { _("NIGHT HIGHWAY") },
+     { _("GRASS VALLEY") },
+     { _("SNOW GARDEN") },
+     { _("QUICKSAND VALLEY") },
+     { _("SILVER MOUNTAIN") },
+     { _("ZIPANGU") },
+     },
     { 0, 0 },
 };
 

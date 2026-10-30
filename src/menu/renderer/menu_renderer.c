@@ -751,21 +751,13 @@ void drawMenuSpriteSubrect(
 
     if ((left < maxX) && (top < maxY) && (right >= minX) && (bottom >= minY)) {
         if (left < minX) {
-#if defined(VERSION_JP)
             x = 1;
             while (x) {
-#else
-            do {
-#endif
                 texS = ((((minX - left) << 3) << 5) / scaleXValue) + texS;
                 left = minX;
-#if defined(VERSION_JP)
 
                 x = 0;
             }
-#else
-            } while (0);
-#endif
         }
         if (top < minY) {
             texT = ((((minY - top) << 3) << 5) / scaleYValue) + texT;
@@ -1720,11 +1712,7 @@ void drawMenuGlyphScript(s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16
     s32 drawX;
     s32 drawY;
     s32 spaceGlyph;
-#if defined(VERSION_JP)
     register s32 advance;
-#else
-    s32 advance;
-#endif
     u16 glyphAdvance;
     u16 scaleValue;
     u16 colorModeValue;

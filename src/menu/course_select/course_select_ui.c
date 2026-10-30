@@ -27,147 +27,101 @@ typedef enum {
     COURSE_RATING_TRICK,
     COURSE_RATING_COUNT
 } CourseSelectCourseRatingType;
-
-#if defined(VERSION_JP)
-MenuGlyphScript gCourseSelectUnusedText[2] = { 0x001D, 0xFFFF };
-CourseModeDescriptionText gCourseSelectModeDescriptionText[7] = {
-    0xFFFC, 0x0007, 0x004C, 0x0081, 0x002B, 0x007A, 0x00A9, 0x0094, 0x009E, 0x0091, 0x00BC, 0x0114, 0x00FF, 0x00BC,
-    0x00B7, 0x00B3, 0xFFFD, 0x009C, 0x0097, 0x0053, 0x0067, 0x003A, 0x0047, 0x009B, 0x00B3, 0x009C, 0x0091, 0x007F,
-    0x002B, 0x007A, 0x0032, 0xFFFF, 0x0000, 0x0000, 0x0000, 0xFFFC, 0x0007, 0x004C, 0x0081, 0x002B, 0x007A, 0x00B2,
-    0x00FF, 0x00BC, 0x00B7, 0x00B3, 0x009C, 0x009A, 0x00B2, 0x0100, 0x0101, 0xFFFD, 0x0102, 0x00A4, 0x0114, 0x00A1,
-    0x0095, 0x0091, 0x00B3, 0x009C, 0x0091, 0x007F, 0x002B, 0x007A, 0x0032, 0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000,
-    0xFFFC, 0x0007, 0x004C, 0x0081, 0x002B, 0x007A, 0x00A9, 0x0091, 0x00A0, 0x00CB, 0x008F, 0x00A9, 0x00B3, 0x0091,
-    0x00BC, 0x0114, 0xFFFD, 0x00FF, 0x00BC, 0x00B7, 0x00A5, 0x0097, 0x0091, 0x007F, 0x002B, 0x007A, 0x0032, 0xFFFF,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0xFFFC, 0x0007, 0x0049, 0x002B, 0x004C, 0x00A8, 0x00D5,
-    0x00D6, 0x00A5, 0x00B2, 0x00CA, 0x00B7, 0x00AE, 0x009C, 0x0032, 0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0xFFFC, 0x0007, 0x0094, 0x00E8, 0x00A5, 0x00B2, 0x00CA, 0x00B7, 0x00AE, 0x009C, 0x0032, 0xFFFF, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0xFFFC, 0x0007, 0x00A3, 0x008A, 0x00A2, 0x00B2, 0x004C,
-    0x0083, 0x004B, 0x003B, 0x0068, 0x00A4, 0x007F, 0x002B, 0x007A, 0x00C9, 0xFFFD, 0x009C, 0x0032, 0xFFFF, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0095, 0x0091, 0x00A9, 0x00A1, 0x00A0, 0x008C, 0x0092, 0x0007, 0xFFFF
-};
-MenuGlyphScript gCourseSelectBoardLevelText[46] = { 0xFFFC, 0x0007, 0x007F, 0x002B, 0x007A, 0x00A8, 0x0069, 0x007E,
-                                                    0x0068, 0x008E, 0x00D5, 0x008F, 0x00C9, 0x0097, 0x00C6, 0x009A,
-                                                    0xFFFD, 0x0091, 0x0032, 0xFFFC, 0x0006, 0x0069, 0x007E, 0x0068,
-                                                    0x00BC, 0x009F, 0x0095, 0x0091, 0x00AD, 0x00CA, 0x004C, 0x0081,
-                                                    0x002B, 0xFFFD, 0x007A, 0x00BC, 0x00A9, 0x00B3, 0x0097, 0x00A4,
-                                                    0x00B7, 0x00AE, 0x009C, 0x0032, 0xFFFF };
-CourseBoardLevelByCourseText gCourseSelectBoardLevelByCourseText[4] = {
-    0xFFFC, 0x0006, 0xFFFE, 0xFFFE, 0xFFFE, 0xFFFE, 0x005B, 0x0067, 0x002B, 0x004C, 0x004F, 0x0041, 0x0068, 0xFFFD,
-    0xFFFE, 0xFFFE, 0xFFFE, 0xFFFE, 0x0015, 0x000E, 0x001F, 0x000E, 0x0015, 0xFFFF, 0xFFFC, 0x0006, 0xFFFE, 0xFFFE,
-    0xFFFE, 0xFFFE, 0x0044, 0x002B, 0x0068, 0x0066, 0x0042, 0x003F, 0x007A, 0xFFFD, 0xFFFE, 0xFFFE, 0xFFFE, 0xFFFE,
-    0x0015, 0x000E, 0x001F, 0x000E, 0x0015, 0xFFFF, 0xFFFC, 0x0006, 0xFFFE, 0xFFFE, 0xFFFE, 0xFFFE, 0x0040, 0x0068,
-    0x0083, 0x003F, 0xFFFD, 0xFFFE, 0xFFFE, 0xFFFE, 0xFFFE, 0x0015, 0x000E, 0x001F, 0x000E, 0x0015, 0xFFFF, 0x0000,
-    0x0000, 0x0000, 0x004C, 0x0083, 0x004B, 0x003B, 0x0068, 0xFFFE, 0x0015, 0x000E, 0x001F, 0x000E, 0x0015, 0xFFFF
-};
-CourseExtraBoardLevelText gCourseSelectExtraCourseBoardLevelText[3] = {
-    0xFFFC, 0x0007, 0x004C, 0x0081, 0x002B, 0x007A, 0x00BC, 0x00A9, 0x00B3, 0x0091, 0x00A8, 0x00A5, 0x00FF, 0x00BC,
-    0x00B7, 0x00B3, 0xFFFD, 0x009C, 0x0091, 0x0032, 0x009C, 0x00C0, 0x0091, 0x007F, 0x002B, 0x007A, 0x00C9, 0x009C,
-    0x0032, 0xFFFF, 0x0000, 0x0000, 0xFFFC, 0x0007, 0x0072, 0x003B, 0x003F, 0x0082, 0x009C, 0x00B8, 0x00A3, 0x005B,
-    0x006B, 0x0067, 0x00A3, 0x0092, 0x0096, 0x0090, 0xFFFD, 0x00BC, 0x00B8, 0x0114, 0x0053, 0x0067, 0x003A, 0x0047,
-    0x0108, 0x00A8, 0x007F, 0x002B, 0x007A, 0x0032, 0xFFFF, 0x0000, 0xFFFC, 0x0007, 0x00AE, 0x008A, 0x009F, 0x0097,
-    0x0043, 0x003A, 0x0072, 0x00BC, 0x0096, 0x0095, 0x00C3, 0x0114, 0x0051, 0x0068, 0xFFFD, 0x0051, 0x0068, 0x009C,
-    0x00CE, 0x00B8, 0x007F, 0x002B, 0x007A, 0x00C9, 0x009C, 0x0032, 0xFFFF
-};
-CoursePurchaseMessageText gCourseSelectPurchaseMessageText[2] = { 0xFFFC, 0x0007, 0x0110, 0x0094, 0x010A, 0x00BC,
-                                                            0x009F, 0x00B7, 0x00A4, 0x0091, 0x00B5, 0x0111,
-                                                            0xFFFF, 0x0000, 0x0000, 0xFFFC, 0x0007, 0x0110,
-                                                            0x009E, 0x00B9, 0x00A9, 0x0092, 0x00B7, 0x0096,
-                                                            0x00B9, 0x00A4, 0x008F, 0x00C6, 0x0111, 0xFFFF };
-MenuGlyphScript gCourseSelectCompleteText[12] = { 0xFFFC, 0x0007, 0x00D5, 0x00D6, 0x00D7, 0x00D8,
-                                                  0x009B, 0x00AE, 0x009B, 0x009F, 0xFFFF };
-CourseSelectCourseRatingTable gCourseSelectCourseRatings = { 0x0001, 0x0003, 0x0003, 0x0002, 0x0002, 0x0002, 0x0003,
-                                                             0x0001, 0x0001, 0x0002, 0x0002, 0x0002, 0x0003, 0x0001,
-                                                             0x0002, 0x0003, 0x0003, 0x0003, 0x0002, 0x0002, 0x0002 };
-s16 gCourseSelectIconListYLayout[3][6] = { 0x0018, 0x0014, 0xFFA8, 0xFFA0, 0x0000, 0x0000, 0x000F, 0x000F, 0xFFB2,
-                                           0xFFB0, 0x0016, 0x0014, 0x000F, 0x000C, 0xFFAE, 0xFFAC, 0x0012, 0x0010 };
-s16 gCourseSelectIconListXLayout[3][4] = { 0xFEFC, 0xFF84, 0x0000, 0x0000, 0xFF40, 0xFF88,
-                                           0x0000, 0x0000, 0xFF40, 0xFF7C, 0xFFCC, 0x0008 };
-s16 gCourseSelectStatsPanelLayout[3][4] = { 0xFF88, 0x0034, 0x0000, 0x0000, 0xFFC8, 0xFFC0,
-                                            0xFFC8, 0x0024, 0xFF7C, 0xFFE0, 0xFF7C, 0x0044 };
-s16 gCourseSelectStatsPlayerMarkerLayout[2][4] = { 0xFF88, 0xFFEC, 0xFF88, 0x0050, 0xFFC0, 0xFFF0, 0xFFBC, 0x0054 };
-#else
 MenuGlyphScript gCourseSelectUnusedText[] = {
-#endif
-    // textconv requires these _() invocations to retain their original line layout.
-#if defined(VERSION_US)
-    // clang-format off
     _("T"),
 };
 
+#if defined(VERSION_JP)
+CourseModeDescriptionText gCourseSelectModeDescriptionText[7] = {
+    { { _SMALL("{COLOR:7}スピードはおそいが、曲がりや\nすくトリックしやすいボード。") } },
+    { { _SMALL("{COLOR:7}スピードも曲がりやすさも平均\n的な、つかいやすいボード。") } },
+    { { _SMALL("{COLOR:7}スピードはいちばんはやいが、\n曲がりにくいボード。") } },
+    { { _SMALL("{COLOR:7}コースの選択にもどります。") } },
+    { { _SMALL("{COLOR:7}お店にもどります。") } },
+    { { _SMALL("{COLOR:7}とってもスペシャルなボードで\nす。") } },
+    { { _SMALL("かいはつちゅう7") } },
+};
+MenuGlyphScript gCourseSelectBoardLevelText[46] = {
+    _SMALL("{COLOR:7}ボードのレベルを選んでくださ\nい。{COLOR:6}レベルがたかいほどスピー\nドがはやくなります。")
+};
+CourseBoardLevelByCourseText gCourseSelectBoardLevelByCourseText[4] = {
+    { { _SMALL("{COLOR:6}    フリースタイル\n    LEVEL") } },
+    { { _SMALL("{COLOR:6}    オールラウンド\n    LEVEL") } },
+    { { _SMALL("{COLOR:6}    アルペン\n    LEVEL") } },
+    { { _SMALL("スペシャル LEVEL") } },
+};
+CourseExtraBoardLevelText gCourseSelectExtraCourseBoardLevelText[3] = {
+    { { _SMALL("{COLOR:7}スピードがはやいのに曲がりや\nすい。すごいボードです。") } },
+    { { _SMALL("{COLOR:7}ジャンプするとフワリとうきあ\nがる、トリック用のボード。") } },
+    { { _SMALL("{COLOR:7}まったくエッジがきかず、ツル\nツルすべるボードです。") } },
+};
+CoursePurchaseMessageText gCourseSelectPurchaseMessageText[2] = {
+    { { _SMALL("{COLOR:7}「お金がたりないよ」") } },
+    { { _SMALL("{COLOR:7}「それはうりきれなんだ」") } },
+};
+MenuGlyphScript gCourseSelectCompleteText[12] = { _("{COLOR:7}選択終了しました") };
+#else
 CourseModeDescriptionText gCourseSelectModeDescriptionText[7] = {
     { {
-            _("{COLOR:7}SLOW, BUT EASY\nTO CONTROL."),
-        } },
+        _("{COLOR:7}SLOW, BUT EASY\nTO CONTROL."),
+    } },
     { {
-            _("{COLOR:7}BALANCED\nBOARD."),
-        } },
+        _("{COLOR:7}BALANCED\nBOARD."),
+    } },
     { {
-            _("{COLOR:7}FAST, BUT HARD\nTO CONTROL."),
-        } },
+        _("{COLOR:7}FAST, BUT HARD\nTO CONTROL."),
+    } },
     { {
-            _("{COLOR:7}RETURN TO\nCOURSE SELECT."),
-        } },
+        _("{COLOR:7}RETURN TO\nCOURSE SELECT."),
+    } },
     { {
-            _("{COLOR:7}RETURN TO\nSHOP."),
-        } },
+        _("{COLOR:7}RETURN TO\nSHOP."),
+    } },
     { {
-            _("{COLOR:7}A VERY SPECIAL\nBOARD."),
-        } },
-    /* Unused graphical glyph data, not menu text. */
-    { { 0x0095, 0x0091, 0x00A9, 0x00A1, 0x00A0, 0x008C, 0x0092, 0x0007, 0xFFFF, 0x0000, 0x0000,
-        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-        0x0000, 0x0000 } },
+        _("{COLOR:7}A VERY SPECIAL\nBOARD."),
+    } },
+    /* Unused development placeholder. */
+    { { _SMALL("かいはつちゅう7") } },
 };
-
 MenuGlyphScript gCourseSelectBoardLevelText[] = {
     _("{COLOR:7}SELECT\nBOARD\nLEVEL."),
 };
-
 CourseBoardLevelByCourseText gCourseSelectBoardLevelByCourseText[4] = {
     { {
-            _("{COLOR:6} FREE STYLE\n    LEVEL"),
-        } },
+        _("{COLOR:6} FREE STYLE\n    LEVEL"),
+    } },
     { {
-            _("{COLOR:6}  ALL ROUND\n    LEVEL"),
-        } },
+        _("{COLOR:6}  ALL ROUND\n    LEVEL"),
+    } },
     { {
-            _("{COLOR:6}   ALPINE\n    LEVEL"),
-        } },
-    /* Unused graphical glyph data, not menu text. */
-    { { 0x004C, 0x0083, 0x004B, 0x003B, 0x0068, 0xFFFE, 0x0015, 0x000E, 0x001F, 0x000E, 0x0015,
-        0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-        0x0000, 0x0000 } },
+        _("{COLOR:6}   ALPINE\n    LEVEL"),
+    } },
+    /* Unused development placeholder. */
+    { { _SMALL("スペシャル LEVEL") } },
 };
-
 CourseExtraBoardLevelText gCourseSelectExtraCourseBoardLevelText[3] = {
     { {
-            _("{COLOR:7}FAST AND EASY\nTO CONTROL."),
-        } },
+        _("{COLOR:7}FAST AND EASY\nTO CONTROL."),
+    } },
     { {
-            _("{COLOR:7}SPECIAL BOARD\nFOR TRICKS."),
-        } },
+        _("{COLOR:7}SPECIAL BOARD\nFOR TRICKS."),
+    } },
     { {
-            _("{COLOR:7}BOARD THAT IS\nUSELESS."),
-        } },
+        _("{COLOR:7}BOARD THAT IS\nUSELESS."),
+    } },
 };
-
 CoursePurchaseMessageText gCourseSelectPurchaseMessageText[2] = {
     { {
-            _("{COLOR:7}NOT ENOUGH\nMONEY."),
-        } },
+        _("{COLOR:7}NOT ENOUGH\nMONEY."),
+    } },
     { {
-            _("{COLOR:7}OUT OF\nSTOCK."),
-        } },
+        _("{COLOR:7}OUT OF\nSTOCK."),
+    } },
 };
-
 MenuGlyphScript gCourseSelectCompleteText[] = {
     _("{COLOR:7}SELECTION\nCOMPLETE."),
-    // clang-format on
 };
+#endif
 
 CourseSelectCourseRatingTable gCourseSelectCourseRatings = {
     {
@@ -200,6 +154,9 @@ s16 gCourseSelectStatsPanelLayout[][4] = {
     { 0xFF7C, 0xFFE0, 0xFF7C, 0x0044 },
 };
 
+#if defined(VERSION_JP)
+s16 gCourseSelectStatsPlayerMarkerLayout[2][4] = { 0xFF88, 0xFFEC, 0xFF88, 0x0050, 0xFFC0, 0xFFF0, 0xFFBC, 0x0054 };
+#else
 s16 gCourseSelectStatsPlayerMarkerLayout[][4] = {
     { 0xFF88, 0xFFEA, 0xFF88, 0x004E },
     { 0xFFC0, 0xFFEC, 0xFFC0, 0x0050 },
@@ -1081,73 +1038,61 @@ void drawCourseSelectCourseCursors(CourseSelectCourseCursorsActor *arg0) {
 }
 
 void updateCourseSelectCourseCursors(CourseSelectCourseCursorsActor *arg0) {
-#if defined(VERSION_JP)
     register CourseSelectCourseCursorsActor *actor;
-#else
-    CourseSelectCourseCursorsActor *actor;
-#endif
     s32 i;
     RacePlayer *player;
     u8 state;
 
     actor = arg0;
     i = 0;
-#if defined(VERSION_JP)
     while (i < (s32)gPlayerCount) {
-#else
-    if ((s32)gPlayerCount > 0) {
-        do {
-#endif
-            if ((gMenuFlowState != 0) && (gRaceSplitscreenMode != 3)) {
-                actor->state[i] = 4;
-            }
-            state = actor->state[i];
-            switch (state) {
-                case 0:
-                    actor->alpha[i] += 0x26;
-                    if (actor->alpha[i] >= 0x100) {
-                        actor->alpha[i] = 0x100;
-                        actor->state[i] = 1;
-                    }
-                    state = actor->state[i];
-                    break;
-                case 1:
-                    player = &gRacePlayers[i];
-                    if (actor->pulseTimer[i] < 0x10) {
-                        actor->alpha[i] -= 9;
-                    } else {
-                        actor->alpha[i] += 9;
-                    }
-                    actor->pulseTimer[i] = (actor->pulseTimer[i] + 1) & 0x1F;
-                    if ((player->menuState == 1) || (gRacePlayers[0].menuState == 3)) {
-                        actor->state[i] = 2;
-                    }
-                    state = actor->state[i];
-                    break;
-                case 2:
-                    player = &gRacePlayers[i];
-                    if (player->menuState == 3) {
-                        actor->state[i] = 4;
-                    }
-                    if (player->menuState == 0) {
-                        actor->state[i] = 1;
-                        actor->alpha[i] = 0x100;
-                        actor->pulseTimer[i] = 0;
-                    }
-                    if (gCurrentGameTask->callbackData2 == 9) {
-                        actor->state[i] = 4;
-                    }
-                    state = actor->state[i];
-                    break;
-                case 3:
-                case 4:
-                    break;
-            }
-            i++;
-            gCourseSelectStatus.previewModelState[i - 1] = state;
-#if defined(VERSION_US)
-        } while (i < (s32)gPlayerCount);
-#endif
+        if ((gMenuFlowState != 0) && (gRaceSplitscreenMode != 3)) {
+            actor->state[i] = 4;
+        }
+        state = actor->state[i];
+        switch (state) {
+            case 0:
+                actor->alpha[i] += 0x26;
+                if (actor->alpha[i] >= 0x100) {
+                    actor->alpha[i] = 0x100;
+                    actor->state[i] = 1;
+                }
+                state = actor->state[i];
+                break;
+            case 1:
+                player = &gRacePlayers[i];
+                if (actor->pulseTimer[i] < 0x10) {
+                    actor->alpha[i] -= 9;
+                } else {
+                    actor->alpha[i] += 9;
+                }
+                actor->pulseTimer[i] = (actor->pulseTimer[i] + 1) & 0x1F;
+                if ((player->menuState == 1) || (gRacePlayers[0].menuState == 3)) {
+                    actor->state[i] = 2;
+                }
+                state = actor->state[i];
+                break;
+            case 2:
+                player = &gRacePlayers[i];
+                if (player->menuState == 3) {
+                    actor->state[i] = 4;
+                }
+                if (player->menuState == 0) {
+                    actor->state[i] = 1;
+                    actor->alpha[i] = 0x100;
+                    actor->pulseTimer[i] = 0;
+                }
+                if (gCurrentGameTask->callbackData2 == 9) {
+                    actor->state[i] = 4;
+                }
+                state = actor->state[i];
+                break;
+            case 3:
+            case 4:
+                break;
+        }
+        i++;
+        gCourseSelectStatus.previewModelState[i - 1] = state;
     }
 
     if (actor->state[0] == 4) {
@@ -1893,24 +1838,14 @@ void updateCourseSelectExtraCourseIconListIn(CourseSelectExtraCourseIconListActo
     temp_a1 = arg0;
     if (arg0->iconX[0][0] < -0x74) {
         var_v1 = 0;
-#if defined(VERSION_US)
-        if ((s32)arg0->itemCounts[0] > 0) {
-#endif
-            var_v0 = arg0;
-#if defined(VERSION_JP)
+        var_v0 = arg0;
         while (var_v1 < (s32)temp_a1->itemCounts[0]) {
-#else
-            do {
-#endif
-                var_v0->iconX[0][0] += 0x20;
-                if (var_v0->iconX[0][0] >= -0x74) {
-                    var_v0->iconX[0][0] = -0x74;
-                }
-                var_v1++;
-                var_v0 = (CourseSelectExtraCourseIconListActor *)((u8 *)var_v0 + sizeof(s16));
-#if defined(VERSION_US)
-            } while (var_v1 < (s32)temp_a1->itemCounts[0]);
-#endif
+            var_v0->iconX[0][0] += 0x20;
+            if (var_v0->iconX[0][0] >= -0x74) {
+                var_v0->iconX[0][0] = -0x74;
+            }
+            var_v1++;
+            var_v0 = (CourseSelectExtraCourseIconListActor *)((u8 *)var_v0 + sizeof(s16));
         }
     } else if (gCurrentGameTask->callbackData2 == 4) {
         setCallbackTaskCallback(temp_a2, (CallbackTaskCallback)updateCourseSelectExtraCourseIconList);
@@ -2167,27 +2102,12 @@ void initCourseSelectExtraCourseIconList(CourseSelectExtraCourseIconListActor *a
             } else {
                 xOffset = 4;
             }
-            /* Preserve IDO's register allocation for the icon-position loop. */
-#if defined(VERSION_US)
-            if (0) {}
-#endif
-
-#if defined(VERSION_JP)
             for (iconIndex = 0; iconIndex != 3; iconIndex++) {
-#else
-            iconIndex = 0;
-            do {
-#endif
                 actor->iconX[playerIndex][iconIndex] =
                     gCourseSelectIconListXLayout[layoutIndex][((playerIndex >= 2) * 2) + 1] + xOffset;
                 actor->iconY[playerIndex][iconIndex] =
                     gCourseSelectIconListYLayout[layoutIndex][((playerIndex & 1) * 2) + 2];
-#if defined(VERSION_JP)
             }
-#else
-                iconIndex++;
-            } while (iconIndex != 3);
-#endif
             playerIndex++;
         } while (playerIndex < (s32)gPlayerCount);
     }

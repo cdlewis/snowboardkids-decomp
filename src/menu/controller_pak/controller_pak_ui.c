@@ -20,88 +20,93 @@
 /* This script ends in the overlapping sparkle sentinel immediately below. */
 MenuGlyphScript gControllerPakContinuePromptText[8] = {
 #if defined(VERSION_JP)
-    0xFFFC, 0x0007, 0x00A1, 0x00C8, 0x0098, 0x00A2, 0x0069, 0x002B
+    _FRAGMENT("{COLOR:7}つづけてレー")
 #else
     _FRAGMENT("{COLOR:7}CONTIN"),
 #endif
 };
+
 #if defined(VERSION_JP)
-Vec2s gCoursePreviewCloseSparkleOffsetsEnd[4] = { 0x004C, 0x008E, 0x009B, 0x00AE, 0x009C, 0x0095, 0x0030, 0xFFFF };
+Vec2s gCoursePreviewCloseSparkleOffsetsEnd[4] = { _("スをしますか?") };
 MenuGlyphScript gControllerPakRumbleCheckPromptText[4][52] = {
-    0xFFFC, 0x0006, 0x00E4, 0x00E5, 0x0080, 0x003A, 0x0047, 0xFFFC, 0x0007, 0x008E, 0x00A1, 0x0095, 0x0092, 0x00CB,
-    0x0090, 0x0091, 0x00A9, 0x00F3, 0xFFFD, 0x0049, 0x003F, 0x0053, 0x006A, 0x002B, 0x0066, 0x00A5, 0x009A, 0x009B,
-    0x0099, 0x008F, 0x00C9, 0x0097, 0x00C6, 0xFFFD, 0x009A, 0x0091, 0x0032, 0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0xFFFC, 0x0006, 0x00E4, 0x00E5,
-    0x0080, 0x003A, 0x0047, 0xFFFC, 0x0007, 0x008E, 0x0050, 0x0038, 0x003A, 0x0047, 0x009B, 0x00A2, 0x0091, 0x00AE,
-    0xFFFD, 0x009C, 0x0032, 0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0xFFFC, 0x0007, 0x00E9, 0x00EA, 0x00A8, 0x00EB, 0x00EC, 0x00BC,
-    0x0090, 0x00B8, 0x00AE, 0x00C9, 0xFFFC, 0x0006, 0x00E4, 0x00E5, 0x0080, 0x003A, 0xFFFD, 0x0047, 0xFFFC, 0x0007,
-    0x008E, 0x00A6, 0x0095, 0x00A4, 0x0091, 0x00C9, 0x0097, 0x00C6, 0x009A, 0x0091, 0x0032, 0xFFFF, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0xFFFC, 0x0007, 0xFFFE, 0xFFFE, 0x0099, 0x00B9, 0x00C9, 0x0091, 0x0091, 0x00C9, 0x009C, 0x0095,
-    0x0030, 0xFFFF
-#else
-
-Vec2s gCoursePreviewCloseSparkleOffsetsEnd[2] = {
-    // textconv requires these _() invocations to retain their original line layout.
-    // clang-format off
-    _("UE?"),
-#endif
+    { _("{COLOR:6}振動パック{COLOR:7}をつかうばあいは、\nコントローラにさしこんでくだ\nさい。") },
+    { _("{COLOR:6}振動パック{COLOR:7}をチェックしていま\nす。") },
+    { _("{COLOR:7}画面の指示があるまで{COLOR:6}振動パッ\nク{COLOR:7}をぬかないでください。") },
+    { _("{COLOR:7}  これでいいですか?") },
 };
-#if defined(VERSION_JP)
-MenuGlyphScript gControllerPakRumbleCheckNotUsedText[10] = { 0xFFFC, 0x0007, 0x00A1, 0x0095, 0x0091,
-                                                             0x00AE, 0x009D, 0x008F, 0xFFFF };
-MenuGlyphScript gControllerPakRumbleCheckNoEntryText[12] = { 0xFFFC, 0x0007, 0x0017, 0x0018, 0xFFFE, 0x000E,
-                                                             0x0017, 0x001D, 0x001B, 0x0022, 0xFFFF };
-MenuGlyphScript gControllerPakRumblePakText[10] = { 0xFFFC, 0x0006, 0x00E4, 0x00E5, 0x0080, 0x003A, 0x0047, 0xFFFF };
-MenuGlyphScript gControllerPakCouldNotEraseNoteText[48] = {
-    0x006F, 0x002B, 0x0060, 0x0058, 0x002B, 0x0053, 0x008E, 0x00DB, 0x009D, 0x00AE, 0x009D, 0x008F,
-    0x00C9, 0x009B, 0xFFFD, 0x009F, 0x0032, 0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0xFFF0, 0x0028, 0x0008, 0x0068, 0x004C, 0x004F, 0x002B, 0x0053, 0xFFFF, 0x0000,
-    0x0000, 0x0000, 0x0053, 0x0069, 0x002B, 0x0055, 0x003F, 0x006E, 0xFFFF
+MenuGlyphScript gControllerPakRumbleCheckNotUsedText[10] = { _("{COLOR:7}つかいません") };
 #else
-
+Vec2s gCoursePreviewCloseSparkleOffsetsEnd[2] = {
+    _("UE?"),
+};
 MenuGlyphScript gControllerPakRumbleCheckPromptText[4][0x34] = {
     {
-        _("{COLOR:7}TO USE {COLOR:6}RUMBLE\nPAK{COLOR:7}, INSERT\nIT NOW."),
-    },
+     _("{COLOR:7}TO USE {COLOR:6}RUMBLE\nPAK{COLOR:7}, INSERT\nIT NOW."),
+     },
     {
-        _("{COLOR:7}CHECKING\n{COLOR:6}RUMBLE PAK{COLOR:7}."),
-    },
+     _("{COLOR:7}CHECKING\n{COLOR:6}RUMBLE PAK{COLOR:7}."),
+     },
     {
-        _("{COLOR:7}DO NOT REMOVE\n{COLOR:6}RUMBLE PAK{COLOR:7}."),
-    },
+     _("{COLOR:7}DO NOT REMOVE\n{COLOR:6}RUMBLE PAK{COLOR:7}."),
+     },
     {
-        _("{COLOR:7}IS THIS OK?"),
-    },
+     _("{COLOR:7}IS THIS OK?"),
+     },
 };
-
 MenuGlyphScript gControllerPakRumbleCheckNotUsedText[12] = {
     _("{COLOR:7}NOT USED"),
 };
+#endif
 
 MenuGlyphScript gControllerPakRumbleCheckNoEntryText[12] = {
     _("{COLOR:7}NO ENTRY"),
 };
 
+#if defined(VERSION_JP)
+MenuGlyphScript gControllerPakRumblePakText[10] = { _("{COLOR:6}振動パック") };
+MenuGlyphScript gControllerPakCouldNotEraseNoteText[48] = { _("ゲームノートを消せませんでし\nた。"),
+                                                            0,
+                                                            0,
+                                                            0,
+                                                            0,
+                                                            0,
+                                                            0,
+                                                            0,
+                                                            0,
+                                                            0xFFF0,
+                                                            0x0028,
+                                                            0x0008,
+                                                            0x0068,
+                                                            0x004C,
+                                                            0x004F,
+                                                            0x002B,
+                                                            0x0053,
+                                                            0xFFFF,
+                                                            0x0000,
+                                                            0x0000,
+                                                            0x0000,
+                                                            0x0053,
+                                                            0x0069,
+                                                            0x002B,
+                                                            0x0055,
+                                                            0x003F,
+                                                            0x006E,
+                                                            0xFFFF };
+#else
 MenuGlyphScript gControllerPakRumblePakText[20] = {
     _("{COLOR:6}RUMBLE PAK"),
 };
-
 MenuGlyphScript gControllerPakAreYouSureText[16] = {
     _("{COLOR:7}ARE YOU SURE?"),
 };
-
 MenuGlyphScript gControllerPakCouldNotEraseNoteText[56] = {
     _("COULD NOT\nERASE THE\nNOTE."),
-    // clang-format on
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    0x0000,
+    0x0000,
+    0x0000,
+    0x0000,
+    0x0000,
+    0x0000,
     0x0000,
     0x0000,
     0xFFF0,
@@ -126,8 +131,8 @@ MenuGlyphScript gControllerPakCouldNotEraseNoteText[56] = {
     0x0000,
     0x0000,
     0x0000,
-#endif
 };
+#endif
 
 void drawControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     s32 i;

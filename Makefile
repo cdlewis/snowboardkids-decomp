@@ -254,6 +254,7 @@ TIDY_C_FILES := $(filter-out %.inc.c $(TIDY_C_FRAGMENT_FILES),$(PROJECT_C_FILES)
 
 TEXTCONV = $(PYTHON) $(TOOLS_DIR)/textconv.py
 CHARMAP = $(TOOLS_DIR)/charmap.txt
+SMALL_CHARMAP = $(TOOLS_DIR)/charmap.small.txt
 TEXTCONV_DIR = $(BUILD_DIR)/textconv
 
 BIN_FILES   := $(foreach dir,$(BIN_DIRS),$(wildcard $(dir)/*.bin))
@@ -356,9 +357,9 @@ $(BUILD_DIR)/%.o: %.s
 	$(PRINTF) "[$(GREEN)   as   $(NO_COL)]  $<\n"
 	$(V)$(CPP) $(CPPFLAGS) $(VERSION_DEFINE) -I include $< | $(AS) $(ASFLAGS) -o $@
 
-$(TEXTCONV_DIR)/%.c: %.c $(TOOLS_DIR)/textconv.py $(CHARMAP)
+$(TEXTCONV_DIR)/%.c: %.c $(TOOLS_DIR)/textconv.py $(CHARMAP) $(SMALL_CHARMAP)
 	@mkdir -p $(dir $@)
-	$(V)$(TEXTCONV) $(CHARMAP) $< $@
+	$(V)$(TEXTCONV) $(CHARMAP) $< $@ --small-charmap $(SMALL_CHARMAP)
 
 # IDO's object writer rounds BSS sections to 16 bytes. These data-only files
 # are assembled from IDO's normal output with GNU as so -no-pad-sections can

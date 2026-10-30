@@ -7,7 +7,11 @@ import sys
 from pathlib import Path
 
 
-MACRO_PATTERN = re.compile(r'(?<![A-Za-z0-9_])(_|_FRAGMENT)\("')
+SOURCE_TOKEN_PATTERN = re.compile(
+    r'//[^\n]*|/\*.*?\*/|"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\''
+    r'|(?<![A-Za-z0-9_])(?P<macro>_SMALL_FRAGMENT|_SMALL|_FRAGMENT|_)(?![A-Za-z0-9_])',
+    re.DOTALL,
+)
 RAW_WORD_PATTERN = re.compile(r"0x([0-9A-Fa-f]{4})")
 COLOR_PATTERN = re.compile(r"COLOR:([0-9]+)")
 
@@ -112,11 +116,21 @@ def encode_text(text, characters, named_values, append_terminator=True):
     return values
 
 
-def _inside_comment(source, position):
-    line_start = source.rfind("\n", 0, position) + 1
-    if "//" in source[line_start:position]:
-        return True
-    return source.rfind("/*", 0, position) > source.rfind("*/", 0, position)
+def _skip_trivia(source, position):
+    while position < len(source):
+        if source[position].isspace():
+            position += 1
+        elif source.startswith("/*", position):
+            end = source.find("*/", position + 2)
+            if end < 0:
+                raise TextConversionError("unterminated comment in _() expression")
+            position = end + 2
+        elif source.startswith("//", position):
+            end = source.find("\n", position + 2)
+            position = len(source) if end < 0 else end + 1
+        else:
+            break
+    return position
 
 
 def _read_string_literal(source, start):
@@ -125,6 +139,9 @@ def _read_string_literal(source, start):
     while index < len(source):
         character = source[index]
         if character == "\\" and index + 1 < len(source):
+            if source[index + 1] == "\n":
+                index += 2
+                continue
             characters.extend((character, source[index + 1]))
             index += 2
         elif character == '"':
@@ -135,30 +152,50 @@ def _read_string_literal(source, start):
     raise TextConversionError("unterminated _() string literal")
 
 
-def process_source(source, characters, named_values):
+def process_source(source, characters, named_values, small_charmap=None):
     if "font_encoding.h" not in source:
         return source
 
     output = []
     position = 0
     while True:
-        match = MACRO_PATTERN.search(source, position)
+        match = SOURCE_TOKEN_PATTERN.search(source, position)
         if match is None:
             output.append(source[position:])
             break
-        if _inside_comment(source, match.start()):
+        if match.group("macro") is None:
             output.append(source[position:match.end()])
             position = match.end()
             continue
 
+        opening = _skip_trivia(source, match.end())
+        if opening >= len(source) or source[opening] != "(":
+            output.append(source[position:match.end()])
+            position = match.end()
+            continue
+        cursor = _skip_trivia(source, opening + 1)
+        literals = []
+        while cursor < len(source) and source[cursor] == '"':
+            literal, cursor = _read_string_literal(source, cursor + 1)
+            literals.append(literal)
+            cursor = _skip_trivia(source, cursor)
+        if not literals or cursor >= len(source) or source[cursor] != ")":
+            raise TextConversionError("_() must contain string literals only")
         output.append(source[position:match.start()])
-        macro_name = match.group(1)
-        text, after_quote = _read_string_literal(source, match.end())
-        if after_quote >= len(source) or source[after_quote] != ")":
-            raise TextConversionError("_() must contain exactly one string literal")
-        values = encode_text(text, characters, named_values, append_terminator=(macro_name == "_"))
+        macro_name = match.group("macro")
+        text = "".join(literals)
+        if macro_name.startswith("_SMALL"):
+            if small_charmap is None:
+                small_charmap = parse_charmap(Path(__file__).with_name("charmap.small.txt"))
+            glyphs, directives = small_charmap
+        else:
+            glyphs, directives = characters, named_values
+        values = encode_text(text, glyphs, directives, append_terminator=not macro_name.endswith("FRAGMENT"))
         output.append(", ".join(f"0x{value:04X}" for value in values))
-        position = after_quote + 1
+        # Preserve following source line numbers, including when clang-format
+        # wraps a call or splits its string into adjacent literals.
+        output.append("\n" * source[match.start():cursor + 1].count("\n"))
+        position = cursor + 1
     return "".join(output)
 
 
@@ -191,6 +228,7 @@ def main(argv=None):
     parser.add_argument("input")
     parser.add_argument("output")
     parser.add_argument("--decode", action="store_true", help="decode big-endian u16 binary to readable text")
+    parser.add_argument("--small-charmap", type=Path, default=Path(__file__).with_name("charmap.small.txt"))
     args = parser.parse_args(argv)
 
     try:
@@ -202,7 +240,7 @@ def main(argv=None):
             converted = decode_text([int.from_bytes(data[i:i+2], "big") for i in range(0, len(data), 2)], characters, named_values)
         else:
             source = sys.stdin.read() if args.input == "-" else Path(args.input).read_text()
-            converted = process_source(source, characters, named_values)
+            converted = process_source(source, characters, named_values, parse_charmap(args.small_charmap))
         if args.output == "-":
             sys.stdout.write(converted)
         else:

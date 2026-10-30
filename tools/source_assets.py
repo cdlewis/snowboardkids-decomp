@@ -80,7 +80,7 @@ def extract_source_assets(root, rom):
     for path in source_files(root):
         source = read_source(path)
         converted = process_source(source, chars, names)
-        for match in re.finditer(r"\b(" + types + r")\s+(\w+)\s*(\[[^;=]*?\])\s*=\s*\{(.*?)\};", converted, re.S):
+        for match in re.finditer(r"\b(" + types + r")\s+(\w+)\s*(\[[^;=]*?\])\s*=\s*\{(.*?)\}\s*;", converted, re.S):
             kind, name, dimensions, body = match.groups()
             entry = dict(name=name, type=kind, source=str(path.relative_to(root)), authority="source", status="source_backed")
             if kind == "MenuGlyphScript":
