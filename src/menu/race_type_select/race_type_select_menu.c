@@ -17,6 +17,8 @@
 #include "game/engine/system_runtime.h"
 #include "game/menu/race_setup/race_setup_menu.h"
 
+/* JP keeps a separate byte relocation; US reuses the struct address. Using
+ * either expression for both regions changes updateRaceTypeSelectMenu. */
 #if defined(VERSION_JP)
 #define RACE_TYPE_SELECT_CURSOR_ANIM_STATE gRaceTypeSelectCursorAnimState
 #else

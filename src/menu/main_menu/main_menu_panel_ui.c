@@ -699,19 +699,11 @@ void updateMainMenuModeSelectGrid(MenuPanelActor *arg0) {
     }
 
     if (gMainMenuSelectionResult == 0) {
-#if defined(VERSION_JP)
-        arg0->x = gFrameCounter & 0xF;
-        if (arg0->x >= 9) {
-            arg0->x = 0x10 - arg0->x;
-        }
-        arg0->x = (arg0->x * 0x10) + 0x7F;
-#else
         arg0->x = gFrameCounter & 0xF; \
         if (arg0->x >= 9) { \
             arg0->x = 0x10 - arg0->x; \
         } \
         arg0->x = (arg0->x * 0x10) + 0x7F;
-#endif
     } else if (gFrameCounter & 1) {
         arg0->x = 0;
     } else {
@@ -761,11 +753,7 @@ void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
     );
 
     i = 0;
-#if defined(VERSION_JP)
-    for (;;) {
-#else
     do {
-#endif
         drawMenuSprite(
             (s16)(arg0->x + i + 0xC),
             (s16)(arg0->y + 0x14),
@@ -787,15 +775,7 @@ void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
             0
         );
         i += 0x10;
-#if defined(VERSION_JP)
-
-        if (!(i < 0xF0)) {
-            break;
-        }
-    }
-#else
     } while (i < 0xF0);
-#endif
 
     drawMenuSprite(
         (s16)(arg0->x - 4),
@@ -819,11 +799,7 @@ void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
     );
 
     i = (arg0->selectionState == 4) * 0;
-#if defined(VERSION_JP)
-    for (;;) {
-#else
     do {
-#endif
         drawMenuSprite(
             (s16)(arg0->x - 4),
             (s16)(arg0->y + i + 0x24),
@@ -845,15 +821,7 @@ void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
             0
         );
         i += 0x10;
-#if defined(VERSION_JP)
-
-        if (!(i <= 0x2F)) {
-            break;
-        }
-    }
-#else
     } while (i <= 0x2F);
-#endif
 
     glyphText[1] = 0xFFFF;
     visibleIndex = 0;
@@ -918,22 +886,10 @@ void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
     title = mainMenuModeDescriptionTitles[gMainMenuModeSelection];
     titleCursor = title;
     if (*title != 0xFFFF) {
-#if defined(VERSION_JP)
-        for (;;) {
-#else
         do {
-#endif
             visibleIndex++;
             titleCursor++;
-#if defined(VERSION_JP)
-
-            if (!(*titleCursor != 0xFFFF)) {
-                break;
-            }
-        }
-#else
         } while (*titleCursor != 0xFFFF);
-#endif
     }
     visibleIndex *= 0x10;
     visibleIndex = -(visibleIndex / 2);
@@ -1115,45 +1071,21 @@ void drawMainMenuSettingsPanel(void *arg0) {
     drawMenuSprite(0x78, -0x64, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
 
     edgeX = xOrigin;
-#if defined(VERSION_JP)
-    for (;;) {
-#else
     do {
-#endif
         drawMenuSprite(edgeX, -0x64, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, 0);
         drawMenuSprite(edgeX, -0x2C, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, 0);
         edgeX += 0x10;
-#if defined(VERSION_JP)
-
-        if (!(edgeX < 0x7C)) {
-            break;
-        }
-    }
-#else
     } while (edgeX < 0x7C);
-#endif
 
     drawMenuSprite(-0x84, -0x2C, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, 0);
     drawMenuSprite(0x78, -0x2C, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, 0);
 
     edgeY = -yOrigin;
-#if defined(VERSION_JP)
-    for (;;) {
-#else
     do {
-#endif
         drawMenuSprite(-0x84, edgeY, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 5, 0x20, 0x20, 0, 0);
         drawMenuSprite(0x78, edgeY, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 6, 0x20, 0x20, 0, 0);
         edgeY += 0x10;
-#if defined(VERSION_JP)
-
-        if (!(edgeY < -0x24)) {
-            break;
-        }
-    }
-#else
     } while (edgeY < -0x24);
-#endif
 
     if (yOrigin) {}
 
@@ -1270,43 +1202,19 @@ void drawRaceRecordSettingsPanel(void *arg0) {
     drawMenuSprite(-0x84, 0x1C, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
     drawMenuSprite(0x78, 0x1C, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
     x = -xStart;
-#if defined(VERSION_JP)
-    for (;;) {
-#else
     do {
-#endif
         drawMenuSprite((s16)x, 0x1C, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, 0);
         drawMenuSprite((s16)x, 0x54, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, 0);
         x += 0x10;
-#if defined(VERSION_JP)
-
-        if (!(x < 0x7C)) {
-            break;
-        }
-    }
-#else
     } while (x < 0x7C);
-#endif
     drawMenuSprite(-0x84, 0x54, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, 0);
     drawMenuSprite(0x78, 0x54, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, 0);
     y1 = 0x2C;
-#if defined(VERSION_JP)
-    for (;;) {
-#else
     do {
-#endif
         drawMenuSprite(-0x84, (s16)y1, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 5, 0x20, 0x20, 0, 0);
         drawMenuSprite(0x78, (s16)y1, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 6, 0x20, 0x20, 0, 0);
         y1 = (y1 + 0x10) * 1;
-#if defined(VERSION_JP)
-
-        if (!(y1 < 0x5C)) {
-            break;
-        }
-    }
-#else
     } while (y1 < 0x5C);
-#endif
     for (x = -0x74; x < 0x7C; x += 0x10) {
         for (y = 0x2C; y != 0x5C; y += 0x10) {
             drawMenuSprite(
@@ -1329,41 +1237,17 @@ void drawRaceRecordSettingsPanel(void *arg0) {
     drawMenuSprite(-0x40, -0x30, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
     drawMenuSprite(0x30, -0x30, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
     x2 = -0x30;
-#if defined(VERSION_JP)
-    for (;;) {
-#else
     do {
-#endif
         drawMenuSprite((s16)x2, -0x30, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, 0);
         drawMenuSprite((s16)x2, 0, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, 0);
         x2 = (x2 + 0x10) * 1;
-#if defined(VERSION_JP)
-
-        if (!(x2 < 0x30)) {
-            break;
-        }
-    }
-#else
     } while (x2 < 0x30);
-#endif
     y2 = -0x20;
-#if defined(VERSION_JP)
-    for (;;) {
-#else
     do {
-#endif
         drawMenuSprite(-0x40, (s16)y2, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 5, 0x20, 0x20, 0, 0);
         drawMenuSprite(0x30, (s16)y2, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 6, 0x20, 0x20, 0, 0);
         y2 += 0x10;
-#if defined(VERSION_JP)
-
-        if (!((y2 - 0) < 0)) {
-            break;
-        }
-    }
-#else
     } while ((y2 - 0) < 0);
-#endif
     for (x2 = -0x30; x2 != 0x30; x2 += 0x10) {
         for (y = -0x20; y != 0; y += 0x10) {
             drawMenuSprite(

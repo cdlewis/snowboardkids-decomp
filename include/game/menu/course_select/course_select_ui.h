@@ -5,12 +5,21 @@
 #include "game/engine/callback_task_scheduler.h"
 #include "game/menu/renderer/menu_renderer.h"
 
+/* Localized scripts have different physical row sizes in the ROMs. */
+#if defined(VERSION_JP)
+#define COURSE_EXTRA_BOARD_LEVEL_TEXT_LENGTH 0x20
+#define COURSE_PURCHASE_MESSAGE_TEXT_LENGTH 0xF
+#else
+#define COURSE_EXTRA_BOARD_LEVEL_TEXT_LENGTH 0x30
+#define COURSE_PURCHASE_MESSAGE_TEXT_LENGTH 0x19
+#endif
+
 typedef struct {
     MenuGlyphScript text[0x18];
 } CourseBoardLevelByCourseText;
 
 typedef struct {
-    MenuGlyphScript text[0x30];
+    MenuGlyphScript text[COURSE_EXTRA_BOARD_LEVEL_TEXT_LENGTH];
 } CourseExtraBoardLevelText;
 
 typedef struct {
@@ -18,7 +27,7 @@ typedef struct {
 } CourseModeDescriptionText;
 
 typedef struct {
-    MenuGlyphScript text[0x19];
+    MenuGlyphScript text[COURSE_PURCHASE_MESSAGE_TEXT_LENGTH];
 } CoursePurchaseMessageText;
 
 typedef struct {
@@ -163,17 +172,10 @@ typedef union {
     u8 values[0x18];
 } CourseSelectCourseRatingTable;
 
-#if defined(VERSION_JP)
-extern MenuGlyphScript gCourseSelectBoardLevelByCourseText[4][0x18];
-extern MenuGlyphScript gCourseSelectExtraCourseBoardLevelText[3][0x20];
-extern MenuGlyphScript gCourseSelectModeDescriptionText[7][0x23];
-extern MenuGlyphScript gCourseSelectPurchaseMessageText[2][0xF];
-#else
 extern CourseBoardLevelByCourseText gCourseSelectBoardLevelByCourseText[4];
 extern CourseExtraBoardLevelText gCourseSelectExtraCourseBoardLevelText[3];
 extern CourseModeDescriptionText gCourseSelectModeDescriptionText[7];
 extern CoursePurchaseMessageText gCourseSelectPurchaseMessageText[2];
-#endif
 extern MenuGlyphScript gCourseSelectBoardLevelText[];
 
 /* Separate snowboard preview actors owned by gMenuScratch0.task (incoming,
@@ -182,7 +184,6 @@ extern MenuGlyphScript gCourseSelectBoardLevelText[];
 
 extern const char gCourseSelectPlayerNumberFormat[];
 
-#if defined(VERSION_JP)
 extern MenuGlyphScript gCourseSelectCompleteText[];
 extern CourseSelectCourseRatingTable gCourseSelectCourseRatings;
 extern const char gCourseSelectHandlingFormat[];
@@ -195,11 +196,8 @@ extern const char gCourseSelectTrickFormat[];
 extern const char gCourseSelectUnknownHandlingText[];
 extern const char gCourseSelectUnknownSpeedText[];
 extern const char gCourseSelectUnknownTrickText[];
-#endif
 
-#if defined(VERSION_JP)
 void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList);
-#endif
 
 void drawCourseSelectSnowboardPreviewIn(CourseSelectCoursePreviewActor *arg0);
 void drawCourseSelectSnowboardPreviewOut(CourseSelectCoursePreviewActor *arg0);

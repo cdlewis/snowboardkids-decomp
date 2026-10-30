@@ -106,7 +106,6 @@ typedef struct {
 
 extern s16 gRaceSetupSavePanelRects[2][4];
 
-#if defined(VERSION_JP)
 extern const char gRaceSetupPlayerNumberFormat[];
 extern const char gRaceSetupMoneyFormat[];
 extern MenuGlyphScript gRaceSetupFourPlayerOptionText[];
@@ -115,7 +114,6 @@ extern MenuGlyphScript gRaceSetupPlayerCountPromptText[][0x34];
 extern RaceSetupSavePromptData gRaceSetupSavePromptData;
 extern MenuGlyphScript gRaceSetupThreePlayerOptionText[];
 extern MenuGlyphScript gRaceSetupTwoPlayerOptionText[];
-#endif
 
 void drawRaceSetupPlayerCountPrompt(MenuIntroActor *arg0);
 void updateRaceSetupPlayerCountPrompt(MenuIntroActor *arg0);

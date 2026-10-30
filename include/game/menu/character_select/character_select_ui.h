@@ -89,13 +89,11 @@ typedef struct {
     MenuGlyphScript unusedText[0x14];
 } CharacterSelectUiConfirmationBannerText;
 
-#if defined(VERSION_JP)
 extern const char gCharacterSelectCharacterStatFormat[];
 extern u16 gCharacterSelectCharacterStatLabels[];
 extern CharacterSelectUiCharacterStats gCharacterSelectCharacterStats[];
 extern CharacterSelectUiConfirmationBannerText gCharacterSelectConfirmationBannerText;
 extern const char gCharacterSelectPlayerNumberFormat[];
-#endif
 
 void drawCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0);
 void updateCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0);

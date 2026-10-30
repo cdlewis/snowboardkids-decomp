@@ -50,7 +50,6 @@ extern CallbackTaskGroup gCallbackTaskPoolStartView1;
 extern CallbackTaskGroup gCallbackTaskPoolStartView2;
 extern CallbackTaskGroup gCallbackTaskPoolStartView3;
 
-#if defined(VERSION_JP)
 extern CallbackTaskSchedulerBss gCallbackTaskSchedulerBssView;
 extern CallbackTask *gCurrentCallbackTask;
 extern u16 gFreeCallbackTaskCount;
@@ -62,7 +61,6 @@ extern u16 gFreeCallbackTaskType3Count;
 extern u16 gFreeCallbackTaskType4Count;
 extern u16 gFreeCallbackTaskType5Count;
 extern u16 gFreeCallbackTaskType6Count;
-#endif
 
 void initCallbackTaskScheduler(s32 arg0);
 void updateCallbackTasks(void);

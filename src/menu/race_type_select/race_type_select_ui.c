@@ -811,12 +811,7 @@ void drawRaceTypeSelectOption3Frame(RaceTypeSelectExitFrameActor *arg0) {
     }
 
     tileOffset = 0;
-#if defined(VERSION_JP)
-    // clang-format off
-    offset = 0; i = 0x80; for (;;) {
-#else
     offset = 0; i = 0x80; do {
-#endif
         drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
 #if defined(VERSION_JP)
                       gRaceTypeSelectFrameTileMaps.exitFrame.rightEdgeTiles[tileOffset], 0, 0x100, gMenuViewportWidth / 2,
@@ -835,15 +830,7 @@ void drawRaceTypeSelectOption3Frame(RaceTypeSelectExitFrameActor *arg0) {
         i = 0x80;
         offset += 0x40;
         tileOffset++;
-#if defined(VERSION_JP)
-
-        if (!(offset != i)) {
-            break;
-        }
-    }
-#else
     } while (offset != i);
-#endif
     i++;
     i--;
 
@@ -969,9 +956,7 @@ void drawRaceTypeSelectCursor(RaceTypeSelectAnimatedWidgetActor *arg0) {
 void updateRaceTypeSelectCursor(RaceTypeSelectAnimatedWidgetActor *arg0) {
     u8 state;
     u8 globalState;
-#if defined(VERSION_US)
     RaceTypeSelectCursorState *cursor = &gRaceTypeSelectCursorTarget;
-#endif
 
     state = arg0->state;
     if (state != (globalState = gRaceTypeSelectCursorTarget.state)) {
@@ -1020,11 +1005,7 @@ void updateRaceTypeSelectCursor(RaceTypeSelectAnimatedWidgetActor *arg0) {
             break;
     }
 
-#if defined(VERSION_JP)
-    gRaceTypeSelectCursorAnimState = state;
-#else
     cursor->state = state;
-#endif
     if (arg0->state == 4) {
         removeCallbackTask(arg0);
         return;

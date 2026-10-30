@@ -35,11 +35,9 @@ typedef struct {
 
 /* Named components preserve IDO's operand scheduling in the matrix packers. */
 
-#if defined(VERSION_JP)
 u16 gMenuDefaultSpritePalette[16] = {
     0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 };
-#endif
 
 AssetHandles gAssetHandles;
 s16 gMenuAsciiFontPaletteIndex;
@@ -49,13 +47,6 @@ u8 *gRenderCallbackScratchPtr;
 u8 *gMenuRenderScratchPtr;
 u8 *gMenuRenderScratchStart;
 
-#if defined(VERSION_JP)
-void initMenuAssetHandles(void) {
-#else
-u16 gMenuDefaultSpritePalette[16] = {
-    0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-};
-
 #ifdef SBK_SPRITE_PALETTE_REMAP
 static AssetTable *sMenuAsciiFontAsset;
 #endif
@@ -64,7 +55,6 @@ static AssetTable *sMenuAsciiFontAsset;
 // clang-format off
 void initMenuAssetHandles(void)
 {
-#endif
     s16 *end;
     s16 *handle;
     end = &gMenuAsciiFontPaletteIndex;
@@ -81,23 +71,7 @@ void initMenuAssetHandles(void)
     end--;
 }
 // clang-format on
-#if defined(VERSION_JP)
-void releaseMenuAssetHandles(void) {
-#endif
-
-#if defined(VERSION_JP)
-    do { \
-        s16 *handle = &gAssetHandles[7]; \
-        do { \
-            if ((*handle) != (-1)) { \
-                *handle = freeRelocatableHeapBlock(*handle); \
-            } \
-            handle++; \
-        } while (handle != (&gMenuAsciiFontPaletteIndex)); \
-    } while (0);
-#endif
 // IDO code generation for this function is sensitive to source line layout.
-#if defined(VERSION_US)
 // clang-format off
 void releaseMenuAssetHandles(void)
 {
@@ -110,7 +84,6 @@ void releaseMenuAssetHandles(void)
             handle++; \
         } while (handle != (&gMenuAsciiFontPaletteIndex)); \
     } while (0);
-#endif
 }
 // clang-format on
 
@@ -488,13 +461,9 @@ void drawMenuFillRectangle(s16 x, s16 y, s16 width, s16 height, u8 red, u8 green
 
     halfWidth = gMenuViewportWidth / 2; maxX = gMenuViewportCenterX + halfWidth;
     if (x0 < maxX) {
-#if defined(VERSION_JP)
-        for (;;) { halfHeight = gMenuViewportHeight / 2; break; }
-#else
         do {
             halfHeight = gMenuViewportHeight / 2;
         } while (0);
-#endif
         maxY = gMenuViewportCenterY + halfHeight;
         minX = gMenuViewportCenterX - halfWidth;
         if (y0 < maxY) {

@@ -27,9 +27,7 @@ extern CharacterSelectCourseMenuData gCharacterSelectCourseMenuData;
 extern u16 gCharacterSelectCourseExitOptionIndex;
 extern CharacterSelectCourseCursorState gCharacterSelectCourseCursorState;
 
-#if defined(VERSION_JP)
 extern CharacterSelectOptionList *gCharacterSelectActiveCourseOptions;
-#endif
 
 void initCharacterSelectCourseMenuFromRaceTypeSelect(void);
 void initCharacterSelectCourseMenuFromRace(void);

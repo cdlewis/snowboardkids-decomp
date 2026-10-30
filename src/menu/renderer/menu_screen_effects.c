@@ -38,14 +38,6 @@ typedef struct {
     /* 0x20 */ s32 pad20;
 } TitleMenuRotatingBoardScratch;
 
-#if defined(VERSION_JP)
-
-void drawPassAwardLabel(MenuScreenEffectActor *);
-void drawCourseRecordBanner(MenuScreenEffectActor *);
-
-void drawRaceStartPlayerEffectSprite(MenuScreenEffectActor *);
-#endif
-
 u8 raceSetupCharacterFocusAnimationIds[8] = { 0, 1, 0, 1, 2, 0, 0, 0 };
 
 s16 raceSetupCharacterFocusSoundIds[6] = {
@@ -130,30 +122,13 @@ s16 passAwardLabelFlashTileOffsets[538] = {
 
 #if defined(VERSION_JP)
 const char gTitleScreenStartPromptText[32] = "PUSH START BUTTON";
-#else
-void drawPassAwardPodiumModels(MenuScreenEffectActor *);
-void drawPassAwardCourseBackdrop(void *);
-void renderPassAwardPodium(MenuScreenEffectActor *);
-void stopPassAwardWinner(MenuScreenEffectActor *);
-void drawTitleScreenStartPrompt(MenuScreenEffectActor *);
-void drawRaceStartPlayerEffectSprite(MenuScreenEffectActor *);
-void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *);
-void waitForRaceStartPlayerEffect(MenuScreenEffectActor *);
-void drawTitleMenuSparkle(MenuScreenEffectActor *);
-void drawCourseRecordBanner(MenuScreenEffectActor *);
-void updateCourseRecordBannerFadeOut(MenuScreenEffectActor *);
-void drawRaceSetupNamePlate(MenuScreenEffectActor *);
-void updateRaceSetupNamePlateSlideOut(MenuScreenEffectActor *);
-void holdRaceSetupNamePlate(MenuScreenEffectActor *);
-void updateRaceSetupNamePlateSlideIn(MenuScreenEffectActor *);
-void drawCongratulationsBannerModel(MenuScreenEffectActor *);
-void updateCongratulationsBannerModel(MenuScreenEffectActor *);
-void updateCongratulationsBannerSprite(MenuScreenEffectActor *);
-void drawPassAwardLabel(MenuScreenEffectActor *);
-void updatePassAwardLabelFadeIn(MenuScreenEffectActor *);
-void drawMainMenuRotatingBoardModel(MenuScreenEffectActor *);
-void drawMainMenuStaticBoardModel(void *);
 #endif
+
+void stopPassAwardWinner(MenuScreenEffectActor *);
+void drawRaceStartPlayerEffectSprite(MenuScreenEffectActor *);
+void drawCourseRecordBanner(MenuScreenEffectActor *);
+void updateRaceSetupNamePlateSlideIn(MenuScreenEffectActor *);
+void drawPassAwardLabel(MenuScreenEffectActor *);
 
 void drawFallingConfetti(MenuScreenEffectActor *arg0) {
     void *texture;

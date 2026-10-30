@@ -97,9 +97,7 @@ extern u8 gRaceTypeSelectCursorAnimState;
 extern RaceTypeSelectFrameTileTable gRaceTypeSelectFrameTileMaps;
 extern RaceTypeSelectDescriptionScriptTable gRaceTypeSelectPortraitScripts;
 
-#if defined(VERSION_JP)
 extern const char gRaceTypeSelectEntryFeeFormat[];
-#endif
 
 void drawRaceTypeSelectOptionIcons(RaceTypeSelectOptionIconActor *arg0);
 void updateRaceTypeSelectOptionIcons(RaceTypeSelectOptionIconActor *arg0);

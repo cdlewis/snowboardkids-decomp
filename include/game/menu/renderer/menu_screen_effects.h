@@ -37,8 +37,6 @@ typedef struct MenuScreenEffectActor {
 
 extern s16 courseRecordDigitTileOffsets[];
 
-#if defined(VERSION_JP)
-extern const char gTitleScreenStartPromptText[];
 extern Vtx congratulationsBannerModelVertices[];
 extern s16 congratulationsBannerSpriteTileOffsets[];
 extern s16 passAwardLabelFlashTileOffsets[];
@@ -49,9 +47,11 @@ extern s16 raceSetupCharacterFocusSoundIds[];
 extern Vtx raceStartPlayerEffectVertices[];
 extern s16 titleMenuSparklePositions[];
 extern u8 titleMenuSparkleTileFrames[];
+/* Only JP has separately addressed rodata symbols for these values. */
+#if defined(VERSION_JP)
+extern const char gTitleScreenStartPromptText[];
 #endif
 
-#if defined(VERSION_JP)
 void drawCongratulationsBannerModel(MenuScreenEffectActor *);
 void drawFallingConfetti(MenuScreenEffectActor *arg0);
 void drawMainMenuRotatingBoardModel(MenuScreenEffectActor *);
@@ -74,7 +74,6 @@ void updateFallingConfettiSway(MenuScreenEffectActor *arg0);
 void updatePassAwardLabelFadeIn(MenuScreenEffectActor *);
 void updateRaceSetupNamePlateSlideOut(MenuScreenEffectActor *);
 void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *);
-#endif
 
 void initFallingConfetti(MenuScreenEffectActor *arg0);
 void initPassAwardPodium(MenuScreenEffectActor *arg0);

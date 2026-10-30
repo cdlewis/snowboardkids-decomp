@@ -430,10 +430,6 @@ $(BUILD_DIR)/src/math/spatial_math.o: C_OBJ_POSTPROCESS = \
 $(BUILD_DIR)/src/menu/renderer/menu_render_utils.o: C_OBJ_POSTPROCESS = \
 	$(PYTHON) $(TOOLS_DIR)/trim_elf_section_tail.py $@ .text 8
 
-$(BUILD_DIR)/src/menu/race_setup/race_setup_menu.o: C_OBJ_POSTPROCESS = \
-	$(PYTHON) $(TOOLS_DIR)/trim_elf_section_tail.py $@ .data 16 \
-		--undefine-symbol gControllerPakRumbleCheckPromptState
-
 endif
 
 # Patch ll.o for modern binutils, matching the upstream libultra build.

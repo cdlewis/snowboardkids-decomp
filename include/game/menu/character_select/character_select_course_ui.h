@@ -5,6 +5,12 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/character_select/character_select_course_menu.h"
 
+#if defined(VERSION_JP)
+#define CHARACTER_SELECT_BEGINNER_DESCRIPTION_LENGTH 0x30
+#else
+#define CHARACTER_SELECT_BEGINNER_DESCRIPTION_LENGTH 0x3A
+#endif
+
 typedef struct CharacterSelectCourseWidgetActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 x;
@@ -79,9 +85,21 @@ typedef struct {
     MenuGlyphScript exitText[14];
 } CharacterSelectCourseExitPreviewData;
 
-#if defined(VERSION_JP)
+typedef union {
+    struct {
+        u16 firstFrameTiles[20];
+        u16 remainingFrameTiles[210];
+        CharacterSelectCourseExitPreviewData exitPreview;
+    } sections;
+    CharacterSelectCourseFrameTileMap frames[11];
+} CharacterSelectCoursePreviewData;
+
+typedef char CharacterSelectCoursePreviewDataSizeCheck[(sizeof(CharacterSelectCoursePreviewData) == 0x1EC) ? 1 : -1];
+
+extern CharacterSelectCoursePreviewData gCharacterSelectCoursePreviewData;
+
 extern u16 gCharacterSelectCourseMedalScoreThresholds[];
-extern MenuGlyphScript gCharacterSelectBeginnerCourseDescriptionText[][0x30];
+extern MenuGlyphScript gCharacterSelectBeginnerCourseDescriptionText[][CHARACTER_SELECT_BEGINNER_DESCRIPTION_LENGTH];
 extern MenuGlyphScript gCharacterSelectAdvancedCourseDescriptionText[][0x30];
 extern MenuGlyphScript gCharacterSelectExpertCourseDescriptionText[][0x38];
 extern MenuGlyphScript gCharacterSelectCourseReturnDescriptionText[];
@@ -94,13 +112,17 @@ extern const char gCharacterSelectRecordCentisecondsFormat[];
 extern u8 gCharacterSelectCourseDifficultyRatings[];
 extern CharacterSelectCourseExitPreviewData gCharacterSelectCourseExitPreviewData;
 extern CharacterSelectCourseText gCharacterSelectCourseNameText[];
+/* Each corner overlaps the first tile of the following map. Linker views
+ * preserve the original relocation anchors into the common allocation. */
 extern CharacterSelectCourseFrameCornerTileMap gCharacterSelectCoursePreviewFrameCornerTileMaps[];
 extern CharacterSelectCourseFrameTileMap gCharacterSelectCoursePreviewFrameTileMaps[];
-extern const char gCharacterSelectCourseRecordHitsLabel[];
-extern const char gCharacterSelectCourseRecordPointsLabel[];
 extern MenuGlyphScript gCharacterSelectCourseStartGameText[];
 extern const char gCharacterSelectCourseStatsScoreFormat[];
 extern u16 gCharacterSelectCourseStatsScoreValues[];
+/* JP has named label storage; US uses inline string literals. */
+#if defined(VERSION_JP)
+extern const char gCharacterSelectCourseRecordHitsLabel[];
+extern const char gCharacterSelectCourseRecordPointsLabel[];
 #endif
 
 void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0);

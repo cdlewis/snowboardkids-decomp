@@ -634,25 +634,13 @@ void initCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
     i = 0;
     if (gPlayerCount > 0) {
         player = &gGameSaveDataBuffer[0];
-#if defined(VERSION_JP)
-        for (;;) {
-#else
         do {
-#endif
             actor->leftSecretSlotUnlocked = actor->leftSecretSlotUnlocked | (player->characterFlags & 1);
             gCharacterSelectHudState.leftSecretSlotUnlocked = actor->leftSecretSlotUnlocked;
             gCharacterSelectHudState.rightSecretSlotUnlocked = actor->rightSecretSlotUnlocked;
             i++;
             player++;
-#if defined(VERSION_JP)
-
-            if (!(i < gPlayerCount)) {
-                break;
-            }
-        }
-#else
         } while (i < gPlayerCount);
-#endif
     }
 
     if (actor->leftSecretSlotUnlocked == 1) {
@@ -796,13 +784,7 @@ void updateCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor
     }
 
     if (mode != 0) {
-#if defined(VERSION_JP)
-        // clang-format off
- i = 0; if ((s32)gPlayerCount > 0) { layout = gCharacterSelectHighlightedRosterIndices; player = gRacePlayers; for (;;) {
-                // clang-format on
-#else
  i = 0; if ((s32)gPlayerCount > 0) { layout = gCharacterSelectHighlightedRosterIndices; player = gRacePlayers; do {
-#endif
                 if (player->selectedCharacterId < 5) {
                     arg0->x[i] = (layout[i] * 0x20) + arg0->baseX;
                 } else if (player->selectedCharacterId == 5) {
@@ -810,15 +792,7 @@ void updateCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor
                 }
                 i++;
                 player++;
-#if defined(VERSION_JP)
-
-                if (!(i < (s32)gPlayerCount)) {
-                    break;
-                }
-            }
-#else
             } while (i < (s32)gPlayerCount);
-#endif
         }
 
         if ((s32)arg0->timer < 0x10) {
@@ -854,25 +828,11 @@ void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
     combinedPlayerFlags = 0;
     loop.playerIndex = 0;
     /* Splitting this loop header across lines changes IDO's instruction scheduling. */
-#if defined(VERSION_JP)
-    // clang-format off
-    if ((s32)gPlayerCount > 0) { player = &gGameSaveDataBuffer[0]; for (;;) {
-            // clang-format on
-#else
     if ((s32)gPlayerCount > 0) { player = &gGameSaveDataBuffer[0]; do {
-#endif
             combinedPlayerFlags |= player->characterFlags;
             loop.playersEnd = &gGameSaveDataBuffer[0] + gPlayerCount;
             player++;
-#if defined(VERSION_JP)
-
-            if (!(player < loop.playersEnd)) {
-                break;
-            }
-        }
-#else
         } while (player < loop.playersEnd);
-#endif
         loop.playerIndex = 0;
     }
 
@@ -885,24 +845,12 @@ void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
     if ((s32)gPlayerCount > 0) {
         highlightedRosterIndices = gCharacterSelectHighlightedRosterIndices;
         marker.actor = arg0;
-#if defined(VERSION_JP)
-        for (;;) {
-#else
         do {
-#endif
             marker.actor->x[0] = (*highlightedRosterIndices * 0x20) + arg0->baseX;
             loop.playerIndex++;
             highlightedRosterIndices++;
             marker.next++;
-#if defined(VERSION_JP)
-
-            if (!(loop.playerIndex < (s32)gPlayerCount)) {
-                break;
-            }
-        }
-#else
         } while (loop.playerIndex < (s32)gPlayerCount);
-#endif
     }
 
     arg0->y = -0x18;

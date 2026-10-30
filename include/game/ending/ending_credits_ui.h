@@ -22,12 +22,10 @@ typedef struct EndingObjectSpriteDebugViewerActor {
     /* 0x1F */ u8 palette;
 } EndingObjectSpriteDebugViewerActor;
 
-#if defined(VERSION_JP)
 void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0);
 void updateEndingCreditsPageText(EndingCreditsPageTextActor *arg0);
 void updateEndingCreditsTheEndTextFadeIn(EndingCreditsPageTextActor *arg0);
 void updateEndingObjectSpriteDebugViewer(EndingObjectSpriteDebugViewerActor *arg0);
-#endif
 
 void initEndingCreditsPageTextActor(EndingCreditsPageTextActor *arg0);
 

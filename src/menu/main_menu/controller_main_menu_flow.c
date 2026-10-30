@@ -800,13 +800,8 @@ void initMainMenu(void) {
     resetAllViewports();
     configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, MAIN_MENU_ASPECT_RATIO);
     gFramebufferRenderInterval.value = 0;
-#if defined(VERSION_JP)
-    loadCompressedRomAsset(&_5DAF30_ROM_END, &_5DCBE0_ROM_START, 0x21);
-    loadCompressedRomAsset(&_5DCBE0_ROM_START, &_5DFDD0_ROM_START, 0x25);
-#else
     LOAD_ASSET(_5DB9D0, 0x21);
     LOAD_ASSET(_5DCBE0, 0x25);
-#endif
     LOAD_ASSET(_593D10, 0x22);
     LOAD_RAW_ASSET(_1467B0, 8);
     LOAD_ASSET(_1DE360, 9);

@@ -6,12 +6,10 @@
 extern s32 gRacePlayerHitCueId;
 extern s16 gRacePlayerHitEffectAngle;
 
-#if defined(VERSION_JP)
 extern s32 gRacePlayerHitAngle;
 extern s32 gRacePlayerHitDeltaX;
 extern s32 gRacePlayerHitDeltaZ;
 extern s32 gRacePlayerHitDistance;
-#endif
 
 s32 tryQueueRacePlayerHitCueSpinout(RacePlayer *player);
 s32 tryQueueRacePlayerHitCueGhostSpinout(RacePlayer *player);

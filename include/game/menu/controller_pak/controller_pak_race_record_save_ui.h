@@ -66,10 +66,8 @@ typedef struct {
     MenuGlyphScript exitMessage[10];
 } ControllerPakRaceRecordSaveUiData;
 
-#if defined(VERSION_JP)
 extern const char gControllerPakRaceRecordMoneyFormat[];
 extern ControllerPakRaceRecordSaveUiData gControllerPakRaceRecordSaveUiData;
-#endif
 
 void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScorePanelActor *arg0);
 void updateControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScorePanelActor *arg0);

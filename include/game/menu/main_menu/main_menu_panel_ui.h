@@ -32,7 +32,6 @@ typedef struct {
     u8 rightTargets[0x10];
 } MainMenuModeSelectByteData;
 
-#if defined(VERSION_JP)
 extern MainMenuModeSelectByteData gMainMenuModeSelectByteData;
 extern MenuGlyphScript *mainMenuModeDescriptionTexts[];
 extern MenuGlyphScript *mainMenuModeDescriptionTitles[];
@@ -41,7 +40,6 @@ extern MenuGlyphScript mainMenuSettingsTitleText[];
 extern MenuGlyphScript raceGhostUnavailableText[];
 extern MenuGlyphScript *raceRecordLapCountTexts[];
 extern MenuGlyphScript raceRecordSettingsTitleText[];
-#endif
 
 void drawMainMenuModeSelectFrame(void *arg0);
 void drawMainMenuModeSelectIcons(MenuPanelActor *arg0);

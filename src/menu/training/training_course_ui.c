@@ -19,9 +19,7 @@ typedef struct {
 } TrainingCourseLessonTitleLayout;
 #endif
 
-#if defined(VERSION_JP)
-void updateTrainingCourseDialog(TrainingCourseUiActor *);
-#else
+#if defined(VERSION_US)
 typedef union {
     TrainingCourseLessonTitleLayout layout;
     TrainingCourseUiScript lessonTitleText[9][0x14];
@@ -321,13 +319,6 @@ TrainingCourseLessonTitleData gTrainingCourseLessonTitleText = {
     },
 };
 /* The final title-text slot and the first X position share the halfword at 0x800B51B6. */
-void drawTrainingCourseDialog(TrainingCourseUiActor *);
-void updateTrainingCourseDialog(TrainingCourseUiActor *);
-void redrawTrainingCourseDialog(TrainingCourseUiActor *);
-void drawTrainingCourseLessonTitlePanel(TrainingCourseUiActor *);
-void updateTrainingCourseLessonTitlePanelScrollOut(TrainingCourseUiActor *);
-void updateTrainingCourseLessonTitlePanel(TrainingCourseUiActor *);
-void updateTrainingCourseLessonEndMenu(TrainingCourseUiActor *);
 #endif
 
 void drawTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
@@ -364,11 +355,7 @@ void drawTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
     );
 
     i = 0;
-#if defined(VERSION_JP)
-    for (;;) {
-#else
     do {
-#endif
         drawMenuSprite(
             (s16)(arg0->x + i + 0x10),
             arg0->y,
@@ -390,14 +377,7 @@ void drawTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
             0
         );
         i += 0x10;
-#if defined(VERSION_JP)
-
-        if (!(i < 0x40))
-            break;
-    }
-#else
     } while (i < 0x40);
-#endif
 
     drawMenuSprite(
         arg0->x,
@@ -422,15 +402,7 @@ void drawTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
 
     i = 0;
     limit = 0x40;
-#if defined(VERSION_JP)
-    for (;;) {
-        /* This single iteration preserves IDO register allocation. */
-        once = 1;
-        while (once) {
-
-#else
     do {
-#endif
         drawMenuSprite(
             arg0->x,
             (s16)(arg0->y + i + 0x10),
@@ -452,11 +424,7 @@ void drawTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
             0
         );
         j = 0;
-#if defined(VERSION_JP)
-            for (;;) {
-#else
         do {
-#endif
             drawMenuSprite(
                 (s16)(arg0->x + j + 0x10),
                 (s16)(arg0->y + i + 0x10),
@@ -468,25 +436,9 @@ void drawTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
                 0
             );
             j += 0x10;
-#if defined(VERSION_JP)
-
-                if (!(j != limit))
-                    break;
-            }
-#else
         } while (j != limit);
-#endif
         i += 0x10;
-#if defined(VERSION_JP)
-
-            once = 0;
-        }
-        if (!(i < 0x30))
-            break;
-    }
-#else
     } while (i < 0x30);
-#endif
 
     drawMenuSprite(
         (s16)(arg0->x + 8),
@@ -508,11 +460,7 @@ void drawTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
     if (gTrainingCourseLesson != 9) {
         j = 0;
         i = 0;
-#if defined(VERSION_JP)
-        for (;;) {
-#else
         do {
-#endif
             alpha = (j == (u16)arg0->state.selectedAction) ? 0x100 : 0x60;
             tileIndex = j + 0x16;
             drawMenuSpriteWithAlpha(
@@ -528,22 +476,11 @@ void drawTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
             );
             j++;
             i += 0x10;
-#if defined(VERSION_JP)
-
-            if (!(j != 3))
-                break;
-        }
-#else
         } while (j != 3);
-#endif
     } else {
         j = 0;
         i = 0;
-#if defined(VERSION_JP)
-        for (;;) {
-#else
         do {
-#endif
             alpha = ((j + 1) == (u16)arg0->state.selectedAction) ? 0x100 : 0x60;
             tileIndex = j + 0x17;
             drawMenuSpriteWithAlpha(
@@ -559,14 +496,7 @@ void drawTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
             );
             j++;
             i += 0x10;
-#if defined(VERSION_JP)
-
-            if (!(j != 2))
-                break;
-        }
-#else
         } while (j != 2);
-#endif
     }
 
     if (gTrainingCourseLesson != 9) {

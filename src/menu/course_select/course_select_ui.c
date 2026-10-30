@@ -30,7 +30,7 @@ typedef enum {
 
 #if defined(VERSION_JP)
 MenuGlyphScript gCourseSelectUnusedText[2] = { 0x001D, 0xFFFF };
-MenuGlyphScript gCourseSelectModeDescriptionText[7][35] = {
+CourseModeDescriptionText gCourseSelectModeDescriptionText[7] = {
     0xFFFC, 0x0007, 0x004C, 0x0081, 0x002B, 0x007A, 0x00A9, 0x0094, 0x009E, 0x0091, 0x00BC, 0x0114, 0x00FF, 0x00BC,
     0x00B7, 0x00B3, 0xFFFD, 0x009C, 0x0097, 0x0053, 0x0067, 0x003A, 0x0047, 0x009B, 0x00B3, 0x009C, 0x0091, 0x007F,
     0x002B, 0x007A, 0x0032, 0xFFFF, 0x0000, 0x0000, 0x0000, 0xFFFC, 0x0007, 0x004C, 0x0081, 0x002B, 0x007A, 0x00B2,
@@ -54,7 +54,7 @@ MenuGlyphScript gCourseSelectBoardLevelText[46] = { 0xFFFC, 0x0007, 0x007F, 0x00
                                                     0x00BC, 0x009F, 0x0095, 0x0091, 0x00AD, 0x00CA, 0x004C, 0x0081,
                                                     0x002B, 0xFFFD, 0x007A, 0x00BC, 0x00A9, 0x00B3, 0x0097, 0x00A4,
                                                     0x00B7, 0x00AE, 0x009C, 0x0032, 0xFFFF };
-MenuGlyphScript gCourseSelectBoardLevelByCourseText[4][24] = {
+CourseBoardLevelByCourseText gCourseSelectBoardLevelByCourseText[4] = {
     0xFFFC, 0x0006, 0xFFFE, 0xFFFE, 0xFFFE, 0xFFFE, 0x005B, 0x0067, 0x002B, 0x004C, 0x004F, 0x0041, 0x0068, 0xFFFD,
     0xFFFE, 0xFFFE, 0xFFFE, 0xFFFE, 0x0015, 0x000E, 0x001F, 0x000E, 0x0015, 0xFFFF, 0xFFFC, 0x0006, 0xFFFE, 0xFFFE,
     0xFFFE, 0xFFFE, 0x0044, 0x002B, 0x0068, 0x0066, 0x0042, 0x003F, 0x007A, 0xFFFD, 0xFFFE, 0xFFFE, 0xFFFE, 0xFFFE,
@@ -62,7 +62,7 @@ MenuGlyphScript gCourseSelectBoardLevelByCourseText[4][24] = {
     0x0083, 0x003F, 0xFFFD, 0xFFFE, 0xFFFE, 0xFFFE, 0xFFFE, 0x0015, 0x000E, 0x001F, 0x000E, 0x0015, 0xFFFF, 0x0000,
     0x0000, 0x0000, 0x004C, 0x0083, 0x004B, 0x003B, 0x0068, 0xFFFE, 0x0015, 0x000E, 0x001F, 0x000E, 0x0015, 0xFFFF
 };
-MenuGlyphScript gCourseSelectExtraCourseBoardLevelText[3][32] = {
+CourseExtraBoardLevelText gCourseSelectExtraCourseBoardLevelText[3] = {
     0xFFFC, 0x0007, 0x004C, 0x0081, 0x002B, 0x007A, 0x00BC, 0x00A9, 0x00B3, 0x0091, 0x00A8, 0x00A5, 0x00FF, 0x00BC,
     0x00B7, 0x00B3, 0xFFFD, 0x009C, 0x0091, 0x0032, 0x009C, 0x00C0, 0x0091, 0x007F, 0x002B, 0x007A, 0x00C9, 0x009C,
     0x0032, 0xFFFF, 0x0000, 0x0000, 0xFFFC, 0x0007, 0x0072, 0x003B, 0x003F, 0x0082, 0x009C, 0x00B8, 0x00A3, 0x005B,
@@ -71,7 +71,7 @@ MenuGlyphScript gCourseSelectExtraCourseBoardLevelText[3][32] = {
     0x0043, 0x003A, 0x0072, 0x00BC, 0x0096, 0x0095, 0x00C3, 0x0114, 0x0051, 0x0068, 0xFFFD, 0x0051, 0x0068, 0x009C,
     0x00CE, 0x00B8, 0x007F, 0x002B, 0x007A, 0x00C9, 0x009C, 0x0032, 0xFFFF
 };
-MenuGlyphScript gCourseSelectPurchaseMessageText[2][15] = { 0xFFFC, 0x0007, 0x0110, 0x0094, 0x010A, 0x00BC,
+CoursePurchaseMessageText gCourseSelectPurchaseMessageText[2] = { 0xFFFC, 0x0007, 0x0110, 0x0094, 0x010A, 0x00BC,
                                                             0x009F, 0x00B7, 0x00A4, 0x0091, 0x00B5, 0x0111,
                                                             0xFFFF, 0x0000, 0x0000, 0xFFFC, 0x0007, 0x0110,
                                                             0x009E, 0x00B9, 0x00A9, 0x0092, 0x00B7, 0x0096,
@@ -1376,11 +1376,7 @@ void drawCourseSelectCourseStats(CourseSelectCourseStatsActor *arg0) {
                     if (j <
                         gCourseSelectCourseRatings.values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_SPEED]) {
                         xOffset = 0;
-#if defined(VERSION_JP)
-                        for (;;) {
-#else
                         do {
-#endif
                             drawMenuSpriteWithAlpha(
                                 (s16)(arg0->x[i] + xOffset + 0x38),
                                 (s16)(arg0->y[i] - 2),
@@ -1394,17 +1390,8 @@ void drawCourseSelectCourseStats(CourseSelectCourseStatsActor *arg0) {
                             );
                             j++;
                             xOffset += 0xC;
-#if defined(VERSION_JP)
-
-                            if (!(j < gCourseSelectCourseRatings
-                                          .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_SPEED])) {
-                                break;
-                            }
-                        }
-#else
                         } while (j < gCourseSelectCourseRatings
                                          .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_SPEED]);
-#endif
                     }
                 }
 
@@ -1421,11 +1408,7 @@ void drawCourseSelectCourseStats(CourseSelectCourseStatsActor *arg0) {
                     if (j < gCourseSelectCourseRatings
                                 .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_HANDLING]) {
                         xOffset = 0;
-#if defined(VERSION_JP)
-                        for (;;) {
-#else
                         do {
-#endif
                             drawMenuSpriteWithAlpha(
                                 (s16)(arg0->x[i] + xOffset + 0x38),
                                 (s16)(arg0->y[i] + 0xA),
@@ -1439,17 +1422,8 @@ void drawCourseSelectCourseStats(CourseSelectCourseStatsActor *arg0) {
                             );
                             j++;
                             xOffset += 0xC;
-#if defined(VERSION_JP)
-
-                            if (!(j < gCourseSelectCourseRatings
-                                          .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_HANDLING])) {
-                                break;
-                            }
-                        }
-#else
                         } while (j < gCourseSelectCourseRatings
                                          .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_HANDLING]);
-#endif
                     }
                 }
 
@@ -1468,11 +1442,7 @@ void drawCourseSelectCourseStats(CourseSelectCourseStatsActor *arg0) {
                     if (j <
                         gCourseSelectCourseRatings.values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_TRICK]) {
                         xOffset = 0;
-#if defined(VERSION_JP)
-                        for (;;) {
-#else
                         do {
-#endif
                             drawMenuSpriteWithAlpha(
                                 (s16)(arg0->x[i] + xOffset + 0x38),
                                 (s16)(arg0->y[i] + 0x16),
@@ -1486,17 +1456,8 @@ void drawCourseSelectCourseStats(CourseSelectCourseStatsActor *arg0) {
                             );
                             j++;
                             xOffset += 0xC;
-#if defined(VERSION_JP)
-
-                            if (!(j < gCourseSelectCourseRatings
-                                          .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_TRICK])) {
-                                break;
-                            }
-                        }
-#else
                         } while (j < gCourseSelectCourseRatings
                                          .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_TRICK]);
-#endif
                     }
                 }
             } else {
@@ -1650,11 +1611,7 @@ void drawCourseSelectCourseDescription(CourseSelectCourseDescriptionActor *arg0)
             } else {
                 descriptionIndex = gRacePlayers[0].menuSelection % 3;
             }
-#if defined(VERSION_JP)
-            text = gCourseSelectModeDescriptionText[descriptionIndex];
-#else
             text = gCourseSelectModeDescriptionText[descriptionIndex].text;
-#endif
         } else {
             if ((gMenuChoicePromptState[0] < 2) || (gMenuChoicePromptState[0] == 9)) {
                 selectedIndex = 1;
@@ -1670,19 +1627,11 @@ void drawCourseSelectCourseDescription(CourseSelectCourseDescriptionActor *arg0)
                 selectedIndex = arg0->selectedBoardLevel;
             }
             if ((gRaceSplitscreenMode == 3) && (gRacePlayers[0].menuSelection < 9)) {
-#if defined(VERSION_JP)
-                text = gCourseSelectBoardLevelByCourseText[gRacePlayers[0].menuSelection % 3];
-#else
                 text = gCourseSelectBoardLevelByCourseText[gRacePlayers[0].menuSelection % 3].text;
-#endif
             } else {
                 if ((gRacePlayers[0].menuSelection >= 9) && (gRacePlayers[0].menuSelection < 12)) {
                     i = gCourseSelectCourseIds[4][selectedIndex - 1] % 3;
-#if defined(VERSION_JP)
-                    text = gCourseSelectExtraCourseBoardLevelText[i];
-#else
                     text = gCourseSelectExtraCourseBoardLevelText[i].text;
-#endif
                 } else {
                     text = gCourseSelectBoardLevelText;
                 }
@@ -1734,11 +1683,7 @@ void drawCourseSelectCourseDescription(CourseSelectCourseDescriptionActor *arg0)
             }
         }
     } else {
-#if defined(VERSION_JP)
-        text = gCourseSelectPurchaseMessageText[COURSE_SELECT_STATUS_LAYOUT.purchaseMessageState - 1];
-#else
         text = gCourseSelectPurchaseMessageText[COURSE_SELECT_STATUS_LAYOUT.purchaseMessageState - 1].text;
-#endif
         drawMenuGlyphScript(arg0->x, arg0->y, text, 1, arg0->alpha, 0);
     }
 }
@@ -1993,23 +1938,11 @@ void updateCourseSelectExtraCourseIconListOut(CourseSelectExtraCourseIconListAct
         var_v1 = 0;
         if ((s32)arg0->itemCounts[0] > 0) {
             var_v0_2 = arg0;
-#if defined(VERSION_JP)
-            for (;;) {
-#else
             do {
-#endif
                 var_v0_2->iconX[0][0] -= 0x20;
                 var_v1++;
                 var_v0_2 = (CourseSelectExtraCourseIconListActor *)((u8 *)var_v0_2 + sizeof(s16));
-#if defined(VERSION_JP)
-
-                if (!(var_v1 < (s32)arg0->itemCounts[0])) {
-                    break;
-                }
-            }
-#else
             } while (var_v1 < (s32)arg0->itemCounts[0]);
-#endif
             var_v0 = arg0->iconX[0][0];
         }
         if (var_v0 < -0xE7) {
@@ -2230,11 +2163,7 @@ void initCourseSelectExtraCourseIconList(CourseSelectExtraCourseIconListActor *a
 
     playerIndex = 0;
     if ((s32)gPlayerCount > 0) {
-#if defined(VERSION_JP)
-        for (;;) {
-#else
         do {
-#endif
             if ((s32)gPlayerCount >= 3) {
                 actor->rowSpacing[playerIndex] = 0xC;
             } else {
@@ -2269,14 +2198,7 @@ void initCourseSelectExtraCourseIconList(CourseSelectExtraCourseIconListActor *a
             } while (iconIndex != 3);
 #endif
             playerIndex++;
-#if defined(VERSION_JP)
-
-            if (!(playerIndex < (s32)gPlayerCount))
-                break;
-        }
-#else
         } while (playerIndex < (s32)gPlayerCount);
-#endif
     }
 
 #if defined(VERSION_JP)

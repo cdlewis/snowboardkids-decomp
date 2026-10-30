@@ -112,3 +112,8 @@ gFrameRenderTaskStatuses = gFrameRenderTasks + 0x66;
 /* Legacy audio views share typed heap and message queue storage. */
 gSoundPlayerHeapEnd = gSoundPlayerHeap + 4;
 gAudioTaskDoneQueue = gAudioTaskDoneQueueStorage;
+
+/* Overlapping character-select frame maps share one contiguous allocation. */
+gCharacterSelectCoursePreviewFrameTileMaps = gCharacterSelectCoursePreviewData;
+gCharacterSelectCoursePreviewFrameCornerTileMaps = gCharacterSelectCoursePreviewData + 0x28;
+gCharacterSelectCourseExitPreviewData = gCharacterSelectCoursePreviewData + 0x1CC;

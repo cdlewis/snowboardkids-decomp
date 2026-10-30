@@ -4,7 +4,6 @@
 #include "common.h"
 #include "game/race/player/race_player_input.h"
 
-#if defined(VERSION_JP)
 extern void (*gRacePlayerAirborneUpdateHandlers[])(RacePlayer *);
 extern void (*gRacePlayerMode07StateHandlers[])(RacePlayer *);
 extern void (*gRacePlayerMode30StateHandlers[])(RacePlayer *);
@@ -15,7 +14,6 @@ extern void (*gRacePlayerTrickSubstateHandlers[])(RacePlayer *);
 extern u16 gRacePlayerVoiceBaseSoundIds[];
 extern u16 gRacePlayerVoiceLeadSoundOffsets[];
 extern u16 gRacePlayerVoiceSplitSoundOffsets[];
-#endif
 
 void initRacePlayers(void);
 void applyRacePlayerProperties(RacePlayer *player);

@@ -46,18 +46,12 @@ void initControllerPakFileDeleteFlow(void) {
     gControllerPakFreeFileCount = 0;
     gRaceRumbleEnabled = 0;
     gMenuFadeAlpha = gCurrentGameTask->callbackData0;
-#if defined(VERSION_JP)
-    loadCompressedRomAsset(&_5DFDD0_ROM_START, &_5E0350_ROM_START, 0x21);
-#else
     LOAD_ASSET(_5DFDD0, 0x21);
-#endif
     LOAD_ASSET(_593D10, 0x22);
     LOAD_ASSET(_598A70, 0x23);
     LOAD_ASSET(_59AAA0, 0x24);
-#if defined(VERSION_JP)
-    loadCompressedRomAsset(&_5E0350_ROM_START, &_5E0E40_ROM_START, 0x26);
-#else
     LOAD_ASSET(_5E0350, 0x26);
+#if defined(VERSION_US)
     LOAD_ASSET(_60F1A0, 0x29);
 #endif
     initCallbackTaskScheduler(0);
@@ -235,30 +229,18 @@ void updateControllerPakFileDeletePrompt(void) {
 void updateControllerPakFileDeleteErrorPrompt(void) {
     s32 state;
 
-#if defined(VERSION_JP)
-    state = gControllerPakDeletePromptState;
-#else
     state = gControllerPakMenuState.unk6;
-#endif
     if (state == 1) {
         if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
             enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
-#if defined(VERSION_JP)
-            gControllerPakDeletePromptState = 2;
-#else
             gControllerPakMenuState.unk6 = 2;
-#endif
             state = 2;
         }
     }
     if (state == 3) {
         gControllerPakRetryCounts[0] = 0;
         setCurrentGameTaskCallback(&updateControllerPakFileDeleteFileList, 0);
-#if defined(VERSION_JP)
-        gControllerPakMenuCursorState = 1;
-#else
         gControllerPakMenuState.state = 1;
-#endif
     }
     updateCallbackTasks();
 }

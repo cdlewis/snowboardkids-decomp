@@ -20,13 +20,11 @@ extern OSMesgQueue gControllerSubsystemReplyQueue;
 extern OSMesgQueue gControllerSubsystemRequestQueue;
 extern OSPfs gRumblePakHandles[];
 
-#if defined(VERSION_JP)
 extern OSMesg gControllerEventMessages[];
 extern OSContStatus gControllerStatuses[];
 extern OSMesg gControllerSubsystemReplyMessages[];
 extern OSMesg gControllerSubsystemRequestMessages[];
 extern OSThread gControllerSubsystemThread;
 extern u8 gControllerSubsystemThreadStack[0x2000];
-#endif
 
 #endif

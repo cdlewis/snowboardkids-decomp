@@ -75,9 +75,7 @@ enum EndingCreditsCharacterId {
 
 extern u8 gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_COUNT];
 
-#if defined(VERSION_JP)
 extern u16 gEndingCreditsTransitionSnowboardIconExpandFrameCounter;
-#endif
 
 void spawnEndingCreditsCharacterVanishPoof(s16 arg0, s16 arg1, u8 arg2, u8 arg3);
 void initEndingCreditsNancySpeedLines(EndingCreditsNancySpeedLinesActor *arg0);

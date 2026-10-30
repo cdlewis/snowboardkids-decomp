@@ -481,7 +481,6 @@ extern Vec3i gDizzyLandFerrisWheelHubOffset;
 extern RaceUiProjectileVertexBlock gRaceUiProjectileVertices[8];
 extern Gfx gAlphaSpriteRenderModeDl[];
 
-#if defined(VERSION_JP)
 extern Vec3i gCourseScrollingTextureSoundPositions[];
 extern RaceCoursePropModelEntry gRaceCoursePropModelEntries[];
 extern RaceUiGfxCommandScriptEntry *gCourseCoinMarkerEntryLists[];
@@ -506,11 +505,6 @@ extern Vec3i gRaceUiStunIconHeadOffset;
 extern Vtx gRaceUiStunIconQuadVertices[];
 extern u16 gRatFaceItemAnimation[];
 extern Vtx gSilverMountainSnowParticleVertices[];
-#endif
-
-#if defined(VERSION_US)
-extern RaceUiRankTextRenderEntry gRaceCoursePropModelEntries[];
-#endif
 
 void renderRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0);
 void updateRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0);

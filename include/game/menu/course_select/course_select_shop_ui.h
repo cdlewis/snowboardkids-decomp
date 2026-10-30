@@ -97,7 +97,6 @@ typedef struct {
 
 typedef Vec2s ShopMenuSparklePattern[13];
 
-#if defined(VERSION_JP)
 extern CourseDetailsMenuEntryTilePages gCourseDetailsMenuEntryTiles;
 extern Vec2s gCoursePreviewCloseSparkleMirrorStart[];
 extern Vec2s gCoursePreviewCloseSparkleOffsets[];
@@ -110,7 +109,6 @@ extern const char gShopMenuMoneyFormat[];
 extern ShopMenuFrameTileMap gShopMenuPanelFrameTilemaps[];
 extern s16 gShopMenuSparkleInitTable[];
 extern ShopMenuSparklePattern gShopMenuSparklePatterns[];
-#endif
 
 void drawShopMenuModeChoiceRows(ShopMenuRowActor *arg0);
 void updateShopMenuModeChoiceRows(ShopMenuRowActor *arg0);

@@ -13,12 +13,10 @@
 
 #define TITLE_SCREEN_LOGO_SPRITE_HANDLE ASSET_HANDLE(37)
 
-#if defined(VERSION_JP)
-#define TITLE_SCREEN_TEXTURE_HANDLE ASSET_HANDLE(0x21)
-
-const char gMainMenuTitleTrademarkText[16] = "TM";
-#else
 #define TITLE_SCREEN_TEXTURE_HANDLE (gAssetHandles[0x21])
+
+#if defined(VERSION_JP)
+const char gMainMenuTitleTrademarkText[16] = "TM";
 #endif
 
 void drawMainMenuTitleLogo(MainMenuTitleLogoActor *arg0) {

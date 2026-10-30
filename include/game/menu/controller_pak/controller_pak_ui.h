@@ -116,21 +116,15 @@ typedef struct {
 } ControllerPakWindowActor;
 
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
-#if defined(VERSION_JP)
-extern ControllerPakRumbleCheckPromptState gControllerPakRumbleCheckPromptState;
-extern u8 gControllerPakRumbleCheckPromptConfirmSelection;
-#endif
 
 extern Vec2s gCoursePreviewCloseSparkleOffsetsEnd[];
 
-#if defined(VERSION_JP)
 extern MenuGlyphScript gControllerPakContinuePromptText[];
 extern MenuGlyphScript gControllerPakCouldNotEraseNoteText[];
 extern MenuGlyphScript gControllerPakRumbleCheckNoEntryText[];
 extern MenuGlyphScript gControllerPakRumbleCheckNotUsedText[];
 extern MenuGlyphScript gControllerPakRumbleCheckPromptText[][0x34];
 extern MenuGlyphScript gControllerPakRumblePakText[];
-#endif
 
 void drawControllerPakContinuePrompt(ControllerPakOptionsActor *arg0);
 void updateControllerPakContinuePrompt(ControllerPakOptionsActor *arg0);

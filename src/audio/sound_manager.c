@@ -13,6 +13,7 @@
 #include "libmus/sequence_commands.h"
 #include "game/race/player/race_player_input.h"
 #include "game/audio/audio_engine_internal.h"
+#include "game/menu/renderer/menu_render_utils.h"
 
 #define SOUND_MANAGER_FREE_HANDLE_COUNT 13
 
@@ -27,11 +28,6 @@ typedef union SoundHalfArg {
         s16 value;
     } half;
 } SoundHalfArg;
-
-#if defined(VERSION_JP)
-
-void *allocRenderCallbackScratch(s32 size);
-#endif
 
 u8 gSoundBankWaveTuning[SOUND_BANK_WAVE_COUNT + 1] = {
     0xDF, 0xD5, 0xE5, 0xF9, 0xD5, 0xE4, 0xE2, 0xD5, 0xE1, 0xEA, 0xED, 0xE1, 0xD5, 0xD5, 0xE1, 0xD5, 0xE0, 0xC9,
@@ -1530,17 +1526,11 @@ s16 gPlayerLoopingSoundId2;
 s16 gPlayerLoopingSoundId3;
 s32 gSharedLoopingPositionalSoundHandle;
 
-#if defined(VERSION_US)
-void *allocRenderCallbackScratch(s32 arg0);
-void requestMusicSequenceBank(s32 arg0);
-s32 reserveSoundEffectQueueWriteIndex(void);
 s32 startCurrentQueuedSoundEffect(void);
-s32 calculatePositionalSoundVolume(Vec3i *pos, s32 volume);
 void updatePlayerLoopingPositionalSound(s32 soundId, s32 mode, s32 volume, f32 pitch);
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-#endif
 void initSoundManager(void) {
     PlayerCommandInit init;
     void *nullPtr;
@@ -1556,23 +1546,6 @@ void initSoundManager(void) {
     gCurrentMusicSequenceHandle = 0;
     gCurrentMusicSequenceBank = -1;
 
-#if defined(VERSION_JP)
-    // clang-format off
-    { \
-        freeList = gFreeSoundHandleStack; \
-        node = gSoundHandleNodes; \
-        for (;;) { \
-            *freeList = node; \
-            node++; \
-            freeList++; \
-
-        if (!(node < (SoundHandleNode *)&gActiveSoundHandleListHead)) { break; }
-} \
-        gFreeSoundHandleCount = 13; \
-        gCurrentQueuedSoundType = 0; \
-    }
-    // clang-format on
-#else
     do { \
         freeList = gFreeSoundHandleStack; \
         node = gSoundHandleNodes; \
@@ -1584,7 +1557,6 @@ void initSoundManager(void) {
         gFreeSoundHandleCount = 13; \
         gCurrentQueuedSoundType = 0; \
     } while (0);
-#endif
 
     gSoundQueueWriteIndex = 0;
     gSoundQueueReadIndex = 0;
@@ -1770,11 +1742,7 @@ s32 startCurrentQueuedSoundEffect(void) {
 
     var_v1 = gActiveSoundHandleListHead;
     if (gActiveSoundHandleListHead != NULL) {
-#if defined(VERSION_JP)
-        for (;;) {
-#else
         do {
-#endif
             if (temp_v0->priority >=
                 (s32)((u64)((((var_v1->priority & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFFULL)) {
                 temp_v0_2 = var_v1->prev;
@@ -1789,15 +1757,7 @@ s32 startCurrentQueuedSoundEffect(void) {
                 return 1;
             }
             var_v1 = var_v1->next;
-#if defined(VERSION_JP)
-
-            if (!(var_v1 != NULL)) {
-                break;
-            }
-        }
-#else
         } while (var_v1 != NULL);
-#endif
     }
 
     temp_v0->next = gActiveSoundHandleListTail->next;
@@ -1832,11 +1792,7 @@ void updateSoundManager(void) {
     }
 
     right = &gPlayerLoopingSoundHandle0, left = gPlayerPositionalSoundHandle0;
-#if defined(VERSION_JP)
-    for (;;) {
-#else
     do {
-#endif
         if ((*right != 0) && (MusHandleAsk(*right) == 0)) {
             *right = 0;
         }
@@ -1844,15 +1800,7 @@ void updateSoundManager(void) {
             *left = 0;
         }
         right++;
-#if defined(VERSION_JP)
-
-        if (!(&gPlayerLoopingSoundHandle0 > ++left)) {
-            break;
-        }
-    }
-#else
     } while (&gPlayerLoopingSoundHandle0 > ++left);
-#endif
 
     if ((gSharedLoopingPositionalSoundHandle != 0) && (MusHandleAsk(gSharedLoopingPositionalSoundHandle) == 0)) {
         gSharedLoopingPositionalSoundHandle = 0;

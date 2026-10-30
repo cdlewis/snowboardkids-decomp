@@ -95,10 +95,8 @@ extern u8 gConnectedControllerBitmask;
 extern u8 gCourseSelectFromRaceTypeMenu;
 extern u8 gCharacterSelectFromRaceSetup;
 
-#if defined(VERSION_JP)
 extern u8 gControllerPakSaveExtNameBytesEnd[];
 extern u8 gMainMenuReturnFromRace;
-#endif
 
 void initControllerSubsystem(void);
 void controllerSubsystemThreadMain(void *threadArg);

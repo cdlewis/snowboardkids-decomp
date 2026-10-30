@@ -13,13 +13,6 @@ typedef struct ControllerPakRaceRecordSaveStatusTransition {
 
 extern ControllerPakRaceRecordSaveStatusTransition gControllerPakRaceRecordSaveStatusTransition;
 
-#if defined(VERSION_JP)
-extern s16 gControllerPakRaceRecordSaveStatusTransitionAlpha;
-extern u16 gControllerPakRaceRecordSaveStatusTransitionNextStatus;
-extern u8 gControllerPakRaceRecordSaveStatusTransitionStep;
-extern u16 gControllerPakRaceRecordSaveStatusTransitionTargetStatus;
-#endif
-
 void initControllerPakRaceRecordSaveFlow(void);
 void updateControllerPakRaceRecordSaveFlow(void);
 void fadeOutControllerPakRaceRecordSaveFlow(void);

@@ -16,8 +16,6 @@
 #include "game/menu/controller_pak/controller_pak_file_delete_flow.h"
 
 #if defined(VERSION_JP)
-#ifdef NON_MATCHING
-#endif
 #else
 #define CONTROLLER_PAK_DELETE_PANEL_HANDLE (gAssetHandles[0x29])
 
@@ -161,11 +159,7 @@ void drawControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     );
 
     i = 0;
-#if defined(VERSION_JP)
-    for (;;) {
-#else
     do {
-#endif
         drawMenuSprite(
             (s16)(arg0->common.x + i),
             (s16)(arg0->common.y - 4),
@@ -187,15 +181,7 @@ void drawControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
             0
         );
         i += 0x10;
-#if defined(VERSION_JP)
-
-        if (!(i < 0xE0)) {
-            break;
-        }
-    }
-#else
     } while (i < 0xE0);
-#endif
 
     drawMenuSprite(
         (s16)(arg0->common.x - 4),
@@ -241,11 +227,7 @@ loop_outer:
         0
     );
     j = 0;
-#if defined(VERSION_JP)
-    for (;;) {
-#else
     do {
-#endif
         drawMenuSprite(
             (s16)(arg0->common.x + j),
             (s16)(arg0->common.y + i),
@@ -257,15 +239,7 @@ loop_outer:
             0
         );
         j += 0x10;
-#if defined(VERSION_JP)
-
-        if (!(j != 0xE0)) {
-            break;
-        }
-    }
-#else
     } while (j != 0xE0);
-#endif
     i += 0x10;
     if (i != 0x30) {
         // IDO register allocation nudge for matching codegen.
@@ -602,11 +576,7 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *act
 // clang-format off
 void updateControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg0) {
     u8 state;
-#if defined(VERSION_JP)
-    u8 globalState;
-#else
     u8 globalState; ControllerPakRumbleCheckPromptState *prompt = &gControllerPakRumbleCheckPromptTransition.prompt;
-#endif
 
     state = arg0->state;
     if (state != (globalState = gControllerPakRumbleCheckPromptTransition.state)) {
@@ -676,11 +646,7 @@ void updateControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *a
             break;
     }
 
-#if defined(VERSION_JP)
-    gControllerPakRumbleCheckPromptState.state = state;
-#else
     prompt->state = state;
-#endif
     if (arg0->state == CONTROLLER_PAK_RUMBLE_DISMISSED) {
         removeCallbackTask(arg0);
         return;
@@ -753,11 +719,7 @@ void drawControllerPakFileDeleteMainOptions(ControllerPakOptionsActor *arg0) {
 }
 
 void updateControllerPakFileDeleteMainOptionsUi(ControllerPakOptionsActor *arg0) {
-#if defined(VERSION_JP)
-    switch (gControllerPakMenuCursorState) {
-#else
     switch (gControllerPakMenuState.state) {
-#endif
         case 0:
             if (arg0->timer < 0x10) {
                 arg0->scale -= 8;
@@ -801,11 +763,7 @@ void drawControllerPakFileDeleteConfirmOptions(ControllerPakOptionsActor *arg0) 
     } else {
         alpha = 0x80;
         otherAlpha = 0x80;
-#if defined(VERSION_JP)
-        if (!gControllerPakMenuConfirmChoice) {}
-#else
         if (!gControllerPakMenuState.confirmChoice) {}
-#endif
     }
 
     drawMenuSpriteWithAlpha(
@@ -831,17 +789,9 @@ void drawControllerPakFileDeleteConfirmOptions(ControllerPakOptionsActor *arg0) 
         0
     );
 
-#if defined(VERSION_JP)
-    if (gControllerPakMenuCursorState == 2) {
-#else
     if (gControllerPakMenuState.state == 2) {
-#endif
         drawMenuSpriteWithAlpha(
-#if defined(VERSION_JP)
-            (s16)(actor->common.x + (gControllerPakMenuConfirmChoice * 0x70)),
-#else
             (s16)(actor->common.x + (gControllerPakMenuState.confirmChoice * 0x70)),
-#endif
             actor->common.y,
             getRelocatableHeapBlockBase(gAssetHandles[0x21]),
             5,
@@ -855,11 +805,7 @@ void drawControllerPakFileDeleteConfirmOptions(ControllerPakOptionsActor *arg0) 
 }
 
 void updateControllerPakFileDeleteConfirmOptionsUi(ControllerPakOptionsActor *arg0) {
-#if defined(VERSION_JP)
-    switch (gControllerPakMenuCursorState) {
-#else
     switch (gControllerPakMenuState.state) {
-#endif
         case 0:
         case 1:
             break;
@@ -1125,11 +1071,7 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
 }
 
 void updateControllerPakFileDeleteFileListUi(ControllerPakFileListActor *arg0) {
-#if defined(VERSION_JP)
-    if (gControllerPakMenuCursorState == 1) {
-#else
     if (gControllerPakMenuState.state == 1) {
-#endif
         if (arg0->cursorTimer < 0x10) {
             arg0->cursorScale -= 9;
         } else {
@@ -1293,6 +1235,8 @@ void updateControllerPakFileDeleteErrorPromptUi(ControllerPakDeletePromptActor *
     ControllerPakMenuState *menuState = &gControllerPakMenuState;
 #endif
 
+/* JP uses a separate load relocation; merging it with the final struct
+     * store changes IDO address reuse and switch scheduling. */
 #if defined(VERSION_JP)
     globalState = gControllerPakDeletePromptState;
 #else

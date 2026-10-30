@@ -3,6 +3,7 @@
 
 #include "common.h"
 
+/* Only JP has separately addressed rodata symbols for these values. */
 #if defined(VERSION_JP)
 extern const f32 gDemoRaceBottomLeftAspectRatio[];
 extern const f32 gDemoRaceBottomRightAspectRatio[];

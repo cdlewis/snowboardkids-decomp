@@ -24,7 +24,6 @@ extern OSMesgQueue gControllerInputUpdateQueue;
 extern s16 gMenuFadeAlpha;
 extern SchedulerState gSchedulerState;
 
-#if defined(VERSION_JP)
 extern OSThread gBootThread;
 extern u8 gFadeColorBlue;
 extern u8 gFadeColorGreen;
@@ -36,7 +35,6 @@ extern OSMesg gPiManagerMessages[];
 extern OSMesgQueue gPiManagerQueue;
 extern OSMesgQueue gRomDmaQueue;
 extern OSMesgQueue gSchedulerClientQueue;
-#endif
 
 extern u8 gDepthBufferPhysicalAddress[];
 

@@ -24,6 +24,11 @@
 
 #define RACE_HUD_POPUP_FONT_HANDLE (gAssetHandles[0x1F])
 
+typedef union RaceHudDigitScratch {
+    char *end;
+    s32 i;
+} RaceHudDigitScratch;
+
 u8 gRaceHudShotTileOffsets[8] = { 5, 5, 8, 11, 14, 17, 0, 0 };
 u8 gRaceHudItemTileIds[8] = { 4, 20, 21, 22, 23, 24, 25, 0 };
 
@@ -307,8 +312,9 @@ const char gRaceHudTrickAttackSecondaryCounterFormat[] = "%2d";
 #endif
 void drawTrickAttackChallengeHud(void *arg0) {
     s32 x;
+/* The two ROMs home the shared scratch on opposite sides of buffer. */
 #if defined(VERSION_JP)
-    s32 i;
+    RaceHudDigitScratch temp;
 #else
     char *digit;
 #endif
@@ -319,10 +325,7 @@ void drawTrickAttackChallengeHud(void *arg0) {
     s32 palette;
     s32 finalPalette;
 #if defined(VERSION_US)
-    union {
-        char *end;
-        s32 i;
-    } temp;
+    RaceHudDigitScratch temp;
 #endif
 
     palette = 0xC;
@@ -335,12 +338,12 @@ void drawTrickAttackChallengeHud(void *arg0) {
         finalPalette = (u16)palette;
         x = 0x40;
 #if defined(VERSION_JP)
-        for (i = 0; i < 2; i++, x += 8) {
+        for (temp.i = 0; temp.i < 2; temp.i++, x += 8) {
             drawAssetTableSpriteWithExplicitPalette(
                 (s16)x,
                 0x50,
                 getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-                (u8)buffer[i] - 5,
+                (u8)buffer[temp.i] - 5,
                 finalPalette
             );
         }
@@ -355,12 +358,12 @@ void drawTrickAttackChallengeHud(void *arg0) {
         x += 8;
         sprintf(buffer, gRaceHudChallengeTimeLimitSecondsFormat, gRaceChallengeTimeLimit.seconds);
 #if defined(VERSION_JP)
-        for (i = 0; i < 2; i++, x += 8) {
+        for (temp.i = 0; temp.i < 2; temp.i++, x += 8) {
             drawAssetTableSpriteWithExplicitPalette(
                 (s16)x,
                 0x50,
                 getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-                (u8)buffer[i] - 5,
+                (u8)buffer[temp.i] - 5,
                 finalPalette
             );
         }
@@ -379,12 +382,12 @@ void drawTrickAttackChallengeHud(void *arg0) {
         x += 8;
         sprintf(buffer, gRaceHudChallengeTimeLimitFractionFormat, gRaceChallengeTimeLimit.fraction >> 8);
 #if defined(VERSION_JP)
-        for (i = 0; i < 2; i++, x += 8) {
+        for (temp.i = 0; temp.i < 2; temp.i++, x += 8) {
             drawAssetTableSpriteWithExplicitPalette(
                 (s16)x,
                 0x50,
                 getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-                (u8)buffer[i] - 5,
+                (u8)buffer[temp.i] - 5,
                 finalPalette
             );
         }
@@ -405,36 +408,13 @@ void drawTrickAttackChallengeHud(void *arg0) {
 
     if (gRacePlayers[0].state.trickAttackMakeCount < 10) {
         x = -0x90;
-#if defined(VERSION_JP)
-        i = 0;
-#else
         temp.i = 0;
-#endif
         if (gRacePlayers[0].state.trickAttackMakeCount > 0) {
-#if defined(VERSION_JP)
-            for (;;) {
-                drawScaledAssetTableSprite(
-                    (s16)x,
-                    -0x68,
-                    getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-                    0x26,
-                    1
-                );
-                i++;
-#else
             do {
                 drawScaledAssetTableSprite((s16)x, -0x68, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x26, 1);
                 temp.i++;
-#endif
                 x += 8;
-#if defined(VERSION_JP)
-
-                if (!(i < gRacePlayers[0].state.trickAttackMakeCount))
-                    break;
-            }
-#else
             } while (temp.i < gRacePlayers[0].state.trickAttackMakeCount);
-#endif
         }
     } else {
         drawAssetTableSprite(-0x84, -0x60, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x26);
@@ -448,13 +428,13 @@ void drawTrickAttackChallengeHud(void *arg0) {
         x = 0x64;
         sprintf(buffer, gRaceHudTrickAttackPointTotalFormat, gRacePlayers[0].state.trickAttackPointTotal);
 #if defined(VERSION_JP)
-        for (i = 0; i != 4; i++, x += 8) {
-            if ((u8)buffer[i] != ' ') {
+        for (temp.i = 0; temp.i != 4; temp.i++, x += 8) {
+            if ((u8)buffer[temp.i] != ' ') {
                 drawAssetTableSprite(
                     (s16)x,
                     -0x58,
                     getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-                    (u8)buffer[i] - 5
+                    (u8)buffer[temp.i] - 5
                 );
 #else
         digit = buffer;
@@ -509,8 +489,9 @@ const char gRaceHudScoreAttackPointTotalFormat[] = "%2d";
 #endif
 void drawScoreAttackChallengeHud(void *arg0) {
     s32 x;
+/* The two ROMs home the shared scratch on opposite sides of buffer. */
 #if defined(VERSION_JP)
-    s32 i;
+    RaceHudDigitScratch temp;
 #else
     char *digit;
 #endif
@@ -521,10 +502,7 @@ void drawScoreAttackChallengeHud(void *arg0) {
     s32 palette;
     s32 finalPalette;
 #if defined(VERSION_US)
-    union {
-        char *end;
-        s32 i;
-    } temp;
+    RaceHudDigitScratch temp;
 #endif
 
     palette = 0xC;
@@ -541,12 +519,12 @@ void drawScoreAttackChallengeHud(void *arg0) {
         finalPalette = (u16)palette;
         x = 0x40;
 #if defined(VERSION_JP)
-        for (i = 0; i < 2; i++, x += 8) {
+        for (temp.i = 0; temp.i < 2; temp.i++, x += 8) {
             drawAssetTableSpriteWithExplicitPalette(
                 (s16)x,
                 0x50,
                 getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-                (u8)buffer[i] - 5,
+                (u8)buffer[temp.i] - 5,
                 finalPalette
             );
         }
@@ -569,12 +547,12 @@ void drawScoreAttackChallengeHud(void *arg0) {
         x += 8;
         sprintf(buffer, gRaceHudScoreAttackTimeLimitSecondsFormat, gRaceChallengeTimeLimit.seconds);
 #if defined(VERSION_JP)
-        for (i = 0; i < 2; i++, x += 8) {
+        for (temp.i = 0; temp.i < 2; temp.i++, x += 8) {
             drawAssetTableSpriteWithExplicitPalette(
                 (s16)x,
                 0x50,
                 getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-                (u8)buffer[i] - 5,
+                (u8)buffer[temp.i] - 5,
                 finalPalette
             );
         }
@@ -593,12 +571,12 @@ void drawScoreAttackChallengeHud(void *arg0) {
         x += 8;
         sprintf(buffer, gRaceHudScoreAttackTimeLimitFractionFormat, gRaceChallengeTimeLimit.fraction >> 8);
 #if defined(VERSION_JP)
-        for (i = 0; i < 2; i++, x += 8) {
+        for (temp.i = 0; temp.i < 2; temp.i++, x += 8) {
             drawAssetTableSpriteWithExplicitPalette(
                 (s16)x,
                 0x50,
                 getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-                (u8)buffer[i] - 5,
+                (u8)buffer[temp.i] - 5,
                 finalPalette
             );
         }
@@ -626,13 +604,13 @@ void drawScoreAttackChallengeHud(void *arg0) {
         sprintf(buffer, gRaceHudScoreAttackPointTotalFormat, gRacePlayers[0].state.scoreAttackPointTotal);
         x = 0;
 #if defined(VERSION_JP)
-        for (i = 0; i < 2; i++, x += 8) {
-            if ((u8)buffer[i] != ' ') {
+        for (temp.i = 0; temp.i < 2; temp.i++, x += 8) {
+            if ((u8)buffer[temp.i] != ' ') {
                 drawAssetTableSprite(
                     (s16)(x + 0x60),
                     -0x50,
                     getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-                    (u8)buffer[i] - 5
+                    (u8)buffer[temp.i] - 5
                 );
 #else
         digit = buffer;
@@ -653,32 +631,13 @@ void drawScoreAttackChallengeHud(void *arg0) {
     }
 
     x = 0;
-#if defined(VERSION_JP)
-    i = 0;
-#else
     temp.i = 0;
-#endif
     if (gRacePlayers[0].state.shieldShotCount > 0) {
-#if defined(VERSION_JP)
-        for (;;) {
-#else
         do {
-#endif
             drawAssetTableSprite((s16)(x - 0x88), -0x60, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x21);
-#if defined(VERSION_JP)
-            i++;
-#else
             temp.i++;
-#endif
             x += 8;
-#if defined(VERSION_JP)
-
-            if (!(i < gRacePlayers[0].state.shieldShotCount))
-                break;
-        }
-#else
         } while (temp.i < gRacePlayers[0].state.shieldShotCount);
-#endif
     }
 
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x22);

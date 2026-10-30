@@ -68,7 +68,6 @@ typedef char RaceCourseSurfaceSizeCheck[(sizeof(RaceCourseSurface) == 0x1C) ? 1 
 extern Vec3i gRaceMotionJointDecodeFrameBuffer[];
 extern volatile s32 gRaceMotionRotationDecodeFrameBuffer[];
 
-#if defined(VERSION_JP)
 extern s32 gRaceCourseCollisionAdjustedX;
 extern s32 gRaceCourseCollisionAdjustedZ;
 extern s32 gRaceCourseCollisionDeltaX;
@@ -82,7 +81,6 @@ extern RaceCourseSurfaceFace *gRaceCourseSurfaceFaces;
 extern RaceCourseSurface *gRaceCourseSurfaces;
 extern RaceMotionDecodedJointFrame gRaceMotionJointFrameBuffer[];
 extern volatile s32 gRaceMotionRotationFrameBuffer[];
-#endif
 
 void initRaceCourseSurfaceData(void);
 /* Local adjacency traversal from a nearby hint. All negative neighbors are

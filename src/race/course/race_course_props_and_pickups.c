@@ -53,7 +53,7 @@ typedef struct {
 
 u32 gRaceCoursePropUnusedData = 0;
 
-RaceCoursePropModelEntry *gRaceCoursePropModelLists[] = { (RaceCoursePropModelEntry *)gRaceCoursePropModelEntries };
+RaceCoursePropModelEntry *gRaceCoursePropModelLists[] = { gRaceCoursePropModelEntries };
 
 CourseCollectibleSpriteEntry gBigSnowmanCollectibleSpriteEntries[] = {
     { 0, 0,  { 15625394, -16267348, -92789296 }       },

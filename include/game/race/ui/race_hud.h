@@ -38,7 +38,6 @@ extern u8 gRaceChallengeFailed;
 
 extern u32 gRaceCoursePlayerPathOffsetData[];
 
-#if defined(VERSION_JP)
 extern const char gRaceHudScoreAttackPointTargetFormat[];
 extern const char gRaceHudScoreAttackTimeLimitLabel[];
 extern const char gRaceHudTargetTimeChallengeFractionFormat[];
@@ -59,7 +58,6 @@ extern u16 gRaceProgressMeterIconTiles[];
 extern u8 gRaceTimeTrialFinishRecorded;
 extern RaceTimer gScoreAttackTimeLimitsByCourse[];
 extern RaceTimer gTrickAttackTimeLimit;
-#endif
 
 void initRaceHud(void);
 void drawTrickAttackChallengeHud(void *arg0);

@@ -114,64 +114,22 @@
 
 #if defined(VERSION_JP)
 #define RACE_UI_TRAIL_GFX_ALLOC_PTR (*(RaceUiDisplayCommand **)&gRegionAllocPtr)
-#define RACE_UI_TIME_TRIAL_SAVE_DATA ((RaceUiTimeTrialSaveData *)&gGameSaveDataBuffer[0])
 #endif
 
 typedef struct {
-#if defined(VERSION_JP)
-    u8 pad0[0x7756];
-    u16 values[10][5];
-} RaceUiTrickValueData;
-
-typedef struct {
-    u8 pad0[0x77C4];
-    u8 icons[10][5];
-} RaceUiTrickIconData;
-
-typedef struct {
-    u8 pad0[0x7832];
-    u8 values[10][5];
-    u8 pad7864[0x7869 - 0x7864];
-    u8 icons[10][5];
-} RaceUiCourseValueData;
-
-typedef struct {
-    u8 pad30[4];
-#else
     /* 0x00 */ u8 pad0[4];
-#endif
     /* 0x04 */ Vec3i vec;
     /* 0x10 */ Mat3x3 matrix;
+    /* 0x22 */ u8 pad22[4];
+} RaceUiSparkleScratch;
+
 #if defined(VERSION_JP)
-    u8 pad52[4];
-} RaceUiSparkleRetargetScratch;
-
 typedef struct {
-    u8 pad30[4];
-    Vec3i vec;
-    Mat3x3 matrix;
-    u8 pad52[0xC];
+    /* 0x00 */ u8 pad0[4];
+    /* 0x04 */ Vec3i vec;
+    /* 0x10 */ Mat3x3 matrix;
+    /* 0x22 */ u8 pad22[0xC];
 } RaceUiSparkleTransformScratch;
-
-typedef struct {
-    u8 pad0[0x4E];
-    RaceTimer courseStatsNames[10][5];
-} RaceUiCourseStatsNameData;
-
-typedef struct {
-    u8 pad0[0x77FB];
-    u8 courseStatsIcons[10][5];
-} RaceUiCourseStatsIconData;
-
-typedef struct {
-    u8 pad0[0x156];
-    RaceTimer resultNames[10][5];
-} RaceUiResultNameData;
-
-typedef struct {
-    u8 pad0[0x78A0];
-    u8 resultIcons[10][5];
-} RaceUiResultIconData;
 
 typedef struct {
     struct {
@@ -179,14 +137,6 @@ typedef struct {
         u32 w1;
     } words;
 } RaceUiDisplayCommand;
-
-typedef struct {
-    u8 pad0[0x12A];
-    RaceTimer timeTrialRecordSplitTimes[11];
-} RaceUiTimeTrialSaveData;
-#else
-    /* 0x22 */ u8 pad22[4];
-} RaceUiSparkleScratch;
 #endif
 
 RaceCourseScrollingTextureInit gRaceCourseScrollingTextureInit[RACE_COURSE_SCROLLING_TEXTURE_COUNT] = {
@@ -710,7 +660,6 @@ RaceUiRankTextRenderEntry *gCourseScoreAttackRingEntryLists[] = {
 
 u32 gScoreAttackRingListsUnusedData[] = { 0x00000000, 0x00000000 };
 
-#if defined(VERSION_JP)
 RaceCoursePropModelEntry gRaceCoursePropModelEntries[] = {
     { 20, { 0, 0 }, { 641011, -78305057, -186895163 },     0,    { 0, 0 } },
     { 20, { 0, 0 }, { -7827915, -82173248, -199094759 },   0,    { 0, 0 } },
@@ -724,21 +673,6 @@ RaceCoursePropModelEntry gRaceCoursePropModelEntries[] = {
     { 20, { 0, 0 }, { 716614209, -808209107, -827743812 }, 112,  { 0, 0 } },
     { 20, { 0, 0 }, { 740705433, -813611092, -829307016 }, 1024, { 0, 0 } },
     { 20, { 0, 0 }, { 771558155, -822819526, -831960948 }, 3824, { 0, 0 } },
-#else
-RaceUiRankTextRenderEntry gRaceCoursePropModelEntries[] = {
-    { 20, 0, { 641011, -78305057, -186895163 },     0,    { 0, 0 } },
-    { 20, 0, { -7827915, -82173248, -199094759 },   0,    { 0, 0 } },
-    { 20, 0, { 455639, -86056546, -217379481 },     1040, { 0, 0 } },
-    { 20, 0, { 9040943, -93289813, -241750873 },    368,  { 0, 0 } },
-    { 20, 0, { 31059461, -103388747, -276707305 },  1168, { 0, 0 } },
-    { 20, 0, { 38275615, -110377248, -302259739 },  1040, { 0, 0 } },
-    { 20, 0, { 676666673, -784630421, -914566824 }, 416,  { 0, 0 } },
-    { 20, 0, { 688251501, -793628094, -881121236 }, 2224, { 0, 0 } },
-    { 20, 0, { 702464373, -803493251, -842779164 }, 3264, { 0, 0 } },
-    { 20, 0, { 716614209, -808209107, -827743812 }, 112,  { 0, 0 } },
-    { 20, 0, { 740705433, -813611092, -829307016 }, 1024, { 0, 0 } },
-    { 20, 0, { 771558155, -822819526, -831960948 }, 3824, { 0, 0 } },
-#endif
 };
 
 u32 gRaceCoursePropModelTerminator[] = { 0xFFFF0000, 0x00000000, 0x00000000, 0x00000000 };
@@ -1642,36 +1576,21 @@ void drawRaceUiCourseStatsRows(RaceUiCourseStatsActor *arg0) {
         drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), row + 0x77);
         if ((row == actor->task.userId) && (gUiBlinkTimer & 1)) {
             drawRaceUiPackedTime(
-#if defined(VERSION_JP)
-                &((RaceUiCourseStatsNameData *)&gGameSaveDataBuffer[0])
-                     ->courseStatsNames[gRaceCourseIndex.signedValue][row],
-#else
                 &gGameSaveDataBuffer[0].timeTrialRecords[gRaceCourseIndex.signedValue][row],
-#endif
                 0x10,
                 y,
                 0x10
             );
         } else if (row < 3) {
             drawRaceUiPackedTime(
-#if defined(VERSION_JP)
-                &((RaceUiCourseStatsNameData *)&gGameSaveDataBuffer[0])
-                     ->courseStatsNames[gRaceCourseIndex.signedValue][row],
-#else
                 &gGameSaveDataBuffer[0].timeTrialRecords[gRaceCourseIndex.signedValue][row],
-#endif
                 0x10,
                 y,
                 0xC
             );
         } else {
             drawRaceUiPackedTime(
-#if defined(VERSION_JP)
-                &((RaceUiCourseStatsNameData *)&gGameSaveDataBuffer[0])
-                     ->courseStatsNames[gRaceCourseIndex.signedValue][row],
-#else
                 &gGameSaveDataBuffer[0].timeTrialRecords[gRaceCourseIndex.signedValue][row],
-#endif
                 0x10,
                 y,
                 0xD
@@ -1682,27 +1601,13 @@ void drawRaceUiCourseStatsRows(RaceUiCourseStatsActor *arg0) {
             0x58,
             (s16)y,
             getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-#if defined(VERSION_JP)
-            ((((RaceUiCourseStatsIconData *)&gGameSaveDataBuffer[0])
-                  ->courseStatsIcons[gRaceCourseIndex.signedValue][row] &
-              7) +
-             0x51)
-#else
             ((gGameSaveDataBuffer[0].timeTrialCharacterIds[gRaceCourseIndex.signedValue][row] & 7) + 0x51)
-#endif
         );
         drawAssetTableSprite(
             0x6C,
             (s16)y,
             getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-#if defined(VERSION_JP)
-            (((*((RaceUiCourseStatsIconData *)&gGameSaveDataBuffer[0]))
-                  .courseStatsIcons[gRaceCourseIndex.signedValue][row] >>
-              3) +
-             0x7C)
-#else
             ((gGameSaveDataBuffer[0].timeTrialCharacterIds[gRaceCourseIndex.signedValue][row] >> 3) + 0x7C)
-#endif
         );
     }
 }
@@ -1975,15 +1880,7 @@ void drawRaceUiScoreAttackCourseValues(RaceUiPopupActor *arg0) {
             color = 0xD;
         }
 
-#if defined(VERSION_JP)
-        sprintf(
-            buffer,
-            "%2d",
-            ((RaceUiCourseValueData *)&gGameSaveDataBuffer[0])->values[gRaceCourseIndex.signedValue][i]
-        );
-#else
         sprintf(buffer, "%2d", gGameSaveDataBuffer[0].scoreAttackScores[gRaceCourseIndex.signedValue][i]);
-#endif
 
         if ((u8)buffer[0] != space) {
 #if defined(VERSION_JP)
@@ -2007,25 +1904,10 @@ void drawRaceUiScoreAttackCourseValues(RaceUiPopupActor *arg0) {
                           buffer[1] - 5, (u16)color);
         }
 
-#if defined(VERSION_JP)
-        drawAssetTableSprite(
-            0x46,
-            (s16)y,
-            getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-            (((RaceUiCourseValueData *)&gGameSaveDataBuffer[0])->icons[gRaceCourseIndex.signedValue][i] & 7) + 0x51
-        );
-        drawAssetTableSprite(
-            0x58,
-            (s16)y,
-            getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-            (((RaceUiCourseValueData *)&gGameSaveDataBuffer[0])->icons[gRaceCourseIndex.signedValue][i] >> 3) + 0x7C
-        );
-#else
         drawAssetTableSprite(0x46, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
                       (gGameSaveDataBuffer[0].scoreAttackCharacterIds[gRaceCourseIndex.signedValue][i] & 7) + 0x51);
         drawAssetTableSprite(0x58, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
                       (gGameSaveDataBuffer[0].scoreAttackCharacterIds[gRaceCourseIndex.signedValue][i] >> 3) + 0x7C);
-#endif
 
         i++;
         y += 0x20;
@@ -2535,33 +2417,11 @@ void drawRaceUiCourseRecordRows(RaceUiPopupActor *arg0) {
         } else {
             color = 0xD;
         }
-#if defined(VERSION_JP)
-        drawRaceUiPackedTime(
-            &((RaceUiResultNameData *)&gGameSaveDataBuffer[0])->resultNames[gRaceCourseIndex.signedValue][i],
-            0x10,
-            y,
-            color
-        );
-        drawAssetTableSprite(
-            0x58,
-            (s16)y,
-            getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-            (((RaceUiResultIconData *)&gGameSaveDataBuffer[0])->resultIcons[gRaceCourseIndex.signedValue][i] & 7) + 0x51
-        );
-        drawAssetTableSprite(
-            0x6C,
-            (s16)y,
-            getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-            ((*((RaceUiResultIconData *)&gGameSaveDataBuffer[0])).resultIcons[gRaceCourseIndex.signedValue][i] >> 3) +
-                0x7C
-        );
-#else
         drawRaceUiPackedTime(&gGameSaveDataBuffer[0].raceRecords[gRaceCourseIndex.signedValue][i], 0x10, y, color);
         drawAssetTableSprite(0x58, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
                       (gGameSaveDataBuffer[0].raceRecordCharacterIds[gRaceCourseIndex.signedValue][i] & 7) + 0x51);
         drawAssetTableSprite(0x6C, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
                       (gGameSaveDataBuffer[0].raceRecordCharacterIds[gRaceCourseIndex.signedValue][i] >> 3) + 0x7C);
-#endif
         i++;
         offset += 4;
         y += 0x20;
@@ -3125,15 +2985,7 @@ void drawRaceUiTrickAttackCourseValues(RaceUiCourseStatsActor *arg0) {
             color = 0xD;
         }
 
-#if defined(VERSION_JP)
-        sprintf(
-            buffer,
-            "%4d",
-            ((RaceUiTrickValueData *)&gGameSaveDataBuffer[0])->values[gRaceCourseIndex.signedValue][i]
-        );
-#else
         sprintf(buffer, "%4d", gGameSaveDataBuffer[0].trickAttackScores[gRaceCourseIndex.signedValue][i]);
-#endif
 
         if ((u8)buffer[0] != space) {
 #if defined(VERSION_JP)
@@ -3164,25 +3016,10 @@ void drawRaceUiTrickAttackCourseValues(RaceUiCourseStatsActor *arg0) {
                           buffer[3] - 5, (u16)color);
         }
 
-#if defined(VERSION_JP)
-        drawAssetTableSprite(
-            0x40,
-            (s16)y,
-            getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-            (((RaceUiTrickIconData *)&gGameSaveDataBuffer[0])->icons[gRaceCourseIndex.signedValue][i] & 7) + 0x51
-        );
-        drawAssetTableSprite(
-            0x54,
-            (s16)y,
-            getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-            (((RaceUiTrickIconData *)&gGameSaveDataBuffer[0])->icons[gRaceCourseIndex.signedValue][i] >> 3) + 0x7C
-        );
-#else
         drawAssetTableSprite(0x40, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
                       (gGameSaveDataBuffer[0].trickAttackCharacterIds[gRaceCourseIndex.signedValue][i] & 7) + 0x51);
         drawAssetTableSprite(0x54, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
                       (gGameSaveDataBuffer[0].trickAttackCharacterIds[gRaceCourseIndex.signedValue][i] >> 3) + 0x7C);
-#endif
 
         i++;
         y += 0x20;
@@ -3625,11 +3462,7 @@ void updateRacePlayerSparkleRetarget(RaceUiSparkleActor *arg0) {
     s16 timer;
     s32 selectedPlayerIndex;
     s32 activeCount;
-#if defined(VERSION_JP)
-    RaceUiSparkleRetargetScratch scratch;
-#else
     RaceUiSparkleScratch scratch;
-#endif
 
     if (gRaceUpdatePaused == 0) {
         if (gFrameCounter & 1) {
@@ -3785,11 +3618,7 @@ void spawnGhostItemEffect(s16 arg0) {
 
 void renderRaceUiExpiredSpeedFanEffect(RaceUiExpiredSpeedFanActor *arg0) {
     volatile u8 pad[0x20];
-#if defined(VERSION_JP)
-    RaceUiDisplayCommand *unused;
-#else
     Gfx *unused;
-#endif
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -4131,59 +3960,33 @@ void initRaceUiBurstTextParticle(RaceUiTextParticleActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiBurstTextParticle);
 }
 
-#if defined(VERSION_JP)
 void spawnRaceUiBurstTextParticle(s32 x, s32 y, s32 z, s16 velocityIndex) {
-#else
-void spawnRaceUiBurstTextParticle(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
-#endif
     RaceUiTextParticleActor *actor =
         createCallbackTaskPreservingArgs((CallbackTaskCallback)initRaceUiBurstTextParticle, 5, 0x1E);
     if (actor != NULL) {
         actor->useAltTextures = 0;
-#if defined(VERSION_JP)
         actor->task.userId = velocityIndex;
         actor->pos.x = x;
         actor->pos.y = y;
         actor->pos.z = z;
-#else
-        actor->task.userId = arg3;
-        actor->pos.x = arg0;
-        actor->pos.y = arg1;
-        actor->pos.z = arg2;
-#endif
     }
 }
 
-#if defined(VERSION_JP)
 void spawnRaceUiAltBurstTextParticle(s32 x, s32 y, s32 z, s16 velocityIndex) {
-#else
-void spawnRaceUiAltBurstTextParticle(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
-#endif
     RaceUiTextParticleActor *actor =
         createCallbackTaskPreservingArgs((CallbackTaskCallback)initRaceUiBurstTextParticle, 5, 0x1E);
     if (actor != NULL) {
         actor->useAltTextures = 1;
-#if defined(VERSION_JP)
         actor->task.userId = velocityIndex;
         actor->pos.x = x;
         actor->pos.y = y;
         actor->pos.z = z;
-#else
-        actor->task.userId = arg3;
-        actor->pos.x = arg0;
-        actor->pos.y = arg1;
-        actor->pos.z = arg2;
-#endif
     }
 }
 
 void renderGhostSlowdownActor(RaceUiPodiumTrailActor *arg0) {
     volatile u8 pad[0x20];
-#if defined(VERSION_JP)
-    volatile RaceUiDisplayCommand *unused;
-#else
     volatile Gfx *unused;
-#endif
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -4520,11 +4323,7 @@ void initDizzyLandCarousel(DizzyLandCarouselActor *actor) {
 
 void renderRaceUiHeavyKnockdownTrailEffect(RaceUiRankTrailActor *arg0) {
     volatile u8 pad[0x20];
-#if defined(VERSION_JP)
-    RaceUiDisplayCommand *unused;
-#else
     Gfx *unused;
-#endif
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -4684,11 +4483,7 @@ void spawnRaceUiThrownTrailObstacle(s16 arg0, void *arg1, void *arg2, s16 arg3) 
 
 void renderRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
     volatile u8 pad[0x20];
-#if defined(VERSION_JP)
-    RaceUiDisplayCommand *unused;
-#else
     Gfx *unused;
-#endif
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -4749,11 +4544,7 @@ void initRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
 
 void renderRaceUiFadingImpact(RaceUiFadingImpactActor *arg0) {
     volatile u8 pad[0x20];
-#if defined(VERSION_JP)
-    RaceUiDisplayCommand *unused;
-#else
     Gfx *unused;
-#endif
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -4862,11 +4653,7 @@ void spawnRaceUiFadingImpact(s32 x, s32 y, s32 z, s32 userId) {
 
 void renderRaceUiSpinHitTransitionEffect(RaceUiTransitionActor *arg0) {
     volatile u8 pad[0x20];
-#if defined(VERSION_JP)
-    RaceUiDisplayCommand *unused;
-#else
     Gfx *unused;
-#endif
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -5519,11 +5306,7 @@ void initSilverMountainSnowParticles(RaceUiEffectParticleActor *actor) {
 }
 
 void renderRaceCourseRankModel(RaceUiRankParticleActor *arg0) {
-#if defined(VERSION_JP)
-    RaceUiDisplayCommand *unused;
-#else
     Gfx *unused;
-#endif
     s32 displayListIndex;
 
     if (gRenderMatricesDirty != 0) {
@@ -5930,11 +5713,7 @@ void initTimeTrialRecordDeltaPopup(RaceUiTimeTrialRecordDeltaPopupActor *popup) 
     popup->velocity = TIME_TRIAL_RECORD_DELTA_POPUP_START_VELOCITY;
     popup->isSlowerThanRecord = calculateRaceTimerDelta(
         &gRaceElapsedTimer,
-#if defined(VERSION_JP)
-        &RACE_UI_TIME_TRIAL_SAVE_DATA->timeTrialRecordSplitTimes[gRaceCourseIndex.signedValue],
-#else
         &gGameSaveDataBuffer[0].bestLapRecords[gRaceCourseIndex.signedValue],
-#endif
         &popup->delta
     );
     setCallbackTaskCallback(popup, (CallbackTaskCallback)updateTimeTrialRecordDeltaPopupSlideIn);
@@ -5956,11 +5735,7 @@ void renderRaceCourseCoinMarkers(RaceUiGfxCommandActor *arg0) {
     entry = gCourseCoinMarkerEntryLists[gRaceCourseIndex.signedValue];
     i = 0;
     if (entry->sentinel != -1) {
-#if defined(VERSION_JP)
-        for (;;) {
-#else
         do {
-#endif
             if ((entry->active != 0) && (isPositionNearCurrentRaceViewportCamera(&entry->position) != 0)) {
                 if (textureIndex != entry->sentinel + actor->textureOffset) {
                     textureIndex = entry->sentinel + actor->textureOffset;
@@ -5995,15 +5770,7 @@ void renderRaceCourseCoinMarkers(RaceUiGfxCommandActor *arg0) {
             }
             entry++;
             i++;
-#if defined(VERSION_JP)
-
-            if (!(entry->sentinel != -1)) {
-                break;
-            }
-        }
-#else
         } while (entry->sentinel != -1);
-#endif
     }
 
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeCleanupDl);
@@ -6323,20 +6090,12 @@ void updateRaceScoreAttackRings(void *arg0) {
 
     entry = gCourseScoreAttackRingEntryLists[gRaceCourseIndex.signedValue];
     if (entry->active != -1) {
-#if defined(VERSION_JP)
-        for (;;) {
-#else
         do {
-#endif
             if (entry->active != 0) {
                 pushRacePlayersOutOfCylinderAndApplyItemHit(&entry->position, 0xE0000, 0x100000, 2);
                 trigger = gRacePlayers[0].state.scoreAttackRingTriggerList;
                 if (trigger != NULL) {
-#if defined(VERSION_JP)
-                    for (;;) {
-#else
                     do {
-#endif
                         if (trigger->triggered == 0) {
                             radius = trigger->radius + 0xE0000;
                             dx = trigger->position.x - entry->position.x;
@@ -6348,11 +6107,7 @@ void updateRaceScoreAttackRings(void *arg0) {
                                         (integerSquareRoot64((s64)dx * dx + (s64)dy * dy + (s64)dz * dz) < radius)) {
                                         trigger->triggered = 1;
                                         i = 0;
-#if defined(VERSION_JP)
-                                        for (;;) {
-#else
                                         do {
-#endif
                                             spawnRaceUiAltBurstTextParticle(
                                                 entry->position.x,
                                                 entry->position.y + 0x70000,
@@ -6360,15 +6115,7 @@ void updateRaceScoreAttackRings(void *arg0) {
                                                 i
                                             );
                                             i++;
-#if defined(VERSION_JP)
-
-                                            if (!(i != 8)) {
-                                                break;
-                                            }
-                                        }
-#else
                                         } while (i != 8);
-#endif
                                         entry->active = 0;
                                         gRacePlayers[0].state.scoreAttackPointTotal++;
                                         break;
@@ -6377,27 +6124,11 @@ void updateRaceScoreAttackRings(void *arg0) {
                             }
                         }
                         trigger = trigger->next;
-#if defined(VERSION_JP)
-
-                        if (!(trigger != NULL)) {
-                            break;
-                        }
-                    }
-#else
                     } while (trigger != NULL);
-#endif
                 }
             }
             entry++;
-#if defined(VERSION_JP)
-
-            if (!(entry->active != -1)) {
-                break;
-            }
-        }
-#else
         } while (entry->active != -1);
-#endif
     }
 
     addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)renderRaceScoreAttackRings, arg0);

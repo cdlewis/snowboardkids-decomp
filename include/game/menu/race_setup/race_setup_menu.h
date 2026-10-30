@@ -73,7 +73,6 @@ extern u8 gMainMenuSecretCodeStep;
 extern u8 gMenuExitSelection;
 extern u8 gRumblePakConnectedMask;
 
-#if defined(VERSION_JP)
 extern RaceSetupSaveDefaultTime gDefaultBestLapRecords[];
 extern RaceSetupSaveDefaultTimeTable gDefaultRaceRecordsByCourseParity;
 extern RaceSetupSaveDefaultTimeRow gDefaultRookieMountainRaceRecords[];
@@ -81,7 +80,6 @@ extern RaceSetupDefaultSaveData gDefaultSaveRecordData;
 extern u8 gDefaultScoreAttackScores[];
 extern RaceSetupSaveDefaultTime gDefaultTimeTrialRecords[][5];
 extern s16 gRaceSetupSavePanelInitialRects[][2];
-#endif
 
 void initRaceSetupMenu(void);
 void updateRaceSetupPlayerCountMenu(void);

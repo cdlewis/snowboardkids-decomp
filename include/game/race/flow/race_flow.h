@@ -31,7 +31,6 @@ extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
 
-#if defined(VERSION_JP)
 extern u8 gRaceCourseCpuPickupUseChances[];
 extern RaceCourseCharacterIdTable gRaceCourseOpponentCharacterIds;
 extern RaceCpuBoardConfig *gRaceCpuBoardConfigsByCourse[];
@@ -40,7 +39,6 @@ extern u16 gRaceGhostReplayGridSwitchFrames[];
 extern u8 gRacePauseMenuSelection;
 extern CourseGridEntry *gRaceReplayCourseGridLists[];
 extern u8 gRaceResultsAwardPlayerNumber;
-#endif
 
 void initStartupControllerPakFlow(void);
 void waitStartupRumbleInit(void);

@@ -26,11 +26,9 @@ typedef struct {
 
 extern AssetHandles gAssetHandles;
 
-#if defined(VERSION_JP)
 extern CompressedAssetHeader gCompressedAssetHeader;
 extern s32 gHuffmanNodeCount;
 extern HuffmanNode gHuffmanNodes[];
-#endif
 
 s32 randomNextMain(void);
 s32 randomNextSecondary(void);

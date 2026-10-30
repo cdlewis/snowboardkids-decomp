@@ -20,20 +20,11 @@ typedef struct RelocatableHeapBlock {
     u8 status;
 } RelocatableHeapBlock;
 
-typedef struct RelocatableHeapBlockStartAlias {
-    u8 *start;
-    u8 pad[0x10];
-} RelocatableHeapBlockStartAlias;
-
-#if defined(VERSION_JP)
-extern RelocatableHeapBlock *gFirstAllocatedRelocatableHeapBlock;
 extern RelocatableHeapBlock gRelocatableHeapBlockListHead;
 extern RelocatableHeapBlock gRelocatableHeapBlockPool[];
-extern RelocatableHeapBlockStartAlias gRelocatableHeapBlockStartAliases[];
 extern RelocatableHeapBlock *gRelocatableHeapFreeBlockStack[];
 extern u8 *gRelocatableHeapNextFreeAddress;
 extern u16 gRelocatableHeapUsedBlockCount;
-#endif
 
 void updateRelocatableHeap(void);
 void initRelocatableHeap(void);

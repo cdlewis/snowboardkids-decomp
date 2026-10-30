@@ -58,11 +58,6 @@
 #define MENU_CROSSFADE_SCALE_STEP 0x0400
 #endif
 // Palette selectors are passed as s32 values, but only their low byte is used.
-#if defined(VERSION_JP)
-u16 gMenuTransparentPalette[16] = { 0x0000, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
-                                    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF };
-s16 gMenuSpriteFlipScales[8] = { 1, 1, -1, 1, 1, -1, -1, -1 };
-#else
 
 u16 gMenuTransparentPalette[MENU_PALETTE_COLOR_COUNT] = {
     0x0000, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
@@ -85,7 +80,6 @@ u16 resolveSpritePaletteIndex(AssetTable *table, u16 index) {
     }
     return remap->slots[index];
 }
-#endif
 #endif
 
 void drawMenuAssetRegion(
@@ -2013,26 +2007,6 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 palette, u16 pal
                             goto palette_loop;
                         }
 
-#if defined(VERSION_JP)
-                        gDPLoadTextureTile_4b(
-                            gRegionAllocPtr++,
-                            texture->imageOffset + (u8 *)font,
-                            G_IM_FMT_CI,
-                            texture->width,
-                            texture->height,
-                            0,
-                            0,
-                            texture->width,
-                            texture->height,
-                            0,
-                            G_TX_CLAMP,
-                            G_TX_CLAMP,
-                            G_TX_NOMASK,
-                            G_TX_NOMASK,
-                            G_TX_NOLOD,
-                            G_TX_NOLOD
-                        );
-#else
                         gDPLoadTextureTile_4b( \
                             gRegionAllocPtr++, \
                             texture->imageOffset + (u8 *)font,
@@ -2051,22 +2025,7 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 palette, u16 pal
                             G_TX_NOLOD, \
                             G_TX_NOLOD \
                         );
-#endif
                         gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, scratch);
-#if defined(VERSION_JP)
-                        gSPTextureRectangle(
-                            gRegionAllocPtr++,
-                            x0 << 2,
-                            storedY << 2,
-                            x1 << 2,
-                            y1 << 2,
-                            G_TX_RENDERTILE,
-                            clipS << 5,
-                            clipT << 5,
-                            0x400,
-                            0x400
-                        );
-#else
                         gSPTextureRectangle( \
                             gRegionAllocPtr++, \
                             x0 << 2, \
@@ -2079,7 +2038,6 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 palette, u16 pal
                             0x400, \
                             0x400 \
                         );
-#endif
                     }
                 }
             }

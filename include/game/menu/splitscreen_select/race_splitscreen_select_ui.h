@@ -78,9 +78,7 @@ extern RaceSplitscreenSelectMenuState gRaceSplitscreenSelectCursorTarget;
 extern RaceSplitscreenSelectFrameTiles gRaceSplitscreenSelectFrameTiles[5];
 extern RaceSplitscreenSelectDescriptionScriptTable gRaceSplitscreenSelectDescriptionScripts;
 
-#if defined(VERSION_JP)
 extern const char gRaceSplitscreenSelectEntryFeeFormat[];
-#endif
 
 void drawRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectOptionIconActor *arg0);
 void updateRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectOptionIconActor *arg0);

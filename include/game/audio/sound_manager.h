@@ -43,7 +43,6 @@ extern s32 gPlayerPositionalSoundHandle1;
 extern s32 gPlayerPositionalSoundHandle2;
 extern s32 gPlayerPositionalSoundHandle3;
 
-#if defined(VERSION_JP)
 extern u8 gSoundBankWaveTuning[];
 extern f32 gSoundBankWavePitchOffsets[];
 extern u8 *gSoundEffectCommandPointers[];
@@ -81,17 +80,12 @@ extern SoundHandleNode gSoundHandleNodes[];
 extern SoundQueueEntry gSoundQueue[];
 extern s32 gSoundQueueReadIndex;
 extern s32 gSoundQueueWriteIndex;
-#endif
 
-#if defined(VERSION_US)
 extern u32 gRaceReplayCourseGridEntries[];
-#endif
 
-#if defined(VERSION_JP)
 s32 calculatePositionalSoundVolume(Vec3i *pos, s32 volume);
 s32 reserveSoundEffectQueueWriteIndex(void);
 void stopCurrentMusicSequence(s32 arg0);
-#endif
 
 void initSoundManager(void);
 void updateSoundManager(void);

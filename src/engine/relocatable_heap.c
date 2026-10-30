@@ -2,11 +2,7 @@
 #include "common.h"
 #include "game/engine/relocatable_heap.h"
 
-#if defined(VERSION_JP)
-#define FIRST_ALLOCATED_HEAP_BLOCK gFirstAllocatedRelocatableHeapBlock
-#else
 #define FIRST_ALLOCATED_HEAP_BLOCK gRelocatableHeapBlockListHead.next
-#endif
 
 #define RELOCATABLE_HEAP_BLOCK_COUNT 0x50
 
@@ -216,11 +212,7 @@ void compactRelocatableHeap(void) {
 }
 
 void *getRelocatableHeapBlockBase(s32 handle) {
-#if defined(VERSION_JP)
-    return gRelocatableHeapBlockStartAliases[handle].start;
-#else
     return gRelocatableHeapBlockPool[handle].start;
-#endif
 }
 
 void lockRelocatableHeapBlock(s32 handle) {

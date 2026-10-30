@@ -62,16 +62,6 @@ enum {
     COURSE_LIST_SLIDE_SELECTED_OUT
 };
 
-#if defined(VERSION_JP)
-typedef union {
-    struct {
-        u16 firstFrameTiles[20];
-        u16 remainingFrameTiles[210];
-        CharacterSelectCourseExitPreviewData exitPreview;
-    } sections;
-    CharacterSelectCourseFrameTileMap frames[11];
-} CharacterSelectCoursePreviewData;
-
 CharacterSelectCoursePreviewData
     gCharacterSelectCoursePreviewData = {
         { { 0x0161, 0x0162, 0x0163, 0x0164, 0x0166, 0x0167, 0x0168, 0x0169, 0x016A, 0x016B,
@@ -93,23 +83,15 @@ CharacterSelectCoursePreviewData
             0x0185, 0x0186, 0x0187, 0x017A, 0x0183, 0x0188, 0x0189, 0x018A, 0x00A4, 0x00A5, 0x00A6, 0x00A7, 0x00A9,
             0x00AA, 0x00AB, 0x00AC, 0x00AD, 0x00AE, 0x00AF, 0x00B0, 0x00B2, 0x00B3, 0x00B4, 0x00B5, 0x00A8, 0x00B1,
             0x00B6, 0x00B7 },
-         { 0x00B8,
-            0x0000,
-            0x000C,
-            0x0018,
-            0x001E,
-            0x001B,
-            0x001C,
-            0x000E,
-            0xFFFE,
-            0x001C,
-            0x000E,
-            0x0015,
-            0x000E,
-            0x000C,
-            0x001D,
-            0xFFFF } }
+         { 0x00B8, 0x0000,
+            // textconv requires this invocation to retain its line layout.
+            // clang-format off
+            { _("COURSE SELECT") },
+            // clang-format on
+         } }
+
 };
+#if defined(VERSION_JP)
 u16 gCharacterSelectCourseStatsScoreValues[10] = { 0x021D, 0x06D6, 0x06AA, 0x0558, 0x05D2,
                                                    0x05D2, 0x0666, 0x0680, 0x017E, 0x01F4 };
 u8 gCharacterSelectCourseDifficultyRatings[12] = { 0x0002, 0x0003, 0x0004, 0x0005, 0x0006,
@@ -170,7 +152,7 @@ CharacterSelectCourseText gCharacterSelectCourseNameText[10] = {
     0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x006F, 0x002B, 0x0060, 0x0061, 0x0055, 0x003C,
     0x002B, 0x00A5, 0x00B2, 0x00CA, 0x00B7, 0x00AE, 0x009C, 0x0032, 0xFFFF
 };
-MenuGlyphScript gCharacterSelectBeginnerCourseDescriptionText[3][0x30] = {
+MenuGlyphScript gCharacterSelectBeginnerCourseDescriptionText[3][CHARACTER_SELECT_BEGINNER_DESCRIPTION_LENGTH] = {
     0xFFFC, 0x0007, 0x00A3, 0x00A2, 0x00B2, 0x00A9, 0x00B3, 0x0097, 0x009C, 0x00CE, 0x00B7, 0x00AE, 0x009B,
     0x008D, 0x0092, 0x0032, 0xFFFD, 0xFFFD, 0xFFFC, 0x0006, 0xFFFE, 0x004C, 0x0081, 0x002B, 0x007A, 0x005B,
     0x0035, 0x003F, 0xFFFE, 0x0001, 0x0000, 0x0049, 0xFFFD, 0xFFFE, 0x001D, 0x0012, 0x0016, 0x000E, 0xFFFE,
@@ -210,12 +192,8 @@ MenuGlyphScript gCharacterSelectCourseStartGameText[38] = {
     0xFFFC, 0x0007, 0x006F, 0x002B, 0x0060, 0x008E, 0x00A9, 0x00C2, 0x00B1, 0x00AE, 0x009C, 0x0095, 0x0030,
     0xFFFF, 0x000B, 0x0018, 0x000A, 0x001B, 0x000D, 0xFFFE, 0x001C, 0x000E, 0x0015, 0x000E, 0x000C, 0x001D,
     0xFFFF, 0x0000, 0x000B, 0x0018, 0x000A, 0x001B, 0x000D, 0xFFFE, 0x0019, 0x000A, 0x0012, 0x0017
-#else
-u16 gCharacterSelectCoursePreviewFrameTileMaps[20] = {
-    0x0161, 0x0162, 0x0163, 0x0164, 0x0166, 0x0167, 0x0168, 0x0169, 0x016A, 0x016B,
-    0x016C, 0x016D, 0x016F, 0x0170, 0x0171, 0x0172, 0x0165, 0x016E, 0x0173, 0x0174,
-#endif
 };
+#endif
 
 #if defined(VERSION_JP)
 const char gCharacterSelectCourseStatsScoreFormat[4] = "%4d";
@@ -228,31 +206,6 @@ const char gCharacterSelectRecordMinutesFormat[8] = "%2.2d";
 const char gCharacterSelectRecordSecondsFormat[8] = "%2.2d";
 const char gCharacterSelectRecordCentisecondsFormat[8] = "%2.2d";
 #else
-u16 gCharacterSelectCoursePreviewFrameCornerTileMaps[210] = {
-    0x0175, 0x00B9, 0x00BA, 0x00BB, 0x00BC, 0x00BE, 0x00BF, 0x00C0, 0x00C1, 0x00C2, 0x00C3, 0x00C4, 0x00C5, 0x00C7,
-    0x00C8, 0x00C9, 0x00CA, 0x00BD, 0x00C6, 0x00CB, 0x00CC, 0x00CD, 0x00CE, 0x00CF, 0x00D0, 0x00D1, 0x00D3, 0x00D4,
-    0x00D5, 0x00D6, 0x00D7, 0x00D8, 0x00D9, 0x00DA, 0x00DC, 0x00DD, 0x00DE, 0x00DF, 0x00D2, 0x00DB, 0x00E0, 0x00E1,
-    0x00E2, 0x00E3, 0x00E4, 0x00E5, 0x00E6, 0x00E8, 0x00E9, 0x00EA, 0x00EB, 0x00EC, 0x00ED, 0x00EE, 0x00EF, 0x00F1,
-    0x00F2, 0x00F3, 0x00F4, 0x00E7, 0x00F0, 0x00F5, 0x00F6, 0x00F7, 0x00F8, 0x00F9, 0x00FA, 0x00FB, 0x00FD, 0x00FE,
-    0x00FF, 0x0100, 0x0101, 0x0102, 0x0103, 0x0104, 0x0106, 0x0107, 0x0108, 0x0109, 0x00FC, 0x0105, 0x010A, 0x010B,
-    0x010C, 0x010D, 0x010E, 0x010F, 0x0110, 0x0112, 0x0113, 0x0114, 0x0115, 0x0116, 0x0117, 0x0118, 0x0119, 0x011B,
-    0x011C, 0x011D, 0x011E, 0x0111, 0x011A, 0x011F, 0x0120, 0x0121, 0x0122, 0x0123, 0x0124, 0x0125, 0x0127, 0x0128,
-    0x0129, 0x012A, 0x012B, 0x012C, 0x012D, 0x012E, 0x0130, 0x0131, 0x0132, 0x0133, 0x0126, 0x012F, 0x0134, 0x0135,
-    0x0136, 0x0137, 0x0138, 0x0139, 0x013A, 0x013C, 0x013D, 0x013E, 0x013F, 0x0140, 0x0141, 0x0142, 0x0143, 0x0145,
-    0x0146, 0x0147, 0x0148, 0x013B, 0x0144, 0x0149, 0x014A, 0x014B, 0x014C, 0x014D, 0x014E, 0x014F, 0x0151, 0x0152,
-    0x0153, 0x0154, 0x0155, 0x0156, 0x0157, 0x0158, 0x015A, 0x015B, 0x015C, 0x015D, 0x0150, 0x0159, 0x015E, 0x015F,
-    0x0160, 0x0176, 0x0177, 0x0178, 0x0179, 0x017B, 0x017C, 0x017D, 0x017E, 0x017F, 0x0180, 0x0181, 0x0182, 0x0184,
-    0x0185, 0x0186, 0x0187, 0x017A, 0x0183, 0x0188, 0x0189, 0x018A, 0x00A4, 0x00A5, 0x00A6, 0x00A7, 0x00A9, 0x00AA,
-    0x00AB, 0x00AC, 0x00AD, 0x00AE, 0x00AF, 0x00B0, 0x00B2, 0x00B3, 0x00B4, 0x00B5, 0x00A8, 0x00B1, 0x00B6, 0x00B7,
-};
-
-CharacterSelectCourseExitPreviewData gCharacterSelectCourseExitPreviewData = {
-    0xB8,
-    0,
-    // textconv requires these _() invocations to retain their original line layout.
-    // clang-format off
-    { _("COURSE SELECT") },
-};
 
 u16 gCharacterSelectCourseStatsScoreValues[10] = {
     0x021D, 0x06D6, 0x06AA, 0x0558, 0x05D2, 0x05D2, 0x0666, 0x0680,
@@ -306,7 +259,7 @@ CharacterSelectCourseText gCharacterSelectCourseNameText[10] = {
     },
 };
 
-MenuGlyphScript gCharacterSelectBeginnerCourseDescriptionText[3][0x3A] = {
+MenuGlyphScript gCharacterSelectBeginnerCourseDescriptionText[3][CHARACTER_SELECT_BEGINNER_DESCRIPTION_LENGTH] = {
     {
         _("{COLOR:7}SLIDE DOWN\nFAST.\n\n{COLOR:6}SPEED FAN:10\nTIME:1'00\"00"),
     },
@@ -352,10 +305,6 @@ MenuGlyphScript gCharacterSelectCourseStartGameText[44] = {
     _FRAGMENT("BOARD PAIN"),
 };
 
-#define gCharacterSelectCoursePreviewFrameTileMaps \
-    ((CharacterSelectCourseFrameTileMap *)gCharacterSelectCoursePreviewFrameTileMaps)
-#define gCharacterSelectCoursePreviewFrameCornerTileMaps \
-    ((CharacterSelectCourseFrameCornerTileMap *)gCharacterSelectCoursePreviewFrameCornerTileMaps)
 #endif
 
 void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0) {
@@ -2942,12 +2891,7 @@ void drawCharacterSelectCourseExitPreviewPanel(CharacterSelectCourseWidgetActor 
 #endif
     }
 
-#if defined(VERSION_JP)
-    // clang-format off
-    tileOffset = 0; offset = 0; i = 0x80; for (;;) {
-#else
     tileOffset = 0; offset = 0; i = 0x80; do {
-#endif
         drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
 #if defined(VERSION_JP)
                       gCharacterSelectCoursePreviewFrameTileMaps[10].right[tileOffset], 0, 0x100, gMenuViewportWidth / 2,
@@ -2966,15 +2910,7 @@ void drawCharacterSelectCourseExitPreviewPanel(CharacterSelectCourseWidgetActor 
         i = 0x80;
         offset += 0x40;
         tileOffset++;
-#if defined(VERSION_JP)
-
-        if (!(offset != i)) {
-            break;
-        }
-    }
-#else
     } while (offset != i);
-#endif
 
     i++;
     i--;
@@ -3332,11 +3268,7 @@ void drawCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg0)
         i = 0;
         var_t8 = temp_v0 & 1;
         if ((temp_v0 / 2) > 0) {
-#if defined(VERSION_JP)
-            for (;;) {
-#else
             do {
-#endif
                 drawMenuSpriteWithAlpha(
                     (s16)(arg0->x + xOffset + 4),
                     (s16)(arg0->y + 0x1C),
@@ -3351,15 +3283,7 @@ void drawCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg0)
                 i++;
                 temp_v0 = gCharacterSelectCourseDifficultyRatings[gRaceCourseIndex.signedValue];
                 xOffset += 0xC;
-#if defined(VERSION_JP)
-
-                if (!(i < (temp_v0 / 2))) {
-                    break;
-                }
-            }
-#else
             } while (i < (temp_v0 / 2));
-#endif
         }
         var_t8 = temp_v0 & 1;
         if (var_t8 != 0) {
