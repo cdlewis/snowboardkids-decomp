@@ -2026,7 +2026,7 @@ gMainMenuModeSelection = 0x80121B5B; // size:0x1
 gRaceTypeSelection = 0x80121B5E; // size:0x1
 gNextFramebufferRenderTaskIndex = 0x80123752; // type:u8
 gFrameRenderTaskStatuses = 0x8012496E; // size:0x2BA
-gRelocatableHeapStart = 0x80160480;
+gRelocatableHeapStart = 0x80160480; // size:0x1C0000
 gPlayerInputHeld = 0x80123758; // type:s32 size:0x4
 gPlayer2InputHeld = 0x8012375C;
 gPlayer3InputHeld = 0x80123760;
@@ -2999,11 +2999,11 @@ gMenuScratch0 = 0x8010ADE0; // size:0x4
 gMenuScratch1 = 0x8010ADE4; // size:0x4
 gMenuScratch2 = 0x8010ADE8; // size:0x4
 
-gRspOutputBuffer = 0x80360000;
+gRspOutputBuffer = 0x80360000; // size:0x8000
 
-gRspYieldBuffer = 0x80368000;
+gRspYieldBuffer = 0x80368000; // size:0xC00
 
-gRspDramStack = 0x80368C00;
+gRspDramStack = 0x80368C00; // size:0x400
 
 gF3dlxMicrocodeText = 0x800B1CC0; // rom:0xB28C0
 
@@ -3257,7 +3257,7 @@ gMainMenuViewportAspectRatio = 0x800E08B0; // rom:0xE14B0 size:0x4
 gMainMenuTitleTrademarkText = 0x800E1050; // rom:0xE1C50 size:0x3
 gRaceUiScorePopupValueFormat = 0x800E14D0; // rom:0xE20D0 size:0x4
 gViewportOverlayRenderCallbackList = 0x80124848;
-gRegionAllocationBuffer = 0x80328480;
+gRuntimeBufferReserved = 0x80328480; // size:0x37B80
 gCourseScrollingTextureSoundPositions = 0x800D6030; // rom:0xD6C30
 gRaceCoursePropModelEntries = 0x800D7650; // rom:0xD8250
 gFallingRockSpawnGroup0 = 0x800D9250; // rom:0xD9E50
@@ -3385,3 +3385,5 @@ gRaceWinnerZoomAspectRatio3 = 0x800E16A4; // rom:0xE22A4
 gRaceWinnerZoomAspectRatio4 = 0x800E16A8; // rom:0xE22A8
 gRaceWinnerZoomAspectRatio6 = 0x800E16B0; // rom:0xE22B0
 gRaceWinnerZoomAspectRatio10 = 0x800E16C0; // rom:0xE22C0
+gDepthBuffer = 0x80369000; // size:0x25800
+gFramebuffers = 0x8038E800; // size:0x70800

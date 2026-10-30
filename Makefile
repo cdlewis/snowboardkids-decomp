@@ -224,7 +224,7 @@ LINKER_SCRIPTS = linker_scripts/hardware_regs.ld linker_scripts/n64_os_syms.ld \
                  linker_scripts/game_syms.jp.ld \
                  undefined_funcs_auto.jp.txt undefined_syms_auto.jp.txt
 endif
-LINKER_SCRIPTS += linker_scripts/race_graphics_bundles.ld
+LINKER_SCRIPTS += linker_scripts/runtime_memory.ld linker_scripts/race_graphics_bundles.ld
 LDFLAGS        = -T $(LD_SCRIPT) -Map $(TARGET).map \
                  $(foreach ld,$(LINKER_SCRIPTS),-T $(ld)) \
                  --no-check-sections
@@ -395,7 +395,9 @@ $(BUILD_DIR)/src/race/player/race_player_properties.o: ASFLAGS := $(filter-out -
 $(BUILD_DIR)/src/demo/main_menu_demo_race_intro_data.o: ASFLAGS := $(filter-out -no-pad-sections,$(ASFLAGS))
 # The title-demo tables end on a 16-byte boundary in both ROM versions.
 $(BUILD_DIR)/src/demo/title_demo_race_intro_data.o: ASFLAGS := $(filter-out -no-pad-sections,$(ASFLAGS))
-$(DESIGNATED_DATA_C_O_FILES): $(BUILD_DIR)/%.o: $(TEXTCONV_DIR)/%.c
+# Explicit BSS sections also need Clang; IDO discards the section attributes.
+EXPLICIT_BSS_C_O_FILES := $(BUILD_DIR)/src/engine/system_runtime_buffers.o
+$(DESIGNATED_DATA_C_O_FILES) $(EXPLICIT_BSS_C_O_FILES): $(BUILD_DIR)/%.o: $(TEXTCONV_DIR)/%.c
 	@mkdir -p $(dir $@)
 	$(PRINTF) "[$(GREEN)   c    $(NO_COL)]  $*.c\n"
 	$(V)$(CC_CHECK) --target=mips-unknown-linux-gnu -mabi=32 -march=mips3 -mno-abicalls -fno-pic -G0 \

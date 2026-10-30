@@ -452,6 +452,15 @@ segments:
       - { type: .bss, vram: 0x8015E5B0, name: ultra/os/timerintr }
       - { type: .bss, vram: 0x8015E5F0, name: ultra/os/exceptasm }
       - { type: .bss, vram: 0x8015E7A0, name: ultra/io/leointerrupt }
+
+  - name: buffers
+    type: code
+    start: 0xE28E0
+    vram: 0x8015F7A0
+    bss_size: 0x29F860
+    subsegments:
+      - { type: .bss, vram: 0x8015F7A0, name: engine/system_runtime_buffers }
+
   # Asset identifiers are shared with US; ROM offsets are JP-specific.
   # Numeric identifiers retain their US names to keep C references shared.
   # course_display_list

@@ -24,10 +24,6 @@ gRaceActionPickupDisplayList = SHARED_RACE_GRAPHICS_SUFFIX_command_000080;
 /* Rookie Mountain overlay address. */
 gRookieMountainBackdropDl = ROOKIE_MOUNTAIN_COURSE_BACKDROP_DISPLAY_LIST_command_000000;
 
-/* Fixed physical/virtual addresses encoded in original data. */
-/* Physical GPU alias of gDepthBuffer (0x80369000), not an image asset. */
-gDepthBufferPhysicalAddress = gDepthBuffer - 0x80000000;
-
 /* Typed slot-zero subobject views used where IDO must retain distinct relocations. */
 gPrimaryCourseUnlockStates = gGameSaveDataBuffer + 0x3F;
 gCourseUnlockScanStart = gGameSaveDataBuffer + 0x1;
@@ -49,20 +45,6 @@ gRaceCamerasEnd = gRaceCameras + 0x2C0;
 
 /* Eight 0x0C slots; existing queue names alias their head words. */
 gModelRenderCallbackQueues = gModelRenderCallbackList;
-
-/* ORI uses an unsigned low half: do not use a carry-adjusted HI16 here. */
-main_BSS_CLEAR_HI = main_BSS_SIZE >> 16;
-main_BSS_CLEAR_LO = main_BSS_SIZE & 0xFFFF;
-ASSERT(main_BSS_SIZE > 0 && (main_BSS_SIZE & 7) == 0, "boot BSS clear requires nonempty 8-byte units")
-ASSERT(buffers_BSS_START >= main_BSS_END, "runtime buffers overlap main BSS")
-ASSERT(buffers_BSS_END <= 0x80400000, "runtime layout exceeds original 4 MB RAM")
-ASSERT((buffers_BSS_START & 15) == 0, "runtime buffers require 16-byte alignment")
-ASSERT((gDepthBuffer & 63) == 0, "depth buffer requires 64-byte alignment")
-ASSERT((gFramebuffers & 63) == 0, "framebuffers require 64-byte alignment")
-ASSERT(entry_ROM_START == 0x1000 && entry_VRAM == 0x80000400, "hardware boot placement changed")
-/* Original IPL3 copies one MB from ROM 0x1000 to the header entry address. */
-ASSERT(main_VRAM - main_ROM_START == entry_VRAM - entry_ROM_START, "main violates IPL3 ROM-to-RAM mapping")
-ASSERT(main_ROM_END <= entry_ROM_START + 0x100000, "main exceeds IPL3 1 MB boot transfer")
 
 /* Typed views of the packed menu-effect data consumed by race intros. */
 gRaceIntroCourseVertices = passAwardLabelFlashTileOffsets + 0x24;
