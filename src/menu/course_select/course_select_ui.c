@@ -92,15 +92,7 @@ s16 gCourseSelectStatsPlayerMarkerLayout[2][4] = { 0xFF88, 0xFFEC, 0xFF88, 0x005
 MenuGlyphScript gCourseSelectUnusedText[] = {
 #endif
     // textconv requires these _() invocations to retain their original line layout.
-#if defined(VERSION_JP)
-const char gCourseSelectUnknownSpeedText[4] = "?";
-const char gCourseSelectUnknownHandlingText[4] = "?";
-const char gCourseSelectUnknownTrickText[4] = "?";
-const char gCourseSelectSpeedFormat[4] = "%d";
-const char gCourseSelectHandlingFormat[4] = "%d";
-const char gCourseSelectTrickFormat[4] = "%d";
-const char gCourseSelectPlayerNumberFormat[4] = "%d";
-#else
+#if defined(VERSION_US)
     // clang-format off
     _("T"),
 };
@@ -214,6 +206,14 @@ s16 gCourseSelectStatsPlayerMarkerLayout[][4] = {
     { 0x0000, 0x0000, 0x0000, 0x0000 },
 };
 #endif
+
+const char gCourseSelectUnknownSpeedText[] = "?";
+const char gCourseSelectUnknownHandlingText[] = "?";
+const char gCourseSelectUnknownTrickText[] = "?";
+const char gCourseSelectSpeedFormat[] = "%d";
+const char gCourseSelectHandlingFormat[] = "%d";
+const char gCourseSelectTrickFormat[] = "%d";
+const char gCourseSelectPlayerNumberFormat[] = "%d";
 
 void drawCourseSelectSnowboardPreviewIn(CourseSelectCoursePreviewActor *arg0) {
     u8 sp2F;
@@ -1316,15 +1316,6 @@ void initCourseSelectCourseListBackdrop(CourseSelectCourseListBackdropActor *arg
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseSelectCourseListBackdrop);
 }
 
-#if defined(VERSION_US)
-const char gCourseSelectUnknownSpeedText[] = "?";
-const char gCourseSelectUnknownHandlingText[] = "?";
-const char gCourseSelectUnknownTrickText[] = "?";
-const char gCourseSelectSpeedFormat[] = "%d";
-const char gCourseSelectHandlingFormat[] = "%d";
-const char gCourseSelectTrickFormat[] = "%d";
-
-#endif
 void drawCourseSelectCourseStats(CourseSelectCourseStatsActor *arg0) {
     s32 i;
     s32 j;
@@ -2231,10 +2222,6 @@ void initCourseSelectExtraCourseIconList(CourseSelectExtraCourseIconListActor *a
     }
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateCourseSelectExtraCourseIconList);
 }
-#if defined(VERSION_US)
-
-const char gCourseSelectPlayerNumberFormat[] = "%d";
-#endif
 
 void drawCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
     s32 j;

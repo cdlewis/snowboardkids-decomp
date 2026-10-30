@@ -142,10 +142,6 @@ RaceSetupSavePromptData gRaceSetupSavePromptData = {
     {
 #endif
         // textconv requires these _() invocations to retain their original line layout.
-#if defined(VERSION_JP)
-const char gRaceSetupPlayerNumberFormat[4] = "%d";
-const char gRaceSetupMoneyFormat[4] = "%6d";
-#endif
         // clang-format off
 #if defined(VERSION_US)
         _("{COLOR:7}PLEASE SELECT\nTHE NUMBER OF\nPLAYERS."),
@@ -247,9 +243,10 @@ RaceSetupSavePromptData gRaceSetupSavePromptData = {
       0x14, 0x00, 0x00, 0x15, 0x16, 0x0E, 0x0F, 0x15, 0x16, 0x0F, 0x14, 0x0F, 0x15, 0x0F, 0x15, 0x17, 0x18,
       0x17, 0x18, 0x17, 0x18, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 };
+#endif
 const char gRaceSetupPlayerNumberFormat[] = "%d";
 const char gRaceSetupMoneyFormat[] = "%6d";
-#endif
+
 void drawRaceSetupPlayerCountPrompt(MenuIntroActor *arg0) {
     s32 i;
     s32 j;

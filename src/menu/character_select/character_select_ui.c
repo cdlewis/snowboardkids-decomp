@@ -44,10 +44,7 @@ u16 gCharacterSelectPlayerMarkerTiles[16] = { 0x0027, 0x0033, 0x002B, 0x002F, 0x
      {
 #endif
             // textconv requires these _() invocations to retain their original line layout.
-#if defined(VERSION_JP)
-const char gCharacterSelectPlayerNumberFormat[4] = "%d";
-const char gCharacterSelectCharacterStatFormat[4] = "%d";
-#else
+#if defined(VERSION_US)
             // clang-format off
             _("{COLOR:7}SELECT YOUR\nCHARACTER."),
         },
@@ -81,8 +78,10 @@ u16 gCharacterSelectPlayerMarkerTiles[] = {
     0x0029, 0x0035, 0x002D, 0x0031, 0x002A, 0x002E, 0x0036, 0x0032,
 };
 
-const char gCharacterSelectPlayerNumberFormat[] = "%d";
 #endif
+
+const char gCharacterSelectPlayerNumberFormat[] = "%d";
+const char gCharacterSelectCharacterStatFormat[] = "%d";
 
 void drawCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0) {
     s32 i;
@@ -859,10 +858,6 @@ void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectPlayerCursorMarkers);
 }
 // clang-format on
-#if defined(VERSION_US)
-
-const char gCharacterSelectCharacterStatFormat[] = "%d";
-#endif
 
 void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPlayerStatsPanelActor *arg0) {
     CharacterSelectUiPlayerCursorActor *controller = gMenuScratch2.playerCursors;

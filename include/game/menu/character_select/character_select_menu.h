@@ -35,10 +35,7 @@ extern s8 gCharacterSelectHighlightedRosterIndices[4];
 
 extern u16 gCharacterSelectIdOrder[];
 extern s16 gCharacterSelectVoiceSoundIds[];
-/* Only JP has separately addressed rodata symbols for these values. */
-#if defined(VERSION_JP)
 extern const f32 gCharacterSelectViewportAspectRatio[];
-#endif
 
 void initCharacterSelectMenu(void);
 void updateCharacterSelectMenu(void);

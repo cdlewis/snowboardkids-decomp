@@ -195,17 +195,7 @@ MenuGlyphScript gCharacterSelectCourseStartGameText[38] = {
 };
 #endif
 
-#if defined(VERSION_JP)
-const char gCharacterSelectCourseStatsScoreFormat[4] = "%4d";
-const char gCharacterSelectCourseBestScoreFormat[4] = "%5d";
-const char gCharacterSelectCourseMedalScoreFormat[4] = "%5d";
-const char gCharacterSelectCoursePlayerRankFormat[4] = "%2d";
-const char gCharacterSelectCourseRecordHitsLabel[4] = "HIT";
-const char gCharacterSelectCourseRecordPointsLabel[4] = "P";
-const char gCharacterSelectRecordMinutesFormat[8] = "%2.2d";
-const char gCharacterSelectRecordSecondsFormat[8] = "%2.2d";
-const char gCharacterSelectRecordCentisecondsFormat[8] = "%2.2d";
-#else
+#if defined(VERSION_US)
 
 u16 gCharacterSelectCourseStatsScoreValues[10] = {
     0x021D, 0x06D6, 0x06AA, 0x0558, 0x05D2, 0x05D2, 0x0666, 0x0680,
@@ -306,6 +296,16 @@ MenuGlyphScript gCharacterSelectCourseStartGameText[44] = {
 };
 
 #endif
+
+const char gCharacterSelectCourseStatsScoreFormat[] = "%4d";
+const char gCharacterSelectCourseBestScoreFormat[] = "%5d";
+const char gCharacterSelectCourseMedalScoreFormat[] = "%5d";
+const char gCharacterSelectCoursePlayerRankFormat[] = "%2d";
+const char gCharacterSelectCourseRecordHitsLabel[4] = "HIT";
+const char gCharacterSelectCourseRecordPointsLabel[4] = "P";
+const char gCharacterSelectRecordMinutesFormat[] = "%2.2d";
+const char gCharacterSelectRecordSecondsFormat[] = "%2.2d";
+const char gCharacterSelectRecordCentisecondsFormat[] = "%2.2d";
 
 void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0) {
 #if defined(VERSION_JP)
@@ -3196,10 +3196,6 @@ void initCharacterSelectCourseTitleCursor(CharacterSelectCourseWidgetActor *arg0
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCourseTitleCursor);
 }
 
-#if defined(VERSION_US)
-const char gCharacterSelectCourseStatsScoreFormat[] = "%4d";
-
-#endif
 void drawCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg0) {
 #if defined(VERSION_US)
     char pad[8];
@@ -3354,12 +3350,6 @@ void initCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg0)
     arg0->transition.bytes.state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCourseStatsBadge);
 }
-#if defined(VERSION_US)
-
-const char gCharacterSelectCourseBestScoreFormat[] = "%5d";
-const char gCharacterSelectCourseMedalScoreFormat[] = "%5d";
-const char gCharacterSelectCoursePlayerRankFormat[] = "%2d";
-#endif
 
 void drawCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor *arg0) {
     s16 *characterIds;
@@ -4092,17 +4082,7 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *act
                         0,
                         recordPalette + 1
                     );
-#if defined(VERSION_JP)
-                    drawMenuAsciiText(
-                        actor->x + 0x28,
-                        (actor->y + (0x14 * rowIndex)) + 8,
-                        gCharacterSelectCourseRecordHitsLabel,
-                        rowPalette,
-                        0x100
-                    );
-#else
-                    drawMenuAsciiText(actor->x + 0x28, (actor->y + (0x14 * rowIndex)) + 8, "HIT", rowPalette, 0x100);
-#endif
+                    drawMenuAsciiText(actor->x + 0x28, (actor->y + (0x14 * rowIndex)) + 8, gCharacterSelectCourseRecordHitsLabel, rowPalette, 0x100);
                     drawMenuSprite(
                         actor->x + 0x48,
                         actor->y + (0x14 * rowIndex),
@@ -4154,17 +4134,7 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *act
                             break;
                         }
                     }
-#if defined(VERSION_JP)
-                    drawMenuAsciiText(
-                        actor->x + 0x40,
-                        (actor->y + (0x14 * rowIndex)) + 8,
-                        gCharacterSelectCourseRecordPointsLabel,
-                        rowPalette,
-                        0x100U
-                    );
-#else
-                    drawMenuAsciiText(actor->x + 0x40, (actor->y + (0x14 * rowIndex)) + 8, "P", rowPalette, 0x100U);
-#endif
+                    drawMenuAsciiText(actor->x + 0x40, (actor->y + (0x14 * rowIndex)) + 8, gCharacterSelectCourseRecordPointsLabel, rowPalette, 0x100U);
                     drawMenuSprite(
                         actor->x + 0x4C,
                         actor->y + (0x14 * rowIndex),
@@ -4375,12 +4345,6 @@ void initCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0) 
     arg0->transition.bytes.state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCourseExitPopup);
 }
-#if defined(VERSION_US)
-
-const char gCharacterSelectRecordMinutesFormat[] = "%2.2d";
-const char gCharacterSelectRecordSecondsFormat[] = "%2.2d";
-const char gCharacterSelectRecordCentisecondsFormat[] = "%2.2d";
-#endif
 
 void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, s32 x, s32 arg2, s32 arg3) {
     char buffer[0x58];

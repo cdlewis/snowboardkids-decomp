@@ -29,10 +29,8 @@
 
 #if defined(VERSION_JP)
 #define CONTROLLER_PAK_GAME_CODE 'NSKJ'
-#define MAIN_MENU_ASPECT_RATIO gMainMenuViewportAspectRatio[0]
 #else
 #define CONTROLLER_PAK_GAME_CODE 'NSKE'
-#define MAIN_MENU_ASPECT_RATIO 1.3333334f
 #endif
 
 #define CONTROLLER_PAK_SAVE_FIELD_OFFSET(field) ((u32) & (((GameSaveData *)0)->field))
@@ -61,9 +59,7 @@ u8 gControllerPakSaveExtNameBytesEnd[0x84] = {
 };
 u8 gMainMenuReturnFromRace = 0;
 
-#if defined(VERSION_JP)
 const f32 gMainMenuViewportAspectRatio[1] = { 1.333333373f };
-#endif
 
 /* Shared controller and menu state, in original BSS address order. */
 u8 gRaceRumbleEnabled;
@@ -798,7 +794,7 @@ void initMainMenu(void) {
     gMainMenuSecretCodeUnlocked = 0;
     gMainMenuSecretCodeStep = 0;
     resetAllViewports();
-    configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, MAIN_MENU_ASPECT_RATIO);
+    configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, gMainMenuViewportAspectRatio[0]);
     gFramebufferRenderInterval.value = 0;
     LOAD_ASSET(_5DB9D0, 0x21);
     LOAD_ASSET(_5DCBE0, 0x25);

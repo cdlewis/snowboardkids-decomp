@@ -167,9 +167,7 @@ u32 gMenuPanelBackdropTexture[16] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFF
                                       0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 #endif
 
-#if defined(VERSION_JP)
-const char gRaceSplitscreenSelectEntryFeeFormat[8] = "%6dG";
-#else
+#if defined(VERSION_US)
 RaceSplitscreenSelectDescriptionScriptTable gRaceSplitscreenSelectDescriptionScripts = {
     {
      {
@@ -204,11 +202,11 @@ u32 gMenuPanelBackdropTexture[16] = {
     0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
 };
 
-const char gRaceSplitscreenSelectEntryFeeFormat[] = "%6dG";
-
 // IDO code generation for this function is sensitive to source line layout.
 #endif
 // clang-format off
+const char gRaceSplitscreenSelectEntryFeeFormat[] = "%6dG";
+
 void drawRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectOptionIconActor *icons) {
     RaceSplitscreenSelectOptionIconActor *savedIcons;
     s32 iconIndex;

@@ -17,20 +17,11 @@
 #include "game/race/player/race_player_input.h"
 #include "game/race/flow/race_flow.h"
 
-#if defined(VERSION_JP)
-#define DEMO_ASPECT_RATIO(symbol) ((symbol)[0])
-#else
-#define DEMO_ASPECT_RATIO(symbol) 1.333333373f
-#endif
-
-#if defined(VERSION_JP)
 const f32 gDemoRaceFullscreenAspectRatio[1] = { 1.333333373f };
 const f32 gDemoRaceTopLeftAspectRatio[1] = { 1.333333373f };
 const f32 gDemoRaceBottomLeftAspectRatio[1] = { 1.333333373f };
 const f32 gDemoRaceTopRightAspectRatio[1] = { 1.333333373f };
 const f32 gDemoRaceBottomRightAspectRatio[4] = { 1.333333373f };
-
-#endif
 
 void initMainMenuDemoRaceIntro(void) {
     RacePlayer *players;
@@ -124,14 +115,14 @@ void initMainMenuDemoRaceIntro(void) {
     initRaceHud();
 
     if (gPlayerCount == 1) {
-        configureViewport(0, 0xA0, 0x78, 0x120U, 0xD0U, 0x140U, 0xF0U, DEMO_ASPECT_RATIO(gDemoRaceFullscreenAspectRatio));
+        configureViewport(0, 0xA0, 0x78, 0x120U, 0xD0U, 0x140U, 0xF0U, gDemoRaceFullscreenAspectRatio[0]);
         gRacePlayerHudStatuses[0].active = 1;
         gFramebufferRenderInterval.value = 0;
     } else {
-        configureViewport(0, 0x57, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, DEMO_ASPECT_RATIO(gDemoRaceTopLeftAspectRatio));
-        configureViewport(1, 0x57, 0xAD, 0x90U, 0x68U, 0xA0U, 0x78U, DEMO_ASPECT_RATIO(gDemoRaceBottomLeftAspectRatio));
-        configureViewport(2, 0xE9, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, DEMO_ASPECT_RATIO(gDemoRaceTopRightAspectRatio));
-        configureViewport(3, 0xE9, 0xAD, 0x90U, 0x68U, 0xA0U, 0x78U, DEMO_ASPECT_RATIO(gDemoRaceBottomRightAspectRatio));
+        configureViewport(0, 0x57, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, gDemoRaceTopLeftAspectRatio[0]);
+        configureViewport(1, 0x57, 0xAD, 0x90U, 0x68U, 0xA0U, 0x78U, gDemoRaceBottomLeftAspectRatio[0]);
+        configureViewport(2, 0xE9, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, gDemoRaceTopRightAspectRatio[0]);
+        configureViewport(3, 0xE9, 0xAD, 0x90U, 0x68U, 0xA0U, 0x78U, gDemoRaceBottomRightAspectRatio[0]);
         gRaceCameras[0].initialized.signedValue = 1;
         gRaceCameras[1].initialized.signedValue = 1;
         gRaceCameras[2].initialized.signedValue = 1;

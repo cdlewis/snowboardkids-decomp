@@ -218,40 +218,72 @@ u32 gRaceCoursePlayerPathOffsetData[0x532] = {
     0x09090909, 0x09090909, 0x09090909, 0x09090909, 0x09090909, 0x09090909, 0x09090909
 };
 
+const char gRaceHudChallengeTimeLimitMinutesFormat[] = "%2.2d";
+const char gRaceHudChallengeTimeLimitSecondsFormat[] = "%2.2d";
+const char gRaceHudChallengeTimeLimitFractionFormat[] = "%2.2d";
+const char gRaceHudTrickAttackPointTotalFormat[] = "%4d";
+const char gRaceHudTrickAttackSecondaryCounterFormat[] = "%2d";
+const char gRaceHudTrickAttackPointLabel[] =
 #if defined(VERSION_JP)
-const char gRaceHudChallengeTimeLimitMinutesFormat[8] = "%2.2d";
-const char gRaceHudChallengeTimeLimitSecondsFormat[8] = "%2.2d";
-const char gRaceHudChallengeTimeLimitFractionFormat[8] = "%2.2d";
-const char gRaceHudTrickAttackPointTotalFormat[4] = "%4d";
-const char gRaceHudTrickAttackSecondaryCounterFormat[4] = "%2d";
-const char gRaceHudTrickAttackPointLabel[8] = "POINT";
-const char gRaceHudTrickAttackTimeLimitLabel[12] = "TIME LIMIT";
-const char gRaceHudScoreAttackTimeLimitMinutesFormat[8] = "%2.2d";
-const char gRaceHudScoreAttackTimeLimitSecondsFormat[8] = "%2.2d";
-const char gRaceHudScoreAttackTimeLimitFractionFormat[8] = "%2.2d";
-const char gRaceHudScoreAttackPointTotalFormat[4] = "%2d";
-const char gRaceHudScoreAttackTimeLimitLabel[12] = "TIME LIMIT";
-const char gRaceHudScoreAttackPointTargetFormat[4] = "/%d";
-const char gRaceHudTargetTimeChallengeMinutesFormat[8] = "%2.2d";
-const char gRaceHudTargetTimeChallengeSecondsFormat[8] = "%2.2d";
-const char gRaceHudTargetTimeChallengeFractionFormat[8] = "%2.2d";
-const char gRaceHudTargetTimeChallengeSecondaryCounterFormat[4] = "%d";
-const char gRaceHudTargetTimeChallengeLapTimeLabel[12] = "LAP TIME";
-const char gRaceHudTargetTimeChallengeTargetTimeLabel[12] = "TARGET TIME";
-const char gRaceHudTargetTimeChallengeTargetTimeFormat[20] = "%2.2d'%2.2d\"%2.2d";
-const char gRaceHudTargetTimeChallengeLapProgressFormat[8] = "*%d/%d";
-const char gRaceHudTimeTrialMinutesFormat[8] = "%2.2d";
-const char gRaceHudTimeTrialSecondsFormat[8] = "%2.2d";
-const char gRaceHudTimeTrialFractionFormat[8] = "%2.2d";
-const char gRaceHudTimeTrialLapTimeLabel[12] = "LAP TIME";
-const char gRaceHudTimeTrialBestLapLabel[12] = "BEST LAP";
-const char gRaceHudTimeTrialBestLapFormat[20] = "%2.2d'%2.2d\"%2.2d";
-const char gRaceHudSinglePlayerScoreFormat[8] = "%5ld";
-const char gRaceHudTrainingScoreFormat[8] = "%5ld";
-const char gRaceHudTwoPlayerScoreFormat[8] = "%5ld";
-const char gRaceHudMultiplayerScoreFormat[8] = "%5ld";
-
+    "POINT";
+#else
+    "Point";
 #endif
+const char gRaceHudTrickAttackTimeLimitLabel[] =
+#if defined(VERSION_JP)
+    "TIME LIMIT";
+#else
+    "Time Limit";
+#endif
+const char gRaceHudScoreAttackTimeLimitMinutesFormat[] = "%2.2d";
+const char gRaceHudScoreAttackTimeLimitSecondsFormat[] = "%2.2d";
+const char gRaceHudScoreAttackTimeLimitFractionFormat[] = "%2.2d";
+const char gRaceHudScoreAttackPointTotalFormat[] = "%2d";
+const char gRaceHudScoreAttackTimeLimitLabel[] =
+#if defined(VERSION_JP)
+    "TIME LIMIT";
+#else
+    "Time Limit";
+#endif
+const char gRaceHudScoreAttackPointTargetFormat[] = "/%d";
+const char gRaceHudTargetTimeChallengeMinutesFormat[] = "%2.2d";
+const char gRaceHudTargetTimeChallengeSecondsFormat[] = "%2.2d";
+const char gRaceHudTargetTimeChallengeFractionFormat[] = "%2.2d";
+const char gRaceHudTargetTimeChallengeSecondaryCounterFormat[] = "%d";
+const char gRaceHudTargetTimeChallengeLapTimeLabel[] =
+#if defined(VERSION_JP)
+    "LAP TIME";
+#else
+    "Lap Time";
+#endif
+const char gRaceHudTargetTimeChallengeTargetTimeLabel[] =
+#if defined(VERSION_JP)
+    "TARGET TIME";
+#else
+    "Target Time";
+#endif
+const char gRaceHudTargetTimeChallengeTargetTimeFormat[] = "%2.2d'%2.2d\"%2.2d";
+const char gRaceHudTargetTimeChallengeLapProgressFormat[] = "*%d/%d";
+const char gRaceHudTimeTrialMinutesFormat[] = "%2.2d";
+const char gRaceHudTimeTrialSecondsFormat[] = "%2.2d";
+const char gRaceHudTimeTrialFractionFormat[] = "%2.2d";
+const char gRaceHudTimeTrialLapTimeLabel[] =
+#if defined(VERSION_JP)
+    "LAP TIME";
+#else
+    "Lap Time";
+#endif
+const char gRaceHudTimeTrialBestLapLabel[] =
+#if defined(VERSION_JP)
+    "BEST LAP";
+#else
+    "Best Lap";
+#endif
+const char gRaceHudTimeTrialBestLapFormat[] = "%2.2d'%2.2d\"%2.2d";
+const char gRaceHudSinglePlayerScoreFormat[] = "%5ld";
+const char gRaceHudTrainingScoreFormat[] = "%5ld";
+const char gRaceHudTwoPlayerScoreFormat[] = "%5ld";
+const char gRaceHudMultiplayerScoreFormat[] = "%5ld";
 s16 gRaceHudMode;
 s16 gRaceHudCoinSpinnerFrame;
 RaceTimer gRaceElapsedTimer;
@@ -300,16 +332,8 @@ void initRaceHud(void) {
     gRaceChallengeFailed = 0;
 }
 
-#if defined(VERSION_US)
-const char gRaceHudChallengeTimeLimitMinutesFormat[] = "%2.2d";
-const char gRaceHudChallengeTimeLimitSecondsFormat[] = "%2.2d";
-const char gRaceHudChallengeTimeLimitFractionFormat[] = "%2.2d";
-const char gRaceHudTrickAttackPointTotalFormat[] = "%4d";
-const char gRaceHudTrickAttackSecondaryCounterFormat[] = "%2d";
-
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-#endif
 void drawTrickAttackChallengeHud(void *arg0) {
     s32 x;
 /* The two ROMs home the shared scratch on opposite sides of buffer. */
@@ -467,26 +491,14 @@ void drawTrickAttackChallengeHud(void *arg0) {
     }
 }
 // clang-format on
-#if defined(VERSION_US)
 
-const char gRaceHudTrickAttackPointLabel[] = "Point";
-const char gRaceHudTrickAttackTimeLimitLabel[] = "Time Limit";
-
-#endif
 void drawTrickAttackChallengeLabels(void *arg0) {
     drawMenuAsciiTextDefaultScale(0x60, -0x61, gRaceHudTrickAttackPointLabel, 5);
     drawMenuAsciiTextDefaultScale(0x38, 0x47, gRaceHudTrickAttackTimeLimitLabel, 5);
 }
 
-#if defined(VERSION_US)
-const char gRaceHudScoreAttackTimeLimitMinutesFormat[] = "%2.2d";
-const char gRaceHudScoreAttackTimeLimitSecondsFormat[] = "%2.2d";
-const char gRaceHudScoreAttackTimeLimitFractionFormat[] = "%2.2d";
-const char gRaceHudScoreAttackPointTotalFormat[] = "%2d";
-
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-#endif
 void drawScoreAttackChallengeHud(void *arg0) {
     s32 x;
 /* The two ROMs home the shared scratch on opposite sides of buffer. */
@@ -647,12 +659,7 @@ void drawScoreAttackChallengeHud(void *arg0) {
     }
 }
 // clang-format on
-#if defined(VERSION_US)
 
-const char gRaceHudScoreAttackTimeLimitLabel[] = "Time Limit";
-const char gRaceHudScoreAttackPointTargetFormat[] = "/%d";
-
-#endif
 void drawScoreAttackChallengeLabels(void *arg0) {
     char sp18[0x20];
 
@@ -660,13 +667,6 @@ void drawScoreAttackChallengeLabels(void *arg0) {
     sprintf(sp18, gRaceHudScoreAttackPointTargetFormat, gRacePlayers[0].state.scoreAttackPointTarget);
     drawMenuAsciiTextDefaultScale(0x70, -0x48, sp18, 6);
 }
-#if defined(VERSION_US)
-
-const char gRaceHudTargetTimeChallengeMinutesFormat[] = "%2.2d";
-const char gRaceHudTargetTimeChallengeSecondsFormat[] = "%2.2d";
-const char gRaceHudTargetTimeChallengeFractionFormat[] = "%2.2d";
-const char gRaceHudTargetTimeChallengeSecondaryCounterFormat[] = "%d";
-#endif
 
 void drawTargetTimeChallengeHud(void *arg0) {
     char buffer[12];
@@ -712,13 +712,6 @@ void drawTargetTimeChallengeHud(void *arg0) {
     }
 }
 
-#if defined(VERSION_US)
-const char gRaceHudTargetTimeChallengeLapTimeLabel[] = "Lap Time";
-const char gRaceHudTargetTimeChallengeTargetTimeLabel[] = "Target Time";
-const char gRaceHudTargetTimeChallengeTargetTimeFormat[] = "%2.2d'%2.2d\"%2.2d";
-const char gRaceHudTargetTimeChallengeLapProgressFormat[] = "*%d/%d";
-
-#endif
 void drawTargetTimeChallengeLabels(void *arg0) {
     char sp28[0x20];
     RaceTimer *targetTime;
@@ -747,12 +740,6 @@ void drawTargetTimeChallengeLabels(void *arg0) {
     drawMenuAsciiTextDefaultScale(-0x68, -0x48, sp28, 6);
 }
 
-#if defined(VERSION_US)
-const char gRaceHudTimeTrialMinutesFormat[] = "%2.2d";
-const char gRaceHudTimeTrialSecondsFormat[] = "%2.2d";
-const char gRaceHudTimeTrialFractionFormat[] = "%2.2d";
-
-#endif
 void drawTimeTrialHud(void *arg0) {
     char buffer[0xC];
     s32 x;
@@ -831,12 +818,6 @@ void drawTimeTrialHud(void *arg0) {
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x2A);
 }
 
-#if defined(VERSION_US)
-const char gRaceHudTimeTrialLapTimeLabel[] = "Lap Time";
-const char gRaceHudTimeTrialBestLapLabel[] = "Best Lap";
-const char gRaceHudTimeTrialBestLapFormat[] = "%2.2d'%2.2d\"%2.2d";
-
-#endif
 void drawTimeTrialLabels(void *unused) {
     char bestLapText[0x20];
 
@@ -851,10 +832,6 @@ void drawTimeTrialLabels(void *unused) {
     );
     drawMenuAsciiTextDefaultScale(0x48, -0x58, bestLapText, 7);
 }
-#if defined(VERSION_US)
-
-const char gRaceHudSinglePlayerScoreFormat[] = "%5ld";
-#endif
 
 void drawSinglePlayerRaceHud(void *arg0) {
     s32 palette;
@@ -949,10 +926,6 @@ void drawSinglePlayerRaceHud(void *arg0) {
 void noopRaceHudCallback(void *arg0) {
 }
 
-#if defined(VERSION_US)
-const char gRaceHudTrainingScoreFormat[] = "%5ld";
-
-#endif
 void drawTrainingRaceHud(void *arg0) {
     s32 palette;
     s32 i;
@@ -1023,12 +996,8 @@ void drawTrainingRaceHud(void *arg0) {
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x29);
 }
 
-#if defined(VERSION_US)
-const char gRaceHudTwoPlayerScoreFormat[] = "%5ld";
-
 /* Matching-sensitive: separate stack objects provide buffer/end boundaries.
  * Portable code should use explicit storage and a five-character draw bound. */
-#endif
 void drawTwoPlayerRaceHud(void *arg0) {
     volatile u8 padding[0x18];
     s32 y;
@@ -1201,10 +1170,6 @@ void drawMultiplayerRaceHud(void *arg0) {
     }
     drawAssetTableSprite(0x14, -0x30, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x1A);
 }
-#if defined(VERSION_US)
-
-const char gRaceHudMultiplayerScoreFormat[] = "%5ld";
-#endif
 
 void drawMultiplayerScoreAndLapCounter(void *arg0) {
     s32 x;

@@ -54,9 +54,7 @@ RaceTypeSelectDescriptionScriptTable gRaceTypeSelectPortraitScripts = {
 #endif
 };
 
-#if defined(VERSION_JP)
-const char gRaceTypeSelectEntryFeeFormat[8] = "%6dG";
-#else
+#if defined(VERSION_US)
 RaceTypeSelectDescriptionScriptTable gRaceTypeSelectPortraitScripts = {
     {
      {
@@ -80,11 +78,11 @@ RaceTypeSelectDescriptionScriptTable gRaceTypeSelectPortraitScripts = {
     },
 };
 
-const char gRaceTypeSelectEntryFeeFormat[] = "%6dG";
-
 // IDO code generation for this function is sensitive to source line layout.
 #endif
 // clang-format off
+const char gRaceTypeSelectEntryFeeFormat[] = "%6dG";
+
 void drawRaceTypeSelectOptionIcons(RaceTypeSelectOptionIconActor *arg0) {
     RaceTypeSelectOptionIconActor *savedArg;
     s32 i;

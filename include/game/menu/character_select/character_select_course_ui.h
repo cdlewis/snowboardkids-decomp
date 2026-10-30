@@ -119,11 +119,8 @@ extern CharacterSelectCourseFrameTileMap gCharacterSelectCoursePreviewFrameTileM
 extern MenuGlyphScript gCharacterSelectCourseStartGameText[];
 extern const char gCharacterSelectCourseStatsScoreFormat[];
 extern u16 gCharacterSelectCourseStatsScoreValues[];
-/* JP has named label storage; US uses inline string literals. */
-#if defined(VERSION_JP)
 extern const char gCharacterSelectCourseRecordHitsLabel[];
 extern const char gCharacterSelectCourseRecordPointsLabel[];
-#endif
 
 void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0);
 void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *arg0);

@@ -16,10 +16,7 @@
 #include "game/engine/system_runtime.h"
 #include "game/engine/controller_input.h"
 
-#if defined(VERSION_JP)
 const f32 gControllerPakFileDeleteViewportAspectRatio[4] = { 1.333333373f };
-
-#endif
 ControllerPakMenuState gControllerPakMenuState;
 OSPfsState gControllerPakFileStates[16];
 s32 gControllerPakFreeBytes;
@@ -32,11 +29,7 @@ void initControllerPakFileDeleteFlow(void) {
         return;
     }
     resetAllViewports();
-#if defined(VERSION_JP)
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, gControllerPakFileDeleteViewportAspectRatio[0]);
-#else
-    configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
-#endif
     gFramebufferRenderInterval.value = 0;
     gCurrentGameTask->callbackData0 = 0;
     gCurrentGameTask->callbackData1 = 0;

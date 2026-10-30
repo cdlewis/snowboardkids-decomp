@@ -137,12 +137,7 @@ Vec2s gCoursePreviewCloseSparkleOffsets[6] = { 0x0003, 0xFFFC, 0x000C, 0xFFFE, 0
 Vec2s gCoursePreviewCloseSparkleMirrorStart[2] = { 0x0000 };
 #endif
 
-#if defined(VERSION_JP)
-const char gShopMenuMoneyFormat[8] = "%6dG";
-const char gCourseUnlockPriceFormat6[8] = "%6dG";
-const char gCourseUnlockPriceFormat5[8] = "%5dG";
-const char gCourseUnlockPriceFormat4[8] = "%4dG";
-#else
+#if defined(VERSION_US)
 s16 gShopMenuSparkleInitTable[16] = {
     0x0058, 0xFFC8, 0x0045, 0x0058, 0xFFB8, 0x002F, 0x0058, 0xFFD8,
     0x004E, 0x0038, 0xFFD8, 0x0057, 0x0038, 0xFFB8, 0x0039, 0x0000,
@@ -163,6 +158,11 @@ Vec2s gCoursePreviewCloseSparkleMirrorStart[2] = {
 // IDO code generation for this function is sensitive to source line layout.
 #endif
 // clang-format off
+const char gShopMenuMoneyFormat[] = "%6dG";
+const char gCourseUnlockPriceFormat6[] = "%6dG";
+const char gCourseUnlockPriceFormat5[] = "%5dG";
+const char gCourseUnlockPriceFormat4[] = "%4dG";
+
 void drawShopMenuModeChoiceRows(ShopMenuRowActor *actor) {
     ShopMenuRowActor *savedActor;
     ShopMenuRowActor *rows;
@@ -189,14 +189,7 @@ void drawShopMenuModeChoiceRows(ShopMenuRowActor *actor) {
         } while (rowIndex < savedActor->visibleRowCount);
     }
 }
-#if defined(VERSION_US)
 // clang-format on
-
-const char gShopMenuMoneyFormat[] = "%6dG";
-const char gCourseUnlockPriceFormat6[] = "%6dG";
-const char gCourseUnlockPriceFormat5[] = "%5dG";
-const char gCourseUnlockPriceFormat4[] = "%4dG";
-#endif
 
 void updateShopMenuModeChoiceRows(ShopMenuRowActor *arg0) {
     s32 i;
