@@ -31,11 +31,11 @@ def graphics_layout(source):
 
 
 def runtime_index_inputs(source, build_dir, *, palettes=True, snowboards=False):
-    inputs = [('menu/renderer', name) for name in ('menu_renderer', 'menu_render_utils')] if palettes else []
+    inputs = [('src/us', 'menu/renderer', name) for name in ('menu_renderer', 'menu_render_utils')] if palettes else []
     if snowboards:
-        inputs.append(('race/player', 'race_player_model_renderer'))
-    for directory, name in inputs:
-        original = f'{build_dir}/src.us/{directory}/{name}.o'
+        inputs.append(('src', 'race/player', 'race_player_model_renderer'))
+    for source_root, directory, name in inputs:
+        original = f'{build_dir}/{source_root}/{directory}/{name}.o'
         if original not in source:
             raise ValueError(f'{name}: missing original renderer linker input')
         source = source.replace(original, f'{build_dir}/runtime-indices/{name}.o')

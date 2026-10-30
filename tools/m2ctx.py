@@ -22,8 +22,9 @@ CPP_FLAGS = [
 
 def import_c_file(in_file, jp=False):
     rel_file = os.path.relpath(in_file, ROOT_DIR)
-    source_root = rel_file.split(os.sep)[0]
-    source_include = "-I" + (source_root if source_root in ("src", "src.us", "src.jp") else "src.us")
+    parts = rel_file.split(os.sep)
+    source_root = os.path.join(*parts[:2]) if parts[:2] in (["src", "us"], ["src", "jp"]) else parts[0]
+    source_include = "-I" + (source_root if source_root in ("src", "src/us", "src/jp") else "src/us")
     cpp_flags = CPP_FLAGS + (["-DVERSION_JP"] if jp else ["-DVERSION_US"])
     macro_cmd = ["gcc", "-E", "-P", "-dM", source_include, *cpp_flags, rel_file]
     preprocess_cmd = ["gcc", "-E", "-P", source_include, *cpp_flags, rel_file]

@@ -11,7 +11,7 @@ class RedundantExternFixerTests(unittest.TestCase):
     def setUp(self):
         self.temp_dir = tempfile.TemporaryDirectory()
         self.root = Path(self.temp_dir.name)
-        (self.root / "src.us").mkdir()
+        (self.root / "src/us").mkdir(parents=True)
         (self.root / "include" / "game").mkdir(parents=True)
 
     def tearDown(self):
@@ -36,7 +36,7 @@ class RedundantExternFixerTests(unittest.TestCase):
             "void drawThing(s32 id, void (*callback)(void));\n",
         )
         source = self.write(
-            "src.us/render_user.c",
+            "src/us/render_user.c",
             '#include "common.h"\n\n'
             "extern void drawThing(s32 id,\n"
             "                          void (*callback)(void));\n"
@@ -57,7 +57,7 @@ class RedundantExternFixerTests(unittest.TestCase):
     def test_reuses_an_existing_include(self):
         self.write("include/game/task.h", "void runTask(void);\n")
         source = self.write(
-            "src.us/task_user.c",
+            "src/us/task_user.c",
             '#include "game/task.h"\n\nextern void runTask(void);\n',
         )
 
@@ -72,7 +72,7 @@ class RedundantExternFixerTests(unittest.TestCase):
             "void runTask(void);\nvoid callbackTarget(void);\n",
         )
         source = self.write(
-            "src.us/task_user.c",
+            "src/us/task_user.c",
             "/* extern void runTask(void); */\n"
             "extern s32 runTaskCount;\n"
             "extern void (*callbackTarget)(void);\n",
@@ -83,7 +83,7 @@ class RedundantExternFixerTests(unittest.TestCase):
     def test_ignores_function_pointer_array_variables(self):
         self.write("include/game/task.h", "void callbackTarget(void);\n")
         source = self.write(
-            "src.us/task_user.c",
+            "src/us/task_user.c",
             "extern void (*callbackTarget[])(void);\n",
         )
 
@@ -93,7 +93,7 @@ class RedundantExternFixerTests(unittest.TestCase):
         self.write("include/game/one.h", "void runTask(void);\n")
         self.write("include/game/two.h", "void runTask(void);\n")
         source = self.write(
-            "src.us/task_user.c",
+            "src/us/task_user.c",
             '#include "game/two.h"\n\nextern void runTask(void);\n',
         )
 
@@ -103,7 +103,7 @@ class RedundantExternFixerTests(unittest.TestCase):
     def test_reports_equal_header_choices_as_ambiguous(self):
         self.write("include/game/one.h", "void runTask(void);\n")
         self.write("include/game/two.h", "void runTask(void);\n")
-        source = self.write("src.us/task_user.c", "extern void runTask(void);\n")
+        source = self.write("src/us/task_user.c", "extern void runTask(void);\n")
 
         violations = self.violations(source)
         self.assertIsNone(violations[0].selected_header)
@@ -114,7 +114,7 @@ class RedundantExternFixerTests(unittest.TestCase):
         self.write("include/game/player.h", "void updatePlayer(void);\n")
         self.write("include/game/shared.h", "void updatePlayer(void);\n")
         source = self.write(
-            "src.us/player.c",
+            "src/us/player.c",
             "extern void updatePlayer(void);\n",
         )
 
@@ -128,7 +128,7 @@ class RedundantExternFixerTests(unittest.TestCase):
             "void rotate(void *matrix, s16 x, s16 y);\n",
         )
         source = self.write(
-            "src.us/math_user.c",
+            "src/us/math_user.c",
             "extern void calculate(void *value);\n"
             "extern void rotate(void *matrix, s16 x, s16 y, ...);\n",
         )
@@ -142,7 +142,7 @@ class RedundantExternFixerTests(unittest.TestCase):
             "void rotateYX(void *matrix, s16 x, s16 y);\n",
         )
         source = self.write(
-            "src.us/math_user.c",
+            "src/us/math_user.c",
             "extern void rotateX(void *matrix, s16 angle);\n"
             "extern void rotateYX(void *matrix, s16 x, s16 y, ...);\n",
         )
@@ -155,7 +155,7 @@ class RedundantExternFixerTests(unittest.TestCase):
             "void osInitialize(void);\n",
         )
         source = self.write(
-            "src.us/runtime.c",
+            "src/us/runtime.c",
             "extern void osInitialize(void);\n",
         )
 
@@ -170,7 +170,7 @@ class RedundantExternFixerTests(unittest.TestCase):
 
     def test_moves_late_same_file_forward_declaration(self):
         source = self.write(
-            "src.us/sound.c",
+            "src/us/sound.c",
             '#include "game/sound.h"\n\n'
             "void firstFunction(void) {\n"
             "}\n\n"
@@ -200,7 +200,7 @@ class RedundantExternFixerTests(unittest.TestCase):
             "void multiply(FixedMatrix3s left, FixedMatrix3s right);\n",
         )
         source = self.write(
-            "src.us/math_user.c",
+            "src/us/math_user.c",
             "extern void multiply(void *left, void *right);\n",
         )
 
@@ -218,7 +218,7 @@ class RedundantExternFixerTests(unittest.TestCase):
             "void multiply(Matrix left, Matrix right);\n",
         )
         source = self.write(
-            "src.us/math_user.c",
+            "src/us/math_user.c",
             "extern void rotate(void *matrix, s16 x, s16 y, ...);\n"
             "extern void multiply(void *left, void *right);\n",
         )
@@ -231,7 +231,7 @@ class RedundantExternFixerTests(unittest.TestCase):
 
     def test_moves_forward_declaration_outside_non_matching_block(self):
         source = self.write(
-            "src.us/compress.c",
+            "src/us/compress.c",
             '#include "game/compress.h"\n\n'
             '#pragma GLOBAL_ASM("compress.s")\n'
             "#ifdef NON_MATCHING\n"

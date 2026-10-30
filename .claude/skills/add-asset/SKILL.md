@@ -208,7 +208,7 @@ Example batch of assets:
 
 ## Tips
 
-- Use `grep` to find all instances of a raw address pattern: `grep -r "0x0045B130" src.us/`
+- Use `grep` to find all instances of a raw address pattern: `grep -r "0x0045B130" src/us/`
 - When converting many addresses, consider using `sed` for batch replacements
 - Always verify the numerical order in yaml - hexadecimal values can be tricky to sort manually
 - Null pointers (`0x00000000`) should not be converted to assets

@@ -1,7 +1,8 @@
 # Multi-version development
 
 Select the region with `VERSION=us|jp`; US is the default. Shared sources live in
-`src`, regional sources in `src.us` and `src.jp`, and shared headers in `include`. Builds define
+`src`, regional sources in `src/us` and `src/jp`, and shared headers in
+`include`. Builds define
 `VERSION_US` or `VERSION_JP` respectively.
 
 ## Build and verify
@@ -24,7 +25,8 @@ its original SHA1 checksum. The regions have separate build outputs.
 | Relocations | `reloc_addrs.txt` | `reloc_addrs.jp.txt` |
 | Generated assembly | `asm/` | `asm.jp/` |
 | Extracted assets | `assets/` | `assets.jp/` |
-| Default C source directory | `src.us/` | `src.jp/` |
+| Shared source root | `src/` | `src/` |
+| Unmigrated regional sources | `src/us/` | `src/jp/` |
 | Build directory | `build/` | `build/jp/` |
 | Generated linker script | `snowboardkids.ld` | `snowboardkids.jp.ld` |
 | Generated unresolved symbols | `undefined_*_auto.txt` | `undefined_*_auto.jp.txt` |
@@ -42,26 +44,39 @@ along with libmus's standalone sample and DMA sources. Libultra compiler and
 assembler settings apply to both shared and regional objects. Differing library
 sources and libmus fragments included by regional players remain regional.
 
+Files that differed only in comments, whitespace, or declaration placement use
+one shared form. Shared title-demo initialization retains a `VERSION_JP` branch
+for its local `register` declaration to preserve the original register allocation.
+Course-select BSS tables and player-property data retain their special assembler
+rules, and the optional snowboard renderer builds from its shared source.
+
 Identical source text can still depend on regional content: the title-demo data
 file remains regional because it includes different player snapshot tables.
 Spatial math shares its source while retaining a JP-only object padding trim.
 
-To migrate another file, move one copy into `src/`, remove both regional copies,
-and give its `c` subsegment `dir: ../src` in both YAML configurations. This path
-is relative to each config's regional `src_path`. For example:
+Both Splat configurations use `src_path: src`. Shared files have ordinary
+subsegments with no directory override:
 
 ```yaml
-- { start: 0x98680, type: c, name: math/fixed_point_math, dir: ../src }
+- [0x98680, c, math/fixed_point_math]
 ```
 
-Keep each region's existing ROM start. Associated `.data`, `.rodata`, and `.bss`
-subsegments resolve through the C sibling to the shared object automatically.
-Objects remain separate: `build/src/` for US and `build/jp/src/` for JP.
+Unmigrated files keep their logical segment names and use `dir: us` or `dir: jp`:
 
-For standalone data files without a `c` sibling, set `dir: ../src` on their
-`.data` or `.rodata` subsegment instead. Handwritten assembly uses the same
-override on its `hasm` subsegment; keep any IDO assembler rules pointed at the
-shared source path.
+```yaml
+- { start: 0x9A2A0, type: c, name: engine/system_runtime, dir: us }
+```
+
+To migrate another file, move one copy out of its regional subfolder, remove the
+other regional copy, and remove the directory overrides in both YAMLs. Keep each
+region's existing ROM start. Associated `.data`, `.rodata`, and `.bss` subsegments
+resolve through their C sibling; standalone data and handwritten assembly entries
+also need their directory overrides removed when their sources become shared.
+
+Objects remain separate: shared files build under `build/src/` for US and
+`build/jp/src/` for JP. Unmigrated files build under `build/src/us/` and
+`build/jp/src/jp/`, respectively. RSP microcode remains regional, including its
+extracted binary paths under `assets/us/rsp/` and `assets.jp/jp/rsp/`.
 
 Preserve any per-file compiler flags or section postprocessing when changing
 object paths. Use `#if defined(VERSION_JP)` or `VERSION_US` for actual regional

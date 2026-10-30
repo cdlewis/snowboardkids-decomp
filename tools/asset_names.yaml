@@ -128,17 +128,17 @@ renames:
   - old: _245A80
     name: SHARED_UI_SPRITES
     rom_start: 0x245A80
-    evidence: "src.us/race/ui/race_hud.c and menu loaders"
+    evidence: "src/us/race/ui/race_hud.c and menu loaders"
 
   - old: _ADDR_2002660
     name: PAN_DISPLAY_LIST
     rom_start: 0x149F70
-    evidence: "src.us/race/ui/race_ui_effects.c: renderGhostSlowdownActor"
+    evidence: "src/us/race/ui/race_ui_effects.c: renderGhostSlowdownActor"
 
   - old: _275A90
     name: SOUND_POINTER_BANK
     rom_start: 0x275A90
-    evidence: "src.us/audio/sound_manager.c: init.soundBank"
+    evidence: "src/us/audio/sound_manager.c: init.soundBank"
 
   - old: DIZZY_LAND_TRIPLE_PARTICLE_CENTER_DISPLAY_LIST
     name: DIZZY_LAND_CAROUSEL_CANOPY_DISPLAY_LIST

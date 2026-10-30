@@ -247,12 +247,12 @@ elif [ "$BOOTSTRAP" = true ]; then
         echo "// file is blank because m2c is not installed" >> "$created_dir/base.c"
     else
         # Determine the C file path from the ASM path
-        # asm/nonmatchings/10AD0/func_8000FED0_10AD0.s -> src.us/10AD0.c
-        # asm/nonmatchings/levels/crazy_jungle_boss/func_800BB2B0_ABAE0.s -> src.us/levels/crazy_jungle_boss.c
+        # asm/nonmatchings/10AD0/func_8000FED0_10AD0.s -> src/us/10AD0.c
+        # asm/nonmatchings/levels/crazy_jungle_boss/func_800BB2B0_ABAE0.s -> src/us/levels/crazy_jungle_boss.c
         ASM_DIR=$(dirname "$ASM_PATH")
         # Select the region and remove the assembly-directory prefix
-        SOURCE_ROOT=src.us
-        [[ "$ASM_DIR" != asm.jp/* ]] || SOURCE_ROOT=src.jp
+        SOURCE_ROOT=src/us
+        [[ "$ASM_DIR" != asm.jp/* ]] || SOURCE_ROOT=src/jp
         RELATIVE_DIR=${ASM_DIR#asm.jp/}
         RELATIVE_DIR=${RELATIVE_DIR#asm/}
         RELATIVE_DIR=${RELATIVE_DIR#nonmatchings/}
@@ -301,7 +301,7 @@ elif [ "$BOOTSTRAP" = true ]; then
     fi
 else
     # Use temp.c as before
-    cp src.us/temp.c "$created_dir/base.c"
+    cp src/us/temp.c "$created_dir/base.c"
 fi
 cat "${CLAUDE_DIR}/prelude.inc" "${CLAUDE_DIR}/../../include/macro.inc" "$ASM_PATH" > "$created_dir/target.s"
 CROSS="$(find_cross_prefix)"

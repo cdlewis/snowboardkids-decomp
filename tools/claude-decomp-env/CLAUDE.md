@@ -16,7 +16,7 @@ Specifically, the subagent should:
 
 <subagent-instructions>
 1. Consult `DECOMPILATION_LEARNINGS.md`. Use its headings and the patterns visible in `base.c` and `target.s` to select the sections relevant to this function. Record a compact digest in `LEARNINGS.md` that names each relevant section, explains why it applies, and states the concrete matching technique to try. Include this digest in your report. Do not copy unrelated sections or merely say that the file was read.
-2. Explore how $functionName is used in the codebase. Look at ../../src.us, ../../include as well as the unmatched code (../../asm/nonmatchings). Write a summary of what the $functionName is and how it's used to `LEARNINGS.md`.
+2. Explore how $functionName is used in the codebase. Look at ../../src/us, ../../include as well as the unmatched code (../../asm/nonmatchings). Write a summary of what the $functionName is and how it's used to `LEARNINGS.md`.
 3. Ensure that base.c compiles successfully. Ensure that any missing types are present. base.c should only depend on "common.h". Any other missing types should be provided inline rather than via #include statements. Do not stop until base.c can be successfully built. Report status and a brief summary of your findings upon completion.
 4. Verify that the function signatures base.c relies upon have the correct number of arguments and correct types for those arguments as well as for the return type. These are frequently halucinated or otherwise decompiled incorrectly.
 5. Consider the purpose of the function and what it's trying to do. Does the C code reflect that purpose? Note any logical errors in the code.
@@ -43,7 +43,7 @@ After `base.c` builds successfully, repeat the following steps:
 
 ## Coding Guidelines
 
-- Look for existing types, prototypes, and globals in `../../src.us` and `../../include` before adding new ones.
+- Look for existing types, prototypes, and globals in `../../src/us` and `../../include` before adding new ones.
 - Prefer struct fields and array indexing over manual pointer arithmetic.
 - Keep variable declarations at the start of each function or block as required by C89.
 - Do not add comments to candidate C code unless they are already needed for project style.

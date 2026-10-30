@@ -56,9 +56,9 @@ endif
 BUILD_DIR = $(if $(filter shiftable,$(BUILD_MODE)),build/shiftable,$(MATCHING_BUILD_DIR))
 ASM_DIRS  = asm$(VERSION_SUFFIX) asm$(VERSION_SUFFIX)/data
 BIN_DIRS  = assets$(VERSION_SUFFIX)
-SRC_DIR = src.$(VERSION)
-# Shared C sources are selected explicitly by both regional Splat configs.
-SRC_DIRS = $(SRC_DIR) src
+SRC_DIR = src/$(VERSION)
+# Both regional Splat configs use src/ as their common source root.
+SRC_DIRS = src
 TOOLS_DIR = tools
 
 # Tools
@@ -202,10 +202,10 @@ $(addsuffix /os/exceptasm.o,$(ULTRA_OBJ_DIRS)): ULTRA_AS_POST = $(PYTHON) $(TOOL
 # These course-select BSS objects end at intentional non-16-byte boundaries.
 # Preserve their logical section sizes instead of adding assembler tail padding.
 COURSE_SELECT_BSS_C_O_FILES := \
-	$(BUILD_DIR)/$(SRC_DIR)/menu/course_select/course_select_selection_state.o \
-	$(BUILD_DIR)/$(SRC_DIR)/menu/course_select/course_select_transition_state.o \
-	$(BUILD_DIR)/$(SRC_DIR)/menu/course_select/course_select_course_tables.o \
-	$(BUILD_DIR)/$(SRC_DIR)/menu/course_select/course_select_status.o
+	$(BUILD_DIR)/src/menu/course_select/course_select_selection_state.o \
+	$(BUILD_DIR)/src/menu/course_select/course_select_transition_state.o \
+	$(BUILD_DIR)/src/menu/course_select/course_select_course_tables.o \
+	$(BUILD_DIR)/src/menu/course_select/course_select_status.o
 COURSE_SELECT_UNPADDED_BSS_O_FILES := \
 	$(COURSE_SELECT_BSS_C_O_FILES) \
 	$(BUILD_DIR)/asm/data/bss_chunk_a_2_course_select_transition_tail.bss.o
@@ -241,16 +241,16 @@ C_O_FILES   := $(patsubst %.c,$(BUILD_DIR)/%.o,$(C_FILES))
 
 # Formatting and tidy cover all tracked C code, including libultra and libmus.
 # Local match-sensitive functions and textconv tables use clang-format guards.
-PROJECT_C_FILES := $(shell git ls-files 'src/**/*.c' 'src/*.c' 'src.us/**/*.c' 'src.us/*.c' 'src.jp/**/*.c' 'src.jp/*.c')
+PROJECT_C_FILES := $(shell git ls-files 'src/**/*.c' 'src/*.c')
 FORMAT_C_FILES := $(PROJECT_C_FILES)
-PROJECT_H_FILES := $(shell git ls-files 'include/**/*.h' 'include/*.h' 'src/**/*.h' 'src/*.h' 'src.us/**/*.h' 'src.jp/**/*.h')
+PROJECT_H_FILES := $(shell git ls-files 'include/**/*.h' 'include/*.h' 'src/**/*.h' 'src/*.h')
 FORMAT_H_FILES := $(filter-out include/hasm.h include/include_asm.h include/sys/%,$(PROJECT_H_FILES))
 FORMAT_FILES := $(FORMAT_C_FILES) $(FORMAT_H_FILES)
 TIDY_C_FRAGMENT_FILES := \
 	$(foreach version,us jp, \
-		src.$(version)/libmus/player_api.c \
-		src.$(version)/libmus/player_commands.c \
-		src.$(version)/libmus/player_commands_tail.c)
+		src/$(version)/libmus/player_api.c \
+		src/$(version)/libmus/player_commands.c \
+		src/$(version)/libmus/player_commands_tail.c)
 TIDY_C_FILES := $(filter-out %.inc.c $(TIDY_C_FRAGMENT_FILES),$(PROJECT_C_FILES))
 
 TEXTCONV = $(PYTHON) $(TOOLS_DIR)/textconv.py
@@ -389,10 +389,10 @@ $(BUILD_DIR)/%.o: $(TEXTCONV_DIR)/%.c
 # These data-only files use designated initializers, which IDO does not support.
 # GNU as preserves the original 16-byte section padding; attributes align each table.
 DESIGNATED_DATA_C_O_FILES := \
-	$(BUILD_DIR)/$(SRC_DIR)/race/player/race_player_properties.o \
-	$(BUILD_DIR)/src.us/demo/main_menu_demo_race_intro_data.o \
+	$(BUILD_DIR)/src/race/player/race_player_properties.o \
+	$(BUILD_DIR)/src/us/demo/main_menu_demo_race_intro_data.o \
 	$(BUILD_DIR)/$(SRC_DIR)/demo/title_demo_race_intro_data.o
-$(BUILD_DIR)/$(SRC_DIR)/race/player/race_player_properties.o: ASFLAGS := $(filter-out -no-pad-sections,$(ASFLAGS))
+$(BUILD_DIR)/src/race/player/race_player_properties.o: ASFLAGS := $(filter-out -no-pad-sections,$(ASFLAGS))
 # The title-demo tables end on a 16-byte boundary in both ROM versions.
 $(BUILD_DIR)/$(SRC_DIR)/demo/title_demo_race_intro_data.o: ASFLAGS := $(filter-out -no-pad-sections,$(ASFLAGS))
 $(DESIGNATED_DATA_C_O_FILES): $(BUILD_DIR)/%.o: $(TEXTCONV_DIR)/%.c
@@ -413,11 +413,11 @@ $(BUILD_DIR)/runtime-indices/%.o: $(TEXTCONV_DIR)/$(SRC_DIR)/menu/renderer/%.c i
 	$(V)$(IDO_CC) $(CFLAGS) $(C_OPT) -DSBK_SPRITE_PALETTE_REMAP -I$(SRC_DIR)/menu/renderer -o $@ $<
 	$(V)$(RM_MDEBUG)
 
-$(BUILD_DIR)/runtime-indices/race_player_model_renderer.o: $(TEXTCONV_DIR)/$(SRC_DIR)/race/player/race_player_model_renderer.c
+$(BUILD_DIR)/runtime-indices/race_player_model_renderer.o: $(TEXTCONV_DIR)/src/race/player/race_player_model_renderer.c
 	@mkdir -p $(dir $@)
 	$(V)$(CC_CHECK) $(CC_CHECK_FLAGS) $(CC_CHECK_WARNINGS) $(CC_CHECK_INCLUDES) \
-		$(C_DEFINES) $(CC_CHECK_MIPS_DEFINES) -DSBK_SNOWBOARD_TEXTURE_SIZE -iquote $(SRC_DIR)/race/player $<
-	$(V)$(IDO_CC) $(CFLAGS) $(C_OPT) -DSBK_SNOWBOARD_TEXTURE_SIZE -I$(SRC_DIR)/race/player -o $@ $<
+		$(C_DEFINES) $(CC_CHECK_MIPS_DEFINES) -DSBK_SNOWBOARD_TEXTURE_SIZE -iquote src/race/player $<
+	$(V)$(IDO_CC) $(CFLAGS) $(C_OPT) -DSBK_SNOWBOARD_TEXTURE_SIZE -Isrc/race/player -o $@ $<
 	$(V)$(RM_MDEBUG)
 
 # Match original JP text extents at partial-file boundaries. IDO pads C
@@ -425,10 +425,10 @@ $(BUILD_DIR)/runtime-indices/race_player_model_renderer.o: $(TEXTCONV_DIR)/$(SRC
 ifeq ($(VERSION),jp)
 $(BUILD_DIR)/src/math/spatial_math.o: C_OBJ_POSTPROCESS = \
 	$(PYTHON) $(TOOLS_DIR)/trim_elf_section_tail.py $@ .text 8
-$(BUILD_DIR)/src.jp/menu/renderer/menu_render_utils.o: C_OBJ_POSTPROCESS = \
+$(BUILD_DIR)/src/jp/menu/renderer/menu_render_utils.o: C_OBJ_POSTPROCESS = \
 	$(PYTHON) $(TOOLS_DIR)/trim_elf_section_tail.py $@ .text 8
 
-$(BUILD_DIR)/src.jp/menu/race_setup/race_setup_menu.o: C_OBJ_POSTPROCESS = \
+$(BUILD_DIR)/src/jp/menu/race_setup/race_setup_menu.o: C_OBJ_POSTPROCESS = \
 	$(PYTHON) $(TOOLS_DIR)/trim_elf_section_tail.py $@ .data 16 \
 		--undefine-symbol gControllerPakRumbleCheckPromptState
 

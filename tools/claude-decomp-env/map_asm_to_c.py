@@ -18,8 +18,8 @@ def parse_annotated_asm(filename):
         # Remove the line number prefix added by the Read tool (e.g., "    10→")
         cleaned_line = re.sub(r'^\s*\d+→', '', line)
 
-        # Check if this is a C source file marker (e.g., "src.us/claude/base_4.c:54")
-        source_match = re.match(r'^(src\.(?:us|jp)/[^:]+\.c):(\d+)', cleaned_line.strip())
+        # Check if this is a C source file marker (e.g., "src/us/claude/base_4.c:54")
+        source_match = re.match(r'^(src/[^:]+\.c):(\d+)', cleaned_line.strip())
         if source_match:
             # Update current source location
             current_source_location = f"{source_match.group(1)}:{source_match.group(2)}"

@@ -44,7 +44,7 @@ def validate_registry(root, registry):
         ids = [v['runtime_id'] for v in items.values() if v['family']==family]
         if sorted(ids)!=list(range(1,count+1)):
             raise ValueError(f'incomplete/duplicate {family} item IDs: {ids}')
-    hud = (root/'src.us/race/ui/race_hud.c').read_text()
+    hud = (root/'src/us/race/ui/race_hud.c').read_text()
     shot = numbers(initializer(hud,'gRaceHudShotTileOffsets'))
     action = numbers(initializer(hud,'gRaceHudItemTileIds'))
     for name,item in items.items():
@@ -52,7 +52,7 @@ def validate_registry(root, registry):
         expected = list(range(shot[i],shot[i]+3)) if item['family']=='projectile' else [action[i]]
         if item['icons']!=expected:
             raise ValueError(f'{name}: icon registry differs from HUD table')
-    dispatch = (root/'src.us/race/player/race_player_equipment_use.c').read_text()
+    dispatch = (root/'src/race/player/race_player_equipment_use.c').read_text()
     for name,item in items.items():
         if item['renderer'] not in dispatch:
             raise ValueError(f'{name}: renderer no longer appears in item dispatch')
@@ -326,7 +326,7 @@ def migrate_tree(original_root, root, layout, registry):
         final_defs[key] = dict(bundle=str(path),model=m)
         final_bundles[str(path)] = dict(schema_version=2,id='models/scenery/'+name,models=[dict(name=name,preview=name+'.glb')],animations=[])
         return key
-    source = (original_root/'src.us/race/course/race_course_effects.c').read_text()
+    source = (original_root/'src/us/race/course/race_course_effects.c').read_text()
     from tools.course_relocations import pack_graphics_group
     _, graphics_symbols = pack_graphics_group(original_root, rows['SHARED_RACE_GRAPHICS'], mode='matching')
     pointers = [value.strip() for value in initializer(source,'gRaceCourseObjectDisplayLists').split(',') if value.strip()]
@@ -367,7 +367,7 @@ def migrate_tree(original_root, root, layout, registry):
             placement = dict(model=key,position=[signed32(v)/65536 for v in (x,y,z)],rotation_y=angle)
             b['scenery'].append(placement)
             components.append(placement)
-        b['scenery_source'] = dict(file='src.us/race/course/race_course_effects.c',symbol=spec['scenery'])
+        b['scenery_source'] = dict(file='src/us/race/course/race_course_effects.c',symbol=spec['scenery'])
         final_bundles[str(base/'asset.yaml')] = b
         final_defs[b['id']+'/preview'] = dict(bundle=str(base/'asset.yaml'),model=dict(name='preview',components=components))
     for name,item in registry['items'].items():
@@ -382,7 +382,7 @@ def migrate_tree(original_root, root, layout, registry):
         for bank,index,old,palette in item_images[name]:
             ref = dict(image=os.path.relpath(moves.get(old,old),base),palette=dict(bank=bank,index=palette),entry=index)
             b['icons' if bank=='SHARED_UI_SPRITES' else 'sprites'].append(ref)
-        b['shared_effects'] = ['src.us/race/effects/race_visual_effects.c','src.us/race/player/race_player_equipment_use.c']
+        b['shared_effects'] = ['src/race/effects/race_visual_effects.c','src/race/player/race_player_equipment_use.c']
     # Retain non-model family bundles with corrected file references, but hide
     # packing records from their public sources lists.
     for path,old in bundles.items():

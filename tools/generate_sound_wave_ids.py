@@ -71,7 +71,7 @@ def collect_waves(root, rom):
     table_rom = int(table_symbol[1], 0)
     main = next(s for s, _ in ranges if s.get("name") == "main")
     pointers = struct.unpack_from(f">{len(effect_ids)}I", rom, table_rom)
-    source = (root / "src.us/audio/sound_manager.c").read_text()
+    source = (root / "src/us/audio/sound_manager.c").read_text()
     source_table = re.search(r"u8 \*gSoundEffectCommandPointers\[[^]]*\]\s*=\s*\{(.*?)\};", source, re.S)
     commands = re.findall(r"\bgSoundEffect\w+Commands\b", source_table[1]) if source_table else []
     if len(commands) != len(effect_ids):

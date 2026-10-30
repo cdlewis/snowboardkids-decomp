@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Parse arguments
-SOURCE_FILE="src.us/temp.c"
+SOURCE_FILE="src/us/temp.c"
 PRESERVE_F3DEX=false
 POSITIONAL_ARGS=()
 
@@ -39,7 +39,7 @@ if [ $# -eq 0 ]; then
     echo "Usage: $0 [--source-file <path>] [--preserve-f3dex] <function_name_or_path_or_scratch_id>"
     echo "Options:"
     echo "  --preserve-f3dex          Preserve gDP* and gSP* macros during import"
-    echo "  --source-file, -s <path>  Use specified source file instead of src.us/temp.c"
+    echo "  --source-file, -s <path>  Use specified source file instead of src/us/temp.c"
     exit 1
 fi
 
@@ -115,24 +115,24 @@ else
 fi
 
 # Clean up temp files from previous runs (only if using default temp.c)
-if [ "$SOURCE_FILE" = "src.us/temp.c" ]; then
-    rm -f src.us/temp.c src.us/ctx.c
+if [ "$SOURCE_FILE" = "src/us/temp.c" ]; then
+    rm -f src/us/temp.c src/us/ctx.c
 fi
 
 # Prepare source code for import
 if [ "$USE_SCRATCH_SOURCE" = true ]; then
-    mkdir -p src.us
+    mkdir -p src/us
 
     if [ -n "$CONTEXT" ]; then
-        echo "$CONTEXT" > src.us/ctx.c
-        echo "Saved context to src.us/ctx.c"
-        echo '#include "ctx.c"' > src.us/temp.c
-        echo "$SOURCE_CODE" >> src.us/temp.c
+        echo "$CONTEXT" > src/us/ctx.c
+        echo "Saved context to src/us/ctx.c"
+        echo '#include "ctx.c"' > src/us/temp.c
+        echo "$SOURCE_CODE" >> src/us/temp.c
     else
-        echo "$SOURCE_CODE" > src.us/temp.c
+        echo "$SOURCE_CODE" > src/us/temp.c
     fi
     echo "Using source code from decomp.me scratch"
-    SOURCE_FILE="src.us/temp.c"
+    SOURCE_FILE="src/us/temp.c"
 fi
 
 # Check that source file exists

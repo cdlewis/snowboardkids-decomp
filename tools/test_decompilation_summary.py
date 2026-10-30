@@ -24,7 +24,7 @@ class RemainingFunctionsTest(unittest.TestCase):
         report = {
             "units": [
                 {
-                    "name": "build/src.us/example",
+                    "name": "build/src/us/example",
                     "functions": [
                         {"name": "matched", "size": "16", "fuzzy_match_percent": 100.0},
                         {"name": "assembly", "size": "24"},

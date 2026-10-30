@@ -477,11 +477,13 @@ def source_files(paths: Sequence[Path]) -> Iterable[Path]:
 
 
 def expected_header_for_source(source: Path, repo_root: Path) -> Path | None:
-    try:
-        relative = source.relative_to(repo_root / "src.us").with_suffix(".h")
-    except ValueError:
-        return None
-    return Path("game") / relative
+    for source_root in ("src/us", "src/jp", "src"):
+        try:
+            relative = source.relative_to(repo_root / source_root).with_suffix(".h")
+        except ValueError:
+            continue
+        return Path("game") / relative
+    return None
 
 
 def header_score(
@@ -669,8 +671,8 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         "paths",
         nargs="*",
         type=Path,
-        default=[Path("src.us")],
-        help="C files or directories to check (default: src.us)",
+        default=[Path("src/us")],
+        help="C files or directories to check (default: src/us)",
     )
     parser.add_argument(
         "--include-dir",

@@ -23,8 +23,8 @@ class BundleTests(unittest.TestCase):
     def test_source_directory_migration_preserves_editable_manifests(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            (root / 'src.us/menu').mkdir(parents=True)
-            (root / 'src.us/menu/text.c').write_text('/* source */')
+            (root / 'src/us/menu').mkdir(parents=True)
+            (root / 'src/us/menu/text.c').write_text('/* source */')
             manifest = root / 'assets/text/example/asset.yaml'
             manifest.parent.mkdir(parents=True)
             source = ("# Keep user formatting\nsources: ['../../../src/menu/text.c']\n"
@@ -32,8 +32,8 @@ class BundleTests(unittest.TestCase):
                       "missing: src/menu/missing.c\nupstream: ../library/src/menu/text.c\n")
             manifest.write_text(source)
             self.assertEqual(migrate_source_paths(root), 1)
-            expected = source.replace('../../../src/menu/text.c', '../../../src.us/menu/text.c')
-            expected = expected.replace('[src/menu/text.c]', '[src.us/menu/text.c]')
+            expected = source.replace('../../../src/menu/text.c', '../../../src/us/menu/text.c')
+            expected = expected.replace('[src/menu/text.c]', '[src/us/menu/text.c]')
             self.assertEqual(manifest.read_text(), expected)
             self.assertEqual(migrate_source_paths(root), 0)
 

@@ -35,7 +35,7 @@ The build will now fail because we have not yet added the expected data. But the
 
 Examine the assembly code for the data segment, this is located in `asm/data/`. So our above example would be located in `asm/data/8A40.data.s`. Remember that the N64 rom is big endian.
 
-Take the labeled data from the data file and add the appropriate variable definitions to the C file (`src.us/8A40.c in our example).
+Take the labeled data from the data file and add the appropriate variable definitions to the C file (`src/us/8A40.c in our example).
 
 Note that the C file will have missing data definitions already but they will be `externs`. You should add the variable definitions in the order in which they appear in the data file (do not follow the ordering of the externs).
 

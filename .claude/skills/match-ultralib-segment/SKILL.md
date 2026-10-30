@@ -7,10 +7,10 @@ description: Match a given segment to a libultra ROM segment. Use this when conv
 
 ## Core Rules
 
-- Match libultra by compiling local source under `src.us/ultra`; do not patch linker scripts, generated linker scripts, or archive-member references.
-- Preserve the upstream libultra subdirectory when possible, for example `../ultralib/src/io/pfsnumfiles.c` becomes `src.us/ultra/io/pfsnumfiles.c`.
+- Match libultra by compiling local source under `src/us/ultra`; do not patch linker scripts, generated linker scripts, or archive-member references.
+- Preserve the upstream libultra subdirectory when possible, for example `../ultralib/src/io/pfsnumfiles.c` becomes `src/us/ultra/io/pfsnumfiles.c`.
 - Keep unidentified neighboring libultra functions as separate `asm` segments until each function is matched as source.
-- Source under `src.us/ultra` should use real libultra names, not `func_...` or `D_...` placeholders.
+- Source under `src/us/ultra` should use real libultra names, not `func_...` or `D_...` placeholders.
 - Add required callable ROM symbols to `symbol_addrs.txt` with runtime VRAM addresses, not `0x700...` splat placeholder addresses. Never add libultra function aliases to `linker_scripts/libultra_syms.ld`.
 - If a libultra source file emits `.data` or `.bss`, match those sections in `snowboardkids.yaml`; do not remove the C definitions, make them `extern`, allow multiple definitions, add linker-script aliases, or delete generated linker entries.
 - When asm references a field inside a known libultra struct, annotate the owning struct symbol in `symbol_addrs.txt` with its real type and size. Do not add a linker-script alias for the field address.
@@ -31,11 +31,11 @@ description: Match a given segment to a libultra ROM segment. Use this when conv
    rg -n "osPfsNumFiles" ../ultralib/src ../ultralib/include
    ```
 
-3. Copy or port the upstream file into `src.us/ultra`, preserving the source subtree. Verify macro values in local headers before using semantic-looking names; for example `CONT_CMD_NOP` may be `0xff`, while the target may want a literal `0`. Treat the upstream as a starting point — the compiled ROM may have been built from a different version of the source. Build early and let the diff guide iterations rather than analyzing the assembly exhaustively beforehand.
+3. Copy or port the upstream file into `src/us/ultra`, preserving the source subtree. Verify macro values in local headers before using semantic-looking names; for example `CONT_CMD_NOP` may be `0xff`, while the target may want a literal `0`. Treat the upstream as a starting point — the compiled ROM may have been built from a different version of the source. Build early and let the diff guide iterations rather than analyzing the assembly exhaustively beforehand.
 
    ```text
-   ../ultralib/src/os/recvmesg.c -> src.us/ultra/os/recvmesg.c
-   ../ultralib/src/io/pfsnumfiles.c -> src.us/ultra/io/pfsnumfiles.c
+   ../ultralib/src/os/recvmesg.c -> src/us/ultra/os/recvmesg.c
+   ../ultralib/src/io/pfsnumfiles.c -> src/us/ultra/io/pfsnumfiles.c
    ```
 
 4. Replace the matching ROM range in `snowboardkids.yaml` with a normal C segment:
@@ -48,8 +48,8 @@ description: Match a given segment to a libultra ROM segment. Use this when conv
 5. If the new source object emits `.data` or `.bss`, match those sections before trying linker workarounds. First inspect the object:
 
    ```sh
-   mips-linux-gnu-objdump -h build/src.us/ultra/os/initialize.o
-   mips-linux-gnu-nm -n build/src.us/ultra/os/initialize.o
+   mips-linux-gnu-objdump -h build/src/us/ultra/os/initialize.o
+   mips-linux-gnu-nm -n build/src/us/ultra/os/initialize.o
    ```
 
    Then split the existing raw data/BSS ranges in `snowboardkids.yaml` so the C file owns exactly the emitted data. Keep the definitions in C when they are part of the upstream file; changing them to `extern` can alter IDO codegen even when it looks semantically equivalent.
@@ -80,7 +80,7 @@ description: Match a given segment to a libultra ROM segment. Use this when conv
 
    ```sh
    rg -n "= 0x800A" linker_scripts
-   rg -n "func_800A[0-9A-Fa-f]+" symbol_addrs.txt src.us asm
+   rg -n "func_800A[0-9A-Fa-f]+" symbol_addrs.txt src/us asm
    ```
 
    If the second command finds unrelated existing placeholders, do not rename them blindly. Fix only the symbols involved in the segment being matched.
@@ -128,7 +128,7 @@ Update the DECOMPILATION_LEARNINGS.md file in the root of the project with any a
 The game code uses -O2 but ultralib specifically should use -O1 instead. The build version can also affect libultra behavior, so check the compile line for both `-O1` and the expected `BUILD_VERSION` such as `BUILD_VERSION=VERSION_I`. You can use the following pattern to override the flags:
 
 ```make
-$(BUILD_DIR)/src.us/ultra/io/%.o: C_OPT = -O1
+$(BUILD_DIR)/src/us/ultra/io/%.o: C_OPT = -O1
 ```
 
 ## VERSION_I Specifics
@@ -158,7 +158,7 @@ Ultralib segments may contain data, rodata, and/or bss which must be similarly m
 First check whether the compiled object actually emits these sections:
 
 ```sh
-mips-linux-gnu-objdump -h build/src.us/ultra/io/pfsnumfiles.o
+mips-linux-gnu-objdump -h build/src/us/ultra/io/pfsnumfiles.o
 ```
 
 If the object only has `.text` plus compiler metadata such as `.options` and `.reginfo`, continue matching instruction generation before adding data or rodata segments.
@@ -179,4 +179,4 @@ You can use the match-data-file skill to help match  the correct segment. Note t
 - Do not link `libultra_rom.a` just to extract one matched object.
 - Do not add a custom `symbol_addrs.ld`; use `symbol_addrs.txt`.
 - Do not disable `undefined_funcs_auto.txt` to keep a local libultra source dependency unresolved.
-- Do not leave `func_...` or `D_...` references in `src.us/ultra`.
+- Do not leave `func_...` or `D_...` references in `src/us/ultra`.

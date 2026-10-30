@@ -200,7 +200,7 @@ def inconsistent_symbols(root: Path) -> list[str]:
     symbols = data_symbols(root / "symbol_addrs.txt")
     observed: dict[str, set[str]] = defaultdict(set)
     paths = [
-        *root.joinpath("src.us").rglob("*.c"),
+        *(p for p in root.joinpath("src").rglob("*.c") if root / "src/jp" not in p.parents),
         *root.joinpath("include").rglob("*.h"),
     ]
     for path in paths:

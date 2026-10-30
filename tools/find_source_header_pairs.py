@@ -7,9 +7,9 @@ import re
 from pathlib import Path
 
 
-SOURCE_ROOT = Path("src.us")
+SOURCE_ROOT = Path("src")
 INCLUDE_ROOT = Path("include")
-EXCLUDED_SOURCE_ROOTS = (Path("src.us/ultra"),)
+EXCLUDED_SOURCE_ROOTS = (Path("src/ultra"), Path("src/us/ultra"), Path("src/jp"))
 GENERATED_CONTEXT_NAME = "c" + "tx.c"
 INCLUDE_RE = re.compile(r'^\s*#\s*include\s+"([^"]+\.h)"', re.MULTILINE)
 

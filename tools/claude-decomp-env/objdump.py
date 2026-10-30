@@ -18,7 +18,7 @@ SKIP_LINES = 1
 RE_INT = re.compile(r"-?[0-9]+")
 RE_COMMENT = re.compile(r"<.*?>")
 RE_SPREL = re.compile(r"(?<=,)([0-9]+|0x[0-9a-f]+)\((sp|s8)\)")
-RE_SOURCE_LINE = re.compile(r"^[a-zA-Z0-9_/\.\-]+\.[ch]:\d+")  # Matches "src.us/temp.c:336"
+RE_SOURCE_LINE = re.compile(r"^[a-zA-Z0-9_/\.\-]+\.[ch]:\d+")  # Matches "src/us/temp.c:336"
 RE_ASM_LINE = re.compile(r"^\s*([0-9a-f]+):\s+([0-9a-f]+)\s+(.+)$")  # Matches " 794:    2402001e     li    v0,30"
 RE_RELOC_LINE = re.compile(r"^\s+([0-9a-f]+):\s+(R_MIPS_\S+)\s+(.+)$")  # Matches "            7a0: R_MIPS_26    setGameStateHandler"
 

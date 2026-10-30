@@ -478,8 +478,8 @@ def find_similar_functions(query: ParsedFunction, candidates: List[ParsedFunctio
 def get_c_source_for_function(func_name: str, project_root: str) -> Optional[str]:
     """Try to find the C source file containing a matched function."""
     # US functions can live in the shared tree or the regional tree.
-    c_files = (c_file for root in ('src', 'src.us')
-               for c_file in Path(project_root, root).glob('**/*.c'))
+    c_files = (c_file for c_file in Path(project_root, 'src').glob('**/*.c')
+               if 'jp' != c_file.relative_to(Path(project_root, 'src')).parts[0])
     for c_file in c_files:
         try:
             with open(c_file, 'r') as f:

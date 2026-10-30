@@ -11,7 +11,7 @@ class InconsistentGlobalTypesTests(unittest.TestCase):
     def setUp(self):
         self.temp_dir = tempfile.TemporaryDirectory()
         self.root = Path(self.temp_dir.name)
-        (self.root / "src.us").mkdir()
+        (self.root / "src/us").mkdir(parents=True)
         (self.root / "include").mkdir()
 
     def tearDown(self):
@@ -37,7 +37,7 @@ class InconsistentGlobalTypesTests(unittest.TestCase):
             "extern s16 gValue;\nextern u32 gSame;\nvoid doThing(void);\n",
         )
         self.write(
-            "src.us/main.c",
+            "src/us/main.c",
             "u16 gValue;\nu32 gSame;\ns32 unknownSymbol;\n"
             "s32 doThing(void) { return 0; }\n",
         )
@@ -48,7 +48,7 @@ class InconsistentGlobalTypesTests(unittest.TestCase):
         self.set_symbols("gData = 0x80100000;")
         self.write("include/data.h", "extern const u8 gData[];\n")
         self.write(
-            "src.us/data.c",
+            "src/us/data.c",
             "const u8\n"
             "gData[DATA_COUNT] = {\n"
             "    1, 2, 3,\n"
@@ -67,7 +67,7 @@ class InconsistentGlobalTypesTests(unittest.TestCase):
             "extern Foo *gPointer;\nextern const s32 gQualified;\n",
         )
         self.write(
-            "src.us/data.c",
+            "src/us/data.c",
             "extern Bar *gPointer;\ns32 gQualified;\n",
         )
 
@@ -83,7 +83,7 @@ class InconsistentGlobalTypesTests(unittest.TestCase):
         )
         self.write("include/data.h", "extern s32 gValue;\n")
         self.write(
-            "src.us/main.c",
+            "src/us/main.c",
             "/* extern u8 gValue; */\n"
             "void useValue(void) {\n"
             "    u16 gValue;\n"
@@ -96,15 +96,15 @@ class InconsistentGlobalTypesTests(unittest.TestCase):
     def test_ignores_generated_scratch_files(self):
         self.set_symbols("gValue = 0x80100000;")
         self.write("include/data.h", "extern s32 gValue;\n")
-        self.write("src.us/" + "te" + "mp.c", "extern u8 gValue;\n")
-        self.write("src.us/" + "c" + "tx.c", "extern u16 gValue;\n")
+        self.write("src/us/" + "te" + "mp.c", "extern u8 gValue;\n")
+        self.write("src/us/" + "c" + "tx.c", "extern u16 gValue;\n")
 
         self.assertEqual(finder.inconsistent_symbols(self.root), [])
 
     def test_compares_function_pointer_variables(self):
         self.set_symbols("gCallback = 0x80100000;")
         self.write("include/data.h", "extern void (*gCallback)(s32);\n")
-        self.write("src.us/data.c", "void (*gCallback)(u32);\n")
+        self.write("src/us/data.c", "void (*gCallback)(u32);\n")
 
         self.assertEqual(finder.inconsistent_symbols(self.root), ["gCallback"])
 

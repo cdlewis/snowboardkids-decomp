@@ -8,10 +8,12 @@ import sys
 from pathlib import Path
 
 
-DEFAULT_PATHS = (Path("src.us"), Path("include/game"))
+DEFAULT_PATHS = (Path("src"), Path("include/game"))
 DEFAULT_EXCLUDES = (
-    Path("src.us/ultra"),
-    Path("src.us") / ("c" + "tx.c"),  # Generated decompilation context.
+    Path("src/jp"),
+    Path("src/ultra"),
+    Path("src/us/ultra"),
+    Path("src/us") / ("c" + "tx.c"),  # Generated decompilation context.
 )
 TOKEN_RE = re.compile(r"[A-Za-z_]\w*|[{};]")
 
@@ -166,7 +168,7 @@ def parse_args() -> argparse.Namespace:
         "paths",
         nargs="*",
         type=Path,
-        help="files or directories to scan (default: src.us and include/game)",
+        help="files or directories to scan (default: shared/US src and include/game)",
     )
     parser.add_argument(
         "--include-vendor",
