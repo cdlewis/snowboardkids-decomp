@@ -1055,19 +1055,19 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
     CharacterSelectUiPlayerPanelFrameActor *panelFrames;
     CharacterSelectUiSelectedCharacterTokenActor *tokens;
     CharacterSelectUiSelectedCharacterTokenActor *actor;
-#if defined(VERSION_US)
+
     volatile CharacterSelectUiSelectedCharacterTokenActor *volatileActor;
-#endif
+
     s32 playerIndex;
-#if defined(VERSION_JP)
-    u8 menuState;
-#else
+
+
+
     u32 menuState;
-#endif
+
     s32 characterId;
-#if defined(VERSION_US)
+
     u8 state;
-#endif
+
     s16 rosterX;
     s16 yDirection;
     s32 step;
@@ -1075,35 +1075,35 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
     s32 exitYStep;
     s32 panelIndex;
     s16 panelX;
-#if defined(VERSION_JP)
-    s16 panelY;
-#else
+
+
+
     s32 panelY;
-#endif
+
 
     panelFrames = gMenuScratch1.playerFrames;
     tokens = arg0;
     actor = arg0;
-#if defined(VERSION_US)
+
     volatileActor = arg0;
-#endif
+
     for (playerIndex = 0; playerIndex < (s32)gPlayerCount; playerIndex++) {
         menuState = gCharacterSelectHudState.selectedTokenState[playerIndex];
-#if defined(VERSION_JP)
-        if (tokens->state[playerIndex] != menuState) {
-#else
+
+
+
         state = tokens->state[playerIndex];
         if (state != (menuState & 0xFFFFFFFF)) {
             state = menuState;
-#endif
+
             actor->state[playerIndex] = menuState;
         }
 
-#if defined(VERSION_JP)
-        switch (actor->state[playerIndex]) {
-#else
+
+
+
         switch (state ^ 0) {
-#endif
+
             case CHARACTER_SELECT_TOKEN_IDLE:
                 break;
             case CHARACTER_SELECT_TOKEN_START:
@@ -1117,17 +1117,17 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
                 }
 
                 panelX = panelFrames->x[playerIndex] + 0x38;
-#if defined(VERSION_JP)
-                panelY = panelFrames->y[playerIndex] + 0x18;
-#else
+
+
+
                 panelY = (panelFrames->y[playerIndex] & 0xFFFFU) & 0xFFFFU;
-#endif
+
                 actor->xDistance[playerIndex] = panelX - rosterX;
-#if defined(VERSION_JP)
-                actor->yDistance[playerIndex] = panelY + 8;
-#else
+
+
+
                 actor->yDistance[playerIndex] = panelY + 0x20;
-#endif
+
                 actor->xDirection[playerIndex] = 1;
                 if (actor->xDistance[playerIndex] < 0) {
                     tokens->xDirection[playerIndex] = -1;
@@ -1150,39 +1150,39 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
                 tokens->tileSize[playerIndex] = 1;
                 tokens->timer[playerIndex] = 0;
                 tokens->state[playerIndex] = CHARACTER_SELECT_TOKEN_FLYING;
-#if defined(VERSION_US)
+
                 state = tokens->state[playerIndex];
-#endif
+
                 break;
             case CHARACTER_SELECT_TOKEN_FLYING:
-#if defined(VERSION_US)
+
                 exitXStep = playerIndex;
-#endif
+
                 if (playerIndex & 1) {
                     yDirection = 1;
                 } else {
                     yDirection = -1;
                 }
-#if defined(VERSION_JP)
-                {
-                    for (step = 0; step < tokens->stepCount[playerIndex]; step++) {
-#else
+
+
+
+
                 step = 0;
                 if (tokens->stepCount[playerIndex] > 0) {
                     do {
-#endif
+
                         if (tokens->axis[playerIndex] != 0) {
                             actor->y[playerIndex] += yDirection;
                             actor->accumulator[playerIndex] += actor->xDistance[playerIndex];
                             if (actor->accumulator[playerIndex] >= actor->yDistance[playerIndex]) {
-#if defined(VERSION_JP)
-                                actor->x[playerIndex] += actor->xDirection[playerIndex];
-                                actor->accumulator[playerIndex] -= actor->yDistance[playerIndex];
-#else
+
+
+
+
                                 actor->accumulator[playerIndex] =
                                     (actor->x[playerIndex] += actor->xDirection[playerIndex],
                                      actor->accumulator[playerIndex] - actor->yDistance[playerIndex]);
-#endif
+
                             }
                         } else {
                             actor->x[playerIndex] += actor->xDirection[playerIndex];
@@ -1203,21 +1203,21 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
                             (actor->y[playerIndex] == panelFrames->y[playerIndex] + 0x18)) {
                             actor->state[playerIndex] = CHARACTER_SELECT_TOKEN_LANDED;
                             actor->tileSize[playerIndex] = 0x20;
-#if defined(VERSION_JP)
-                            break;
-#else
+
+
+
                             state = volatileActor->state[playerIndex];
                             goto flight_done;
-#endif
+
                         }
-#if defined(VERSION_JP)
-                    }
-#else
+
+
+
                         step++;
                     } while (step < tokens->stepCount[playerIndex]);
                     state = actor->state[playerIndex];
                 flight_done:;
-#endif
+
                 }
                 break;
             case CHARACTER_SELECT_TOKEN_LANDED:
@@ -1226,20 +1226,20 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
                 break;
         }
 
-#if defined(VERSION_JP)
-        gCharacterSelectHudState.selectedTokenState[playerIndex] = actor->state[playerIndex];
-#else
+
+
+
         gCharacterSelectHudState.selectedTokenState[playerIndex] = state;
-#endif
+
     }
 
     if (panelFrames->transitionState == 3) {
-#if defined(VERSION_JP)
-        for (step = 0; step < 0x10; step++) {
-#else
+
+
+
         step = 0;
         do {
-#endif
+
             for (panelIndex = 0; panelIndex != RACE_PLAYER_COUNT; panelIndex++) {
                 if (panelIndex < 2) {
                     exitXStep = -1;
@@ -1264,18 +1264,18 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
                 actor->x[panelIndex] = panelFrames->x[panelIndex] + 0x38;
                 actor->y[panelIndex] = panelFrames->y[panelIndex] + 0x18;
             }
-#if defined(VERSION_US)
+
             step++;
-#endif
+
             if (panelFrames->x[0] == -0x114) {
                 panelFrames->transitionState = 4;
                 break;
             }
-#if defined(VERSION_JP)
-        }
-#else
+
+
+
         } while (step != 0x10);
-#endif
+
     }
 
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectSelectedCharacterTokens, actor);

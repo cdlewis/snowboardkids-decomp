@@ -1614,9 +1614,6 @@ void drawRaceUiCourseStatsRows(RaceUiCourseStatsActor *arg0) {
 
 void drawRaceUiCourseStatsElapsedTime(RaceUiAlpha1AActor *arg0) {
 
-#if defined(VERSION_JP)
-    {
-#endif
     if (arg0->alpha != 0xFF) {
         gDPPipeSync(gRegionAllocPtr++);
         gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
@@ -1628,9 +1625,6 @@ void drawRaceUiCourseStatsElapsedTime(RaceUiAlpha1AActor *arg0) {
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
     }
 }
-#if defined(VERSION_JP)
-}
-#endif
 
 void drawRaceUiCourseStatsLapTimeLabel(RaceUiAlpha18Actor *arg0) {
 
@@ -1862,13 +1856,7 @@ void drawRaceUiScoreAttackCourseValues(RaceUiPopupActor *arg0) {
 
     y = -0x50;
     /* IDO scheduling for this function depends on these statements staying on one line. */
-#if defined(VERSION_JP)
-    // clang-format off
-    i = 0; space = ' '; while (i != 5) { char buffer[8];
-        // clang-format on
-#else
     i = 0; space = ' '; do { char buffer[8];
-#endif
 
         drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), i + 0x77);
 
@@ -1883,20 +1871,9 @@ void drawRaceUiScoreAttackCourseValues(RaceUiPopupActor *arg0) {
         sprintf(buffer, "%2d", gGameSaveDataBuffer[0].scoreAttackScores[gRaceCourseIndex.signedValue][i]);
 
         if ((u8)buffer[0] != space) {
-#if defined(VERSION_JP)
-            drawAssetTableSpriteWithExplicitPalette(
-                0x10,
-                (s16)y,
-                getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-                buffer[0] - 5,
-                color
-            );
-            {}
-#else
             drawAssetTableSpriteWithExplicitPalette(0x10, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
                           buffer[0] - 5, color);
             do { } while (0);
-#endif
         }
 
         if ((u8)buffer[1] != space) {
@@ -1911,25 +1888,13 @@ void drawRaceUiScoreAttackCourseValues(RaceUiPopupActor *arg0) {
 
         i++;
         y += 0x20;
-#if defined(VERSION_JP)
-    }
-#else
     } while (i != 5);
-#endif
 }
 // clang-format on
-#if defined(VERSION_JP)
-void drawRaceUiScoreAttackTargetStatus(RaceUiAlpha18Actor *arg0) {
-    char text[0xC];
-#endif
 
-#if defined(VERSION_JP)
-    {
-#else
 void drawRaceUiScoreAttackTargetStatus(RaceUiAlpha18Actor *arg0) {
     char buffer[0xC];
 
-#endif
     if (arg0->alpha != 0xFF) {
         gDPPipeSync(gRegionAllocPtr++);
         gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
@@ -1937,17 +1902,9 @@ void drawRaceUiScoreAttackTargetStatus(RaceUiAlpha18Actor *arg0) {
         gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
         gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
     }
-#if defined(VERSION_JP)
-        sprintf(text, "/%d", gRacePlayers[0].state.scoreAttackPointTarget);
-#else
     sprintf(buffer, "/%d", gRacePlayers[0].state.scoreAttackPointTarget);
-#endif
     drawMenuAsciiTextDefaultScale(-0x54, -0x14, "*", 6);
-#if defined(VERSION_JP)
-        drawMenuAsciiTextDefaultScale(-0x3C, -0x14, text, 6);
-#else
     drawMenuAsciiTextDefaultScale(-0x3C, -0x14, buffer, 6);
-#endif
     if (gRaceChallengeFailed != 0) {
 #if defined(VERSION_JP)
             drawMenuAsciiTextDefaultScale(-0x68, -4, "TIME OUT", 4);
@@ -1957,9 +1914,6 @@ void drawRaceUiScoreAttackTargetStatus(RaceUiAlpha18Actor *arg0) {
     }
     if (arg0->alpha != 0xFF) {
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
-#if defined(VERSION_JP)
-        }
-#endif
     }
 }
 
@@ -2246,9 +2200,6 @@ void initRaceUiHitPrizePayout(RaceUiCounterActor *arg0) {
 
 void drawRaceUiCourseRecordElapsedTime(RaceUiAlphaActor *arg0) {
 
-#if defined(VERSION_JP)
-    {
-#endif
     if (arg0->alpha != 0xFF) {
         gDPPipeSync(gRegionAllocPtr++);
         gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
@@ -2258,9 +2209,6 @@ void drawRaceUiCourseRecordElapsedTime(RaceUiAlphaActor *arg0) {
     drawRaceUiPackedTime(&gRaceElapsedTimer, -0x68, -0x37, 0xC);
     if (arg0->alpha != 0xFF) {
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
-#if defined(VERSION_JP)
-        }
-#endif
     }
 }
 
@@ -3631,15 +3579,6 @@ void renderRaceUiExpiredSpeedFanEffect(RaceUiExpiredSpeedFanActor *arg0) {
     }
 
     if (arg0->frontMatrix != NULL) {
-#if defined(VERSION_JP)
-        gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
-        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->frontMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, gSpeedFanFrontDisplayList);
-        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->backMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, gSpeedFanBackDisplayList);
-#else
         gDPPipeSync(gRegionAllocPtr++);
         gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
         gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
@@ -3647,7 +3586,6 @@ void renderRaceUiExpiredSpeedFanEffect(RaceUiExpiredSpeedFanActor *arg0) {
         gSPDisplayList(gRegionAllocPtr++, gSpeedFanFrontDisplayList);
         gSPMatrix(gRegionAllocPtr++, arg0->backMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gSpeedFanBackDisplayList);
-#endif
     }
 }
 
@@ -3725,19 +3663,11 @@ void renderRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
     }
 
     if (arg0->matrix != NULL) {
-#if defined(VERSION_JP)
-        gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
-        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_2003870_VRAM);
-#else
         gDPPipeSync(gRegionAllocPtr++);
         gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
         gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
         gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, &_ADDR_2003870_VRAM);
-#endif
     }
 }
 
@@ -4001,19 +3931,11 @@ void renderGhostSlowdownActor(RaceUiPodiumTrailActor *arg0) {
     }
 
     if (arg0->matrix != NULL) {
-#if defined(VERSION_JP)
-        gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
-        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &PAN_DISPLAY_LIST_VRAM);
-#else
         gDPPipeSync(gRegionAllocPtr++);
         gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
         gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
         gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, &PAN_DISPLAY_LIST_VRAM);
-#endif
     }
 }
 
@@ -4277,25 +4199,6 @@ void renderDizzyLandCarousel(DizzyLandCarouselActor *arg0) {
 
         if ((arg0->canopyMatrix != NULL) && (arg0->negativeSineHorsesMatrix != NULL) &&
             (arg0->positiveSineHorsesMatrix != NULL)) {
-#if defined(VERSION_JP)
-            gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
-            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->canopyMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_CAROUSEL_CANOPY_DISPLAY_LIST_VRAM);
-            gSPMatrix(
-                RACE_UI_TRAIL_GFX_ALLOC_PTR++,
-                arg0->negativeSineHorsesMatrix,
-                G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW
-            );
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_CAROUSEL_HORSES_NEGATIVE_SINE_DISPLAY_LIST_VRAM);
-            gSPMatrix(
-                RACE_UI_TRAIL_GFX_ALLOC_PTR++,
-                arg0->positiveSineHorsesMatrix,
-                G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW
-            );
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_CAROUSEL_HORSES_POSITIVE_SINE_DISPLAY_LIST_VRAM);
-#else
             gDPPipeSync(gRegionAllocPtr++);
             gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
             gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
@@ -4305,7 +4208,6 @@ void renderDizzyLandCarousel(DizzyLandCarouselActor *arg0) {
             gSPDisplayList(gRegionAllocPtr++, &DIZZY_LAND_CAROUSEL_HORSES_NEGATIVE_SINE_DISPLAY_LIST_VRAM);
             gSPMatrix(gRegionAllocPtr++, arg0->positiveSineHorsesMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(gRegionAllocPtr++, &DIZZY_LAND_CAROUSEL_HORSES_POSITIVE_SINE_DISPLAY_LIST_VRAM);
-#endif
         }
     }
 }
@@ -4335,19 +4237,11 @@ void renderRaceUiHeavyKnockdownTrailEffect(RaceUiRankTrailActor *arg0) {
     }
 
     if (arg0->matrix != NULL) {
-#if defined(VERSION_JP)
-        gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
-        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_20019C0_VRAM);
-#else
         gDPPipeSync(gRegionAllocPtr++);
         gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
         gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
         gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, &_ADDR_20019C0_VRAM);
-#endif
     }
 }
 
@@ -4495,19 +4389,11 @@ void renderRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
     }
 
     if (arg0->matrix != NULL) {
-#if defined(VERSION_JP)
-        gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
-        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_2003538_VRAM);
-#else
         gDPPipeSync(gRegionAllocPtr++);
         gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
         gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
         gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, &_ADDR_2003538_VRAM);
-#endif
     }
 }
 
@@ -4556,21 +4442,12 @@ void renderRaceUiFadingImpact(RaceUiFadingImpactActor *arg0) {
     }
 
     if (arg0->matrix != NULL) {
-#if defined(VERSION_JP)
-        gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
-        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gDPSetPrimColor(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_20035F8_VRAM);
-#else
         gDPPipeSync(gRegionAllocPtr++);
         gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
         gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
         gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
         gSPDisplayList(gRegionAllocPtr++, &_ADDR_20035F8_VRAM);
-#endif
     }
 }
 
@@ -4665,19 +4542,11 @@ void renderRaceUiSpinHitTransitionEffect(RaceUiTransitionActor *arg0) {
     }
 
     if (arg0->matrix != NULL) {
-#if defined(VERSION_JP)
-        gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
-        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_2002490_VRAM);
-#else
         gDPPipeSync(gRegionAllocPtr++);
         gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
         gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
         gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, &_ADDR_2002490_VRAM);
-#endif
     }
 }
 
@@ -4861,19 +4730,11 @@ void renderDizzyLandTeacupBumper(DizzyLandTeacupBumperActor *arg0) {
         }
 
         if (arg0->matrix != NULL) {
-#if defined(VERSION_JP)
-            gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
-            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_TEACUP_BUMPER_DISPLAY_LIST_VRAM);
-#else
             gDPPipeSync(gRegionAllocPtr++);
             gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
             gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(gRegionAllocPtr++, &DIZZY_LAND_TEACUP_BUMPER_DISPLAY_LIST_VRAM);
-#endif
         }
     }
 }
@@ -4987,15 +4848,6 @@ void renderDizzyLandFerrisWheel(DizzyLandFerrisWheelActor *arg0) {
         }
 
         if (arg0->wheelMatrix != NULL) {
-#if defined(VERSION_JP)
-            gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
-            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->supportMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_FERRIS_WHEEL_SUPPORT_DISPLAY_LIST_VRAM);
-            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->wheelMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_FERRIS_WHEEL_DISPLAY_LIST_VRAM);
-#else
             gDPPipeSync(gRegionAllocPtr++);
             gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
             gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
@@ -5003,7 +4855,6 @@ void renderDizzyLandFerrisWheel(DizzyLandFerrisWheelActor *arg0) {
             gSPDisplayList(gRegionAllocPtr++, &DIZZY_LAND_FERRIS_WHEEL_SUPPORT_DISPLAY_LIST_VRAM);
             gSPMatrix(gRegionAllocPtr++, arg0->wheelMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(gRegionAllocPtr++, &DIZZY_LAND_FERRIS_WHEEL_DISPLAY_LIST_VRAM);
-#endif
         }
     }
 }
@@ -5325,19 +5176,11 @@ void renderRaceCourseRankModel(RaceUiRankParticleActor *arg0) {
                 displayListIndex = 1;
             }
 
-#if defined(VERSION_JP)
-            gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
-            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->displayLists[displayListIndex]);
-#else
             gDPPipeSync(gRegionAllocPtr++);
             gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
             gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(gRegionAllocPtr++, arg0->displayLists[displayListIndex]);
-#endif
         }
     }
 }

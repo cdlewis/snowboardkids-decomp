@@ -611,44 +611,6 @@ void updateMainMenuModeSelectGrid(MenuPanelActor *arg0) {
     u8 temp_a2_3;
     u8 temp_a2_4;
 
-#if defined(VERSION_JP)
-    // clang-format off
-    if (arg0) {} \
-    if ((gMenuFadeAlpha == 0) && (gMainMenuSelectionResult == 0)) { \
-        pressedInput = gPlayerInputPressed[0]; \
-        { \
-            if (pressedInput & (STICK_UP | U_JPAD)) { \
-                temp_a2 = mainMenuModeSelectUpTargets[gMainMenuModeSelection]; \
-                if (temp_a2 != gMainMenuModeSelection) { \
-                    gMainMenuModeSelection = temp_a2; \
-                    enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL); \
-                    pressedInput = gPlayerInputPressed[0]; \
-                } \
-            } else if (pressedInput & (STICK_DOWN | D_JPAD)) { \
-                var_v0 = gMainMenuModeSelection; \
-                temp_a2_2 = mainMenuModeSelectDownTargets[var_v0]; \
-                if (temp_a2_2 != var_v0) { \
-                    gMainMenuModeSelection = temp_a2_2; \
-                    enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL); \
-                    pressedInput = gPlayerInputPressed[0]; \
-                } \
-            } else if (pressedInput & (STICK_RIGHT | R_JPAD)) { \
-                temp_a2_3 = mainMenuModeSelectRightTargets[gMainMenuModeSelection]; \
-                if (temp_a2_3 != gMainMenuModeSelection) { \
-                    gMainMenuModeSelection = temp_a2_3; \
-                    enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL); \
-                    pressedInput = gPlayerInputPressed[0]; \
-                } \
-            } else if (pressedInput & (STICK_LEFT | L_JPAD)) { \
-                temp_a2_4 = mainMenuModeSelectLeftTargets[gMainMenuModeSelection]; \
-                if (temp_a2_4 != gMainMenuModeSelection) { \
-                    gMainMenuModeSelection = temp_a2_4; \
-                    enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL); \
-                    pressedInput = gPlayerInputPressed[0]; \
-                } \
-            }
-            // clang-format on
-#else
     if (arg0) {} \
     if ((gMenuFadeAlpha == 0) && (gMainMenuSelectionResult == 0)) { \
         pressedInput = gPlayerInputPressed[0]; \
@@ -683,7 +645,6 @@ void updateMainMenuModeSelectGrid(MenuPanelActor *arg0) {
                     pressedInput = gPlayerInputPressed[0]; \
                 } \
             }
-#endif
             if (pressedInput & (A_BUTTON | B_BUTTON | START_BUTTON)) {
                 gMainMenuSelectionResult = 1;
                 if (pressedInput & B_BUTTON) {
@@ -691,11 +652,7 @@ void updateMainMenuModeSelectGrid(MenuPanelActor *arg0) {
                 }
                 enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
             }
-#if defined(VERSION_JP)
-        }
-#else
         } while (0);
-#endif
     }
 
     if (gMainMenuSelectionResult == 0) {

@@ -1,11 +1,7 @@
 #include <PR/gu.h>
 #include "game/audio/audio_engine_internal.h"
 
-#if defined(VERSION_JP)
-#define MUS_REGISTER register
-#else
 #define MUS_REGISTER
-#endif
 
 #define FIRST_DRUM_NOTE 12
 #define U8_TO_FLOAT(c) ((c) & 128) ? -(256 - (c)) : (c)

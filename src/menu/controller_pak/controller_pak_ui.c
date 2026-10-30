@@ -15,11 +15,8 @@
 #include "game/race/player/race_player_input.h"
 #include "game/menu/controller_pak/controller_pak_file_delete_flow.h"
 
-#if defined(VERSION_JP)
-#else
 #define CONTROLLER_PAK_DELETE_PANEL_HANDLE (gAssetHandles[0x29])
 
-#endif
 /* This script ends in the overlapping sparkle sentinel immediately below. */
 MenuGlyphScript gControllerPakContinuePromptText[8] = {
 #if defined(VERSION_JP)

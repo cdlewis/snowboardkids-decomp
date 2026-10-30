@@ -781,11 +781,7 @@ void updateTrainingCourseDialog(TrainingCourseUiActor *arg0) {
             if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
                 scan = arg0->layout.script;
                 arg0->state.script.visibleGlyphCount = 0;
-#if defined(VERSION_JP)
-                for (keepScanning = 1; keepScanning;) {
-#else
                 do {
-#endif
                     token = *scan;
                     if (token < 0xFF00) {
                         scan++;
@@ -808,11 +804,7 @@ void updateTrainingCourseDialog(TrainingCourseUiActor *arg0) {
                             keepScanning = 0;
                         }
                     }
-#if defined(VERSION_JP)
-                }
-#else
                 } while (keepScanning);
-#endif
             }
             break;
         case 1:
@@ -832,17 +824,10 @@ void updateTrainingCourseDialog(TrainingCourseUiActor *arg0) {
             arg0->confirmBlinkTimer = (arg0->confirmBlinkTimer + 1) & 0xF;
             if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
                 enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
-#if defined(VERSION_JP)
-
-                while (*arg0->layout.script != 0xFFFB) {
-#else
                 if (*arg0->layout.script != 0xFFFB) {
                     do {
-#endif
                         arg0->layout.script++;
-#if defined(VERSION_US)
                     } while (*arg0->layout.script != 0xFFFB);
-#endif
                 }
                 arg0->layout.script++;
                 arg0->scriptState = 0;

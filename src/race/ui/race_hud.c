@@ -1284,11 +1284,7 @@ void drawRaceCourseProgressMeter(void *arg0) {
     );
 
     i = 3;
-#if defined(VERSION_JP)
-    while (i >= 0) {
-#else
     do {
-#endif
         if (((gRacePlayers[order[i]].state.stateFlags & RACE_PLAYER_COLLISION_SQUASHED) != 0) ||
             (gRacePlayers[order[i]].state.progressMeterSquashFrame != 0)) {
             gRacePlayers[order[i]].state.progressMeterSquashFrame++;
@@ -1347,11 +1343,7 @@ void drawRaceCourseProgressMeter(void *arg0) {
             );
         }
         i--;
-#if defined(VERSION_JP)
-    }
-#else
     } while (i >= 0);
-#endif
 }
 
 void updateRaceCourseProgressMeter(void) {

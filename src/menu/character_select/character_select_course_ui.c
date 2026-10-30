@@ -4358,14 +4358,9 @@ void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, 
     color = arg3;
     sprintf(&buffer[-0x10], gCharacterSelectRecordMinutesFormat, record->minutes);
     i = -0x10;
-#if defined(VERSION_JP)
-    while (i < -0xE) {
-        {}
-#else
     do {
         do {
         } while (0);
-#endif
         drawAssetTableSpriteWithExplicitPaletteWideIndex(
             (s16)x,
             y,
@@ -4375,11 +4370,7 @@ void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, 
         );
         i++;
         x += 8;
-#if defined(VERSION_JP)
-    }
-#else
     } while (i < -0xE);
-#endif
     drawAssetTableSpriteWithExplicitPaletteWideIndex(
         (s16)x,
         y,
@@ -4396,11 +4387,7 @@ void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, 
 
     sprintf(&buffer[-0x10], gCharacterSelectRecordSecondsFormat, record->seconds);
     i = -0x10;
-#if defined(VERSION_JP)
-    while (i < -0xE) {
-#else
     do {
-#endif
         drawAssetTableSpriteWithExplicitPaletteWideIndex(
             (s16)x,
             y,
@@ -4410,11 +4397,7 @@ void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, 
         );
         i++;
         x += 8;
-#if defined(VERSION_JP)
-    }
-#else
     } while (i < -0xE);
-#endif
     drawAssetTableSpriteWithExplicitPaletteWideIndex(
         (s16)x,
         y,
@@ -4426,11 +4409,7 @@ void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, 
     x += 8;
     sprintf(&buffer[-0x10], gCharacterSelectRecordCentisecondsFormat, record->centiseconds >> 8);
     i = -0x10;
-#if defined(VERSION_JP)
-    while (i != -0xE) {
-#else
     do {
-#endif
         drawAssetTableSpriteWithExplicitPaletteWideIndex(
             (s16)x,
             y,
@@ -4440,10 +4419,5 @@ void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, 
         );
         i++;
         x += 8;
-#if defined(VERSION_US)
     } while (i != -0xE);
-#endif
 }
-#if defined(VERSION_JP)
-}
-#endif

@@ -129,21 +129,10 @@ void drawMenuAssetRegion(
 
     if ((left < maxX) && (top < maxY) && (right >= minX) && (bottom >= minY)) {
         if (left < minX) {
-#if defined(VERSION_JP)
-            x = 1;
-            while (x) {
-#else
             do {
-#endif
                 texS = ((((minX - left) << 3) << 5) / scaleXValue) + texS;
                 left = minX;
-#if defined(VERSION_JP)
-
-                x = 0;
-            }
-#else
             } while (0);
-#endif
         }
         if (top < minY) {
             texT = ((((minY - top) << 3) << 5) / scaleYValue) + texT;

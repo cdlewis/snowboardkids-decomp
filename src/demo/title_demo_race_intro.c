@@ -23,11 +23,7 @@ s8 gTitleDemoRaceIntroFadeStep;
 
 void initTitleDemoRaceIntro(void) {
     RacePlayer *players;
-#if defined(VERSION_JP)
-    register s32 one = 1;
-#else
     s32 one = 1;
-#endif
     s32 active = 1;
     s32 two = 2;
     s32 three = 3;
