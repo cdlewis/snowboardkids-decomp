@@ -17,6 +17,12 @@
 #include "game/engine/system_runtime.h"
 #include "game/menu/race_setup/race_setup_menu.h"
 
+#if defined(VERSION_JP)
+#define RACE_TYPE_SELECT_CURSOR_ANIM_STATE gRaceTypeSelectCursorAnimState
+#else
+#define RACE_TYPE_SELECT_CURSOR_ANIM_STATE gRaceTypeSelectCursorTarget.state
+#endif
+
 RaceTypeSelectCursorState gRaceTypeSelectCursorTarget;
 
 void returnToRaceTypeSelectMenu(void) {
@@ -97,7 +103,7 @@ void updateRaceTypeSelectMenu(void) {
     } else {
         if (gRacePlayers[0].menuState == 0) {
             if (gMenuSelectionConfirmTimer == 0) {
-                if (gRaceTypeSelectCursorTarget.state == 1) {
+                if (RACE_TYPE_SELECT_CURSOR_ANIM_STATE == 1) {
                     selection = gRaceTypeSelection;
                     heldInput = gPlayerInputHeld[0];
                     heldUp = heldInput & (STICK_UP | U_JPAD);
@@ -153,6 +159,9 @@ void updateRaceTypeSelectMenu(void) {
                     if (repeatTimer != 0) {
                         gMenuInputRepeatTimers[0] = repeatTimer + 1;
                         if (gMenuInputRepeatTimers[0 ^ 0] == 0xFFFF) {
+#if defined(VERSION_JP)
+                            if (&gRaceTypeSelectCursorTarget) {}
+#endif
                             selection = 0;
                             gMenuInputRepeatTimers[selection] = 0xC;
                         }

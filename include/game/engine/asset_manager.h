@@ -18,21 +18,11 @@ typedef struct {
     /* 0xA */ s16 value;
 } HuffmanNode;
 
-#if defined(VERSION_US)
 typedef struct {
     /* 0x0 */ s32 decodedSize; /* Output allocation and decompression length. */
     /* 0x4 */ u8 flags;
     /* 0x5 */ u8 pad5[3]; /* DMA read-ahead: encoded payload starts at +5, not +8. */
 } CompressedAssetHeader;
-#endif
-
-#if defined(VERSION_JP)
-typedef struct {
-    /* 0x0 */ s32 compressedSize;
-    /* 0x4 */ u8 flags;
-    /* 0x5 */ u8 pad5[3];
-} CompressedAssetHeader;
-#endif
 
 extern AssetHandles gAssetHandles;
 

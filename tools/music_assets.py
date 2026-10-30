@@ -1,4 +1,4 @@
-"""Reversible Mus sequence listings; opcodes follow src/us/libmus/player.c's jumptable."""
+"""Reversible Mus sequence listings; opcodes follow src/libmus/player.c's jumptable."""
 import struct
 
 from tools.asset_parts import complete_parts, pack_parts

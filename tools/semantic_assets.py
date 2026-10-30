@@ -326,7 +326,7 @@ def migrate_tree(original_root, root, layout, registry):
         final_defs[key] = dict(bundle=str(path),model=m)
         final_bundles[str(path)] = dict(schema_version=2,id='models/scenery/'+name,models=[dict(name=name,preview=name+'.glb')],animations=[])
         return key
-    source = (original_root/'src/us/race/course/race_course_effects.c').read_text()
+    source = (original_root/'src/race/course/race_course_effects.c').read_text()
     from tools.course_relocations import pack_graphics_group
     _, graphics_symbols = pack_graphics_group(original_root, rows['SHARED_RACE_GRAPHICS'], mode='matching')
     pointers = [value.strip() for value in initializer(source,'gRaceCourseObjectDisplayLists').split(',') if value.strip()]
@@ -367,7 +367,7 @@ def migrate_tree(original_root, root, layout, registry):
             placement = dict(model=key,position=[signed32(v)/65536 for v in (x,y,z)],rotation_y=angle)
             b['scenery'].append(placement)
             components.append(placement)
-        b['scenery_source'] = dict(file='src/us/race/course/race_course_effects.c',symbol=spec['scenery'])
+        b['scenery_source'] = dict(file='src/race/course/race_course_effects.c',symbol=spec['scenery'])
         final_bundles[str(base/'asset.yaml')] = b
         final_defs[b['id']+'/preview'] = dict(bundle=str(base/'asset.yaml'),model=dict(name='preview',components=components))
     for name,item in registry['items'].items():

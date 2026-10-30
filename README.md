@@ -102,8 +102,6 @@ US only.
 
 ## Reverse-engineering notes
 
-- [Multi-version development](docs/versions.md) covers version-specific paths,
-  diff commands, and matching Japanese functions.
 - [Readable asset extraction](docs/readable-assets.md) explains semantic asset
   bundles, Blender-friendly GLB models/animations, PNGs, text, replays, audio,
   safe migration, and byte-exact rebuilding. Start with

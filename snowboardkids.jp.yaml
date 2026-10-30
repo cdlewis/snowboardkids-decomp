@@ -51,15 +51,15 @@ segments:
       - { start: 0x3D10, type: c, name: menu/race_setup/race_setup_menu, dir: jp }
       - { start: 0x5530, type: c, name: menu/character_select/character_select_menu, dir: jp }
       - [0x6110, c, menu/splitscreen_select/race_splitscreen_select_menu]
-      - { start: 0x6840, type: c, name: menu/character_select/character_select_course_menu, dir: jp }
-      - { start: 0x7B00, type: c, name: menu/course_select/multiplayer_course_select_menu, dir: jp }
-      - { start: 0x91F0, type: c, name: menu/race_type_select/race_type_select_menu, dir: jp }
+      - [0x6840, c, menu/character_select/character_select_course_menu]
+      - [0x7B00, c, menu/course_select/multiplayer_course_select_menu]
+      - [0x91F0, c, menu/race_type_select/race_type_select_menu]
       - { start: 0x9930, type: c, name: menu/controller_pak/controller_pak_race_record_save_flow, dir: jp }
       - [0xA1D0, c, menu/course_select/course_select_menu]
       - { start: 0xCC70, type: c, name: menu/controller_pak/controller_pak_continue_prompt_flow, dir: jp }
       - { start: 0xCFF0, type: c, name: menu/controller_pak/controller_pak_file_delete_flow, dir: jp }
       - [0xD7E0, c, menu/controller_pak/controller_pak_replay_save_message_flow]
-      - { start: 0xDBB0, type: c, name: ending/ending_credits_flow, dir: jp }
+      - [0xDBB0, c, ending/ending_credits_flow]
       - { start: 0xE060, type: c, name: menu/training/training_course_ui, dir: jp }
       - { start: 0xF2F0, type: c, name: menu/renderer/menu_renderer, dir: jp }
       - { start: 0x146B0, type: c, name: menu/race_setup/race_setup_ui, dir: jp }
@@ -82,11 +82,11 @@ segments:
       - [0x3E6F0, c, race/effects/race_start_transition]
       - { start: 0x3EF20, type: c, name: demo/main_menu_demo_race_intro, dir: jp }
       - [0x3F620, c, demo/title_demo_race_intro]
-      - { start: 0x3FE40, type: c, name: menu/main_menu/main_menu_race_flow, dir: jp }
+      - [0x3FE40, c, menu/main_menu/main_menu_race_flow]
       - [0x408F0, c, menu/main_menu/training_course_race_flow]
       - [0x415A0, c, menu/main_menu/main_menu_scene_model]
-      - { start: 0x434E0, type: c, name: engine/relocatable_heap, dir: jp }
-      - { start: 0x439F0, type: c, name: engine/asset_manager, dir: jp }
+      - [0x434E0, c, engine/relocatable_heap]
+      - [0x439F0, c, engine/asset_manager]
       - [0x44270, c, race/scene/race_scene_setup]
       - { start: 0x46200, type: c, name: menu/renderer/menu_render_utils, dir: jp }
       - [0x497D8, c, math/spatial_math]
@@ -97,13 +97,13 @@ segments:
       - [0x55E50, c, race/effects/race_intro_effects]
       - { start: 0x57A40, type: c, name: race/ui/race_ui_effects, dir: jp }
       - [0x66F30, c, race/course/race_course_props_and_pickups]
-      - { start: 0x6A060, type: c, name: race/course/race_course_effects, dir: jp }
+      - [0x6A060, c, race/course/race_course_effects]
       - [0x6DCF0, c, race/camera/race_camera]
-      - { start: 0x70CC0, type: c, name: engine/viewport_manager, dir: jp }
-      - { start: 0x71610, type: c, name: engine/callback_task_scheduler, dir: jp }
+      - [0x70CC0, c, engine/viewport_manager]
+      - [0x71610, c, engine/callback_task_scheduler]
       - { start: 0x71F80, type: c, name: audio/sound_manager, dir: jp }
       - { start: 0x73380, type: c, name: race/flow/race_flow, dir: jp }
-      - { start: 0x78950, type: c, name: race/motion/race_motion_animation_debug_viewer, dir: jp }
+      - [0x78950, c, race/motion/race_motion_animation_debug_viewer]
       - { start: 0x78B30, type: c, name: race/ui/race_hud, dir: jp }
       - { start: 0x7B950, type: c, name: race/player/race_player_progress, dir: jp }
       - [0x7C3E0, c, race/player/race_player_model_renderer]
@@ -117,22 +117,22 @@ segments:
       - [0x87B60, c, race/player/race_player_movement]
       - { start: 0x8C410, type: c, name: race/player/race_player_update, dir: jp }
       - [0x97FC0, c, math/fixed_point_math]
-      - { start: 0x992C0, type: c, name: engine/game_task_scheduler, dir: jp }
+      - [0x992C0, c, engine/game_task_scheduler]
       - { start: 0x99BE0, type: c, name: engine/system_runtime, dir: jp }
       - { start: 0x9C760, type: c, name: audio/scheduler, dir: jp }
-      - { start: 0x9D190, type: c, name: libmus/player, dir: jp }
-      - { start: 0x9FD00, type: c, name: libmus/aud_thread, dir: jp }
+      - [0x9D190, c, libmus/player]
+      - [0x9FD00, c, libmus/aud_thread]
       - [0xA0430, c, libmus/aud_samples]
       - [0xA0470, c, libmus/aud_dma]
       - [0xA0780, c, ultra/os/createmesgqueue]
       - [0xA07B0, c, ultra/os/seteventmesg]
-      - { start: 0xA0820, type: c, name: ultra/io/controller, dir: jp }
+      - [0xA0820, c, ultra/io/controller]
       - [0xA0BE0, c, ultra/os/createthread]
       - [0xA0D30, c, ultra/os/startthread]
       - [0xA0E80, c, ultra/os/recvmesg]
       - [0xA0FC0, c, ultra/io/contreaddata]
       - [0xA1220, c, ultra/os/sendmesg]
-      - { start: 0xA1370, type: c, name: ultra/io/motor, dir: jp }
+      - [0xA1370, c, ultra/io/motor]
       - [0xA1B10, c, ultra/io/pfsinitpak]
       - [0xA1D80, c, ultra/io/pfssearchfile]
       - [0xA1F40, c, ultra/io/pfsnumfiles]
@@ -147,7 +147,7 @@ segments:
       - [0xA3D70, hasm, ultra/os/writebackdcache]
       - [0xA3DF0, c, ultra/gu/perspective]
       - [0xA4080, c, ultra/os/stopthread]
-      - { start: 0xA4140, type: c, name: ultra/os/initialize, dir: jp }
+      - [0xA4140, c, ultra/os/initialize]
       - [0xA43D0, c, ultra/io/pimgr]
       - [0xA4560, c, ultra/os/setthreadpri]
       - [0xA4640, c, ultra/io/viblack]
@@ -158,7 +158,7 @@ segments:
       - [0xA4D90, c, ultra/io/visetmode]
       - [0xA4E00, c, ultra/io/visetevent]
       - [0xA4E70, hasm, ultra/os/writebackdcacheall]
-      - { start: 0xA4EA0, type: c, name: ultra/io/sptask, dir: jp }
+      - [0xA4EA0, c, ultra/io/sptask]
       - [0xA5160, c, ultra/io/sptaskyield]
       - [0xA5200, c, ultra/io/viswapbuf]
       - [0xA5250, hasm, ultra/os/setintmask]
@@ -187,7 +187,7 @@ segments:
       - [0xA66E0, c, ultra/os/gettime]
       - [0xA6770, c, ultra/os/settimer]
       - [0xA6850, c, ultra/io/sirawdma]
-      - { start: 0xA6900, type: c, name: ultra/io/siacs, dir: jp }
+      - [0xA6900, c, ultra/io/siacs]
       - [0xA69C0, hasm, ultra/os/exceptasm]
       - [0xA72D0, c, ultra/io/pfsisplug]
       - [0xA7640, c, ultra/io/crc]
@@ -209,7 +209,7 @@ segments:
       - [0xAAA30, hasm, ultra/os/maptlbrdb]
       - [0xAAA90, c, ultra/io/pirawread]
       - [0xAAAF0, hasm, ultra/libc/bzero]
-      - { start: 0xAAB90, type: c, name: ultra/io/cartrominit, dir: jp }
+      - [0xAAB90, c, ultra/io/cartrominit]
       - [0xAAC80, c, ultra/io/leodiskinit]
       - [0xAAD80, c, ultra/io/piacs]
       - [0xAAE40, c, ultra/os/getthreadpri]
@@ -219,7 +219,7 @@ segments:
       - [0xAB600, c, ultra/io/vi]
       - [0xAB740, c, ultra/os/jammesg]
       - [0xAB890, c, ultra/io/pigetcmdq]
-      - { start: 0xAB8C0, type: c, name: ultra/os/timerintr, dir: jp }
+      - [0xAB8C0, c, ultra/os/timerintr]
       - [0xABCC0, c, ultra/io/vigetcurrcontext]
       - [0xABCD0, c, ultra/io/viswapcontext]
       - [0xAC030, hasm, ultra/os/getcount]
@@ -241,7 +241,7 @@ segments:
       - [0xAE9B0, c, ultra/audio/auxbus]
       - [0xAEAC0, c, ultra/audio/save]
       - [0xAEB80, c, ultra/io/si]
-      - { start: 0xAEBB0, type: c, name: ultra/io/leointerrupt, dir: jp }
+      - [0xAEBB0, c, ultra/io/leointerrupt]
       - [0xAF430, c, ultra/os/destroythread]
       - [0xAF530, c, ultra/libc/xlitob]
       - [0xAF7D0, c, ultra/libc/xldtob]
@@ -261,8 +261,8 @@ segments:
       - { start: 0xB35E0, type: .data, name: menu/main_menu/controller_main_menu_flow, dir: jp }
       - { start: 0xB3680, type: .data, name: menu/race_setup/race_setup_menu, dir: jp }
       - { start: 0xB38F0, type: .data, name: menu/character_select/character_select_menu, dir: jp }
-      - { start: 0xB3910, type: .data, name: menu/character_select/character_select_course_menu, dir: jp }
-      - { start: 0xB3980, type: .data, name: menu/course_select/multiplayer_course_select_menu, dir: jp }
+      - [0xB3910, .data, menu/character_select/character_select_course_menu]
+      - [0xB3980, .data, menu/course_select/multiplayer_course_select_menu]
       - [0xB39A0, .data, menu/course_select/course_select_menu]
       - { start: 0xB39F0, type: .data, name: menu/training/training_course_ui, dir: jp }
       - { start: 0xB56D0, type: .data, name: menu/renderer/menu_renderer, dir: jp }
@@ -281,9 +281,9 @@ segments:
       - [0xB92F0, .data, race/effects/race_start_transition]
       - { start: 0xBB5E0, type: .data, name: demo/main_menu_demo_race_intro, dir: jp }
       - { start: 0xBB640, type: .data, name: demo/title_demo_race_intro_data, dir: jp }
-      - { start: 0xD39B0, type: .data, name: menu/main_menu/main_menu_race_flow, dir: jp }
+      - [0xD39B0, .data, menu/main_menu/main_menu_race_flow]
       - [0xD3A60, .data, menu/main_menu/main_menu_scene_model]
-      - { start: 0xD3CB0, type: .data, name: engine/asset_manager, dir: jp }
+      - [0xD3CB0, .data, engine/asset_manager]
       - [0xD3DD0, .data, race/scene/race_scene_setup]
       - { start: 0xD3E60, type: .data, name: menu/renderer/menu_render_utils, dir: jp }
       - [0xD3E80, .data, math/spatial_math]
@@ -294,7 +294,7 @@ segments:
       - [0xD5B80, .data, race/effects/race_intro_effects]
       - { start: 0xD5F20, type: .data, name: race/ui/race_ui_effects, dir: jp }
       - [0xD7680, .data, race/course/race_course_props_and_pickups]
-      - { start: 0xD9B70, type: .data, name: race/course/race_course_effects, dir: jp }
+      - [0xD9B70, .data, race/course/race_course_effects]
       - [0xDA7B0, .data, race/camera/race_camera]
       - { start: 0xDAAE0, type: .data, name: audio/sound_manager, dir: jp }
       - { start: 0xDC3C0, type: .data, name: race/flow/race_flow, dir: jp }
@@ -308,26 +308,26 @@ segments:
       - [0xDE6E0, .data, race/player/race_player_movement]
       - { start: 0xDE800, type: .data, name: race/player/race_player_update, dir: jp }
       - [0xDED60, .data, math/fixed_point_math]
-      - { start: 0xDEE00, type: .data, name: engine/game_task_scheduler, dir: jp }
+      - [0xDEE00, .data, engine/game_task_scheduler]
       - { start: 0xDEE40, type: .data, name: engine/system_runtime, dir: jp }
       - { start: 0xDF080, type: .data, name: audio/scheduler, dir: jp }
-      - { start: 0xDF090, type: .data, name: libmus/player, dir: jp }
-      - { start: 0xDF1C0, type: .data, name: libmus/aud_thread, dir: jp }
-      - { start: 0xDF1E0, type: .data, name: ultra/io/controller, dir: jp }
-      - { start: 0xDF1F0, type: .data, name: ultra/io/motor, dir: jp }
-      - { start: 0xDF200, type: .data, name: ultra/os/initialize, dir: jp }
+      - [0xDF090, .data, libmus/player]
+      - [0xDF1C0, .data, libmus/aud_thread]
+      - [0xDF1E0, .data, ultra/io/controller]
+      - [0xDF1F0, .data, ultra/io/motor]
+      - [0xDF200, .data, ultra/os/initialize]
       - [0xDF220, .data, ultra/io/pimgr]
       - [0xDF250, .data, ultra/io/vimgr]
       - [0xDF270, .data, ultra/io/vitbl]
       - [0xDFF90, .data, ultra/audio/sl]
       - [0xDFFA0, .data, ultra/io/aisetnextbuf]
       - [0xDFFB0, .data, ultra/os/thread]
-      - { start: 0xDFFD0, type: .data, name: ultra/io/siacs, dir: jp }
+      - [0xDFFD0, .data, ultra/io/siacs]
       - [0xDFFE0, .data, ultra/os/exceptasm]
       - [0xE0000, .data, ultra/libc/xprintf]
       - [0xE0050, .data, ultra/io/piacs]
       - [0xE0060, .data, ultra/io/vi]
-      - { start: 0xE00D0, type: .data, name: ultra/os/timerintr, dir: jp }
+      - [0xE00D0, .data, ultra/os/timerintr]
       - [0xE00E0, .data, ultra/audio/drvrnew]
       - [0xE0270, .data, ultra/audio/env]
       - [0xE03B0, .data, ultra/libc/xlitob]
@@ -339,15 +339,15 @@ segments:
       - { start: 0xE0830, type: .rodata, name: menu/race_setup/race_setup_menu, dir: jp }
       - { start: 0xE08B0, type: .rodata, name: menu/character_select/character_select_menu, dir: jp }
       - [0xE08C0, .rodata, menu/splitscreen_select/race_splitscreen_select_menu]
-      - { start: 0xE08D0, type: .rodata, name: menu/character_select/character_select_course_menu, dir: jp }
-      - { start: 0xE08E0, type: .rodata, name: menu/course_select/multiplayer_course_select_menu, dir: jp }
-      - { start: 0xE0900, type: .rodata, name: menu/race_type_select/race_type_select_menu, dir: jp }
+      - [0xE08D0, .rodata, menu/character_select/character_select_course_menu]
+      - [0xE08E0, .rodata, menu/course_select/multiplayer_course_select_menu]
+      - [0xE0900, .rodata, menu/race_type_select/race_type_select_menu]
       - { start: 0xE0910, type: .rodata, name: menu/controller_pak/controller_pak_race_record_save_flow, dir: jp }
       - [0xE0960, .rodata, menu/course_select/course_select_menu]
       - { start: 0xE0970, type: .rodata, name: menu/controller_pak/controller_pak_continue_prompt_flow, dir: jp }
       - { start: 0xE0980, type: .rodata, name: menu/controller_pak/controller_pak_file_delete_flow, dir: jp }
       - [0xE0990, .rodata, menu/controller_pak/controller_pak_replay_save_message_flow]
-      - { start: 0xE09A0, type: .rodata, name: ending/ending_credits_flow, dir: jp }
+      - [0xE09A0, .rodata, ending/ending_credits_flow]
       - { start: 0xE09B0, type: .rodata, name: menu/race_setup/race_setup_ui, dir: jp }
       - { start: 0xE09E0, type: .rodata, name: menu/character_select/character_select_ui, dir: jp }
       - { start: 0xE0A10, type: .rodata, name: menu/splitscreen_select/race_splitscreen_select_ui, dir: jp }
@@ -362,25 +362,25 @@ segments:
       - [0xE0FC0, .rodata, race/effects/race_start_transition]
       - { start: 0xE0FD0, type: .rodata, name: demo/main_menu_demo_race_intro, dir: jp }
       - [0xE0FF0, .rodata, demo/title_demo_race_intro]
-      - { start: 0xE1000, type: .rodata, name: menu/main_menu/main_menu_race_flow, dir: jp }
+      - [0xE1000, .rodata, menu/main_menu/main_menu_race_flow]
       - [0xE1020, .rodata, menu/main_menu/training_course_race_flow]
       - [0xE10A0, .rodata, menu/main_menu/main_menu_scene_model]
       - [0xE10D0, .rodata, race/scene/race_scene_setup]
       - { start: 0xE1120, type: .rodata, name: menu/renderer/menu_screen_effects, dir: jp }
       - { start: 0xE1140, type: .rodata, name: race/ui/race_ui_effects, dir: jp }
-      - { start: 0xE1400, type: .rodata, name: race/course/race_course_effects, dir: jp }
-      - { start: 0xE1450, type: .rodata, name: engine/viewport_manager, dir: jp }
-      - { start: 0xE1470, type: .rodata, name: engine/callback_task_scheduler, dir: jp }
+      - [0xE1400, .rodata, race/course/race_course_effects]
+      - [0xE1450, .rodata, engine/viewport_manager]
+      - [0xE1470, .rodata, engine/callback_task_scheduler]
       - { start: 0xE14D0, type: .rodata, name: audio/sound_manager, dir: jp }
       - { start: 0xE1500, type: .rodata, name: race/flow/race_flow, dir: jp }
-      - { start: 0xE1620, type: .rodata, name: race/motion/race_motion_animation_debug_viewer, dir: jp }
+      - [0xE1620, .rodata, race/motion/race_motion_animation_debug_viewer]
       - { start: 0xE1630, type: .rodata, name: race/ui/race_hud, dir: jp }
       - [0xE1770, .rodata, race/course/race_surface_cues]
       - [0xE1790, .rodata, race/player/race_player_collision]
       - [0xE17E0, .rodata, race/player/race_player_movement]
       - { start: 0xE1830, type: .rodata, name: race/player/race_player_update, dir: jp }
       - { start: 0xE1950, type: .rodata, name: engine/system_runtime, dir: jp }
-      - { start: 0xE1980, type: .rodata, name: libmus/player, dir: jp }
+      - [0xE1980, .rodata, libmus/player]
       - [0xE1A10, .rodata, ultra/gu/perspective]
       - [0xE1A20, .rodata, ultra/os/setintmask]
       - [0xE1AA0, .rodata, ultra/gu/sinf]
@@ -402,29 +402,29 @@ segments:
       - { type: .bss, vram: 0x8010A0F0, name: menu/race_setup/race_setup_menu, dir: jp }
       - { type: .bss, vram: 0x8010A170, name: menu/character_select/character_select_menu, dir: jp }
       - { type: .bss, vram: 0x8010A190, name: menu/splitscreen_select/race_splitscreen_select_menu }
-      - { type: .bss, vram: 0x8010A1A0, name: menu/character_select/character_select_course_menu, dir: jp }
+      - { type: .bss, vram: 0x8010A1A0, name: menu/character_select/character_select_course_menu }
       - { type: .bss, vram: 0x8010A1C0, name: menu/course_select/course_select_selection_state }
       - { type: .bss, vram: 0x8010A1E8, name: menu/course_select/course_select_transition_state }
       - { type: .bss, vram: 0x8010A1F8, name: menu/course_select/course_select_course_tables }
       - { type: .bss, vram: 0x8010A238, name: menu/course_select/course_select_status }
-      - { type: .bss, vram: 0x8010A270, name: menu/race_type_select/race_type_select_menu, dir: jp }
+      - { type: .bss, vram: 0x8010A270, name: menu/race_type_select/race_type_select_menu }
       - { type: .bss, vram: 0x8010A280, name: menu/controller_pak/controller_pak_race_record_save_flow, dir: jp }
       - { type: .bss, vram: 0x8010A290, name: menu/course_select/course_select_menu }
       - { type: .bss, vram: 0x8010A2A0, name: menu/controller_pak/controller_pak_continue_prompt_flow, dir: jp }
       - { type: .bss, vram: 0x8010A2B0, name: menu/controller_pak/controller_pak_file_delete_flow, dir: jp }
-      - { type: .bss, vram: 0x8010A4C0, name: ending/ending_credits_flow, dir: jp }
+      - { type: .bss, vram: 0x8010A4C0, name: ending/ending_credits_flow }
       - { type: .bss, vram: 0x8010A4E0, name: ending/ending_credits_tommy }
       - { type: .bss, vram: 0x8010A4F0, name: ending/ending_credits_effects }
       - { type: .bss, vram: 0x8010A500, name: demo/title_demo_race_intro }
-      - { type: .bss, vram: 0x8010A510, name: menu/main_menu/main_menu_race_flow, dir: jp }
+      - { type: .bss, vram: 0x8010A510, name: menu/main_menu/main_menu_race_flow }
       - { type: .bss, vram: 0x8010A520, name: menu/main_menu/main_menu_scene_model }
-      - { type: .bss, vram: 0x8010F4A0, name: engine/relocatable_heap, dir: jp }
-      - { type: .bss, vram: 0x8010FC40, name: engine/asset_manager, dir: jp }
+      - { type: .bss, vram: 0x8010F4A0, name: engine/relocatable_heap }
+      - { type: .bss, vram: 0x8010FC40, name: engine/asset_manager }
       - { type: .bss, vram: 0x80111450, name: menu/renderer/menu_render_utils, dir: jp }
       - { type: .bss, vram: 0x801114F0, name: race/effects/race_visual_effects }
       - { type: .bss, vram: 0x80111500, name: race/camera/race_camera }
-      - { type: .bss, vram: 0x801117D0, name: engine/viewport_manager, dir: jp }
-      - { type: .bss, vram: 0x80111A90, name: engine/callback_task_scheduler, dir: jp }
+      - { type: .bss, vram: 0x801117D0, name: engine/viewport_manager }
+      - { type: .bss, vram: 0x80111A90, name: engine/callback_task_scheduler }
       - { type: .bss, vram: 0x80120B70, name: audio/sound_manager, dir: jp }
       - { type: .bss, vram: 0x80120E60, name: race/flow/race_flow, dir: jp }
       - { type: .bss, vram: 0x80120E90, name: race/ui/race_hud, dir: jp }
@@ -432,26 +432,26 @@ segments:
       - { type: .bss, vram: 0x80121070, name: race/player/race_player_collision }
       - { type: .bss, vram: 0x80121090, name: race/player/race_player_movement }
       - { type: .bss, vram: 0x801210A0, name: race/player/race_player_input }
-      - { type: .bss, vram: 0x801228D0, name: engine/game_task_scheduler, dir: jp }
+      - { type: .bss, vram: 0x801228D0, name: engine/game_task_scheduler }
       - { type: .bss, vram: 0x80122AD0, name: engine/system_runtime, dir: jp }
       - { type: .bss, vram: 0x80155940, name: audio/scheduler, dir: jp }
-      - { type: .bss, vram: 0x80159950, name: libmus/player, dir: jp }
-      - { type: .bss, vram: 0x801599C0, name: libmus/aud_thread, dir: jp }
+      - { type: .bss, vram: 0x80159950, name: libmus/player }
+      - { type: .bss, vram: 0x801599C0, name: libmus/aud_thread }
       - { type: .bss, vram: 0x8015BCA0, name: ultra/os/seteventmesg }
-      - { type: .bss, vram: 0x8015BD20, name: ultra/io/controller, dir: jp }
-      - { type: .bss, vram: 0x8015BDB0, name: ultra/io/motor, dir: jp }
-      - { type: .bss, vram: 0x8015BFF0, name: ultra/os/initialize, dir: jp }
+      - { type: .bss, vram: 0x8015BD20, name: ultra/io/controller }
+      - { type: .bss, vram: 0x8015BDB0, name: ultra/io/motor }
+      - { type: .bss, vram: 0x8015BFF0, name: ultra/os/initialize }
       - { type: .bss, vram: 0x8015C000, name: ultra/io/pimgr }
       - { type: .bss, vram: 0x8015D1D0, name: ultra/io/vimgr }
-      - { type: .bss, vram: 0x8015E3F0, name: ultra/io/sptask, dir: jp }
-      - { type: .bss, vram: 0x8015E430, name: ultra/io/siacs, dir: jp }
+      - { type: .bss, vram: 0x8015E3F0, name: ultra/io/sptask }
+      - { type: .bss, vram: 0x8015E430, name: ultra/io/siacs }
       - { type: .bss, vram: 0x8015E450, name: ultra/io/pfsisplug }
-      - { type: .bss, vram: 0x8015E490, name: ultra/io/cartrominit, dir: jp }
+      - { type: .bss, vram: 0x8015E490, name: ultra/io/cartrominit }
       - { type: .bss, vram: 0x8015E510, name: ultra/io/leodiskinit }
       - { type: .bss, vram: 0x8015E590, name: ultra/io/piacs }
-      - { type: .bss, vram: 0x8015E5B0, name: ultra/os/timerintr, dir: jp }
+      - { type: .bss, vram: 0x8015E5B0, name: ultra/os/timerintr }
       - { type: .bss, vram: 0x8015E5F0, name: ultra/os/exceptasm }
-      - { type: .bss, vram: 0x8015E7A0, name: ultra/io/leointerrupt, dir: jp }
+      - { type: .bss, vram: 0x8015E7A0, name: ultra/io/leointerrupt }
   # Asset identifiers are shared with US; ROM offsets are JP-specific.
   # Numeric identifiers retain their US names to keep C references shared.
   # course_display_list

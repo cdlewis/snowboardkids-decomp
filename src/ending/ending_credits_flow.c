@@ -20,10 +20,7 @@
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/menu/renderer/menu_renderer.h"
 
-/* These globals form the original 0x10-byte ending_credits_flow BSS contribution. */
-
-const f32 gEndingCreditsViewportAspectRatio[4] = { 1.333333373f, 0.0f, 0.0f, 0.0f };
-
+/* Preserve the original ending-flow BSS order for each regional layout. */
 s16 gEndingCreditsUnusedValue;
 u16 gEndingCreditsSequencePhase;
 u8 gEndingCreditsHandshakeState;
@@ -31,6 +28,8 @@ u8 gEndingCreditsTransitionSnowboardIconSpinStep;
 s16 gEndingCreditsTransitionSnowboardIconAngle;
 u8 gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_COUNT];
 Vec3i gMenuCameraTargetOffset;
+
+const f32 gEndingCreditsViewportAspectRatio[4] = { 1.333333373f, 0.0f, 0.0f, 0.0f };
 
 void initEndingCreditsFlow(void) {
     s32 sp34;

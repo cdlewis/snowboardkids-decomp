@@ -1,14 +1,13 @@
-#include "common.h"
 #include "game/engine/viewport_manager.h"
 #include "PR/gu.h"
+
+ViewportState gViewportStates[4];
 
 const f32 gDefaultViewportOverlayFarClip[1] = { 15000.0f };
 const f32 gCustomViewportOverlayFarClip[1] = { 15000.0f };
 const f32 gRaceViewportOverlayFarClip[1] = { 15000.0f };
 const f32 gMenuViewportFarClip[1] = { 10000.0f };
 const f32 gMenuViewportOverlayFarClip[4] = { 15000.0f, 0.0f, 0.0f, 0.0f };
-
-ViewportState gViewportStates[4];
 
 void resetAllViewports(void) {
     s32 i;
@@ -66,6 +65,12 @@ void configureViewport(
     gViewportStates[viewportIndex].top = centerY - (height / 2);
     gViewportStates[viewportIndex].right = (width / 2) + centerX;
     gViewportStates[viewportIndex].bottom = (height / 2) + centerY;
+#if defined(VERSION_US)
+    gViewportStates[viewportIndex].left = gViewportStates[viewportIndex].left;
+    gViewportStates[viewportIndex].top = gViewportStates[viewportIndex].top;
+    gViewportStates[viewportIndex].right = gViewportStates[viewportIndex].right;
+    gViewportStates[viewportIndex].bottom = gViewportStates[viewportIndex].bottom;
+#endif
     gViewportStates[viewportIndex].screenBoundsValid = 1;
 
     if (gViewportStates[viewportIndex].right < 0) {
@@ -135,6 +140,12 @@ void configureViewportWithFovAndFarClip(
     gViewportStates[viewportIndex].top = centerY - (height / 2);
     gViewportStates[viewportIndex].right = (width / 2) + centerX;
     gViewportStates[viewportIndex].bottom = (height / 2) + centerY;
+#if defined(VERSION_US)
+    gViewportStates[viewportIndex].left = gViewportStates[viewportIndex].left;
+    gViewportStates[viewportIndex].top = gViewportStates[viewportIndex].top;
+    gViewportStates[viewportIndex].right = gViewportStates[viewportIndex].right;
+    gViewportStates[viewportIndex].bottom = gViewportStates[viewportIndex].bottom;
+#endif
     gViewportStates[viewportIndex].screenBoundsValid = 1;
 
     if (gViewportStates[viewportIndex].right < 0) {
@@ -202,6 +213,12 @@ void configureRaceViewport(
     gViewportStates[viewportIndex].top = centerY - (height / 2);
     gViewportStates[viewportIndex].right = (width / 2) + centerX;
     gViewportStates[viewportIndex].bottom = (height / 2) + centerY;
+#if defined(VERSION_US)
+    gViewportStates[viewportIndex].left = gViewportStates[viewportIndex].left;
+    gViewportStates[viewportIndex].top = gViewportStates[viewportIndex].top;
+    gViewportStates[viewportIndex].right = gViewportStates[viewportIndex].right;
+    gViewportStates[viewportIndex].bottom = gViewportStates[viewportIndex].bottom;
+#endif
     gViewportStates[viewportIndex].screenBoundsValid = 1;
 
     if (gViewportStates[viewportIndex].right < 0) {
@@ -269,6 +286,12 @@ void configureMenuViewport(
     gViewportStates[viewportIndex].top = centerY - (height / 2);
     gViewportStates[viewportIndex].right = (width / 2) + centerX;
     gViewportStates[viewportIndex].bottom = (height / 2) + centerY;
+#if defined(VERSION_US)
+    gViewportStates[viewportIndex].left = gViewportStates[viewportIndex].left;
+    gViewportStates[viewportIndex].top = gViewportStates[viewportIndex].top;
+    gViewportStates[viewportIndex].right = gViewportStates[viewportIndex].right;
+    gViewportStates[viewportIndex].bottom = gViewportStates[viewportIndex].bottom;
+#endif
     gViewportStates[viewportIndex].screenBoundsValid = 1;
 
     if (gViewportStates[viewportIndex].right < 0) {

@@ -313,7 +313,7 @@ def index_models(root, layout):
     scroll_rows = table_rows(scroll_body)
     scroll_courses = ['quicksand_valley','quicksand_valley','night_highway','animal_land',
                       'dizzy_land','dizzy_land','sunset_rock','sunset_rock']
-    effect_source = (root/'src/us/race/course/race_course_effects.c').read_text()
+    effect_source = (root/'src/race/course/race_course_effects.c').read_text()
     water_layer_body = re.search(r'gCourseWaterLayerEntries\[\]\s*=\s*\{(.*?)\};',effect_source,re.S)[1]
     water_layers = table_rows(water_layer_body)
     for bank in specs:

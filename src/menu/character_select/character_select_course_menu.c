@@ -67,15 +67,19 @@ CharacterSelectCourseMenuData gCharacterSelectCourseMenuData = {
     { RACE_COURSE_ANIMAL_LAND, -1, 0, 0, 0, 0, 0, 0 },
 };
 
-// IDO code generation for this function is sensitive to source line layout.
-// clang-format off
 u16 gCharacterSelectCourseExitOptionIndex;
 CharacterSelectCourseCursorState gCharacterSelectCourseCursorState;
+/* During this menu, gRaceCourseIndex is a list cursor, resolved through this
+ * table to a course ID on confirmation (e.g. index 0 -> Rookie 9, 1 -> Big Snowman 0). */
 CharacterSelectOptionList *gCharacterSelectActiveCourseOptions;
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
     s32 var_v1;
-    register s32 unused; /* Preserve IDO's spill layout. */
+#if defined(VERSION_JP)
+    register s32 unused; /* Preserve the spill layout. */
+#endif
     s32 var_v0_3;
     u8 temp_v1;
     GameSaveData *var_v0;

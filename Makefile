@@ -247,10 +247,9 @@ PROJECT_H_FILES := $(shell git ls-files 'include/**/*.h' 'include/*.h' 'src/**/*
 FORMAT_H_FILES := $(filter-out include/hasm.h include/include_asm.h include/sys/%,$(PROJECT_H_FILES))
 FORMAT_FILES := $(FORMAT_C_FILES) $(FORMAT_H_FILES)
 TIDY_C_FRAGMENT_FILES := \
-	$(foreach version,us jp, \
-		src/$(version)/libmus/player_api.c \
-		src/$(version)/libmus/player_commands.c \
-		src/$(version)/libmus/player_commands_tail.c)
+	src/libmus/player_api.c \
+	src/libmus/player_commands.c \
+	src/libmus/player_commands_tail.c
 TIDY_C_FILES := $(filter-out %.inc.c $(TIDY_C_FRAGMENT_FILES),$(PROJECT_C_FILES))
 
 TEXTCONV = $(PYTHON) $(TOOLS_DIR)/textconv.py

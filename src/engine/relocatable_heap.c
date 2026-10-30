@@ -2,6 +2,12 @@
 #include "common.h"
 #include "game/engine/relocatable_heap.h"
 
+#if defined(VERSION_JP)
+#define FIRST_ALLOCATED_HEAP_BLOCK gFirstAllocatedRelocatableHeapBlock
+#else
+#define FIRST_ALLOCATED_HEAP_BLOCK gRelocatableHeapBlockListHead.next
+#endif
+
 #define RELOCATABLE_HEAP_BLOCK_COUNT 0x50
 
 typedef enum RelocatableHeapBlockStatus {
@@ -18,7 +24,7 @@ u16 gRelocatableHeapUsedBlockCount;
 u8 *gRelocatableHeapNextFreeAddress;
 
 void updateRelocatableHeapNextFreeAddress(void) {
-    RelocatableHeapBlock *node = gFirstAllocatedRelocatableHeapBlock;
+    RelocatableHeapBlock *node = FIRST_ALLOCATED_HEAP_BLOCK;
     RelocatableHeapBlock *next;
 
     if (node == NULL) {
@@ -48,7 +54,7 @@ void initRelocatableHeap(void) {
     }
 
     gRelocatableHeapUsedBlockCount = 0;
-    gFirstAllocatedRelocatableHeapBlock = NULL;
+    FIRST_ALLOCATED_HEAP_BLOCK = NULL;
     updateRelocatableHeapNextFreeAddress();
 }
 
@@ -177,7 +183,7 @@ void compactRelocatableHeap(void) {
     u8 *src;
     u32 blockStart;
 
-    block = gFirstAllocatedRelocatableHeapBlock;
+    block = FIRST_ALLOCATED_HEAP_BLOCK;
     nextFree = gRelocatableHeapStart;
     if (block != NULL) {
         do {
@@ -210,7 +216,11 @@ void compactRelocatableHeap(void) {
 }
 
 void *getRelocatableHeapBlockBase(s32 handle) {
+#if defined(VERSION_JP)
     return gRelocatableHeapBlockStartAliases[handle].start;
+#else
+    return gRelocatableHeapBlockPool[handle].start;
+#endif
 }
 
 void lockRelocatableHeapBlock(s32 handle) {
